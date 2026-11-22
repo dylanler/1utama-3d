@@ -1,7 +1,25 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
 ## Round-19 (In Progress — Swarm Full-Fidelity Final Pass: Wayfinding, WC Corridors, Proshop/Gym Interiors, Escalator & Bridge Polish)
-- **Swarm Full-Fidelity Final Pass**: Starting coordinated multi-agent polish across wayfinding totems, WC-only service corridors, Camp5 proshop & Celebrity Fitness gym interiors, escalator & Rainforest bridge details, and full visual verification across all floors.
+- **Escalator Alignment & Soffit Fixes (`src/world/traversalSystems.js`, `#13`)**:
+  - Added vertical-height-compensated incline alignment (`setInclinedPos(mesh, H, zPos, xShift)`) and matched `balSpan = length + 0.04` across `glass`, `glassClamp`, `glassEdge`, `skirt`, and `rail` so inclined handrails never protrude diagonally past the escalator glass (`2F-10`) and join `newelTop` (`y = yFloor + 0.89`) flush at both top and bottom landings for both `dx > 0` and `dx < 0`.
+  - Extended the inclined under-truss and added a horizontal upper machine-head truss soffit return (`upperTrussHead` at `y = y1 - 0.605..y1 - 0.02`) so the green Rainforest escalators (`rf-up/dn` in `1F-08`) and all mall escalators join flush into the upper ceiling coffer with zero floating gap.
+- **GF Koi Pond, 2F Suspension Bridge & `3F-07` Under-Bridge Canopy (`src/world/iconicAttractions.js`, `#13`)**:
+  - Upgraded the 2 white sculptural geese on the GF Koi Pond (`G-07`, Photo 3) with organic S-curved `TubeGeometry` necks, teardrop torsos, folded left/right wing shells, lifted tail feathers, bills, and dark eye beads perched on wet mossy river stones.
+  - Seated all foreground river boulders, island curb stones (`islCurbBase`), and lakeside palm root boulders (`treeSpots` & `canopyTreeSpots`) strictly inside the elliptical Koi Pond bed (`y = koiBedY + 0.24`) with zero floating or stray rocks on the GF concourse.
+  - Increased the Koi school to 56 sculpted Nishikigoi swimming closer to the surface (`koiWaterY - 0.055`) with 34 densely schooling along the boardwalk-to-goose-island channel (`G-07`).
+  - Extended the 2F suspension bridge twin parabolic ladder-arches (`archSpanZ = 12.82`) into structural steel balcony skewback abutment pedestals (`skewback`), tie struts, and underdeck Warren-truss bearing beams (`bearingBeam`) at `z = ±12.74` (`1F-07`, `2F-07`).
+  - Added 3 mid-height under-bridge broadleaf rainforest canopy clusters (`x = 34.4..41.6, z = -1.8..2.2, h = 16.5..16.9`) directly beneath/flanking the 2F suspension bridge midspan for `3F-07` (`#9`, Photo 2).
+- **Photo-Verified WC-Only Service Corridors & Camera Framing (`src/data/mallLayout.js`, `#14`)**:
+  - Added 1F Rainforest-West WC-only & Lift Lobby service corridor (`fac-rf-1f-wc`, `floor: 2, side: 'W', x: 13.4, z: -20.16, width: 5.68, hasSurau: false, surauGender: 'WC ONLY'`) beside Clarins (`f301-clarins` adjusted to `z: -13.5, width: 7.4`) and opposite Rocku Yakiniku (`#200`).
+  - Added 2F 1 Utama E WC-only & Baby Care service corridor (`fac-wc-s1ue`, `floor: 3, side: 'S', x: -134.48, z: 20.2, width: 6.4, hasSurau: false, surauGender: 'WC ONLY'`) beside Monsoon-ID & Playtime (`S606` and `SF1UE` adjusted to `w: 22.4` each, `#098`).
+  - Updated `3F-07` (`21.2, -7.2 -> 40.5, 2.5, pitch: -0.05, yOff: 0.58`) and `4F-08` (`130.5, -14.2 -> 148.5, -22.5, pitch: 0.03`) camera presets per `@visual-verifier-2` (`#9`).
+- **Celebrity Fitness Studio, Cellini/Furniture Interiors & Wayfinding Polish (`src/graphics/proceduralTextures.js`, `#14`)**:
+  - Assigned `CELEBRITY FITNESS` / `st === 'gym'` its own `celebrity-fitness` brand profile (`facadeType: 'minimalist-tech'`, dark charcoal-obsidian brushed steel fascia with glowing crimson-red 5-point Star emblem & red/white typography) so `mallArchitecture.js` never spawns sneaker racks or mannequins inside Celebrity Fitness (`S216A`, `EZ216A`).
+  - Added `int-gym` to `createStoreInteriorBackwallTexture` with dark fitness-club mirrors, glowing crimson-red Celebrity Fitness 5-point Star & neon coves, 9 commercial cardio treadmills with cyan LED telemetry consoles, and multi-tier dumbbell racks.
+  - Added authentic brand fascia profiles for `BRANDS OUTLET (BO)` (`brands-outlet-orange`) and `POPULAR BOOKSTORE` (`popular-crimson`).
+  - Upgraded `int-cellini` and `int-furniture` interior backwalls (`#9`) with warm illuminated walnut wood-slat feature backdrops, backlit floating designer living-room shelves with ceramic vases, and framed abstract gallery art above sectional sofa vignettes.
+  - Fixed `createRestroomWayfindingTexture` Malay subtitle on `WC ONLY` corridors to read `TANDAS LELAKI & WANITA • OKU • BILIK BAYI • LIF LOBI` (zero false Surau reference).
 
 ## Round-18 (Completed — Final Full-Fidelity Visual Polish Across All 30 Verified Shots)
 - **3F `TGV Maybank IMAX` (`EZ101`)**: Prioritize `TGV` above `MAYBANK` in `getStoreBrandProfile()` so `EZ101` renders its corrugated pale-grey steel wall + yellow `Maybank` box + glowing cyan `IMAX®` + red `TGV Cinemas` (fixing `Maybank • LAMY`), and lift `Bites` hanging pergola vines above the signage bar so text stays 100% crisp.

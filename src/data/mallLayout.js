@@ -646,7 +646,7 @@ export const STORES = [
   { id: 'f142-nealsyard', name: 'NEAL’S YARD REMEDIES', subtitle: 'Organic Botanical Skincare • Melvita Adjacent', lot: 'F142', floor: 2, wing: 'Old Wing', x: -125.8, z: 15.8, width: 12.4, side: 'W', brandBg: '#1e3a8a', brandFg: '#ffffff', accent: '#60a5fa', style: 'beauty' },
   { id: 'f125-aeon', name: 'AEON', subtitle: 'Fashion Department Store • Mens & Ladies', lot: 'F125', floor: 2, wing: 'Old Wing', x: -29.2, z: -15.8, width: 12.4, side: 'E', brandBg: '#831843', brandFg: '#ffffff', accent: '#f472b6', style: 'anchor' },
   { id: 'f125b-aeon', name: 'AEON STYLE', subtitle: 'Shoes • Handbags • Travel Accessories', lot: 'F125B', floor: 2, wing: 'Old Wing', x: -29.2, z: 15.8, width: 12.4, side: 'E', brandBg: '#9d174d', brandFg: '#ffffff', accent: '#f472b6', style: 'anchor' },
-  { id: 'f301-clarins', name: 'CLARINS', subtitle: 'French Plant-Based Skincare • Opposite Rocku Yakiniku', lot: 'F301', floor: 2, wing: 'New Wing 1F', x: 13.4, z: -16.4, width: 13.2, side: 'W', brandBg: '#991b1b', brandFg: '#ffffff', accent: '#fca5a5', style: 'beauty' },
+  { id: 'f301-clarins', name: 'CLARINS', subtitle: 'French Plant-Based Skincare • Opposite Rocku Yakiniku', lot: 'F301', floor: 2, wing: 'New Wing 1F', x: 13.4, z: -13.5, width: 7.4, side: 'W', brandBg: '#991b1b', brandFg: '#ffffff', accent: '#fca5a5', style: 'beauty' },
   { id: 'f355-rocku', name: 'ROCKU YAKINIKU', subtitle: 'Japanese Charcoal Yakiniku • Opposite Clarins & 1F WC', lot: 'F355-F357', floor: 2, wing: 'Rainforest', x: 13.4, z: 16.4, width: 13.2, side: 'W', brandBg: '#1c1917', brandFg: '#fde68a', accent: '#f59e0b', style: 'japanese' },
 
   ...strip(2, 'Old Wing', 'N', -22.2, -125.2, [
@@ -728,8 +728,8 @@ export const STORES = [
   ]),
   // Open 8.6m sunlit terrace portal at x=-144.7..-136.1 leading directly out onto Outdoor Saranghae Finger-Heart / Skywalker Rooftop Bridge!
   ...strip(3, '1 Utama E', 'S', 20.2, -182.8, [
-    { lot: 'S606', name: 'NEXT GEN NINJA ARENA', sub: 'Trampoline Zone • Climbing • Kids Cafe & Arcade', w: 25.8, bg: '#f8fafc', fg: '#1e1b4b', ac: '#38bdf8', st: 'toys' },
-    { lot: 'SF1UE', name: 'LEGO® CERTIFIED STORE • KIDDO', sub: 'Brick Models • Collectibles • Saranghae Corridor', w: 25.8, bg: '#dc2626', fg: '#fef08a', ac: '#facc15', st: 'toys' }
+    { lot: 'S606', name: 'NEXT GEN NINJA ARENA', sub: 'Trampoline Zone • Climbing • Kids Cafe & Arcade', w: 22.4, bg: '#f8fafc', fg: '#1e1b4b', ac: '#38bdf8', st: 'toys' },
+    { lot: 'SF1UE', name: 'LEGO® CERTIFIED STORE • KIDDO', sub: 'Brick Models • Collectibles • Saranghae Corridor', w: 22.4, bg: '#dc2626', fg: '#fef08a', ac: '#facc15', st: 'toys' }
   ]),
 
   // Old Wing 2F (2025 Walkthrough Verified #033–#075, #136–#139: Harvey Norman [dark charcoal!] opposite LEGO -> Gintell (S142, opposite TGV escalator!) -> Toys"R"Us (S140) -> Fipper (S139) -> Energized -> Wondermama (S131) -> Hokkaido Sushi (S129) -> Soxworld (S126A) & North: ITone Superstore [red] -> SIGNATURE -> Crystal Corner -> Popular -> Fei Fan!)
@@ -879,9 +879,11 @@ export const MALL_FACILITIES = [
   { id: 'fac-estreet-alfresco', facilityType: 'transit-portal', zoneColor: '#059669', name: 'E-STREET ALFRESCO GARDEN ACCESS', subtitle: 'Outdoor Garden Terrace & Direct Escalator Link to MRT Pintu B', lot: 'LG-EXT', floor: 0, wing: '1 Utama E', x: -130.8, z: -15.0, width: 10.2, side: 'E' },
   { id: 'fac-1ue-3f-link', facilityType: 'transit-portal', zoneColor: '#be123c', name: '3F PEDESTRIAN LINK TO TGV IMAX', subtitle: 'Direct Covered Link Corridor to Old Wing 3F Maybank IMAX', lot: '3F-LINK', floor: 4, wing: '1 Utama E', x: -130.8, z: 15.0, width: 10.2, side: 'E' },
 
-  // Recessed Restroom, Baby Care, Sensory Pod & Surau (Prayer Room) Service Corridors (Tucked BESIDE Toilets — Verified #025, #135, #159, #200, #320, #506!)
+  // Recessed Restroom, Baby Care, Sensory Pod & Surau (Prayer Room) Service Corridors (Tucked BESIDE Toilets — Verified #025, #098, #135, #159, #200, #320, #506!)
   { id: 'fac-surau-g1ue', facilityType: 'restroom-surau', surauGender: 'SURAU LELAKI & WANITA', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & PRAYER ROOM (GF 1UE)', subtitle: 'Beside G618 IJN First Pharmacy • Gents & Ladies • Baby Room • Lift & Prayer Room (#506)', lot: 'G1UE-WC/SURAU', floor: 1, wing: '1 Utama E', x: -162.8, z: 20.2, width: 7.8, side: 'S' },
   { id: 'fac-surau-f1ua', facilityType: 'restroom-surau', surauGender: 'SURAU WANITA', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU WANITA (1F OLD WING)', subtitle: 'Gents & Ladies Toilets • OKU • Baby Care • Surau Wanita & Wudhu', lot: 'F1-WC/SURAU', floor: 2, wing: 'Old Wing', x: -71.3, z: 22.2, width: 6.4, side: 'S' },
+  { id: 'fac-rf-1f-wc', facilityType: 'restroom-surau', hasSurau: false, surauGender: 'WC ONLY', zoneColor: '#2b4c57', name: '1F RAINFOREST WEST LIFT LOBBY & RESTROOMS', subtitle: 'Beside Clarins (F301) & Opposite Rocku Yakiniku • Gents & Ladies WC • Lift Lobby (#200)', lot: 'F301-WC', floor: 2, wing: 'Rainforest', x: 13.4, z: -20.16, width: 5.68, side: 'W' },
+  { id: 'fac-wc-s1ue', facilityType: 'restroom-surau', hasSurau: false, surauGender: 'WC ONLY', zoneColor: '#2b4c57', name: '2F 1 UTAMA E RESTROOMS & BABY CARE', subtitle: 'Beside Monsoon-ID & Playtime • Gents & Ladies WC • Baby Care (#098)', lot: 'S1UE-WC', floor: 3, wing: '1 Utama E', x: -134.48, z: 20.2, width: 6.4, side: 'S' },
   { id: 'fac-rf-2f-wc', facilityType: 'restroom-surau', hasSurau: false, surauGender: 'WC ONLY', zoneColor: '#2b4c57', name: '2F RAINFOREST WEST LIFT LOBBY & RESTROOMS', subtitle: 'Immediately West of ASICS (S302) • Gents & Ladies WC • Lift Lobby (#025)', lot: 'S301-WC', floor: 3, wing: 'Rainforest', x: 13.4, z: -16.4, width: 13.2, side: 'W' },
   { id: 'fac-surau-s1ua', facilityType: 'restroom-surau', hasSurau: true, surauGender: 'SURAU LELAKI', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU LELAKI (2F OLD WING)', subtitle: 'Gents & Ladies Toilets • OKU • Baby Care • Surau Lelaki & Wudhu', lot: 'S1-WC/SURAU', floor: 3, wing: 'Old Wing', x: -32.8, z: 22.2, width: 6.4, side: 'S' },
   { id: 'fac-2f-sensory-baby', facilityType: 'sensory-baby', hasSurau: false, surauGender: 'SENSORY POD • BABY ROOM', zoneColor: '#ec4899', name: '2F OVAL SENSORY POD & BABY ROOM', subtitle: 'Vibrant Jigsaw Sensory Pod & Warm Wood Baby Care Room (#159, #161)', lot: 'S2-BABY/POD', floor: 3, wing: 'The Oval', x: 155.4, z: 23.2, width: 7.4, side: 'S' },
@@ -1145,7 +1147,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('3F-04', 'Old Wing TGV Bites Concessions, Banpresto & Junior Halls 1–7', -101.0, -14.0, -77.5, -18.5, 0.01),
     aimShot('3F-05', 'Old Wing 3F Yellow Zone Car Park Lobby & 1PAY Autopay', -101.4, 13.4, -101.4, 22.2, 0.02),
     aimShot('3F-06', '3F Sportszone EZ216A Celebrity Fitness Bridge', -25.5, 0.0, 6.0, 0.0, 0.03),
-    aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 22.8, -14.2, 40.5, 3.8, -0.22, 0.58),
+    aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 21.2, -7.2, 40.5, 2.5, -0.05, 0.58),
     aimShot('3F-08', '3F Highstreet The Ledge Art Gallery Exhibitions', 70.0, -13.5, 92.0, -20.5, 0.01),
     aimShot('3F-09', '3F Highstreet Concierge & Restrooms/Surau Service Corridor', 94.0, 11.5, 100.8, 23.2, -0.02),
     aimShot('3F-10', '3F Oval OV301 XZQT Showroom & Purple Carpark Lobby', 138.0, -16.5, 168.0, 6.0, 0.01)
@@ -1158,7 +1160,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('4F-05', 'EZ402 Toy Catchers White Striped Facade & Bow Claw Machines', 64.0, 11.2, 74.5, 22.0, 0.01),
     aimShot('4F-06', 'EZ502 Diva Karaoke Neoclassical Chandelier Lobby & Lounges', 115.5, 12.6, 123.5, 22.2, 0.02),
     aimShot('4F-07', 'EZ503 Cross Fire Cobalt-Steel Portal, MotoGP & maimai DX', 137.5, 14.6, 150.5, 22.0, 0.01),
-    aimShot('4F-08', 'OV401 Cellini (4F) Stacked Beneath OV501 Stanzo (5F)', 114.5, -15.5, 152.0, -17.0, 0.04),
+    aimShot('4F-08', 'OV401 Cellini (4F) Stacked Beneath OV501 Stanzo (5F)', 130.5, -14.2, 148.5, -22.5, 0.03),
     aimShot('4F-09', 'OV501 Stanzo Collection & EVCS457 EV Superchargers', 149.0, -14.8, 169.5, -10.0, 0.01),
     aimShot('4F-10', '4F Oval Panoramic Glass Lifts & 6-Story Dome View', 117.5, 0.0, 158.0, 0.0, 0.02)
   ],

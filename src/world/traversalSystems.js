@@ -132,7 +132,18 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
 
     // Properly orient incline for BOTH positive-dx and negative-dx crisscrossing escalators!
     const flipX = dx < 0;
+    const dirSign = dx >= 0 ? 1 : -1;
+    const absAngle = Math.atan2(dy, Math.abs(dx));
+    const sinA = Math.sin(absAngle);
+    const cosA = Math.cos(absAngle);
     incline.rotation.z = flipX ? Math.atan2(-dy, -dx) : angle;
+
+    // Helper: position an inclined element at vertical height H above the step-line so its ends meet
+    // (xStart, y0 + H) and (xEnd, y1 + H) with ZERO horizontal skew or diagonal overhang!
+    const setInclinedPos = (mesh, H, zPos, xShift = 0) => {
+      mesh.position.set(dirSign * (H * sinA + xShift), H * cosA, zPos);
+    };
+
     const activeTrussMat = bank.theme === 'rainforest-green'
       ? rfGreenEnamelMat
       : bank.theme === 'tgv-imax'
@@ -147,48 +158,64 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       : escGlassMat;
 
     // Recessed dark step-chain underbed tucked strictly BELOW all 34 steps
-    const underBed = new THREE.Mesh(new THREE.BoxGeometry(length - 1.2, 0.14, bank.width * 0.78), skirtDarkMat);
-    underBed.position.y = -0.44;
+    const underBed = new THREE.Mesh(new THREE.BoxGeometry(length - 0.50, 0.14, bank.width * 0.78), skirtDarkMat);
+    setInclinedPos(underBed, -0.34, 0, 0.12);
     incline.add(underBed);
 
-    // Architectural Under-Truss (Themed: Rainforest Green, TGV IMAX Blue, Oval Backlit Silver, or Standard Brushed Steel!)
+    // Architectural Under-Truss aligned so upper end joins flush into the upper ceiling soffit return (ZERO floating flange!)
+    // and lower end stays tucked inside the lower floor slab.
     const truss = new THREE.Mesh(
-      new THREE.BoxGeometry(length - 1.35, 0.36, bank.width * 0.90),
+      new THREE.BoxGeometry(length - 0.36, 0.38, bank.width * 0.90),
       activeTrussMat
     );
-    truss.position.y = -0.64;
+    setInclinedPos(truss, -0.48, 0, 0.18);
     incline.add(truss);
 
+    // Upper horizontal machine-head truss soffit return seated 100% flush with ceiling coffer (y = y1 - 0.605..y1 - 0.02)!
+    const upperTrussHead = new THREE.Mesh(
+      new THREE.BoxGeometry(1.16, 0.585, bank.width * 0.90),
+      activeTrussMat
+    );
+    upperTrussHead.position.set(bank.xEnd + dirSign * 0.44, y1 - 0.3125, bank.z);
+    root.add(upperTrussHead);
+
     // Glass/Themed side balustrades + skirt guards + warm 3000K skirt LEDs + black moving rubber handrails
+    // All aligned to identical span (length + 0.04) and vertical-height-compensated localX so rail NEVER protrudes past glass!
+    const balSpan = length + 0.04;
     for (const zSide of [-bank.width * 0.44, bank.width * 0.44]) {
-      const skirt = new THREE.Mesh(new THREE.BoxGeometry(length + 0.35, 0.24, 0.08), bank.theme === 'rainforest-green' ? activeTrussMat : skirtDarkMat);
-      skirt.position.set(0, -0.02, zSide * 0.92);
+      const skirt = new THREE.Mesh(
+        new THREE.BoxGeometry(balSpan, 0.30, 0.08),
+        bank.theme === 'rainforest-green' ? activeTrussMat : skirtDarkMat
+      );
+      setInclinedPos(skirt, -0.06, zSide * 0.92);
       incline.add(skirt);
 
-      const glass = new THREE.Mesh(new THREE.BoxGeometry(length + 0.45, 0.90, 0.032), activeBalMat);
-      glass.position.set(0, 0.48, zSide);
+      const glass = new THREE.Mesh(new THREE.BoxGeometry(balSpan, 0.84 * cosA, 0.032), activeBalMat);
+      setInclinedPos(glass, 0.45, zSide);
       incline.add(glass);
 
       // Tempered glass green architectural top-edge highlight + brushed stainless clamp channel
-      const glassClamp = new THREE.Mesh(new THREE.BoxGeometry(length + 0.45, 0.04, 0.052), trussMat);
-      glassClamp.position.set(0, 0.04, zSide);
-      const glassEdge = new THREE.Mesh(new THREE.BoxGeometry(length + 0.45, 0.024, 0.038), escGlassEdgeMat);
-      glassEdge.position.set(0, 0.91, zSide);
+      const glassClamp = new THREE.Mesh(new THREE.BoxGeometry(balSpan, 0.04, 0.052), trussMat);
+      setInclinedPos(glassClamp, 0.04, zSide);
+      const glassEdge = new THREE.Mesh(new THREE.BoxGeometry(balSpan, 0.024, 0.038), escGlassEdgeMat);
+      setInclinedPos(glassEdge, 0.86, zSide);
       incline.add(glassClamp, glassEdge);
 
-      const skirtLed = new THREE.Mesh(new THREE.BoxGeometry(length + 0.25, 0.036, 0.032), escSkirtLedMat);
-      skirtLed.position.set(0, 0.10, zSide * 0.87);
+      const skirtLed = new THREE.Mesh(new THREE.BoxGeometry(length - 0.08, 0.036, 0.032), escSkirtLedMat);
+      setInclinedPos(skirtLed, 0.09, zSide * 0.87);
       incline.add(skirtLed);
 
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(length + 0.65, 0.075, 0.095), bank.theme === 'tgv-imax' ? handrailBurgundyMat : handrailBlackMat);
-      rail.position.set(0, 0.95, zSide);
+      const rail = new THREE.Mesh(
+        new THREE.BoxGeometry(balSpan, 0.075, 0.095),
+        bank.theme === 'tgv-imax' ? handrailBurgundyMat : handrailBlackMat
+      );
+      setInclinedPos(rail, 0.89, zSide);
       incline.add(rail);
     }
 
     root.add(g);
 
     // Horizontal Top & Bottom Grooved Stainless Comb Landing Plates + Yellow Comb Teeth + Curved Handrail Newels!
-    const dirSign = dx >= 0 ? 1 : -1;
     for (const endInfo of [
       { x: bank.xStart - dirSign * 0.56, y: y0, isEntry: bank.direction === 1, sign: -dirSign },
       { x: bank.xEnd + dirSign * 0.56, y: y1, isEntry: bank.direction === -1, sign: dirSign }
@@ -199,15 +226,18 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       combYellow.position.set(endInfo.x - endInfo.sign * 0.60, endInfo.y + 0.022, bank.z);
       root.add(plate, combYellow);
 
-      // Curved semicircular rubber handrail newel loops + stainless newel ends on left & right sides (100% OPEN walkway between them!)
+      // Curved semicircular rubber handrail newel loops + stainless newel ends meeting the inclined glass & handrail at xStart/xEnd!
       for (const zSide of [-bank.width * 0.44, bank.width * 0.44]) {
-        const newelBody = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.86, 0.09), trussMat);
-        newelBody.position.set(endInfo.x, endInfo.y + 0.43, bank.z + zSide);
-        const newelTop = new THREE.Mesh(new THREE.BoxGeometry(0.94, 0.075, 0.095), handrailBlackMat);
-        newelTop.position.set(endInfo.x, endInfo.y + 0.89, bank.z + zSide);
+        const newelBody = new THREE.Mesh(new THREE.BoxGeometry(1.06, 0.86, 0.09), trussMat);
+        newelBody.position.set(endInfo.x - endInfo.sign * 0.06, endInfo.y + 0.43, bank.z + zSide);
+        const newelTop = new THREE.Mesh(
+          new THREE.BoxGeometry(1.08, 0.075, 0.095),
+          bank.theme === 'tgv-imax' ? handrailBurgundyMat : handrailBlackMat
+        );
+        newelTop.position.set(endInfo.x - endInfo.sign * 0.06, endInfo.y + 0.89, bank.z + zSide);
         const newelCurve = new THREE.Mesh(
           new THREE.TorusGeometry(0.28, 0.042, 12, 20, Math.PI),
-          handrailBlackMat
+          bank.theme === 'tgv-imax' ? handrailBurgundyMat : handrailBlackMat
         );
         newelCurve.rotation.z = endInfo.sign < 0 ? Math.PI / 2 : -Math.PI / 2;
         newelCurve.position.set(endInfo.x + endInfo.sign * 0.46, endInfo.y + 0.61, bank.z + zSide);

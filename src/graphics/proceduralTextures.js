@@ -2836,6 +2836,26 @@ export function getStoreBrandProfile(store) {
   if (uName.includes('CELLINI')) {
     return { facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'cellini-charcoal-blue', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 14, displayTitle: 'CELLINI', brandKey: 'cellini', isLight: false };
   }
+  if (uName.includes('CELEBRITY FITNESS') || st === 'gym') {
+    return {
+      facadeType: 'minimalist-tech',
+      fasciaH: 1.38,
+      materialStyle: 'celebrity-fitness',
+      fontFamily: FONTS.geometric,
+      weight: '800',
+      italic: false,
+      tracking: 8,
+      displayTitle: uName.includes('SPIN') ? 'CELEBRITY FITNESS  •  SPIN & YOGA' : 'CELEBRITY FITNESS',
+      brandKey: 'celebrity-fitness',
+      isLight: false
+    };
+  }
+  if (uName.includes('BRANDS OUTLET')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.28, materialStyle: 'brands-outlet-orange', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 10, displayTitle: 'BRANDS OUTLET', brandKey: 'brands-outlet', isLight: false };
+  }
+  if (uName.includes('POPULAR BOOKSTORE') || uName.startsWith('POPULAR')) {
+    return { facadeType: 'open-market', fasciaH: 1.34, materialStyle: 'popular-crimson', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 10, displayTitle: 'POPULAR', brandKey: 'popular', isLight: false };
+  }
   if (uName.includes('DECATHLON')) {
     return { facadeType: 'sports-industrial', fasciaH: 1.46, materialStyle: 'decathlon-indigo', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 10, displayTitle: 'DECATHLON', brandKey: 'decathlon', isLight: false };
   }
@@ -2952,8 +2972,7 @@ export function getStoreBrandProfile(store) {
     uName.includes('PUMA') ||
     uName.includes('SPORTS DIRECT') ||
     uName.includes('DECATHLON') ||
-    st === 'sports' ||
-    st === 'gym'
+    st === 'sports'
   ) {
     return { facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'raw-concrete', fontFamily: FONTS.condensed, weight: '700', italic: false, tracking: 8, displayTitle: cleanTitle, brandKey: 'sports', isLight: false };
   }
@@ -2962,12 +2981,11 @@ export function getStoreBrandProfile(store) {
     uName.includes('COACH') ||
     uName.includes('LANCÔME') ||
     uName.includes('H&M') ||
-    uName.includes('BRANDS OUTLET') ||
     uName.includes('PADINI') ||
     st === 'luxury' ||
     st === 'beauty'
   ) {
-    const isDarkLux = uName.includes('BRANDS OUTLET') || uName.includes('PADINI') || uName.includes('COACH');
+    const isDarkLux = uName.includes('PADINI') || uName.includes('COACH');
     return { facadeType: 'luxury-fashion', fasciaH: 1.16, materialStyle: isDarkLux ? 'obsidian-stone' : 'ivory-limestone', fontFamily: isDarkLux ? FONTS.geometric : FONTS.didone, weight: '600', italic: false, tracking: 14, displayTitle: cleanTitle, brandKey: 'luxury', isLight: !isDarkLux };
   }
   if (st === 'cinema' || st === 'arcade' || st === 'rollerwa' || st === 'skydiving' || st === 'toys') {
@@ -3151,6 +3169,54 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       ctx.fillRect(0, h - 5, w, 5);
       ctxE.fillStyle = '#38bdf8';
       ctxE.fillRect(0, h - 5, w, 5);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'celebrity-fitness': {
+      // Photo-matched Celebrity Fitness (S216A & EZ216A): Sleek dark charcoal-obsidian brushed steel fascia with glowing crimson-red fitness club LED cove!
+      const cfG = ctx.createLinearGradient(0, 0, 0, h);
+      cfG.addColorStop(0, '#18181f');
+      cfG.addColorStop(0.5, '#101016');
+      cfG.addColorStop(1, '#09090d');
+      ctx.fillStyle = cfG;
+      ctx.fillRect(0, 0, w, h);
+      for (let rx = 0; rx < w; rx += 96) {
+        ctx.fillStyle = 'rgba(255,255,255,0.04)';
+        ctx.fillRect(rx, 0, 2, h);
+      }
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(0, h - 8, w, 8);
+      ctxE.fillStyle = '#ef4444';
+      ctxE.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#fca5a5';
+      break;
+    }
+    case 'brands-outlet-orange': {
+      // Photo-matched 1F F118 Brands Outlet (BO): Vibrant orange-red architectural fascia with crisp white logotype!
+      const boG = ctx.createLinearGradient(0, 0, 0, h);
+      boG.addColorStop(0, '#ea580c');
+      boG.addColorStop(1, '#c2410c');
+      ctx.fillStyle = boG;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#fef08a';
+      ctx.fillRect(0, h - 6, w, 6);
+      ctxE.fillStyle = 'rgba(254, 240, 138, 0.55)';
+      ctxE.fillRect(0, h - 6, w, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'popular-crimson': {
+      // Photo-matched 2F S116 Popular Bookstore: Iconic crimson-red fascia with white POPULAR logotype!
+      const popG = ctx.createLinearGradient(0, 0, 0, h);
+      popG.addColorStop(0, '#dc2626');
+      popG.addColorStop(1, '#991b1b');
+      ctx.fillStyle = popG;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, h - 5, w, 5);
       fgCol = '#ffffff';
       emissiveTextCol = '#ffffff';
       break;
@@ -4734,6 +4800,65 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
         break;
       }
 
+      case 'celebrity-fitness': {
+        // Photo-matched 2F S216A & 3F EZ216A CELEBRITY FITNESS: Glowing crimson-red 5-point Star emblem + bold white CELEBRITY & fiery red FITNESS!
+        const sx = -268;
+        const sy = 96;
+        targetCtx.save();
+        targetCtx.translate(sx, sy);
+        targetCtx.fillStyle = '#ef4444';
+        targetCtx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? 44 : 18;
+          const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+          if (i === 0) targetCtx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else targetCtx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        targetCtx.closePath();
+        targetCtx.fill();
+        // Inner bright white/coral star facet core
+        targetCtx.fillStyle = isEmissive ? '#ffffff' : '#fecaca';
+        targetCtx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? 20 : 8;
+          const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+          if (i === 0) targetCtx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else targetCtx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.restore();
+
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'CELEBRITY', -42, 108, 290, 62, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = isEmissive ? '#f87171' : '#ef4444';
+        fillAutoFitText(targetCtx, 'FITNESS', 218, 108, 230, 62, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = isEmissive ? '#fca5a5' : '#e2e8f0';
+        fillAutoFitText(targetCtx, 'EVERYDAY IS SHOWTIME  •  MEGACLUB', 58, 148, 460, 20, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'brands-outlet': {
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 5;
+        targetCtx.strokeRect(-288, 52, 86, 86);
+        fillAutoFitText(targetCtx, 'BO', -245, 114, 72, 54, '900', '"Jost", sans-serif', 2);
+        fillAutoFitText(targetCtx, 'BRANDS OUTLET', 56, 118, 440, 68, '800', '"Jost", sans-serif', 10);
+        break;
+      }
+
+      case 'popular': {
+        // Popular Bookstore white square ribbon emblem + bold POPULAR
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fillRect(-235, 52, 84, 84);
+        targetCtx.fillStyle = '#dc2626';
+        fillAutoFitText(targetCtx, 'P', -193, 116, 60, 64, '900', '"Playfair Display", serif', 0);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'POPULAR', 52, 118, 380, 74, '800', '"Jost", sans-serif', 12);
+        break;
+      }
+
       case 'decathlon': {
         // Photo-matched 1F F319 Decathlon: Glowing white 2025 Decathlon Orbit emblem + bold DECATHLON!
         const ox = -248;
@@ -4988,6 +5113,7 @@ export function createStoreInteriorBackwallTexture(store) {
   else if (uName.includes('MADAM KWAN')) key = 'int-madamkwans';
   else if (uName.includes('CHILI')) key = 'int-chilis';
   else if (uName.includes('CELLINI') || uName.includes('STANZO') || uName.includes('XZQT')) key = 'int-cellini';
+  else if (uName.includes('CELEBRITY FITNESS') || st === 'gym') key = 'int-gym';
   else if (uName.includes('TAISHI') || uName.includes('TOY CATCHER')) key = 'int-taishi';
   else if (uName.includes('FOOD DISTRICT')) key = 'int-food-district';
   else if (uName.includes('KYOCHON')) key = 'int-kyochon';
@@ -5558,22 +5684,206 @@ export function createStoreInteriorBackwallTexture(store) {
     ctx.fillStyle = isDTF ? '#c89b66' : '#523422';
     ctx.fillRect(0, 344, W, 168);
   } else if (key === 'int-cellini') {
-    // WARM ITALIAN LEATHER SOFA LIVING ROOM (Cellini / Stanzo / XZQT — ZERO bookshelf wallpaper!)
+    // WARM ITALIAN LEATHER SOFA LIVING ROOM (Cellini / Stanzo / XZQT — Illuminated walnut wood-slat backdrops, designer floating shelves & framed gallery art!)
     fillWall('#e8dfd2', '#cbbba6');
+    const artPals = [
+      ['#1e3a5f', '#d4a359', '#f5ebe0'],
+      ['#7c3f28', '#d9b382', '#2b2623'],
+      ['#2d4a43', '#c89d54', '#efe8dc']
+    ];
     for (let b = 0; b < 3; b++) {
       const bx = 36 + b * 326;
-      ctx.fillStyle = '#382a20';
-      ctx.fillRect(bx, 68, 286, 160);
+      // Warm walnut wood-slat architectural feature wall panel behind each sectional vignette
+      ctx.fillStyle = '#4a3525';
+      ctx.fillRect(bx, 52, 286, 224);
+      for (let sl = 0; sl < 286; sl += 12) {
+        ctx.fillStyle = sl % 24 === 0 ? '#6e4f37' : '#5a402c';
+        ctx.fillRect(bx + sl, 52, 8, 224);
+      }
+      // Warm recessed LED cove top glow washing down the walnut slats
+      const coveG = ctx.createLinearGradient(bx, 52, bx, 128);
+      coveG.addColorStop(0, 'rgba(255, 236, 192, 0.55)');
+      coveG.addColorStop(1, 'rgba(255, 236, 192, 0.0)');
+      ctx.fillStyle = coveG;
+      ctx.fillRect(bx, 52, 286, 76);
       ctx.strokeStyle = '#c49a52';
       ctx.lineWidth = 3;
-      ctx.strokeRect(bx, 68, 286, 160);
-      // Warm designer leather sofa silhouette
-      ctx.fillStyle = b === 1 ? '#8c4428' : '#d8cfc2';
-      ctx.fillRect(bx + 24, 286, 238, 72);
-      ctx.fillRect(bx + 18, 256, 250, 36);
+      ctx.strokeRect(bx, 52, 286, 224);
+
+      // Left half of panel: Framed contemporary abstract canvas art (warm ivory mat + geometric modernist motif)
+      const ax = bx + 18;
+      const ay = 74;
+      ctx.fillStyle = '#f7f3eb';
+      ctx.fillRect(ax, ay, 116, 148);
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(ax, ay, 116, 148);
+      const pal = artPals[b];
+      ctx.fillStyle = pal[0];
+      ctx.fillRect(ax + 12, ay + 12, 92, 124);
+      ctx.fillStyle = pal[1];
+      ctx.beginPath();
+      ctx.arc(ax + 58, ay + 74, 34, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = pal[2];
+      ctx.fillRect(ax + 24, ay + 96, 68, 26);
+
+      // Right half of panel: 3 Warm Backlit Floating Designer Living-Room Shelves with ceramic vases & art books!
+      const sx = bx + 148;
+      for (let sh = 0; sh < 3; sh++) {
+        const sy = 104 + sh * 52;
+        const lg = ctx.createLinearGradient(sx, sy, sx, sy + 18);
+        lg.addColorStop(0, 'rgba(255, 234, 188, 0.48)');
+        lg.addColorStop(1, 'rgba(255, 234, 188, 0.0)');
+        ctx.fillStyle = lg;
+        ctx.fillRect(sx, sy + 4, 120, 16);
+        ctx.fillStyle = '#d4a359';
+        ctx.fillRect(sx, sy, 120, 5);
+        // Sculpted ceramic vase & stacked design books on shelf
+        ctx.fillStyle = '#f5ebe0';
+        ctx.fillRect(sx + 14, sy - 22, 16, 22);
+        ctx.fillStyle = '#c89d54';
+        ctx.beginPath();
+        ctx.arc(sx + 58, sy - 11, 11, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(sx + 82, sy - 16, 24, 16);
+      }
+
+      // Plush Italian L-shaped leather sectional sofa silhouette & bolster cushions in foreground
+      ctx.fillStyle = b === 1 ? '#9c5234' : '#dfd6c8';
+      ctx.fillRect(bx + 16, 258, 254, 42);
+      ctx.fillStyle = b === 1 ? '#844226' : '#cfc3b2';
+      ctx.fillRect(bx + 22, 294, 242, 68);
+      for (let c = 0; c < 3; c++) {
+        ctx.fillStyle = b === 1 ? '#b86b48' : '#efe8dc';
+        ctx.fillRect(bx + 30 + c * 78, 264, 68, 28);
+      }
     }
     ctx.fillStyle = '#8b6848';
     ctx.fillRect(0, 384, W, 128);
+  } else if (key === 'int-gym') {
+    // AUTHENTIC 1 UTAMA CELEBRITY FITNESS (S216A & EZ216A) DARK FITNESS MEGACLUB:
+    // High-energy charcoal/obsidian cardio & free-weight studio, glowing crimson-red Star emblem, neon studio light coves, illuminated mirrors & sleek treadmill bays!
+    fillWall('#14151c', '#090a0e');
+    // Top crimson-red & charcoal fitness club header band
+    ctx.fillStyle = '#181820';
+    ctx.fillRect(0, 0, W, 62);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(0, 58, W, 6);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'CELEBRITY FITNESS  •  CARDIO TREADMILLS  •  FREE WEIGHTS  •  SALTAR  •  SPIN STUDIO', W * 0.5, 40, W - 80, 19, '800', '"Jost", sans-serif', 4);
+
+    // 3 Illuminated dark-tinted studio mirror & equipment bays + central glowing Red Star emblem wall!
+    for (let b = 0; b < 3; b++) {
+      const bx = 26 + b * 332;
+      const bw = 308;
+      // Recessed studio mirror bay with crimson & electric-violet diagonal LED light bars
+      const mg = ctx.createLinearGradient(bx, 78, bx, 368);
+      mg.addColorStop(0, '#1e2230');
+      mg.addColorStop(0.5, '#151822');
+      mg.addColorStop(1, '#0e1017');
+      ctx.fillStyle = mg;
+      ctx.fillRect(bx, 78, bw, 290);
+      ctx.strokeStyle = b === 1 ? '#ef4444' : '#f43f5e';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(bx, 78, bw, 290);
+
+      // Glowing horizontal ceiling cove inside studio bay
+      const lg = ctx.createLinearGradient(bx, 80, bx, 134);
+      lg.addColorStop(0, 'rgba(239, 68, 68, 0.42)');
+      lg.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
+      ctx.fillStyle = lg;
+      ctx.fillRect(bx + 4, 80, bw - 8, 54);
+
+      if (b === 1) {
+        // Center Bay: Iconic Giant Glowing Crimson-Red Celebrity Fitness 5-Point Star & EVERYDAY IS SHOWTIME motivational neon!
+        const cx = bx + bw * 0.5;
+        const cy = 172;
+        const starGlow = ctx.createRadialGradient(cx, cy, 8, cx, cy, 92);
+        starGlow.addColorStop(0, 'rgba(239, 68, 68, 0.55)');
+        starGlow.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
+        ctx.fillStyle = starGlow;
+        ctx.fillRect(bx + 12, 86, bw - 24, 175);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? 54 : 22;
+          const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+          if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#fecaca';
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? 24 : 10;
+          const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+          if (i === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = '#ffffff';
+        fillAutoFitText(ctx, 'EVERYDAY IS SHOWTIME', cx, 254, bw - 36, 20, '800', '"Jost", sans-serif', 3);
+      } else {
+        // Left & Right Bays: Backlit functional training zone & 3-tier chrome dumbbell / kettlebell racks!
+        ctx.fillStyle = '#fca5a5';
+        fillAutoFitText(ctx, b === 0 ? 'CARDIO & TREADMILL ZONE' : 'FREE WEIGHTS & STRENGTH', bx + bw * 0.5, 114, bw - 32, 16, '800', '"Jost", sans-serif', 3);
+        for (let r = 0; r < 2; r++) {
+          const ry = 158 + r * 54;
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(bx + 22, ry, bw - 44, 6);
+          for (let d = 0; d < 7; d++) {
+            const dx = bx + 34 + d * 36;
+            ctx.fillStyle = d % 2 === 0 ? '#94a3b8' : '#ef4444';
+            ctx.fillRect(dx, ry - 16, 10, 16);
+            ctx.fillRect(dx + 16, ry - 16, 10, 16);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fillRect(dx + 10, ry - 10, 6, 4);
+          }
+        }
+      }
+
+      // Foreground Row of Sleek Commercial Cardio Treadmills & Spin Bikes (3 units per bay with glowing cyan LED telemetry screens & red accent stripes!)
+      for (let t = 0; t < 3; t++) {
+        const tx = bx + 54 + t * 100;
+        // Treadmill running deck & red side rails
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(tx - 34, 332, 68, 22);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(tx - 34, 348, 68, 5);
+        // Dual inclined console uprights & handrail
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(tx - 24, 274, 6, 60);
+        ctx.fillRect(tx + 18, 274, 6, 60);
+        ctx.fillRect(tx - 28, 294, 56, 5);
+        // Sleek tilted touchscreen fitness console with glowing cyan workout metrics
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(tx - 22, 248, 44, 28);
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(tx - 22, 248, 44, 28);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(tx - 16, 254, 32, 12);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(tx - 6, 269, 12, 4);
+      }
+    }
+    // Dark charcoal rubberized gym flooring with red sprint-track lane lines
+    ctx.fillStyle = '#111318';
+    ctx.fillRect(0, 382, W, 130);
+    ctx.fillStyle = '#ef4444';
+    ctx.fillRect(0, 382, W, 5);
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+    ctx.fillRect(0, 442, W, 4);
   } else if (key === 'int-taishi') {
     // VIBRANT PASTEL CLAW-MACHINE ARCADE (Taishi Planet / Toy Catcher!)
     fillWall('#241848', '#140c2c');
@@ -5885,11 +6195,30 @@ export function createStoreInteriorBackwallTexture(store) {
     ctx.fillStyle = '#181c24';
     ctx.fillRect(0, 404, W, 108);
   } else if (key === 'int-furniture') {
-    // Warm modern home living / kitchen cabinetry showroom (Signature Kitchen, Nitori, MUJI)
-    fillWall('#eae3d7', '#d2c8b8');
-    const furnPal = ['#d6c5b3', '#8b6848', '#526150', '#c4a684', '#f5f0e6', '#3d352e'];
+    // Warm modern home living / designer furniture & framed art showroom (Signature Kitchen, Nitori, MUJI, Home's Harmony)
+    fillWall('#efe8dc', '#d8cebe');
+    const furnPal = ['#d6c5b3', '#8b6848', '#526150', '#c4a684', '#f5f0e6', '#b8944a'];
     for (let b = 0; b < 3; b++) {
-      drawLitNiche(26 + b * 332, 54, 304, 334, '#dfd7ca', '#8c6a4a', furnPal, 4);
+      const bx = 26 + b * 332;
+      drawLitNiche(bx, 54, 184, 334, '#e6ded0', '#8c6a4a', furnPal, 4);
+      // Framed warm gallery artwork beside illuminated living-room shelving
+      const ax = bx + 198;
+      ctx.fillStyle = '#faf6f0';
+      ctx.fillRect(ax, 68, 106, 148);
+      ctx.strokeStyle = '#b8944a';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(ax, 68, 106, 148);
+      ctx.fillStyle = b === 1 ? '#7c4a32' : '#3b5249';
+      ctx.fillRect(ax + 12, 80, 82, 124);
+      ctx.fillStyle = '#e6c88a';
+      ctx.beginPath();
+      ctx.arc(ax + 53, 142, 26, 0, Math.PI * 2);
+      ctx.fill();
+      // Warm upholstered accent credenza below framed artwork
+      ctx.fillStyle = '#8c623e';
+      ctx.fillRect(ax, 256, 106, 128);
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(ax + 8, 264, 90, 4);
     }
     ctx.fillStyle = '#bfa98e';
     ctx.fillRect(0, 404, W, 108);
@@ -7745,7 +8074,14 @@ export function createRestroomWayfindingTexture(surauLabel = 'SURAU') {
 
   ctx.fillStyle = '#d4b882';
   ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('TANDAS LELAKI & WANITA  •  OKU  •  BILIK BAYI  •  SURAU & WUDHU', 296, 108, 696);
+  ctx.fillText(
+    hasSurau
+      ? 'TANDAS LELAKI & WANITA  •  OKU  •  BILIK BAYI  •  SURAU & WUDHU'
+      : 'TANDAS LELAKI & WANITA  •  OKU  •  BILIK BAYI  •  LIF LOBI',
+    hasSurau ? 296 : 234,
+    108,
+    696
+  );
 
   const tex = finalizeTexture(c, { srgb: true });
   cachedRestroomWayfinding.set(surauLabel, tex);
