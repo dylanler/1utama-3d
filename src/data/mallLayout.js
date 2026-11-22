@@ -846,8 +846,8 @@ export const STORES = [
   // ===================== FLOOR 5: 4F–5F ENTERTAINMENT ZONE (EZ / OV — Stacked 4F CELLINI + 5F STANZO Verified #157!) =====================
   { id: 'ez501-camp5-w', name: 'CAMP5 INDOOR CLIMBING GYM', subtitle: '24m Panoramic Glass Lead Wall • Bouldering • Eat Well Café', lot: 'EZ501', floor: 5, wing: 'Entertainment Zone', x: 13.5, z: 0, width: 45.6, side: 'W', brandBg: '#7c2d12', brandFg: '#fed7aa', accent: '#fb923c', style: 'sports' },
   ...strip(5, 'Entertainment Zone', 'N', -23.2, 14.2, [
-    { lot: 'E403', name: 'GSC CINEMAS 1 UTAMA (15 HALLS)', sub: 'BIG 4K Laser • Dolby Atmos • ScreenX 270° • 4DX', w: 54.0, bg: '#1c1917', fg: '#fde047', ac: '#eab308', st: 'cinema' },
-    { lot: 'E403-PREST', name: 'GSC PRESTIGE LOUNGE & GSC PLAY', sub: 'VIP Recliner Dining Suites & Family PlayPark', w: 52.0, bg: '#292524', fg: '#fef08a', ac: '#f59e0b', st: 'dining' },
+    { lot: 'EZ403', name: 'GSC CINEMAS 1 UTAMA (15 HALLS)', sub: 'BIG 4K Laser • Dolby Atmos • ScreenX 270° • 4DX', w: 54.0, bg: '#c5a87e', fg: '#141414', ac: '#facc15', st: 'cinema' },
+    { lot: 'EZ403-PREST', name: 'GSC PRESTIGE LOUNGE & GSC PLAY', sub: 'VIP Recliner Dining Suites & Family PlayPark', w: 52.0, bg: '#c5a87e', fg: '#141414', ac: '#f59e0b', st: 'cinema' },
     { lot: 'OV401', name: 'CELLINI CONTEMPORARY LIVING (4F)', sub: 'Stacked Beneath 5F Stanzo • Motorized Leather Recliners', w: 52.6, bg: '#0f172a', fg: '#e2e8f0', ac: '#38bdf8', st: 'furniture' }
   ]),
   ...strip(5, 'Entertainment Zone', 'S', 23.2, 14.2, [
@@ -1121,7 +1121,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('1F-04', 'Old Wing F142 Neal’s Yard, HOOGA, iORA & Centre Court', -121.0, 14.5, -94.0, 19.5, 0.01),
     aimShot('1F-05', 'Old Wing F118 Brands Outlet, Vincci & Boost Juice', -69.5, -14.2, -44.0, -18.0, 0.01),
     aimShot('1F-06', '1F Promenade Void, Baskin-Robbins, CU & Sun Paradise', -25.8, -5.8, -4.0, 2.5, -0.02),
-    aimShot('1F-07', '1F Rainforest Balcony Vista: Open-Air Parabolic-Arch Bridge & Waterfall (Photo 1!)', 22.0, -11.8, 41.5, 4.5, 0.22),
+    aimShot('1F-07', '1F Rainforest Balcony Vista: Open-Air Parabolic-Arch Bridge & Waterfall (Photo 1!)', 22.6, 11.4, 41.8, -2.5, 0.22),
     aimShot('1F-08', '1F Highstreet Havaianas, Outpozt, Xixili, Swarovski & Pandora', 78.5, 10.5, 58.0, 18.0, 0.01),
     aimShot('1F-09', '1F Highstreet Yomaro, Pull&Bear, HLA & Owala Kiosk', 102.0, -10.5, 76.0, -16.0, 0.01),
     aimShot('1F-10', '1F Oval F319 Decathlon Adjacent to F320 Parkson & Padini', 142.0, -17.2, 168.0, -16.5, 0.01)
@@ -1129,7 +1129,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
   3: [ // 2F (10 unobstructed Real2Sim shots)
     aimShot('2F-01', '1UE S601 WINDLAB Indoor Skydiving & S611 PJPAC', -151.0, 10.5, -174.0, -9.5, 0.01),
     aimShot('2F-02', 'Outdoor 2F Saranghae Finger-Heart / Skywalker Rooftop Bridge', -143.1, -24.4, -138.8, -37.2, -0.34, 4.4),
-    aimShot('2F-03', 'Old Wing S101 Harvey Norman, LEGO & Blue TGV IMAX Escalator', -95.0, -15.2, -116.0, -3.5, 0.01),
+    aimShot('2F-03', 'Old Wing S101 Harvey Norman, LEGO & Blue TGV IMAX Escalator', -104.5, -13.2, -113.5, -1.5, 0.01),
     aimShot('2F-04', 'Old Wing S140 Toys"R"Us, Wondermama & Centre Court', -106.5, 14.5, -82.0, 18.5, 0.01),
     aimShot('2F-05', 'Old Wing S125 AEON Home, Hokkaido Sushi & Restrooms/Surau', -58.5, 16.0, -34.0, 17.5, 0.01),
     aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -25.8, -5.8, -4.0, 2.0, -0.02),
@@ -1145,7 +1145,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('3F-04', 'Old Wing TGV Bites Concessions, Banpresto & Junior Halls 1–7', -101.0, -14.0, -77.5, -18.5, 0.01),
     aimShot('3F-05', 'Old Wing 3F Yellow Zone Car Park Lobby & 1PAY Autopay', -101.4, 13.4, -101.4, 22.2, 0.02),
     aimShot('3F-06', '3F Sportszone EZ216A Celebrity Fitness Bridge', -25.5, 0.0, 6.0, 0.0, 0.03),
-    aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 22.8, -14.2, 40.5, 3.8, -0.18),
+    aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 22.8, -14.2, 40.5, 3.8, -0.22, 0.58),
     aimShot('3F-08', '3F Highstreet The Ledge Art Gallery Exhibitions', 70.0, -13.5, 92.0, -20.5, 0.01),
     aimShot('3F-09', '3F Highstreet Concierge & Restrooms/Surau Service Corridor', 94.0, 11.5, 100.8, 23.2, -0.02),
     aimShot('3F-10', '3F Oval OV301 XZQT Showroom & Purple Carpark Lobby', 138.0, -16.5, 168.0, 6.0, 0.01)
@@ -1153,11 +1153,11 @@ export const LEVEL_VERIFICATION_SHOTS = {
   5: [ // 4F–5F Entertainment Zone (10 unobstructed Real2Sim shots)
     aimShot('4F-01', 'EZ501 Camp5 24m Climbing Gym & Crash Mats', 24.5, -18.8, 14.5, -15.2, 0.04),
     aimShot('4F-02', 'EZ403 GSC Cinemas 15-Screen Wood-Slat Foyer & Concessions', 58.5, -12.5, 42.0, -23.2, 0.03),
-    aimShot('4F-03', 'E403 GSC Prestige Lounge, GSC Play & EK5 Newsplus', 64.5, -6.5, 90.0, -19.0, 0.01),
-    aimShot('4F-04', 'EZ401 Wangsa Bowl 10-Pin Bowling Lanes & Pinsetters', 20.5, 14.2, 38.0, 21.5, -0.02),
-    aimShot('4F-05', 'EZ402 Toy Catcher UFO Claw Machine Arcade', 56.5, 9.5, 74.5, 22.0, 0.00),
-    aimShot('4F-06', 'EZ502 Diva Karaoke Neon Lounge Entrance', 116.5, 14.5, 124.0, 22.8, 0.01),
-    aimShot('4F-07', 'EZ503 Cross Fire Rhythm Arcade (maimai DX)', 136.5, 14.8, 152.0, 22.2, -0.01),
+    aimShot('4F-03', 'EZ403 GSC Prestige Lounge, GSC Play & EK5 Newsplus', 64.5, -6.5, 90.0, -19.0, 0.01),
+    aimShot('4F-04', 'EZ401 Wangsa Bowl White Die-Cut Facade, Mural & Lanes', 25.5, 12.2, 38.0, 21.8, 0.01),
+    aimShot('4F-05', 'EZ402 Toy Catchers White Striped Facade & Bow Claw Machines', 64.0, 11.2, 74.5, 22.0, 0.01),
+    aimShot('4F-06', 'EZ502 Diva Karaoke Neoclassical Chandelier Lobby & Lounges', 115.5, 12.6, 123.5, 22.2, 0.02),
+    aimShot('4F-07', 'EZ503 Cross Fire Cobalt-Steel Portal, MotoGP & maimai DX', 137.5, 14.6, 150.5, 22.0, 0.01),
     aimShot('4F-08', 'OV401 Cellini (4F) Stacked Beneath OV501 Stanzo (5F)', 114.5, -15.5, 152.0, -17.0, 0.04),
     aimShot('4F-09', 'OV501 Stanzo Collection & EVCS457 EV Superchargers', 149.0, -14.8, 169.5, -10.0, 0.01),
     aimShot('4F-10', '4F Oval Panoramic Glass Lifts & 6-Story Dome View', 117.5, 0.0, 158.0, 0.0, 0.02)

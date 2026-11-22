@@ -635,15 +635,48 @@ export function buildIconicAttractions(scene, interactables) {
   // ==========================================================================
   const GF_Y = 6.0;
   const koiWaterY = GF_Y - 0.18; // y = 5.82 (shallow natural Ground Floor Koi Pond basin!)
-  const koiBedY = GF_Y - 0.86;   // y = 5.14 (solid basin sits cleanly above LG ceiling!)
+  const koiBedY = GF_Y - 0.60;   // y = 5.40 (recessed basin cleanly above bright coffered LG ceiling!)
 
-  // Elliptical solid structural basin slab sealing GF Koi Pond bottom cleanly from LG ceiling below
-  const basinGeo = new THREE.CylinderGeometry(17.7, 17.7, 0.26, 52);
+  // Elliptical solid structural basin slab sealing GF Koi Pond bottom + BRIGHT COFFERED PLASTER LG CEILING SOFFIT & WARM LED HALO BELOW!
+  const basinGeo = new THREE.CylinderGeometry(17.7, 17.7, 0.18, 52);
   const pondBed = new THREE.Mesh(basinGeo, botMats.riverBed);
   pondBed.scale.set(1.0, 1.0, 12.9 / 17.7);
   pondBed.position.set(38.0, koiBedY, 0);
   pondBed.receiveShadow = true;
   rainforestGroup.add(pondBed);
+
+  // Sleek bright cream-plaster architectural ceiling soffit + warm recessed LED cove ring & 12 downlights facing LG Rainforest!
+  const lgSoffitMat = new THREE.MeshStandardMaterial({
+    color: '#f1ebe0',
+    emissive: '#fff4da',
+    emissiveIntensity: 0.36,
+    roughness: 0.62,
+    metalness: 0.02
+  });
+  const lgSoffitDisk = new THREE.Mesh(new THREE.CircleGeometry(17.75, 52), lgSoffitMat);
+  lgSoffitDisk.rotation.x = Math.PI / 2;
+  lgSoffitDisk.scale.set(1.0, 12.95 / 17.75, 1.0);
+  lgSoffitDisk.position.set(38.0, koiBedY - 0.105, 0);
+  rainforestGroup.add(lgSoffitDisk);
+
+  const lgCoveMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.42, 1.18, 0.78), toneMapped: false });
+  const lgCovePts = [];
+  for (let ci = 0; ci <= 52; ci++) {
+    const a = (ci / 52) * Math.PI * 2;
+    lgCovePts.push(new THREE.Vector3(38.0 + Math.cos(a) * 14.6, koiBedY - 0.125, Math.sin(a) * 10.4));
+  }
+  rainforestGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(lgCovePts, true), 56, 0.085, 6, true), lgCoveMat));
+  const lgDownGeo = new THREE.CircleGeometry(0.32, 12);
+  for (let dl = 0; dl < 12; dl++) {
+    const a = (dl / 12) * Math.PI * 2;
+    const lamp = new THREE.Mesh(lgDownGeo, lgCoveMat);
+    lamp.rotation.x = Math.PI / 2;
+    lamp.position.set(38.0 + Math.cos(a) * 9.8, koiBedY - 0.118, Math.sin(a) * 6.8);
+    rainforestGroup.add(lamp);
+  }
+  const lgRFBounce = new THREE.PointLight('#fff1d4', 18, 34, 1.45);
+  lgRFBounce.position.set(38.0, 4.35, 0);
+  rainforestGroup.add(lgRFBounce);
 
   const rockMat = botMats.wetKarst;
   const wetLowerRockMat = botMats.wetLowerKarst;
@@ -747,14 +780,24 @@ export function buildIconicAttractions(scene, interactables) {
       st.rotation.y = -a;
       islG.add(st);
     }
-    // Lush island elephant-ear & fern understory
-    const islFrond = createArchedFrondGeo(0.68, 1.25, 0.34);
-    for (let f = 0; f < 16; f++) {
-      const a = (f / 16) * Math.PI * 2;
-      const r = 1.4 + (f % 3) * 1.1;
-      const lf = new THREE.Mesh(islFrond, f % 2 === 0 ? botMats.elephantEarLeaf : botMats.frondDeep);
-      lf.position.set(Math.cos(a) * r * 1.25, 0.38, Math.sin(a) * r * 0.72);
-      lf.rotation.set(-0.22, a, 0);
+    // Dense lush mossy groundcover + 36 layered elephant-ear, monstera & sword fern fronds (exact Photo 3!)
+    const islMossCap = new THREE.Mesh(new THREE.CylinderGeometry(4.35, 4.65, 0.14, 24), mossRockMat);
+    islMossCap.scale.set(1.33, 1.0, 0.80);
+    islMossCap.position.y = 0.24;
+    islG.add(islMossCap);
+    const islFrond = createArchedFrondGeo(0.76, 1.42, 0.38);
+    const islSmallFrond = createArchedFrondGeo(0.52, 0.96, 0.28);
+    for (let f = 0; f < 36; f++) {
+      const a = (f / 36) * Math.PI * 2 + (f % 3) * 0.18;
+      const ring = f % 4;
+      const r = 0.45 + ring * 1.12;
+      const lf = new THREE.Mesh(
+        ring < 2 ? islFrond : islSmallFrond,
+        f % 3 === 0 ? botMats.elephantEarLeaf : f % 3 === 1 ? botMats.monsteraLeaf : botMats.frondDeep
+      );
+      lf.position.set(Math.cos(a) * r * 1.24, 0.32 + (3 - ring) * 0.08, Math.sin(a) * r * 0.72);
+      lf.rotation.set(-0.18 - (f % 3) * 0.12, a, Math.sin(f * 1.7) * 0.18);
+      lf.scale.setScalar(0.92 + (f % 4) * 0.16);
       islG.add(lf);
     }
     // 2 Charming White Sculptural Geese/Ducks perched on river stones at the Koi Pond water's edge (Photo 3 bottom-right!)
@@ -1347,7 +1390,7 @@ export function buildIconicAttractions(scene, interactables) {
       const ka = (k / 4) * Math.PI * 2 + i * 0.7;
       const b = new THREE.Mesh(boulderTemplates[(i + k) % 4], k % 2 === 0 ? mossRockMat : rockMat);
       b.scale.set(0.75, 0.48, 0.70);
-      b.position.set(t.x + Math.cos(ka) * 0.62, 0.08, t.z + Math.sin(ka) * 0.62);
+      b.position.set(t.x + Math.cos(ka) * 0.62, t.y + 0.08, t.z + Math.sin(ka) * 0.62);
       b.rotation.y = ka;
       b.castShadow = true;
       b.receiveShadow = true;
@@ -1559,7 +1602,7 @@ export function buildIconicAttractions(scene, interactables) {
   // Balanced photorealistic rainforest tree canopy framing LEFT (+X in 2F-07: sunlit mid-crown matching photo!) & RIGHT (-X in 2F-07: lush lower canopy revealing curved terracotta balconies!)
   const broadleafSpots = [
     { x: 31.6, z: -5.2, h: 18.6, r: 3.1, s: 1.1 },
-    { x: 32.2, z: 3.8, h: 19.2, r: 3.2, s: 2.3 },
+    { x: 32.0, z: 7.4, h: 19.2, r: 3.2, s: 2.3 },
     { x: 30.8, z: -9.2, h: 18.2, r: 2.9, s: 3.7 },
     { x: 44.0, z: -4.6, h: 21.4, r: 3.6, s: 4.5 },
     { x: 44.2, z: 4.6, h: 20.2, r: 3.4, s: 5.9 },
@@ -1955,11 +1998,51 @@ export function buildIconicAttractions(scene, interactables) {
     marquee.position.set(-4.8, 2.55, 3.8);
     const podMarquee = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 1.75), goSignMat);
     podMarquee.position.set(1.8, 3.55, 2.13);
+    // Chamfered octagonal glowing cyan & magenta spaceship porthole windows on upper & lower play pods!
+    for (const [px, py, pz, r, neon] of [
+      [-0.6, 3.4, 2.16, 0.56, sgCyanNeon], [4.2, 3.4, 2.16, 0.56, sgPinkNeon],
+      [0.6, 6.1, 1.54, 0.48, sgYellowNeon], [4.2, 6.1, 1.54, 0.48, sgCyanNeon]
+    ]) {
+      const portRing = new THREE.Mesh(new THREE.TorusGeometry(r, 0.075, 6, 8), neon);
+      portRing.position.set(px, py, pz);
+      const portGlass = new THREE.Mesh(new THREE.CircleGeometry(r - 0.05, 8), new THREE.MeshBasicMaterial({ color: '#0c2348' }));
+      portGlass.position.set(px, py, pz - 0.02);
+      sg.add(portRing, portGlass);
+    }
+    // Iconic tilted ~38° cyan neon "GO >>" frame (neon-green GO + hot-pink >>) + hexagonal blue/yellow ticket booth arch!
+    const goTiltedG = new THREE.Group();
+    goTiltedG.position.set(-4.6, 3.95, 3.82);
+    goTiltedG.rotation.z = -0.28;
+    const goGreenPinkTex = createSignBoardTexture('GO  >>', 'STARSHIP GALACTICA', '#0b1433', '#4ade80', '#ec4899', 512, 192);
+    const goBoard = new THREE.Mesh(new THREE.BoxGeometry(2.65, 1.05, 0.14), [sgCyanNeon, sgCyanNeon, sgCyanNeon, sgCyanNeon, new THREE.MeshBasicMaterial({ map: goGreenPinkTex }), new THREE.MeshBasicMaterial({ map: goGreenPinkTex })]);
+    goTiltedG.add(goBoard);
+    // Hexagonal blue & yellow chamfered ticket booth arch
+    const hexArch = new THREE.Mesh(new THREE.TorusGeometry(2.15, 0.16, 6, 6, Math.PI), sgYellowNeon);
+    hexArch.position.set(-4.8, 1.12, 3.8);
     const tktCounter = new THREE.Mesh(new THREE.BoxGeometry(3.8, 1.04, 1.15), sgPanelMat);
     tktCounter.position.set(-4.8, 0.62, 3.8);
     const tktGlow = new THREE.Mesh(new THREE.BoxGeometry(3.86, 0.08, 1.20), sgYellowNeon);
     tktGlow.position.set(-4.8, 1.16, 3.8);
-    sg.add(podA, podB, tubeSlide, marquee, podMarquee, tktCounter, tktGlow);
+    // Stylized 3D white Astronaut waving beside Starship Galactica entrance!
+    const astroG = new THREE.Group();
+    astroG.position.set(-1.6, 0.22, 3.8);
+    const astroSuitMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.32 });
+    const astroVisorMat = new THREE.MeshStandardMaterial({ color: '#f59e0b', roughness: 0.12, metalness: 0.85 });
+    const aTorso = new THREE.Mesh(new THREE.CapsuleGeometry(0.24, 0.56, 8, 12), astroSuitMat);
+    aTorso.position.y = 0.96;
+    const aPack = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.48, 0.22), astroSuitMat);
+    aPack.position.set(0, 1.02, -0.22);
+    const aHelm = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 12), astroSuitMat);
+    aHelm.position.y = 1.56;
+    const aVisor = new THREE.Mesh(new THREE.SphereGeometry(0.21, 12, 10), astroVisorMat);
+    aVisor.position.set(0, 1.56, 0.10);
+    for (const lx of [-0.12, 0.12]) {
+      const aLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.62, 8), astroSuitMat);
+      aLeg.position.set(lx, 0.34, 0);
+      astroG.add(aLeg);
+    }
+    astroG.add(aTorso, aPack, aHelm, aVisor);
+    sg.add(podA, podB, tubeSlide, marquee, podMarquee, goTiltedG, hexArch, tktCounter, tktGlow, astroG);
     root.add(sg);
   }
 
@@ -4759,49 +4842,68 @@ export function buildIconicAttractions(scene, interactables) {
     crashMat.position.set(1.4, 0.19, 0);
     campGroup.add(crashMat);
 
-    // Angled climbing wall panels + overhanging 3D volumes + top-rope anchor beams
-    const wallCols = ['#f97316', '#0ea5e9', '#eab308', '#10b981'];
-    const holdCols = ['#ef4444', '#fde047', '#ec4899', '#22d3ee', '#ffffff'];
+    // Photo-matched 5F EZ501 Camp5: Mottled light-grey/concrete-beige architectural rock/plywood climbing walls + colorful holds & top-ropes!
+    const wallCols = ['#9ea3a8', '#b5b0a6', '#8f969e', '#aca89f'];
+    const holdCols = ['#ef4444', '#facc15', '#ec4899', '#0ea5e9', '#22c55e', '#f97316', '#ffffff'];
     for (let i = 0; i < 4; i++) {
       const zOff = (i - 1.5) * 2.55;
       const panel = new THREE.Mesh(
-        new THREE.BoxGeometry(0.92, 5.7, 2.42),
-        new THREE.MeshStandardMaterial({ color: wallCols[i % wallCols.length], roughness: 0.72 })
+        new THREE.BoxGeometry(0.92, 5.7, 2.48),
+        new THREE.MeshStandardMaterial({ color: wallCols[i % wallCols.length], roughness: 0.86, metalness: 0.04 })
       );
       panel.position.set(0.35, 3.0, zOff);
-      panel.rotation.z = i % 2 === 0 ? -0.14 : 0.08;
+      panel.rotation.z = i % 2 === 0 ? -0.14 : 0.09;
       campGroup.add(panel);
 
-      // 3D Pyramid Overhang Climbing Volume
+      // Matte-charcoal geometric climbing volume + colorful climbing route holds
       const vol = new THREE.Mesh(
-        new THREE.ConeGeometry(0.45, 0.65, 4),
-        new THREE.MeshStandardMaterial({ color: '#1e293b', roughness: 0.7 })
+        new THREE.ConeGeometry(0.48, 0.68, 4),
+        new THREE.MeshStandardMaterial({ color: '#272b33', roughness: 0.78 })
       );
       vol.rotation.z = -Math.PI / 2;
-      vol.position.set(0.85, 2.4 + (i % 2) * 1.1, zOff);
+      vol.position.set(0.84, 2.45 + (i % 2) * 1.15, zOff);
       campGroup.add(vol);
 
-      const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 4.9, 6), new THREE.MeshBasicMaterial({ color: '#facc15' }));
-      rope.position.set(1.05, 2.85, zOff);
+      const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 5.1, 6), new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? '#facc15' : '#ef4444' }));
+      rope.position.set(1.06, 2.85, zOff);
       campGroup.add(rope);
 
-      for (let h = 0; h < 8; h++) {
+      for (let h = 0; h < 14; h++) {
         const hold = new THREE.Mesh(
-          new THREE.DodecahedronGeometry(0.11, 0),
-          new THREE.MeshStandardMaterial({ color: holdCols[(i + h) % holdCols.length], roughness: 0.45 })
+          new THREE.DodecahedronGeometry(0.095 + (h % 2) * 0.025, 0),
+          new THREE.MeshStandardMaterial({ color: holdCols[(i * 3 + h) % holdCols.length], roughness: 0.48 })
         );
-        hold.position.set(0.85, 0.9 + h * 0.58, zOff + ((h % 3) - 1) * 0.64);
+        hold.position.set(0.84, 0.65 + h * 0.36, zOff + ((h % 3) - 1) * 0.66 + Math.sin(h) * 0.14);
         campGroup.add(hold);
       }
     }
-    // Camp5 Check-In / Harness Counter + Staff + Monitors + Coiled Rope/Chalk Props + Grounded Bench CLEAR of column!
-    const cDesk = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.05, 1.05), new THREE.MeshStandardMaterial({ color: '#7c2d12', roughness: 0.5 }));
+    // Photo-matched angled floor-to-ceiling clear glass proshop storefront wall framed in galvanized steel mullions w/ frosted white stencil "camp 5"!
+    const galvMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', roughness: 0.32, metalness: 0.78 });
+    const glassProMat = new THREE.MeshPhysicalMaterial({ color: '#e2f1f8', transparent: true, opacity: 0.24, roughness: 0.08, depthWrite: false });
+    const proGlass = new THREE.Mesh(new THREE.BoxGeometry(0.08, 4.9, 5.8), glassProMat);
+    proGlass.position.set(2.9, 2.45, 3.2);
+    proGlass.rotation.y = 0.22;
+    const proStencil = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.8, 1.1),
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('camp (5)', 'PROSHOP • CLIMBING GEAR', '#64748b', '#ffffff', '#bef264', 512, 160), transparent: true, opacity: 0.82 })
+    );
+    proStencil.rotation.y = Math.PI / 2 + 0.22;
+    proStencil.position.set(3.0, 2.85, 3.2);
+    for (const mz of [0.4, 2.2, 4.0, 5.8]) {
+      const mull = new THREE.Mesh(new THREE.BoxGeometry(0.09, 5.0, 0.09), galvMat);
+      mull.position.set(2.9 + (mz - 3.2) * Math.sin(0.22), 2.5, mz);
+      campGroup.add(mull);
+    }
+    campGroup.add(proGlass, proStencil);
+
+    // Photo-matched Matte-Black Check-In Desk with Bright Lime-Yellow "check in" Signage!
+    const cDesk = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.05, 1.05), new THREE.MeshStandardMaterial({ color: '#14161a', roughness: 0.42, metalness: 0.25 }));
     cDesk.position.set(4.8, 0.525, -4.4);
     const cTop = new THREE.Mesh(new THREE.BoxGeometry(2.94, 0.09, 1.16), new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.3 }));
     cTop.position.set(4.8, 1.08, -4.4);
     const cSign = new THREE.Mesh(
       new THREE.PlaneGeometry(2.4, 0.64),
-      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('CAMP5 CHECK-IN', 'EZ501 • 24M LEAD & BOULDER', '#7c2d12', '#fed7aa', '#fb923c') })
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('check in', 'camp (5) • EZ501', '#14161a', '#bef264', '#ffffff') })
     );
     cSign.position.set(4.8, 0.58, -3.86);
     const cMon = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.36, 0.08), steelDarkMat);
@@ -4839,14 +4941,42 @@ export function buildIconicAttractions(scene, interactables) {
 
     const deckPad = new THREE.Mesh(new THREE.BoxGeometry(11.6, 0.06, 4.6), steelDarkMat);
     deckPad.position.y = 0.03;
-    // Printed Cosmic Bowling Pinsetter Masking Unit with illuminated Lane 01-04 banner!
-    const hoodTex = createSignBoardTexture('WANGSA BOWL • COSMIC LANES 01 – 04', 'EZ401 • TOURNAMENT TEN-PIN BOWLING', '#1e1b4b', '#fde047', '#38bdf8');
+    // Photo-matched crisp white sculpted wireframe masking hood (LANES 9-16) + fiery orange LED pinstripe + retro multicolor bowling-pin mural!
+    const whiteHoodMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.32 });
+    const hoodTex = createSignBoardTexture('Wangsa BOWL  •  LANES 9 – 16', 'EZ401 • TOURNAMENT TEN-PIN BOWLING', '#f8fafc', '#dc2626', '#f97316', 1024, 192);
     const hood = new THREE.Mesh(
       new THREE.BoxGeometry(11.6, 1.25, 0.85),
-      [steelDarkMat, steelDarkMat, steelDarkMat, steelDarkMat, steelDarkMat, new THREE.MeshBasicMaterial({ map: hoodTex })]
+      [whiteHoodMat, whiteHoodMat, whiteHoodMat, whiteHoodMat, whiteHoodMat, new THREE.MeshBasicMaterial({ map: hoodTex })]
     );
     hood.position.set(0, 1.58, 1.85);
-    bowlGroup.add(deckPad, hood);
+    const hoodGlow = new THREE.Mesh(new THREE.BoxGeometry(11.64, 0.06, 0.08), new THREE.MeshBasicMaterial({ color: '#f97316' }));
+    hoodGlow.position.set(0, 0.96, 1.42);
+    // Retro multicolor bowling-pin mural panel on left flanking wall!
+    const muralC = document.createElement('canvas');
+    muralC.width = 512;
+    muralC.height = 512;
+    const mCtx = muralC.getContext('2d');
+    mCtx.fillStyle = '#fefce8';
+    mCtx.fillRect(0, 0, 512, 512);
+    const mCols = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#8b5cf6'];
+    for (let i = 0; i < 6; i++) {
+      const mx = 48 + i * 82;
+      mCtx.fillStyle = mCols[i];
+      mCtx.beginPath();
+      mCtx.ellipse(mx, 340, 28, 118, 0, 0, Math.PI * 2);
+      mCtx.fill();
+      mCtx.beginPath();
+      mCtx.arc(mx, 184, 20, 0, Math.PI * 2);
+      mCtx.fill();
+      mCtx.fillStyle = '#ffffff';
+      mCtx.fillRect(mx - 14, 212, 28, 14);
+      mCtx.fillRect(mx - 14, 234, 28, 10);
+    }
+    const muralTex = new THREE.CanvasTexture(muralC);
+    muralTex.colorSpace = THREE.SRGBColorSpace;
+    const pinMural = new THREE.Mesh(new THREE.BoxGeometry(0.18, 3.6, 4.2), new THREE.MeshStandardMaterial({ map: muralTex, roughness: 0.45 }));
+    pinMural.position.set(-6.05, 1.82, -0.2);
+    bowlGroup.add(deckPad, hood, hoodGlow, pinMural);
 
     for (let l = 0; l < 4; l++) {
       const lx = (l - 1.5) * 2.55;
@@ -4898,14 +5028,25 @@ export function buildIconicAttractions(scene, interactables) {
   // 4F: EZ402 Toy Catcher Detailed UFO Claw Machines + Grounded EZ502 Diva KTV + Detailed EZ503 maimai DX + EVCS457 Bay!
   {
     const plushCols = ['#f43f5e', '#fbbf24', '#34d399', '#a855f7', '#38bdf8', '#fb923c'];
-    const clawHeaderMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TOY CATCHER', 'UFO CLAW • 1 TOKEN', '#831843', '#fef08a', '#f472b6') });
+    const clawHeaderMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TOY CATCHERS', 'UFO CLAW • PLUSHIES', '#18181b', '#f472b6', '#facc15') });
+    const bowPinkMat = new THREE.MeshStandardMaterial({ color: '#ec4899', emissive: '#db2777', emissiveIntensity: 0.25, roughness: 0.28 });
     for (let c = 0; c < 6; c++) {
       const claw = new THREE.Group();
       claw.position.set(67 + c * 2.35, 30.0, 20.8);
       const base = new THREE.Mesh(
         new THREE.BoxGeometry(1.45, 0.92, 1.18),
-        new THREE.MeshStandardMaterial({ color: c % 2 === 0 ? '#db2777' : '#0284c7', roughness: 0.34 })
+        new THREE.MeshStandardMaterial({ color: c % 2 === 0 ? '#ec4899' : '#18181b', roughness: 0.26, metalness: 0.14 })
       );
+      // Iconic sculpted 3D pink gift-bow topper crowning every Toy Catchers cabinet!
+      const bowLoopL = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.055, 8, 16), bowPinkMat);
+      bowLoopL.position.set(-0.20, 2.66, -0.35);
+      bowLoopL.rotation.z = 0.35;
+      const bowLoopR = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.055, 8, 16), bowPinkMat);
+      bowLoopR.position.set(0.20, 2.66, -0.35);
+      bowLoopR.rotation.z = -0.35;
+      const bowKnot = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), bowPinkMat);
+      bowKnot.position.set(0, 2.62, -0.35);
+      claw.add(bowLoopL, bowLoopR, bowKnot);
       base.position.y = 0.46;
       // Front arcade control deck with joystick, red push button & prize drop chute!
       const ctrlDeck = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.14, 0.28), steelDarkMat);
@@ -4956,62 +5097,113 @@ export function buildIconicAttractions(scene, interactables) {
       addShadow(root, 67 + c * 2.35, 30.0, 20.8, 2.0, 1.8);
     }
 
-    // EZ502 Diva Karaoke GROUNDED Full-Height Neon Entrance Portal Arch at x=123.5 (9m EAST of escalator nw-dn-4 -> ZERO escalator slicing!)
+    // Photo-matched 5F EZ502 Diva Karaoke: NEOCLASSICAL LUXURY HOTEL LOBBY PORTAL!
+    // Warm taupe-beige wainscot walls + off-white crown molding + gold crystal wall chandeliers + upper gold-framed LED karaoke screen +
+    // tufted crimson & royal-blue velvet Chesterfield sofas + gold marble coffee tables + fluted blush-pink Diva Signature desk + Zebra Bearbrick + articulated receptionist!
     const divaArch = new THREE.Group();
     divaArch.position.set(123.5, 30.0, 20.8);
-    // Grounded vertical brass/neon legs touching y = 0.0 (ZERO floating arch!)
-    for (const ax of [-2.4, 2.4]) {
-      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.15, 2.25, 10), brassMat);
-      leg.position.set(ax, 1.125, 0);
-      const legBase = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.35, 0.16, 12), steelDarkMat);
-      legBase.position.set(ax, 0.08, 0);
-      divaArch.add(leg, legBase);
+    const taupeWainMat = new THREE.MeshStandardMaterial({ color: '#b8a690', roughness: 0.58 });
+    const moldingWhiteMat = new THREE.MeshStandardMaterial({ color: '#f5f5f4', roughness: 0.42 });
+    const blushFluteMat = new THREE.MeshStandardMaterial({ color: '#f3c6cf', roughness: 0.44 });
+    const crimsonVelvetMat = new THREE.MeshStandardMaterial({ color: '#991b1b', roughness: 0.78 });
+    const royalVelvetMat = new THREE.MeshStandardMaterial({ color: '#1d4ed8', roughness: 0.78 });
+    const crystalGlowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.45, 1.28, 0.88) });
+
+    // Flanking Neoclassical Wainscot Wing Walls + Gold Crystal Wall Chandeliers!
+    for (const side of [-1, 1]) {
+      const wx = side * 3.65;
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(2.6, 5.2, 0.36), taupeWainMat);
+      wall.position.set(wx, 2.6, 0.45);
+      const frameOuter = new THREE.Mesh(new THREE.BoxGeometry(2.2, 4.4, 0.40), moldingWhiteMat);
+      frameOuter.position.set(wx, 2.6, 0.44);
+      const frameInner = new THREE.Mesh(new THREE.BoxGeometry(1.96, 4.14, 0.42), taupeWainMat);
+      frameInner.position.set(wx, 2.6, 0.43);
+      const crown = new THREE.Mesh(new THREE.BoxGeometry(2.75, 0.18, 0.52), brassMat);
+      crown.position.set(wx, 5.22, 0.45);
+      // Gold Crystal Wall Chandelier Sconce!
+      const chBase = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.12, 12), brassMat);
+      chBase.rotation.x = Math.PI / 2;
+      chBase.position.set(wx, 3.25, 0.22);
+      const chTier = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.14, 0.42, 12), crystalGlowMat);
+      chTier.position.set(wx, 2.98, 0.08);
+      const chRing = new THREE.Mesh(new THREE.TorusGeometry(0.30, 0.025, 6, 16), brassMat);
+      chRing.rotation.x = Math.PI / 2;
+      chRing.position.set(wx, 3.16, 0.08);
+      divaArch.add(wall, frameOuter, frameInner, crown, chBase, chTier, chRing);
     }
-    const neonArch = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.13, 10, 36, Math.PI), new THREE.MeshBasicMaterial({ color: '#e879f9' }));
-    neonArch.position.y = 2.22;
-    // Crown marquee mounted cleanly ABOVE pink neon arch apex (bottom y=4.87 > arch top 4.75 -> ZERO text occlusion!)
-    const divaHeader = new THREE.Mesh(
-      new THREE.BoxGeometry(3.4, 0.62, 0.16),
-      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('DIVA VIP KARAOKE', 'EZ502 • CONCERT KTV SUITES', '#4c1d95', '#ffffff', '#e879f9') })
-    );
-    divaHeader.position.set(0, 5.18, 0);
-    for (const sx of [-0.75, 0.75]) {
-      const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.42, 6), brassMat);
-      strut.position.set(sx, 4.72, 0);
-      divaArch.add(strut);
+    // Large Gold-Framed Upper LED Karaoke Promo Screen spanning across portal header!
+    const ledFrame = new THREE.Mesh(new THREE.BoxGeometry(5.1, 1.75, 0.22), brassMat);
+    ledFrame.position.set(0, 4.35, 0.36);
+    const divaScreenMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('Diva  SIGNATURE', 'VIP CONCERT KARAOKE SUITES • EZ502', '#261722', '#fffbeb', '#f5c76e', 1024, 320) });
+    const ledScreen = new THREE.Mesh(new THREE.PlaneGeometry(4.82, 1.50), divaScreenMat);
+    ledScreen.rotation.y = Math.PI;
+    ledScreen.position.set(0, 4.35, 0.24);
+
+    // Fluted Blush-Pink & Champagne-Gold "Diva Signature" Reception Desk + Real Articulated Receptionist!
+    const divaDesk = new THREE.Mesh(new THREE.BoxGeometry(2.75, 1.04, 0.94), blushFluteMat);
+    divaDesk.position.set(0, 0.52, 0.18);
+    const divaTop = new THREE.Mesh(new THREE.BoxGeometry(2.88, 0.08, 1.06), moldingWhiteMat);
+    divaTop.position.set(0, 1.08, 0.18);
+    const divaBrassTrim = new THREE.Mesh(new THREE.BoxGeometry(2.82, 0.05, 0.98), brassMat);
+    divaBrassTrim.position.set(0, 0.08, 0.18);
+    for (let fl = -10; fl <= 10; fl++) {
+      const rib = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.94, 6), brassMat);
+      rib.position.set(fl * 0.125, 0.54, -0.30);
+      divaArch.add(rib);
     }
-    const divaDesk = new THREE.Mesh(
-      new THREE.BoxGeometry(2.6, 1.05, 0.92),
-      new THREE.MeshStandardMaterial({ color: '#4c1d95', roughness: 0.35, metalness: 0.3 })
-    );
-    divaDesk.position.set(0, 0.525, 0.1);
-    const divaTop = new THREE.Mesh(new THREE.BoxGeometry(2.75, 0.09, 1.04), new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.25 }));
-    divaTop.position.set(0, 1.08, 0.1);
     const divaFrontSign = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.2, 0.64),
-      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('VIP RECEPTION', 'BOOK A SUITE', '#3b0764', '#f5d0fe', '#e879f9') })
+      new THREE.PlaneGeometry(1.95, 0.42),
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('Diva Signature', '', '#f3c6cf', '#6b2c3e', '#d4af37', 512, 128) })
     );
     divaFrontSign.rotation.y = Math.PI;
-    divaFrontSign.position.set(0, 0.56, -0.37);
-    // Uniformed receptionist behind Diva desk + flanking velvet stanchions!
-    const recTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 0.56, 10), new THREE.MeshStandardMaterial({ color: '#ec4899', roughness: 0.45 }));
-    recTorso.position.set(0, 1.24, 0.45);
-    const recHead = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 10), new THREE.MeshStandardMaterial({ color: '#e2a982' }));
-    recHead.position.set(0, 1.66, 0.45);
-    const velvetM = new THREE.MeshStandardMaterial({ color: '#be123c', roughness: 0.55 });
-    for (const sx of [-3.6, 3.6]) {
-      const p1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.06, 0.92, 8), brassMat);
-      p1.position.set(sx, 0.46, -0.8);
-      const p2 = p1.clone();
-      p2.position.x = sx * 0.72;
-      const rp = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.05, 6), velvetM);
-      rp.rotation.z = Math.PI / 2;
-      rp.position.set(sx * 0.86, 0.72, -0.8);
-      divaArch.add(p1, p2, rp);
+    divaFrontSign.position.set(0, 0.62, -0.34);
+    const divaStaff = createArticulatedPerson({ shirt: '#f472b6', pants: '#18181b' });
+    divaStaff.position.set(0, 0, 0.72);
+    divaStaff.rotation.y = Math.PI;
+
+    // Tufted Crimson-Red (left) & Royal-Blue (right) Velvet Chesterfield Sofas + Gold Filigree Marble Coffee Tables!
+    for (const [sx, sMat] of [[-3.5, crimsonVelvetMat], [3.5, royalVelvetMat]]) {
+      const sSeat = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.42, 0.84), sMat);
+      sSeat.position.set(sx, 0.25, -0.78);
+      const sBack = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.56, 0.20), sMat);
+      sBack.position.set(sx, 0.68, -0.44);
+      for (const armX of [-0.90, 0.90]) {
+        const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.84, 10), sMat);
+        arm.rotation.x = Math.PI / 2;
+        arm.position.set(sx + armX, 0.58, -0.78);
+        divaArch.add(arm);
+      }
+      const tblTop = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.05, 18), moldingWhiteMat);
+      tblTop.position.set(sx, 0.46, -1.62);
+      const tblFrame = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.44, 12, 1, true), brassMat);
+      tblFrame.position.set(sx, 0.22, -1.62);
+      divaArch.add(sSeat, sBack, tblTop, tblFrame);
     }
-    divaArch.add(neonArch, divaHeader, divaDesk, divaTop, divaFrontSign, recTorso, recHead);
+
+    // Iconic Black-and-White Striped Zebra Bearbrick Art Sculpture flanking desk!
+    const bearG = new THREE.Group();
+    bearG.position.set(1.95, 0, -0.32);
+    const bearW = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.22 });
+    const bearB = new THREE.MeshStandardMaterial({ color: '#111827', roughness: 0.22 });
+    const bTorso = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.52, 0.28), bearW);
+    bTorso.position.y = 0.72;
+    const bStripe = new THREE.Mesh(new THREE.BoxGeometry(0.40, 0.12, 0.30), bearB);
+    bStripe.position.y = 0.76;
+    const bHead = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.32, 0.30), bearW);
+    bHead.position.y = 1.16;
+    for (const ex of [-0.14, 0.14]) {
+      const ear = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.08, 10), bearB);
+      ear.rotation.x = Math.PI / 2;
+      ear.position.set(ex, 1.35, 0);
+      const bLeg = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.46, 0.22), ex < 0 ? bearB : bearW);
+      bLeg.position.set(ex * 0.75, 0.23, 0);
+      bearG.add(ear, bLeg);
+    }
+    bearG.add(bTorso, bStripe, bHead);
+
+    divaArch.add(ledFrame, ledScreen, divaDesk, divaTop, divaBrassTrim, divaFrontSign, divaStaff, bearG);
     root.add(divaArch);
-    addShadow(root, 123.5, 30.0, 20.8, 6.2, 2.8);
+    addShadow(root, 123.5, 30.0, 20.8, 9.2, 3.6);
 
     // EZ503 Cross Fire Detailed maimai DX PRiSM Rhythm Cabinets (Glowing Beatmap Screens + 8 Bezel Buttons + Players!)
     const maimaiTex = createMaimaiScreenTexture();
@@ -5054,6 +5246,58 @@ export function buildIconicAttractions(scene, interactables) {
       root.add(cab);
       addShadow(root, 143 + m * 2.8, 30.0, 20.8, 2.2, 1.8);
     }
+    // Photo-matched 5F EZ503 Cross Fire: Brushed-steel & Cobalt-blue entrance portal + Circular Neon Infinity-Mirror Medallion + 2 MotoGP Racing Bikes w/ Glowing Blue LED Wheels!
+    const cfPortal = new THREE.Group();
+    cfPortal.position.set(148.6, 30.0, 21.8);
+    const cfCobaltMat = new THREE.MeshStandardMaterial({ color: '#1d4ed8', roughness: 0.28, metalness: 0.45 });
+    const cfSteelMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', roughness: 0.26, metalness: 0.82 });
+    const cfCyanNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.22, 1.95, 2.55), toneMapped: false });
+    const cfOrangeNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.45, 0.88, 0.18), toneMapped: false });
+    for (const px of [-7.8, 7.8]) {
+      const pier = new THREE.Mesh(new THREE.BoxGeometry(0.65, 5.2, 0.55), cfSteelMat);
+      pier.position.set(px, 2.6, 0);
+      const colEdge = new THREE.Mesh(new THREE.BoxGeometry(0.14, 5.2, 0.62), cfCobaltMat);
+      colEdge.position.set(px - Math.sign(px) * 0.34, 2.6, 0);
+      const ledStrip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 4.9, 0.06), cfCyanNeon);
+      ledStrip.position.set(px - Math.sign(px) * 0.42, 2.6, -0.28);
+      cfPortal.add(pier, colEdge, ledStrip);
+    }
+    // Circular Neon Infinity-Mirror Medallion mounted above arcade bay!
+    for (let ir = 0; ir < 3; ir++) {
+      const infRing = new THREE.Mesh(new THREE.TorusGeometry(0.82 - ir * 0.22, 0.045, 8, 32), ir === 1 ? cfOrangeNeon : cfCyanNeon);
+      infRing.position.set(0, 4.25, -0.32 + ir * 0.06);
+      cfPortal.add(infRing);
+    }
+    const infBack = new THREE.Mesh(new THREE.CircleGeometry(0.84, 28), new THREE.MeshStandardMaterial({ color: '#090b14', roughness: 0.08, metalness: 0.92 }));
+    infBack.rotation.y = Math.PI;
+    infBack.position.set(0, 4.25, -0.14);
+    cfPortal.add(infBack);
+
+    // 2 Sculpted MotoGP Arcade Racing Bikes with Glowing Electric-Blue LED Wheels!
+    for (const [bx, bodyHex] of [[-5.6, '#dc2626'], [-3.4, '#2563eb']]) {
+      const bikeG = new THREE.Group();
+      bikeG.position.set(bx, 0, -2.6);
+      const bikeMat = new THREE.MeshStandardMaterial({ color: bodyHex, roughness: 0.22, metalness: 0.35 });
+      const plat = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.14, 2.15), steelDarkMat);
+      plat.position.y = 0.07;
+      const fairing = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.68, 1.55), bikeMat);
+      fairing.position.set(0, 0.72, 0.05);
+      fairing.rotation.x = -0.18;
+      const windScreen = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.42, 0.06), new THREE.MeshPhysicalMaterial({ color: '#bae6fd', transparent: true, opacity: 0.45 }));
+      windScreen.position.set(0, 1.16, 0.62);
+      windScreen.rotation.x = -0.58;
+      const raceScr = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.62, 0.10), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('MotoGP', 'CROSS FIRE RACING', '#0c1636', '#38bdf8', '#facc15', 256, 160) }));
+      raceScr.position.set(0, 1.48, 0.98);
+      for (const wz of [-0.58, 0.56]) {
+        const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.07, 8, 20), cfCyanNeon);
+        wheel.rotation.y = Math.PI / 2;
+        wheel.position.set(0, 0.42, wz);
+        bikeG.add(wheel);
+      }
+      bikeG.add(plat, fairing, windScreen, raceScr);
+      cfPortal.add(bikeG);
+    }
+    root.add(cfPortal);
 
     // EVCS457 Dedicated Glazed Oval Carpark EV Supercharger Bay + Painted White Stall Lines + Coiled Cables + Visitors!
     const evG = new THREE.Group();

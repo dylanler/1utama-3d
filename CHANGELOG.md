@@ -1,6 +1,6 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
-## Round-17 (In Progress — Entertainment Zone, Anchors, LUXE G, 13 Bespoke Kiosks & LG Rainforest Ceiling)
+## Round-17 (Completed — Entertainment Zone, Anchors, LUXE G, 13 Bespoke Kiosks & LG Rainforest Ceiling)
 - **Round-16b Visual Polish**: Add bright coffered plaster ceiling soffit + warm recessed LED cove ring directly beneath the Ground Floor Koi Pond basin in LG Rainforest, remove stretched flat `lgPlaza` quad, lift 4 stray `treeSpots` palm-base boulders up to GF (`y = 5.83`), add dense ferns/elephant-ear foliage on the GF Koi planting island, refine `createLuxeValetVistaTexture()`, and unblock `1F-07`, `3F-07`, and `2F-03` camera angles.
 - **3F–5F Entertainment Zone & 2F Starship Galactica Photo-Exact Rebuild**:
   - **3F `TGV Maybank IMAX` (`EZ101`)**: Corrugated pale-grey steel facade, stacked bright yellow `Maybank` box over 3D glowing cyan `IMAX®` + red `TGV Cinemas`, vine-draped `Bites` bar, backlit `Now Seating Halls 1–7` & `TGV JUNIOR` directory, dark striped foyer floor, and slatted LED ceiling.

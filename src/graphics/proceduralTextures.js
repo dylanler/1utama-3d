@@ -2819,13 +2819,67 @@ export function getStoreBrandProfile(store) {
     return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'pjpac-canary-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 14, displayTitle: 'PJPAC', brandKey: 'pjpac', isLight: true };
   }
   if (uName.includes('WANGSA BOWL')) {
-    return { facadeType: 'entertainment-marquee', fasciaH: 1.48, materialStyle: 'velvet-navy', fontFamily: FONTS.condensed, weight: '700', italic: false, tracking: 10, displayTitle: 'WANGSA BOWL', brandKey: 'wangsa-bowl', isLight: false };
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.48, materialStyle: 'wangsa-white-diecut', fontFamily: FONTS.condensed, weight: '800', italic: false, tracking: 6, displayTitle: 'Wangsa BOWL', brandKey: 'wangsa-bowl', isLight: true };
+  }
+  if (uName.includes('TOY CATCHER')) {
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'toycatcher-white-diag', fontFamily: FONTS.geometric, weight: '900', italic: false, tracking: 4, displayTitle: 'TOY CATCHERS', brandKey: 'toy-catcher', isLight: true };
+  }
+  if (uName.includes('CAMP5')) {
+    return { facadeType: 'sports-industrial', fasciaH: 1.46, materialStyle: 'camp5-concrete-glass', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 6, displayTitle: 'camp 5', brandKey: 'camp5', isLight: true };
+  }
+  if (uName.includes('DIVA KARAOKE')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.44, materialStyle: 'diva-neoclassical', fontFamily: FONTS.classicSerif, weight: '700', italic: true, tracking: 8, displayTitle: 'Diva KARAOKE', brandKey: 'diva-karaoke', isLight: true };
+  }
+  if (uName.includes('CROSS FIRE')) {
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.48, materialStyle: 'crossfire-cobalt-steel', fontFamily: FONTS.condensed, weight: '900', italic: false, tracking: 10, displayTitle: 'CROSS FIRE', brandKey: 'cross-fire', isLight: false };
+  }
+  if (uName.includes('CELLINI')) {
+    return { facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'cellini-charcoal-blue', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 14, displayTitle: 'CELLINI', brandKey: 'cellini', isLight: false };
+  }
+  if (uName.includes('DECATHLON')) {
+    return { facadeType: 'sports-industrial', fasciaH: 1.46, materialStyle: 'decathlon-indigo', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 10, displayTitle: 'DECATHLON', brandKey: 'decathlon', isLight: false };
   }
   if (uName.includes('AEON')) {
-    return { facadeType: 'open-market', fasciaH: 1.44, materialStyle: 'pure-white-magenta', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 14, displayTitle: 'AEON', brandKey: 'aeon', isLight: true };
+    return { facadeType: 'open-market', fasciaH: 1.44, materialStyle: 'pure-white-magenta', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 16, displayTitle: 'ÆON', brandKey: 'aeon', isLight: true };
+  }
+  if (uName.includes('DEGEM')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'degem-deep-navy', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 16, displayTitle: 'DeGem', brandKey: 'degem', isLight: false };
+  }
+  if (uName === 'H&M' || uName.startsWith('H&M ')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'hm-light-stone', fontFamily: FONTS.classicSerif, weight: '800', italic: true, tracking: 6, displayTitle: 'H&M', brandKey: 'hm', isLight: true };
+  }
+  if (uName.includes('STEVE MADDEN')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 12, displayTitle: 'STEVE MADDEN', brandKey: 'luxury-dark', isLight: false };
+  }
+  if (uName.includes('CALVIN KLEIN')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'ck-greige-taupe', fontFamily: FONTS.geometric, weight: '500', italic: false, tracking: 12, displayTitle: 'Calvin Klein', brandKey: 'calvin-klein', isLight: false };
+  }
+  if (uName.includes('LACOSTE')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 14, displayTitle: 'LACOSTE', brandKey: 'lacoste', isLight: false };
+  }
+  if (uName.includes('OCCITANE')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'loccitane-provence-yellow', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 10, displayTitle: "L'OCCITANE EN PROVENCE", brandKey: 'loccitane', isLight: true };
+  }
+  if (uName.includes('LANCÔME') || uName.includes('LANCOME')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'obsidian-stone', fontFamily: FONTS.classicSerif, weight: '600', italic: false, tracking: 18, displayTitle: 'LANCÔME', brandKey: 'lancome', isLight: false };
+  }
+  if (uName.includes('YSL')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'obsidian-stone', fontFamily: FONTS.didone, weight: '600', italic: false, tracking: 14, displayTitle: 'YVES SAINT LAURENT', brandKey: 'ysl', isLight: false };
+  }
+  if (uName.includes('MARKS & SPENCER')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'ms-pure-white', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 12, displayTitle: 'M&S  •  MARKS & SPENCER', brandKey: 'ms', isLight: true };
+  }
+  if (uName.includes('MADAM KWAN')) {
+    return { facadeType: 'modern-bistro', fasciaH: 1.32, materialStyle: 'madam-kwans-cream', fontFamily: FONTS.classicSerif, weight: '700', italic: true, tracking: 6, displayTitle: "Madam Kwan's", brandKey: 'madam-kwans', isLight: true };
+  }
+  if (uName.includes('DENZA') || uName.includes('FRED PERRY')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 12, displayTitle: 'DENZA  •  FRED PERRY', brandKey: 'denza-fred', isLight: false };
+  }
+  if (uName.includes('MAYBANK')) {
+    return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'maybank-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'Maybank  •  LAMY', brandKey: 'maybank', isLight: true };
   }
   if (uName.includes('ZARA')) {
-    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'ivory-limestone', fontFamily: FONTS.didone, weight: '700', italic: false, tracking: 4, displayTitle: 'ZARA', brandKey: 'zara', isLight: true };
+    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'zara-champagne-taupe', fontFamily: FONTS.didone, weight: '700', italic: false, tracking: 6, displayTitle: 'ZARA', brandKey: 'zara', isLight: false };
   }
   if (uName.includes('CHANEL')) {
     return { facadeType: 'luxury-fashion', fasciaH: 1.18, materialStyle: 'chanel-backlit-white', fontFamily: FONTS.geometric, weight: '600', italic: false, tracking: 20, displayTitle: 'CHANEL', brandKey: 'chanel', isLight: true };
@@ -2840,10 +2894,10 @@ export function getStoreBrandProfile(store) {
     return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'warm-cream-plaster', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 8, displayTitle: 'MUJI 無印良品', brandKey: 'muji', isLight: true };
   }
   if (uName.includes('GSC')) {
-    return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'GSC', brandKey: 'gsc', isLight: false };
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'gsc-honey-oak', fontFamily: FONTS.geometric, weight: '900', italic: false, tracking: 8, displayTitle: 'GSC', brandKey: 'gsc', isLight: true };
   }
   if (uName.includes('TGV')) {
-    return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'TGV CINEMAS', brandKey: 'tgv', isLight: false };
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'tgv-corrugated-imax', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'TGV CINEMAS', brandKey: 'tgv', isLight: true };
   }
   if (uName.includes('POP MART')) {
     return { facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'popmart-lime-crown', fontFamily: FONTS.condensed, weight: '800', italic: false, tracking: 6, displayTitle: 'POP MART', brandKey: 'pop-mart', isLight: true };
@@ -2962,6 +3016,220 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
 
   // 1. REAL ARCHITECTURAL FACADE MATERIAL FINISH PER BRAND
   switch (prof.materialStyle) {
+    case 'tgv-corrugated-imax': {
+      // Photo-matched 3F EZ101 TGV Maybank IMAX: Vertical corrugated pale-grey industrial steel cladding (#c8ccd2)!
+      ctx.fillStyle = '#c8ccd2';
+      ctx.fillRect(0, 0, w, h);
+      for (let rx = 0; rx < w; rx += 14) {
+        ctx.fillStyle = 'rgba(255,255,255,0.42)';
+        ctx.fillRect(rx, 0, 5, h);
+        ctx.fillStyle = 'rgba(71,85,105,0.28)';
+        ctx.fillRect(rx + 6, 0, 5, h);
+      }
+      ctx.fillStyle = '#0ea5e9';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = '#38bdf8';
+      ctxE.fillRect(0, h - 7, w, 7);
+      fgCol = '#0f172a';
+      emissiveTextCol = '#38bdf8';
+      break;
+    }
+    case 'gsc-honey-oak': {
+      // Photo-matched 4F EZ403 GSC Cinemas: Towering warm honey-oak vertical timber slat wall (#c5a87e) + subtle warm cove!
+      ctx.fillStyle = '#c5a87e';
+      ctx.fillRect(0, 0, w, h);
+      for (let rx = 0; rx < w; rx += 16) {
+        const tone = rx % 32 === 0 ? '#b79668' : '#d0b58d';
+        ctx.fillStyle = tone;
+        ctx.fillRect(rx, 0, 11, h);
+        ctx.fillStyle = '#5c4529';
+        ctx.fillRect(rx + 11, 0, 5, h);
+      }
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(0, h - 6, w, 6);
+      ctxE.fillStyle = '#fde047';
+      ctxE.fillRect(0, h - 6, w, 6);
+      fgCol = '#141414';
+      emissiveTextCol = '#fef08a';
+      break;
+    }
+    case 'wangsa-white-diecut': {
+      // Photo-matched 4F EZ401 Wangsa Bowl: Bright crisp white sculpted fascia (#f8fafc) w/ fiery orange-gold bottom edge!
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(255,255,255,0.42)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#f97316';
+      ctx.fillRect(0, h - 8, w, 8);
+      fgCol = '#dc2626';
+      emissiveTextCol = '#fb923c';
+      break;
+    }
+    case 'toycatcher-white-diag': {
+      // Photo-matched 4F EZ402 Toy Catchers: Crisp pure white fascia crisscrossed with diagonal black graphic lines!
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(255,255,255,0.48)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#18181b';
+      ctx.lineWidth = 5;
+      for (let d = -h; d < w + h; d += 92) {
+        ctx.beginPath();
+        ctx.moveTo(d, 0);
+        ctx.lineTo(d + h * 0.85, h);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(d + 46, h);
+        ctx.lineTo(d + 46 + h * 0.85, 0);
+        ctx.stroke();
+      }
+      // Clean white center backing pad behind rainbow logo
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.fillRect(w * 0.24, 18, w * 0.52, h - 36);
+      fgCol = '#ec4899';
+      emissiveTextCol = '#f472b6';
+      break;
+    }
+    case 'camp5-concrete-glass': {
+      // Photo-matched 5F EZ501 Camp5: Architectural light-grey concrete/frosted glass band w/ lime-yellow bottom hairline!
+      ctx.fillStyle = '#adb2b8';
+      ctx.fillRect(0, 0, w, h);
+      for (let rx = 0; rx < w; rx += 96) {
+        ctx.fillStyle = rx % 192 === 0 ? 'rgba(255,255,255,0.14)' : 'rgba(15,23,42,0.08)';
+        ctx.fillRect(rx, 0, 94, h);
+      }
+      ctx.fillStyle = '#bef264';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = '#bef264';
+      ctxE.fillRect(0, h - 7, w, 7);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'diva-neoclassical': {
+      // Photo-matched 5F EZ502 Diva Karaoke: Warm neoclassical taupe-beige panel with champagne-gold wainscot borders!
+      ctx.fillStyle = '#b8a690';
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#e5c67a';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(18, 16, w - 36, h - 32);
+      ctx.strokeStyle = '#f5f5f4';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(28, 24, w - 56, h - 48);
+      fgCol = '#fff8e7';
+      emissiveTextCol = '#fde68a';
+      break;
+    }
+    case 'crossfire-cobalt-steel': {
+      // Photo-matched 5F EZ503 Cross Fire: Brushed silver-steel panels framed in cobalt blue (#1d4ed8) + glowing cyan LED!
+      const sg = ctx.createLinearGradient(0, 0, 0, h);
+      sg.addColorStop(0, '#cbd5e1');
+      sg.addColorStop(0.5, '#94a3b8');
+      sg.addColorStop(1, '#64748b');
+      ctx.fillStyle = sg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#1d4ed8';
+      ctx.lineWidth = 18;
+      ctx.strokeRect(9, 9, w - 18, h - 18);
+      ctx.strokeStyle = '#22d3ee';
+      ctx.lineWidth = 5;
+      ctx.strokeRect(20, 20, w - 40, h - 40);
+      ctxE.strokeStyle = '#22d3ee';
+      ctxE.lineWidth = 6;
+      ctxE.strokeRect(20, 20, w - 40, h - 40);
+      fgCol = '#0f172a';
+      emissiveTextCol = '#fb923c';
+      break;
+    }
+    case 'cellini-charcoal-blue': {
+      ctx.fillStyle = '#181a1f';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(0, h - 5, w, 5);
+      ctxE.fillStyle = '#38bdf8';
+      ctxE.fillRect(0, h - 5, w, 5);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'decathlon-indigo': {
+      // Photo-matched 1F F319 Decathlon: Deep indigo-cobalt blue (#2c2e83) architectural monolith!
+      ctx.fillStyle = '#2c2e83';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(44, 46, 131, 0.25)';
+      ctxE.fillRect(0, 0, w, h);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'degem-deep-navy': {
+      ctx.fillStyle = '#111c3a';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(0, h - 5, w, 5);
+      fgCol = '#f8fafc';
+      emissiveTextCol = '#fef3c7';
+      break;
+    }
+    case 'hm-light-stone': {
+      ctx.fillStyle = '#dedad2';
+      ctx.fillRect(0, 0, w, h);
+      fgCol = '#dc2626';
+      emissiveTextCol = '#ef4444';
+      break;
+    }
+    case 'ck-greige-taupe': {
+      ctx.fillStyle = '#9e978e';
+      ctx.fillRect(0, 0, w, h);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'loccitane-provence-yellow': {
+      ctx.fillStyle = '#eab308';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(234, 179, 8, 0.28)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#2c1808';
+      drawEmissive = false;
+      break;
+    }
+    case 'ms-pure-white': {
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(248, 250, 252, 0.36)';
+      ctxE.fillRect(0, 0, w, h);
+      fgCol = '#0f172a';
+      drawEmissive = false;
+      break;
+    }
+    case 'zara-champagne-taupe': {
+      ctx.fillStyle = '#c6baa7';
+      ctx.fillRect(0, 0, w, h);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'madam-kwans-cream': {
+      ctx.fillStyle = '#f3ebdc';
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#047857';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#047857';
+      drawEmissive = false;
+      break;
+    }
+    case 'maybank-yellow': {
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(250, 204, 21, 0.35)';
+      ctxE.fillRect(0, 0, w, h);
+      fgCol = '#111827';
+      drawEmissive = false;
+      break;
+    }
     case 'mrdiy-black-yellow': {
       // Photo-matched 1 Utama S319 MR. D.I.Y.: Crisp matte jet-black fascia w/ subtle panel seam & bright yellow bottom hairline
       ctx.fillStyle = '#14161a';
@@ -3746,8 +4014,8 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'zara': {
-        // Bold unbroken high-contrast Playfair editorial ZARA wordmark (ZERO dropped thin hairlines!)
-        targetCtx.fillStyle = '#111111';
+        // Photo-matched LUXE G ZARA: Glowing crisp white editorial Playfair ZARA on champagne-taupe travertine!
+        targetCtx.fillStyle = '#ffffff';
         fillAutoFitText(targetCtx, 'ZARA', 0, 126, maxW * 0.56, 92, '800', '"Playfair Display", "Georgia", serif', -3);
         break;
       }
@@ -3776,24 +4044,28 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'parkson': {
-        // Photo-matched 1 Utama PARKSON Elite 百盛: Crisp silver/white 3D-outlined PARKSON + script Elite + 百盛 across backlit ice-blue header!
-        if (!isEmissive) {
-          targetCtx.strokeStyle = '#1e293b';
-          targetCtx.lineWidth = 6;
-          targetCtx.font = '700 72px "Jost", sans-serif';
+        // Photo-matched 1 Utama PARKSON Elite 百盛: Repeated crisp glowing white PARKSON Elite 百盛 across BOTH left & right anchor bays!
+        const bays = maxW > 1100 ? [-430, 430] : [0];
+        for (const bx of bays) {
           targetCtx.textAlign = 'center';
           targetCtx.textBaseline = 'middle';
-          targetCtx.strokeText('PARKSON', -160, 100);
+          if (!isEmissive) {
+            targetCtx.strokeStyle = '#0f172a';
+            targetCtx.lineWidth = 6;
+            targetCtx.font = '700 62px "Jost", sans-serif';
+            targetCtx.strokeText('PARKSON', bx - 125, 100);
+            targetCtx.font = 'italic 600 54px "Playfair Display", "Cormorant Garamond", serif';
+            targetCtx.strokeText('Elite', bx + 110, 100);
+            targetCtx.font = '700 56px "Noto Serif JP", serif';
+            targetCtx.strokeText('百盛', bx + 236, 100);
+          }
           targetCtx.fillStyle = '#ffffff';
-          targetCtx.fillText('PARKSON', -160, 100);
-          targetCtx.font = 'italic 600 62px "Playfair Display", "Cormorant Garamond", serif';
-          targetCtx.strokeText('Elite', 142, 100);
-          targetCtx.fillStyle = '#ffffff';
-          targetCtx.fillText('Elite', 142, 100);
-          targetCtx.font = '700 66px "Noto Serif JP", serif';
-          targetCtx.strokeText('百盛', 300, 100);
-          targetCtx.fillStyle = '#ffffff';
-          targetCtx.fillText('百盛', 300, 100);
+          targetCtx.font = '700 62px "Jost", sans-serif';
+          targetCtx.fillText('PARKSON', bx - 125, 100);
+          targetCtx.font = 'italic 600 54px "Playfair Display", "Cormorant Garamond", serif';
+          targetCtx.fillText('Elite', bx + 110, 100);
+          targetCtx.font = '700 56px "Noto Serif JP", serif';
+          targetCtx.fillText('百盛', bx + 236, 100);
         }
         break;
       }
@@ -4346,27 +4618,229 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'wangsa-bowl': {
-        // Authentic 1 Utama WANGSA BOWL: Clean modern bowling-ball crest (well clear of W!) + bold athletic condensed WANGSA BOWL!
-        const lx = -Math.min(maxW * 0.40, 290);
-        targetCtx.fillStyle = '#38bdf8';
+        // Photo-matched 4F EZ401 Wangsa Bowl: Red cursive "Wangsa" + bold orange-gold "BOWL" w/ flame bowling-ball O & bowling pin L!
+        targetCtx.fillStyle = '#dc2626';
+        fillAutoFitText(targetCtx, 'Wangsa', -185, 110, 270, 74, '800', '"Playfair Display", "Georgia", serif', 2, true);
+        targetCtx.fillStyle = '#f97316';
+        fillAutoFitText(targetCtx, 'B', 18, 118, 80, 84, '900', '"Oswald", sans-serif', 2);
+        // Flame-ringed orange-gold bowling ball `O`
+        targetCtx.fillStyle = '#ea580c';
         targetCtx.beginPath();
-        targetCtx.arc(lx, 96, 28, 0, Math.PI * 2);
+        targetCtx.arc(92, 88, 32, 0, Math.PI * 2);
         targetCtx.fill();
-        targetCtx.fillStyle = '#11182b';
-        for (const [dx, dy] of [[-7, -7], [6, -9], [0, 4]]) {
+        targetCtx.fillStyle = '#18181b';
+        for (const [dx, dy] of [[-8, -8], [7, -9], [0, 5]]) {
           targetCtx.beginPath();
-          targetCtx.arc(lx + dx, 96 + dy, 4.2, 0, Math.PI * 2);
+          targetCtx.arc(92 + dx, 88 + dy, 4.5, 0, Math.PI * 2);
           targetCtx.fill();
         }
+        targetCtx.fillStyle = '#f59e0b';
+        fillAutoFitText(targetCtx, 'W', 166, 118, 92, 84, '900', '"Oswald", sans-serif', 2);
+        // Sculpted white/red-neck bowling pin `L`
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fillRect(226, 48, 22, 74);
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.fillRect(226, 62, 22, 10);
+        targetCtx.fillStyle = '#f59e0b';
+        targetCtx.fillRect(226, 108, 52, 16);
+        break;
+      }
+
+      case 'toy-catcher': {
+        // Photo-matched 4F EZ402 TOY CATCHERS: Puffy black-outlined rainbow bubble letters!
+        const letters = 'TOY CATCHERS';
+        const rainbow = ['#ec4899', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6', '#a855f7'];
+        targetCtx.textAlign = 'center';
+        targetCtx.textBaseline = 'middle';
+        targetCtx.font = '900 72px "Montserrat", "Jost", sans-serif';
+        const startX = -((letters.length - 1) * 46) * 0.5;
+        for (let i = 0; i < letters.length; i++) {
+          const ch = letters[i];
+          if (ch === ' ') continue;
+          const cx = startX + i * 46;
+          const cy = 98 + (i % 2 === 0 ? -4 : 4);
+          if (!isEmissive) {
+            targetCtx.strokeStyle = '#111827';
+            targetCtx.lineWidth = 10;
+            targetCtx.strokeText(ch, cx, cy);
+          }
+          targetCtx.fillStyle = rainbow[i % rainbow.length];
+          targetCtx.fillText(ch, cx, cy);
+        }
+        break;
+      }
+
+      case 'camp5': {
+        // Photo-matched 5F EZ501 Camp5: Crisp frosted white stencil "camp" + iconic oval around "5"!
         targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'WANGSA BOWL', 46, 116, maxW * 0.66, 62, '700', '"Oswald", sans-serif', 9);
+        fillAutoFitText(targetCtx, 'camp', -56, 116, 260, 78, '700', '"Jost", sans-serif', 6);
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 6;
+        targetCtx.beginPath();
+        targetCtx.ellipse(122, 92, 46, 54, 0, 0, Math.PI * 2);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#bef264';
+        fillAutoFitText(targetCtx, '5', 122, 116, 70, 74, '800', '"Jost", sans-serif', 0);
+        break;
+      }
+
+      case 'diva-karaoke': {
+        // Photo-matched 5F EZ502 Diva Karaoke: Refined champagne-gold cursive "Diva" + "KARAOKE SIGNATURE"!
+        targetCtx.fillStyle = isEmissive ? '#fde68a' : '#fffbeb';
+        fillAutoFitText(targetCtx, 'Diva', -126, 112, 240, 82, '700', '"Playfair Display", serif', 4, true);
+        targetCtx.fillStyle = '#f5d08a';
+        fillAutoFitText(targetCtx, 'KARAOKE  •  SIGNATURE', 142, 108, 340, 32, '700', '"Jost", sans-serif', 8);
+        break;
+      }
+
+      case 'cross-fire': {
+        // Photo-matched 5F EZ503 CROSS FIRE: Glowing 3D orange flame icon + stacked cobalt/orange CROSS FIRE!
+        const fx = -215;
+        targetCtx.fillStyle = '#f97316';
+        targetCtx.beginPath();
+        targetCtx.moveTo(fx, 44);
+        targetCtx.quadraticCurveTo(fx + 38, 78, fx + 24, 134);
+        targetCtx.quadraticCurveTo(fx, 148, fx - 24, 134);
+        targetCtx.quadraticCurveTo(fx - 38, 78, fx, 44);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#fde047';
+        targetCtx.beginPath();
+        targetCtx.moveTo(fx, 72);
+        targetCtx.quadraticCurveTo(fx + 18, 96, fx + 10, 128);
+        targetCtx.quadraticCurveTo(fx, 136, fx - 10, 128);
+        targetCtx.quadraticCurveTo(fx - 18, 96, fx, 72);
+        targetCtx.fill();
+        targetCtx.fillStyle = isEmissive ? '#38bdf8' : '#0f172a';
+        fillAutoFitText(targetCtx, 'CROSS', -20, 116, 260, 76, '900', '"Oswald", sans-serif', 8);
+        targetCtx.fillStyle = '#f97316';
+        fillAutoFitText(targetCtx, 'FIRE', 196, 116, 200, 76, '900', '"Oswald", sans-serif', 8);
+        break;
+      }
+
+      case 'cellini': {
+        // Photo-matched 4F OV401 Cellini: Bright sky-blue square "CO" emblem + crisp white serif "CELLINI"!
+        targetCtx.fillStyle = '#38bdf8';
+        targetCtx.fillRect(-255, 50, 88, 88);
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '800 42px "Jost", sans-serif';
+        targetCtx.textAlign = 'center';
+        targetCtx.textBaseline = 'middle';
+        targetCtx.fillText('CO', -211, 96);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'CELLINI', 56, 114, 380, 72, '700', '"Cormorant Garamond", serif', 18);
+        break;
+      }
+
+      case 'decathlon': {
+        // Photo-matched 1F F319 Decathlon: Glowing white 2025 Decathlon Orbit emblem + bold DECATHLON!
+        const ox = -248;
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 10;
+        targetCtx.beginPath();
+        targetCtx.arc(ox, 96, 28, 0.35, Math.PI * 1.82);
+        targetCtx.stroke();
+        targetCtx.beginPath();
+        targetCtx.moveTo(ox + 18, 72);
+        targetCtx.lineTo(ox + 34, 96);
+        targetCtx.lineTo(ox + 16, 120);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'DECATHLON', 46, 118, 460, 76, '800', '"Jost", sans-serif', 12);
         break;
       }
 
       case 'aeon': {
-        // Authentic Malaysian AEON magenta logotype
-        targetCtx.fillStyle = '#b81d77';
-        fillAutoFitText(targetCtx, 'AEON', 0, 122, maxW * 0.56, 84, '700', '"Jost", sans-serif', 20);
+        // Photo-matched Malaysian AEON: Glowing hot-magenta (#d6006e) ÆON channel letters on pure white!
+        targetCtx.fillStyle = '#d6006e';
+        fillAutoFitText(targetCtx, 'ÆON', 0, 122, maxW * 0.56, 88, '800', '"Jost", sans-serif', 22);
+        break;
+      }
+
+      case 'hm': {
+        targetCtx.fillStyle = '#dc2626';
+        fillAutoFitText(targetCtx, 'H&M', 0, 126, 280, 96, '800', '"Playfair Display", serif', 6, true);
+        break;
+      }
+
+      case 'lacoste': {
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'LACOSTE', -46, 116, 360, 68, '700', '"Jost", sans-serif', 14);
+        // Iconic emerald-green Lacoste crocodile silhouette badge!
+        targetCtx.fillStyle = '#16a34a';
+        targetCtx.beginPath();
+        targetCtx.ellipse(196, 98, 42, 16, -0.08, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.beginPath();
+        targetCtx.moveTo(154, 94);
+        targetCtx.lineTo(132, 82);
+        targetCtx.lineTo(148, 108);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fillRect(228, 94, 12, 6);
+        break;
+      }
+
+      case 'lancome': {
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'LANCÔME', 0, 116, 420, 66, '600', '"Cormorant Garamond", serif', 20);
+        targetCtx.fillStyle = '#f472b6';
+        targetCtx.beginPath();
+        targetCtx.arc(0, 44, 10, 0, Math.PI * 2);
+        targetCtx.fill();
+        break;
+      }
+
+      case 'ysl': {
+        targetCtx.fillStyle = '#d4af37';
+        fillAutoFitText(targetCtx, 'YSL', -220, 116, 130, 68, '700', '"Playfair Display", serif', 4);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'YVES SAINT LAURENT', 74, 112, 460, 46, '600', '"Cormorant Garamond", serif', 10);
+        break;
+      }
+
+      case 'madam-kwans': {
+        // Photo-matched LUXE G Madam Kwan's: Emerald-green script + yellow crescent moon & star!
+        targetCtx.fillStyle = '#047857';
+        fillAutoFitText(targetCtx, "Madam Kwan's", -24, 118, 430, 74, '700', '"Playfair Display", serif', 2, true);
+        targetCtx.fillStyle = '#eab308';
+        targetCtx.beginPath();
+        targetCtx.arc(228, 84, 24, 0.3, Math.PI * 1.7);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#f3ebdc';
+        targetCtx.beginPath();
+        targetCtx.arc(236, 80, 18, 0, Math.PI * 2);
+        targetCtx.fill();
+        break;
+      }
+
+      case 'denza-fred': {
+        targetCtx.strokeStyle = '#38bdf8';
+        targetCtx.lineWidth = 5;
+        targetCtx.beginPath();
+        targetCtx.arc(-230, 96, 26, 0, Math.PI * 2);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'DENZA', -116, 114, 180, 56, '700', '"Jost", sans-serif', 12);
+        targetCtx.fillStyle = '#d4af37';
+        fillAutoFitText(targetCtx, '•', 2, 112, 30, 46, '700', '"Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'FRED PERRY', 168, 114, 290, 54, '700', '"Cormorant Garamond", serif', 10);
+        break;
+      }
+
+      case 'maybank': {
+        targetCtx.fillStyle = '#111827';
+        targetCtx.beginPath();
+        targetCtx.arc(-225, 96, 30, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.font = '900 32px "Jost", sans-serif';
+        targetCtx.textAlign = 'center';
+        targetCtx.textBaseline = 'middle';
+        targetCtx.fillText('M', -225, 98);
+        targetCtx.fillStyle = '#111827';
+        fillAutoFitText(targetCtx, 'Maybank  •  LAMY', 45, 114, 440, 62, '800', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -4384,18 +4858,34 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'gsc': {
-        targetCtx.fillStyle = '#facc15';
-        fillAutoFitText(targetCtx, 'GSC', -130, 124, 220, 88, '800', '"Jost", sans-serif', 8);
-        targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'GOLDEN SCREEN CINEMAS', 120, 114, 380, 34, '500', '"Jost", sans-serif', 8);
+        // Photo-matched 4F EZ403 GSC Cinemas: Matte-black gold-halo GSC filmstrip emblem + 2 rows of glowing format logos!
+        targetCtx.fillStyle = isEmissive ? '#facc15' : '#141414';
+        targetCtx.fillRect(-355, 36, 220, 120);
+        targetCtx.strokeStyle = '#facc15';
+        targetCtx.lineWidth = 6;
+        targetCtx.strokeRect(-355, 36, 220, 120);
+        targetCtx.fillStyle = isEmissive ? '#fef08a' : '#facc15';
+        fillAutoFitText(targetCtx, 'GSC', -245, 122, 185, 86, '900', '"Jost", sans-serif', 6);
+        // 2 Rows of glowing GSC signature cinema format logos
+        targetCtx.fillStyle = isEmissive ? '#ffffff' : '#18181b';
+        fillAutoFitText(targetCtx, 'BIG   |   SCREENX   |   4DX   |   ATMOS', 135, 82, 520, 34, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = isEmissive ? '#fde047' : '#78350f';
+        fillAutoFitText(targetCtx, 'PRESTIGE LOUNGE   •   play PARK   •   15 HALLS', 135, 134, 520, 28, '700', '"Jost", sans-serif', 6);
         break;
       }
 
       case 'tgv': {
-        targetCtx.fillStyle = '#e11d48';
-        fillAutoFitText(targetCtx, 'TGV', -120, 124, 220, 88, '800', '"Jost", sans-serif', 8);
-        targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'IMAX  •  CINEMAS', 120, 114, 340, 36, '500', '"Jost", sans-serif', 10);
+        // Photo-matched 3F EZ101 TGV Maybank IMAX: Stacked bright yellow Maybank box over 3D glowing electric-cyan IMAX® + red TGV Cinemas!
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.fillRect(-350, 28, 250, 62);
+        targetCtx.fillStyle = '#111827';
+        fillAutoFitText(targetCtx, 'Maybank', -225, 72, 220, 42, '900', '"Jost", sans-serif', 2);
+        targetCtx.fillStyle = isEmissive ? '#38bdf8' : '#0284c7';
+        fillAutoFitText(targetCtx, 'IMAX®', -225, 152, 250, 66, '900', '"Jost", sans-serif', 12);
+        targetCtx.fillStyle = isEmissive ? '#fb7185' : '#e11d48';
+        fillAutoFitText(targetCtx, 'TGV Cinemas', 155, 108, 390, 68, '800', '"Playfair Display", serif', 4, true);
+        targetCtx.fillStyle = isEmissive ? '#38bdf8' : '#0f172a';
+        fillAutoFitText(targetCtx, 'BITES  •  HALLS 1–7  •  TGV JUNIOR', 155, 154, 390, 24, '700', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -7560,19 +8050,48 @@ export function createLuxeValetVistaTexture() {
   sky.addColorStop(1, '#f4f8fb');
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, w, h);
-  // Shaded outdoor porte-cochere roof overhang at top
-  ctx.fillStyle = '#3b3630';
-  ctx.fillRect(0, 0, w, 74);
-  ctx.fillStyle = '#d4af37';
-  ctx.fillRect(0, 74, w, 8);
-  // Lush green Central Park tropical tree line across background
-  for (let i = 0; i < 18; i++) {
-    const tx = i * 64 + 10;
-    const tr = 58 + (i % 4) * 18;
-    ctx.fillStyle = i % 3 === 0 ? '#1f5e2c' : i % 3 === 1 ? '#2f7a38' : '#4a9844';
-    ctx.beginPath();
-    ctx.arc(tx, 278 - (i % 3) * 14, tr, 0, Math.PI * 2);
-    ctx.fill();
+  // Architectural bronze & limestone outdoor porte-cochere overhang + recessed warm downlights
+  const roofG = ctx.createLinearGradient(0, 0, 0, 86);
+  roofG.addColorStop(0, '#2a2520');
+  roofG.addColorStop(1, '#474038');
+  ctx.fillStyle = roofG;
+  ctx.fillRect(0, 0, w, 78);
+  ctx.fillStyle = '#c8a65a';
+  ctx.fillRect(0, 78, w, 6);
+  for (let lx = 96; lx < w; lx += 168) {
+    const dg = ctx.createRadialGradient(lx, 56, 3, lx, 56, 26);
+    dg.addColorStop(0, '#fff7dc');
+    dg.addColorStop(1, 'rgba(255,247,220,0)');
+    ctx.fillStyle = dg;
+    ctx.fillRect(lx - 28, 32, 56, 46);
+  }
+  // Distant sunlit Bandar Utama architectural skyline silhouettes
+  ctx.fillStyle = 'rgba(148, 176, 198, 0.42)';
+  for (const [bx, bw, bh] of [[40, 95, 165], [160, 72, 130], [720, 110, 185], [860, 125, 145]]) {
+    ctx.fillRect(bx, 316 - bh, bw, bh);
+  }
+  // Organic multi-layered dappled Central Park rainforest tree line (ZERO flat circle blobs!)
+  const canopyCols = ['#1b4724', '#265c2e', '#347336', '#4c8c42', '#69a650'];
+  for (let layer = 0; layer < 4; layer++) {
+    for (let i = 0; i < 42; i++) {
+      const tx = ((i * 27 + layer * 19) % (w + 60)) - 30;
+      const ty = 296 - layer * 16 - Math.sin(i * 1.4 + layer) * 28;
+      const rx = 24 + ((i * 13 + layer * 7) % 28);
+      const ry = 16 + ((i * 11 + layer * 5) % 20);
+      ctx.fillStyle = canopyCols[(layer + (i % 2)) % canopyCols.length];
+      ctx.beginPath();
+      ctx.ellipse(tx, ty, rx, ry, ((i % 5) - 2) * 0.14, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  // Slender porte-cochere limestone columns & warm sunlit palm trunks
+  ctx.fillStyle = '#4e3c2c';
+  for (const px of [128, 342, 548, 912]) {
+    ctx.fillRect(px, 232, 8, 94);
+  }
+  ctx.fillStyle = '#ddd6c7';
+  for (const cx of [14, w - 58]) {
+    ctx.fillRect(cx, 84, 44, 244);
   }
   // Sunlit cream porte-cochere drive apron & granite curb
   ctx.fillStyle = '#d8d2c6';

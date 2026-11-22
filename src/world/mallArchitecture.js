@@ -815,17 +815,7 @@ export function buildMallArchitecture(scene, interactables) {
       const nwShape = rectShape(b.xMin, b.xMax, b.zMin, b.zMax);
 
       if (fIdx === 0) {
-        // LG beneath the Ground Floor Rainforest Koi Pond is a bright solid LG Rainforest concourse
-        // with warm teak inlay plaza around the Giant Arapaima Aquarium & glass-walled escalator pavilion!
-        const rf = BOUNDS.rainforestVoid;
-        const lgPlaza = new THREE.Mesh(
-          new THREE.PlaneGeometry(rf.xMax - rf.xMin - 2.0, rf.zMax - rf.zMin - 2.0),
-          new THREE.MeshStandardMaterial({ map: createRainforestTerracottaFloorTexture(), roughness: 0.26, metalness: 0.05 })
-        );
-        lgPlaza.rotation.x = -Math.PI / 2;
-        lgPlaza.position.set(38.0, 0.014, 0.0);
-        lgPlaza.receiveShadow = true;
-        root.add(lgPlaza);
+        // LG beneath the Ground Floor Rainforest Koi Pond uses the unified reflective LG marble floor (no stretched flat quad!)
       }
 
       if (fIdx >= 1) {
@@ -846,6 +836,43 @@ export function buildMallArchitecture(scene, interactables) {
         rfTerraMesh.position.y = y + 0.014;
         rfTerraMesh.receiveShadow = true;
         root.add(rfTerraMesh);
+
+        // Photo-matched LUXE G Bright White Calacatta Marble Floor Inlay (x=63..117, z=-22.6..22.6 — #389, #400!)
+        const calacattaMaps = createMarbleFloorMaps({
+          baseHex: '#f6f4ef',
+          altHex: '#efece4',
+          veinColor: '#c8bfb0',
+          groutColor: '#d9d3c7',
+          tiles: 4,
+          baseRoughness: 28,
+          repeatX: 0.14,
+          repeatY: 0.14
+        });
+        const calacattaMat = new THREE.MeshStandardMaterial({
+          map: calacattaMaps.map,
+          roughnessMap: calacattaMaps.roughnessMap,
+          normalMap: calacattaMaps.normalMap,
+          normalScale: new THREE.Vector2(0.28, 0.28),
+          metalness: 0.04,
+          envMapIntensity: 0.72
+        });
+        const luxeGFloor = new THREE.Mesh(new THREE.ShapeGeometry(rectShape(63.0, 117.5, -22.6, 22.6)), calacattaMat);
+        luxeGFloor.rotation.x = -Math.PI / 2;
+        luxeGFloor.position.y = y + 0.014;
+        luxeGFloor.receiveShadow = true;
+        root.add(luxeGFloor);
+
+        // Textured Dark-Walnut Wood Rim encircling the Ground Floor Oval Atrium balustrade base (#372!)
+        const gfOvalWalnutPts = [];
+        for (let oi = 0; oi <= 56; oi++) {
+          const a = 0.372 + (oi / 56) * (Math.PI * 2 - 0.744);
+          gfOvalWalnutPts.push(new THREE.Vector3(138.0 + Math.cos(a) * 18.85, y + 0.06, Math.sin(a) * 12.15));
+        }
+        const gfOvalRim = new THREE.Mesh(
+          new THREE.TubeGeometry(new THREE.CatmullRomCurve3(gfOvalWalnutPts, false), 56, 0.13, 8, false),
+          new THREE.MeshStandardMaterial({ color: '#4c3220', roughness: 0.52, metalness: 0.08 })
+        );
+        root.add(gfOvalRim);
       }
 
       if (fIdx >= 1 && fIdx <= 6) {
@@ -1525,9 +1552,24 @@ export function buildMallArchitecture(scene, interactables) {
       }
     }
 
-    // Iconic Oval Atrium Cylindrical Vertical Glowing White LED-Slatted Columns (LG/1F/2F #154/#373) + Gold-Banded Brushed Stainless Columns on GF (#372)!
+    // Iconic Oval Atrium Cylindrical Vertical Glowing White LED-Slatted Columns (LG/1F/2F #154/#373) + Gold-Banded Brushed Stainless Columns on GF (#372) + LUXE G 3-Gold-Band Brushed Stainless Columns!
     const ovalLedRibMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.75, 1.82, 1.92), toneMapped: false });
     const ovalChromeMat = new THREE.MeshStandardMaterial({ color: '#c4cdd6', roughness: 0.22, metalness: 0.88, envMapIntensity: 1.35 });
+    const calacattaPlinthMat = new THREE.MeshStandardMaterial({ color: '#f4f1ea', roughness: 0.24, metalness: 0.05 });
+    for (const lx of [70.2, 85.0, 99.8]) {
+      for (const lz of [-6.8, 6.8]) {
+        const lgSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.575, 0.575, 4.92, 22), ovalChromeMat);
+        lgSleeve.position.set(lx, 8.65, lz);
+        const lgBase = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.67, 0.42, 22), calacattaPlinthMat);
+        lgBase.position.set(lx, 6.21, lz);
+        root.add(lgSleeve, lgBase);
+        for (const gy of [7.15, 8.65, 10.15]) {
+          const gBand = new THREE.Mesh(new THREE.CylinderGeometry(0.592, 0.592, 0.075, 22), brassGoldMat);
+          gBand.position.set(lx, gy, lz);
+          root.add(gBand);
+        }
+      }
+    }
     for (let i = 0; i < 10; i++) {
       const a = ((i + 0.5) / 10) * Math.PI * 2;
       if (Math.abs(Math.sin(a)) < 0.28) continue;
@@ -2023,6 +2065,13 @@ export function buildMallArchitecture(scene, interactables) {
     const isPjpac = uName.includes('PJPAC');
     const isRollerwa = uName.includes('ROLLERWA');
     const isTehTarik = uName.includes('TEH TARIK');
+    const isAeon = uName.includes('AEON');
+    const isDecathlon = uName.includes('DECATHLON');
+    const isTgv = uName.includes('TGV');
+    const isGsc = uName.includes('GSC');
+    const isWangsa = uName.includes('WANGSA BOWL');
+    const isCellini = uName.includes('CELLINI');
+    const isLoccitane = uName.includes('OCCITANE');
     const isMrt = store.id === 'g-mrt-portal' || uName.includes('MRT BANDAR UTAMA');
     const isNarrowCorridor = Math.abs(store.z) < 12.5;
     const isFlankWall = store.width <= 13.5 && (store.side === 'E' || store.side === 'W');
@@ -3129,7 +3178,8 @@ export function buildMallArchitecture(scene, interactables) {
     const doorHalfW = Math.min(2.1, innerW * 0.24);
     const glassBayW = halfW - 0.22 - doorHalfW;
     const isOpenGlassless =
-      isParkson || isJayaGrocer || isGameOn || isModu || isMrt ||
+      isParkson || isAeon || isDecathlon || isGsc || isTgv || isWangsa ||
+      isJayaGrocer || isGameOn || isModu || isMrt ||
       isMrDiy || isPopMart || isTopToy || isZusPastry || isSephora ||
       isStarbucks || isHeytea || isMiniso || isIppudo || isBhc ||
       isComeTrue || isAdidas || isFoodDistrict || isRollerwa;
@@ -3382,7 +3432,7 @@ export function buildMallArchitecture(scene, interactables) {
           // Center interior square warm-orange "Always Low prices" pillar surrounded by stacks of bright yellow shopping baskets + stainless stanchions!
           const leftWallW = Math.min(3.4, halfW - 3.6);
           const rightWallW = Math.min(3.4, halfW - 3.6);
-          const leftWall = new THREE.Mesh(new THREE.BoxGeometry(leftWallW, eaveY, 0.92), jayaTerracottaMat);
+          const leftWall = new THREE.Mesh(new THREE.BoxGeometry(leftWallW, eaveY, 0.92), lightOakMat);
           leftWall.position.set(-halfW + leftWallW * 0.5, eaveY * 0.5, 0.28);
           const hammerBadgeMat = new THREE.MeshStandardMaterial({
             map: createMrDiyHammerBadgeTexture(),
@@ -3467,6 +3517,43 @@ export function buildMallArchitecture(scene, interactables) {
             const rib = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.24, intD), lightOakMat);
             rib.position.set(ribX, eaveY - 0.22, -intD * 0.5 + 0.14);
             g.add(rib);
+          }
+          // Photo-matched Jaya Grocer full-width flanking supermarket perimeter glazing, bright ceiling & glowing checkout lanes!
+          const flankW = halfW - portalHalf - 2.35;
+          if (flankW > 1.2) {
+            for (const side of [-1, 1]) {
+              const fx = side * (portalHalf + 1.18 + flankW * 0.5);
+              const fGlass = new THREE.Mesh(new THREE.PlaneGeometry(flankW, eaveY - 0.22), intGlassPhysMat);
+              fGlass.position.set(fx, eaveY * 0.5, 0.24);
+              const fCurb = new THREE.Mesh(new THREE.BoxGeometry(flankW, 0.28, 0.26), satinWhiteMat);
+              fCurb.position.set(fx, 0.14, 0.24);
+              const chkCounter = new THREE.Mesh(new THREE.BoxGeometry(Math.min(flankW - 0.8, 3.2), 0.94, 0.72), satinWhiteMat);
+              chkCounter.position.set(fx, 0.47, -1.35);
+              const chkSign = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.36, 0.08), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('CHECKOUT', 'EXPRESS LANE', '#dc2626', '#ffffff', '#facc15', 256, 96) }));
+              chkSign.position.set(fx, 2.35, -1.35);
+              g.add(fGlass, fCurb, chkCounter, chkSign);
+            }
+          }
+        } else if (isAeon) {
+          // Photo-matched AEON (LG/G/1F/2F Old Wing): Bright white & Statuario marble outer piers + warm honey-oak portal arch + white egg-crate ceiling louver band + open glassless silver EAS security gates!
+          const oakPortalHalf = Math.min(halfW - 1.5, 6.2);
+          for (const side of [-1, 1]) {
+            const marblePier = new THREE.Mesh(new THREE.BoxGeometry(1.45, storeH, 0.96), satinWhiteMat);
+            marblePier.position.set(side * (halfW - 0.72), storeH * 0.5, 0.26);
+            const oakJamb = new THREE.Mesh(new THREE.BoxGeometry(0.46, eaveY, 1.04), lightOakMat);
+            oakJamb.position.set(side * oakPortalHalf, eaveY * 0.5, 0.28);
+            g.add(marblePier, oakJamb);
+          }
+          const oakArchBeam = new THREE.Mesh(new THREE.BoxGeometry(oakPortalHalf * 2 + 0.48, 0.42, 1.06), lightOakMat);
+          oakArchBeam.position.set(0, eaveY - 0.10, 0.28);
+          // Crisp white egg-crate ceiling louver band inside portal!
+          const louverBar = new THREE.Mesh(new THREE.BoxGeometry(oakPortalHalf * 1.92, 0.10, 1.85), satinWhiteMat);
+          louverBar.position.set(0, eaveY - 0.24, -0.82);
+          g.add(oakArchBeam, louverBar);
+          for (let ex = -2; ex <= 2; ex++) {
+            const eas = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.54, 0.42), brushedAlumMat);
+            eas.position.set(ex * 2.15, 0.77, 0.26);
+            g.add(eas);
           }
         } else if (isMiniso) {
           // Photo-matched 1 Utama LG308C MINISO: Coral-pink portal w/ 3 CONTINUOUS PARALLEL WHITE LED STRIPS running up both jambs & header soffit + projecting RED square smiling-bag pier blade sign + LAVENDER blind-box threshold island + striped lavender/white column!
@@ -4291,10 +4378,13 @@ export function buildMallArchitecture(scene, interactables) {
         g.add(wire, pot, bush);
       }
     } else if (isParkson) {
-      // Photo-matched 1 Utama G320 & S320 PARKSON ELITE: G320 sparkling champagne-gold mosaic outer piers + glossy white marble hall w/ Estée Lauder, SK-II & Laneige beauty islands; S320 sleek dark-gunmetal angled wing-walls + red wooden toy train & white kitchenware grid!
+      // Photo-matched 1 Utama PARKSON ELITE (G320 Cosmetics / F320 1F Apparel & Menswear / S320 2F Toys & Home):
+      // Corrugated reflective silver-chrome piers w/ vertical LED strips & black digital fashion screens (G/1F), central matte-charcoal pier w/ digital screen (2F)!
+      const is1FParkson = store.floor === 2;
       const is2FParkson = store.floor === 3;
       const innerSpan = Math.min(halfW - 2.4, 8.6);
-      const pierMat = is2FParkson ? gunmetalRibMat : parksonGoldMosaicMat;
+      const chromePierMat = new THREE.MeshStandardMaterial({ color: '#d4dce6', roughness: 0.20, metalness: 0.90, envMapIntensity: 1.45 });
+      const pierMat = is2FParkson ? gunmetalRibMat : chromePierMat;
       for (const side of [-1, 1]) {
         for (const px of [side * (halfW - 0.85), side * innerSpan]) {
           const pMesh = new THREE.Mesh(new THREE.BoxGeometry(1.55, storeH, 1.15), pierMat);
@@ -4302,10 +4392,30 @@ export function buildMallArchitecture(scene, interactables) {
           const goldBand = new THREE.Mesh(new THREE.BoxGeometry(1.60, 0.14, 1.20), brassGoldMat);
           goldBand.position.set(px, eaveY, 0.34);
           g.add(pMesh, goldBand);
+          if (!is2FParkson) {
+            // Vertical LED edge strips + inset black digital fashion screen on corrugated silver pier!
+            for (const lo of [-0.74, 0.74]) {
+              const pLed = new THREE.Mesh(new THREE.BoxGeometry(0.05, eaveY - 0.2, 0.05), sportLedBarMat);
+              pLed.position.set(px + lo, eaveY * 0.5, 0.93);
+              g.add(pLed);
+            }
+            const digScr = new THREE.Mesh(
+              new THREE.BoxGeometry(0.96, 1.72, 0.06),
+              new THREE.MeshBasicMaterial({ map: createSignBoardTexture('PARKSON Elite', is1FParkson ? 'NEW SEASON APPAREL' : 'HAUTE BEAUTÉ', '#0f172a', '#ffffff', '#d4af37', 256, 384) })
+            );
+            digScr.position.set(px, 2.05, 0.93);
+            g.add(digScr);
+          }
         }
       }
       if (is2FParkson) {
-        // S320 Toys & Home Living: Colorful red wooden toy train left + black-steel open kitchenware display racks & tiled pedestals right (replaces blank white box — photo-matched to 2_S320_Parkson_Elite_S_-_toys_homes_.jpg!)
+        // Central matte-charcoal dividing pier with digital promo screen splitting 2F Toys & Home bays!
+        const cPier = new THREE.Mesh(new THREE.BoxGeometry(1.65, storeH, 1.18), obsidianGlossMat);
+        cPier.position.set(0, storeH * 0.5, 0.34);
+        const cScr = new THREE.Mesh(new THREE.BoxGeometry(1.12, 1.92, 0.06), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('PARKSON Elite', 'TOYS & HOME LIVING', '#111827', '#ffffff', '#facc15', 256, 384) }));
+        cScr.position.set(0, 2.15, 0.94);
+        g.add(cPier, cScr);
+        // S320 Toys & Home Living: Colorful red wooden toy train left + black-steel open kitchenware display racks right!
         const trainBody = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.72, 0.82), jayaRedPortalMat);
         trainBody.position.set(-4.2, 0.46, -1.45);
         const trainCab = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.56, 0.78), mrDiyYellowMat);
@@ -4324,6 +4434,29 @@ export function buildMallArchitecture(scene, interactables) {
             cookware.position.set(4.2 + pot * 0.56, 1.06 + sh * 0.52, -1.65);
             g.add(cookware);
           }
+        }
+      } else if (is1FParkson) {
+        // F320 1F Menswear & Ladies Apparel Hall: Sculpted fashion mannequins on marble risers, tailored brass garment racks & festive ceiling lanterns (NO G320 cosmetics!)
+        for (const [mx, colIdx] of [[-4.8, 0], [-1.6, 2], [1.6, 4], [4.8, 1]]) {
+          const riser = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.78, 0.24, 18), cafeMarbleMat);
+          riser.position.set(mx, 0.12, -1.35);
+          g.add(riser);
+          addSculptedMannequin(g, mx, 0.24, -1.35, mannequinLightMat, mx < 0 ? 0.25 : -0.25, intMerchMats[colIdx]);
+        }
+        for (const rx of [-3.2, 3.2]) {
+          const rBar = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.04, 0.04), brassGoldMat);
+          rBar.position.set(rx, 1.55, -2.35);
+          for (const endX of [-1.18, 1.18]) {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.55, 0.48), brassGoldMat);
+            leg.position.set(rx + endX, 0.78, -2.35);
+            g.add(leg);
+          }
+          for (let gm = -3; gm <= 3; gm++) {
+            const shirt = new THREE.Mesh(hangingGarmentGeo, intMerchMats[(gm + 7) % intMerchMats.length]);
+            shirt.position.set(rx + gm * 0.30, 1.15, -2.35);
+            g.add(shirt);
+          }
+          g.add(rBar);
         }
       } else {
         // G320 Cosmetics Hall: Estée Lauder octagonal black/white island + SK-II burgundy island w/ 3 red barstools + Laneige white marble island!
@@ -4383,11 +4516,16 @@ export function buildMallArchitecture(scene, interactables) {
       }
       g.add(ccPlaque);
     } else if (isCoach) {
-      // Photo-matched 1 Utama G309 COACH: Matte charcoal left pier + glowing amber glass blocks + right full-height glass craft workshop bay w/ wood workbench & glowing pink neon scissors!
-      const cLeftPier = new THREE.Mesh(new THREE.BoxGeometry(0.86, storeH, 0.94), obsidianGlossMat);
-      cLeftPier.position.set(-halfW + 0.43, storeH * 0.5, 0.28);
-      const amberTransom = new THREE.Mesh(new THREE.BoxGeometry(halfW * 0.92, 0.62, 0.22), amberBacklitMat);
-      amberTransom.position.set(halfW * 0.44, eaveY - 0.34, 0.46);
+      // Photo-matched 1 Utama G309 COACH: Full-width glowing amber glass-block lattice flanking BOTH left & right piers + craft workshop bench w/ pink neon scissors!
+      for (const side of [-1, 1]) {
+        const cPier = new THREE.Mesh(new THREE.BoxGeometry(0.82, storeH, 0.94), obsidianGlossMat);
+        cPier.position.set(side * (halfW - 0.41), storeH * 0.5, 0.28);
+        const amberFlank = new THREE.Mesh(new THREE.BoxGeometry(1.55, eaveY - 0.35, 0.24), amberBacklitMat);
+        amberFlank.position.set(side * (halfW - 1.65), eaveY * 0.5, 0.44);
+        g.add(cPier, amberFlank);
+      }
+      const amberTransom = new THREE.Mesh(new THREE.BoxGeometry(store.width - 1.6, 0.56, 0.22), amberBacklitMat);
+      amberTransom.position.set(0, eaveY - 0.32, 0.46);
       const craftBench = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.88, 0.85), lightOakMat);
       craftBench.position.set(halfW - 1.95, 0.44, -1.15);
       // Glowing pink neon scissors craft emblem on right workshop wall!
@@ -4714,6 +4852,150 @@ export function buildMallArchitecture(scene, interactables) {
       const rBelt = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.06, 0.02), jayaRedPortalMat);
       rBelt.position.set(3.6, 0.84, 0.95);
       g.add(rBelt);
+    } else if (isDecathlon) {
+      // Photo-matched 1F F319 DECATHLON: Deep indigo-cobalt (#2c2e83) twin-bay open glassless portal + central backlit hiker photo pillar +
+      // green AstroTurf outdoor display island (dome tent + pop-up soccer goal) + giant royal-blue branded column w/ 3-tone pink/rose/burgundy base rings!
+      const decBlueMat = new THREE.MeshStandardMaterial({ color: '#2c2e83', roughness: 0.34, metalness: 0.18 });
+      const turfMat = new THREE.MeshStandardMaterial({ color: '#16a34a', roughness: 0.92 });
+      for (const px of [-halfW + 0.58, 0, halfW - 0.58]) {
+        const dPier = new THREE.Mesh(new THREE.BoxGeometry(1.16, storeH, 1.02), decBlueMat);
+        dPier.position.set(px, storeH * 0.5, 0.32);
+        g.add(dPier);
+      }
+      // Central backlit hiker / sport adventure photo pillar!
+      const hikerScr = new THREE.Mesh(
+        new THREE.BoxGeometry(0.96, 2.85, 0.08),
+        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('DECATHLON', 'READY TO PLAY? • 70+ SPORTS', '#1e3a8a', '#ffffff', '#38bdf8', 256, 512) })
+      );
+      hikerScr.position.set(0, 1.95, 0.86);
+      // Green AstroTurf outdoor display island w/ sculpted dome tent & pop-up soccer goal!
+      const turfPad = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.05, 2.2), turfMat);
+      turfPad.position.set(-3.6, 0.03, -1.15);
+      const tentDome = new THREE.Mesh(new THREE.SphereGeometry(0.95, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: '#0284c7', roughness: 0.55 }));
+      tentDome.scale.set(1.15, 0.92, 1.05);
+      tentDome.position.set(-4.5, 0.06, -1.15);
+      // Pop-up white soccer goal frame
+      const goalTop = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.06, 0.06), satinWhiteMat);
+      goalTop.position.set(-2.3, 1.02, -1.15);
+      for (const gx of [-3.05, -1.55]) {
+        const gPost = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.02, 0.06), satinWhiteMat);
+        gPost.position.set(gx, 0.51, -1.15);
+        g.add(gPost);
+      }
+      // Giant Royal-Blue "DECATHLON Ready to play?" Branded Column w/ 3-tone Pink/Dusty-Rose/Burgundy Base Rings!
+      const decCol = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, eaveY - 0.12, 20), decBlueMat);
+      decCol.position.set(3.8, eaveY * 0.5, 0.58);
+      const ringCols = ['#881337', '#be5a7a', '#f472b6'];
+      ringCols.forEach((hex, ri) => {
+        const ring = new THREE.Mesh(new THREE.CylinderGeometry(0.585, 0.585, 0.28, 20), new THREE.MeshStandardMaterial({ color: hex, roughness: 0.45 }));
+        ring.position.set(3.8, 0.16 + ri * 0.28, 0.58);
+        g.add(ring);
+      });
+      const colBanner = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.58, 0.58, 1.1, 20, 1, true),
+        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('DECATHLON', 'Ready to play?', '#2c2e83', '#ffffff', '#67e8f9', 512, 192) })
+      );
+      colBanner.position.set(3.8, 2.35, 0.58);
+      g.add(hikerScr, turfPad, tentDome, goalTop, decCol, colBanner);
+    } else if (isTgv) {
+      // Photo-matched 3F EZ101 TGV MAYBANK IMAX: Corrugated steel piers + glowing cyan Bites bar draped in green vines + white backlit Now Seating Halls 1-7 & TGV JUNIOR board + dark striped foyer floor + slatted LED ceiling!
+      const corrSteelMat = new THREE.MeshStandardMaterial({ color: '#c4c9d0', roughness: 0.36, metalness: 0.62 });
+      const vineMat = new THREE.MeshStandardMaterial({ color: '#166534', roughness: 0.78 });
+      const cyanGlowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.25, 1.85, 2.45), toneMapped: false });
+      for (const side of [-1, 1]) {
+        const tPier = new THREE.Mesh(new THREE.BoxGeometry(1.25, storeH, 1.05), corrSteelMat);
+        tPier.position.set(side * (halfW - 0.62), storeH * 0.5, 0.30);
+        g.add(tPier);
+      }
+      // Dark charcoal-striped foyer floor pad + dark linear ceiling slats with glowing LED bars!
+      const foyerFloor = new THREE.Mesh(new THREE.BoxGeometry(innerW - 0.8, 0.04, intD + 0.6), obsidianGlossMat);
+      foyerFloor.position.set(0, 0.03, -intD * 0.5 + 0.15);
+      g.add(foyerFloor);
+      for (let sl = -5; sl <= 5; sl++) {
+        const slat = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.22, intD), obsidianGlossMat);
+        slat.position.set(sl * (innerW / 12), eaveY - 0.22, -intD * 0.5 + 0.12);
+        g.add(slat);
+        if (sl % 2 === 0) {
+          const led = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, intD - 0.4), cyanGlowMat);
+          led.position.set(sl * (innerW / 12) + 0.18, eaveY - 0.32, -intD * 0.5 + 0.12);
+          g.add(led);
+        }
+      }
+      // Bites Concession Bar w/ black steel pergola draped in hanging green vines (left-center!)
+      const bitesX = -Math.min(innerW * 0.24, 5.2);
+      const bitesCounter = new THREE.Mesh(new THREE.BoxGeometry(4.6, 1.02, 1.05), obsidianGlossMat);
+      bitesCounter.position.set(bitesX, 0.51, -1.45);
+      const bitesTop = new THREE.Mesh(new THREE.BoxGeometry(4.72, 0.07, 1.15), satinWhiteMat);
+      bitesTop.position.set(bitesX, 1.05, -1.45);
+      const bitesHeader = new THREE.Mesh(new THREE.BoxGeometry(4.65, 0.64, 0.24), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('Bites', 'POPCORN • COMBOS • DRINKS', '#0284c7', '#ffffff', '#fef08a', 512, 128) }));
+      bitesHeader.position.set(bitesX, 2.92, -1.05);
+      for (let vn = -4; vn <= 4; vn++) {
+        const vine = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.03, 0.68 + (Math.abs(vn) % 2) * 0.25, 6), vineMat);
+        vine.position.set(bitesX + vn * 0.48, 2.38, -0.94);
+        g.add(vine);
+      }
+      // White backlit "Now Seating • Halls 1 2 3 4 5 6 7" & "TGV JUNIOR" directory wall (right-center!)
+      const hallX = Math.min(innerW * 0.24, 5.2);
+      const nowSeating = new THREE.Mesh(
+        new THREE.BoxGeometry(4.4, 2.1, 0.12),
+        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('Now Seating  •  Halls 1 2 3 4 5 6 7', 'MAYBANK IMAX  •  TGV JUNIOR  •  INDULGE', '#f8fafc', '#0f172a', '#e11d48', 768, 320) })
+      );
+      nowSeating.position.set(hallX, 2.15, -intD + 0.25);
+      g.add(bitesCounter, bitesTop, bitesHeader, nowSeating);
+    } else if (isGsc) {
+      // Photo-matched 4F EZ403 GSC CINEMAS: Towering warm honey-oak vertical wood-slat portal piers + open glassless wide matte-black concession counter w/ white quartz top + 5 glowing menu monitors!
+      const honeyOakMat = new THREE.MeshStandardMaterial({ color: '#c5a87e', roughness: 0.48 });
+      const darkOakSlatMat = new THREE.MeshStandardMaterial({ color: '#785a38', roughness: 0.62 });
+      for (const side of [-1, 1]) {
+        const gx = side * (halfW - 0.95);
+        const oakPier = new THREE.Mesh(new THREE.BoxGeometry(1.9, storeH, 1.05), honeyOakMat);
+        oakPier.position.set(gx, storeH * 0.5, 0.28);
+        g.add(oakPier);
+        for (let sl = -3; sl <= 3; sl++) {
+          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.08, storeH - 0.1, 0.10), darkOakSlatMat);
+          slat.position.set(gx + sl * 0.24, storeH * 0.5, 0.82);
+          g.add(slat);
+        }
+      }
+      // Wide open matte-black concession counter w/ crisp white quartz top + 5 glowing backlit cinema menu monitors!
+      const concW = Math.min(innerW - 4.2, 14.8);
+      const concBase = new THREE.Mesh(new THREE.BoxGeometry(concW, 1.02, 1.05), obsidianGlossMat);
+      concBase.position.set(0, 0.51, -1.65);
+      const concTop = new THREE.Mesh(new THREE.BoxGeometry(concW + 0.14, 0.08, 1.18), satinWhiteMat);
+      concTop.position.set(0, 1.06, -1.65);
+      const concToe = new THREE.Mesh(new THREE.BoxGeometry(concW + 0.06, 0.05, 1.08), warmCoveLedMat);
+      concToe.position.set(0, 0.05, -1.65);
+      g.add(concBase, concTop, concToe);
+      const menuLabels = ['CARAMEL POPCORN', 'COMBO 1 • REGULAR', 'HOTDOG & NACHOS', 'COLD DRINKS', 'GSC MERCHANDISE'];
+      for (let m = 0; m < 5; m++) {
+        const mx = (m - 2) * Math.min(2.55, (concW - 1.2) / 4.5);
+        const mon = new THREE.Mesh(
+          new THREE.BoxGeometry(1.85, 0.98, 0.08),
+          new THREE.MeshBasicMaterial({ map: createSignBoardTexture(menuLabels[m], 'GSC CONCESSIONS • RM18.90', '#18181b', '#facc15', '#ffffff', 384, 192) })
+        );
+        mon.position.set(mx, 2.75, -intD + 0.28);
+        g.add(mon);
+      }
+    } else if (isCellini) {
+      // Photo-matched 4F OV401 Cellini: Matte-charcoal architectural monolith piers + glowing sky-blue vertical accent LED + warm oak showroom!
+      const skyLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.28, 1.65, 2.35), toneMapped: false });
+      for (const side of [-1, 1]) {
+        const cPier = new THREE.Mesh(new THREE.BoxGeometry(1.15, storeH, 0.96), obsidianGlossMat);
+        cPier.position.set(side * (halfW - 0.58), storeH * 0.5, 0.28);
+        const cLed = new THREE.Mesh(new THREE.BoxGeometry(0.06, eaveY - 0.2, 0.06), skyLedMat);
+        cLed.position.set(side * (halfW - 1.18), eaveY * 0.5, 0.72);
+        g.add(cPier, cLed);
+      }
+    } else if (isLoccitane) {
+      // Photo-matched LUXE G L'OCCITANE: Provence sunshine-yellow (#eab308) arched boutique window frames & limestone mullions!
+      const provYellowMat = new THREE.MeshStandardMaterial({ color: '#eab308', roughness: 0.42 });
+      for (const side of [-1, 1]) {
+        const yPier = new THREE.Mesh(new THREE.BoxGeometry(0.75, storeH, 0.88), provYellowMat);
+        yPier.position.set(side * (halfW - 0.38), storeH * 0.5, 0.28);
+        const arch = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.12, 8, 20, Math.PI), provYellowMat);
+        arch.position.set(side * (halfW - 2.15), eaveY - 1.25, 0.42);
+        g.add(yPier, arch);
+      }
     } else if (isMrt) {
       // MRT BANDAR UTAMA (PINTU B) SKYWALK PORTAL: Sunlit glazed transit sliding doors + glowing MRT blue-teal wayfinding header + daylight skywalk corridor behind!
       const skyGlowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.08, 1.24, 1.38) });
@@ -5373,116 +5655,93 @@ export function buildMallArchitecture(scene, interactables) {
     };
 
     if (k.id === 'k-luxe-pop') {
-      // GF LUXE DIOR / CHANEL GRAND WHITE-MARBLE & BRUSHED-CHAMPAGNE-GOLD EXHIBITION PAVILION (Shot 8 Hero Centerpiece!)
-      const rug = new THREE.Mesh(new THREE.CylinderGeometry(3.65, 3.72, 0.08, 40), ivoryStoneMat);
-      rug.position.y = 0.04;
-      const goldTrim = new THREE.Mesh(new THREE.TorusGeometry(3.68, 0.045, 8, 44), brassGoldMat);
-      goldTrim.rotation.x = Math.PI / 2;
-      goldTrim.position.y = 0.09;
-      const haloGlow = new THREE.Mesh(new THREE.TorusGeometry(3.45, 0.032, 8, 44), warmCoveLedMat);
-      haloGlow.rotation.x = Math.PI / 2;
-      haloGlow.position.y = 0.09;
-      // Grand 4-pillar fluted white marble & brushed-gold luxury colonnade supporting glowing gold halo canopy!
-      for (let cp = 0; cp < 4; cp++) {
-        const ca = (cp / 4) * Math.PI * 2 + Math.PI * 0.25;
-        const px = Math.cos(ca) * 2.55;
-        const pz = Math.sin(ca) * 2.55;
-        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 3.25, 16), ivoryStoneMat);
-        col.position.set(px, 1.70, pz);
-        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.16, 0.16, 16), brassGoldMat);
-        cap.position.set(px, 3.28, pz);
-        const baseC = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.24, 0.20, 16), brassGoldMat);
-        baseC.position.set(px, 0.18, pz);
-        kg.add(col, cap, baseC);
-      }
-      const canopyRing = new THREE.Mesh(new THREE.TorusGeometry(2.55, 0.13, 14, 64), brassGoldMat);
-      canopyRing.rotation.x = Math.PI / 2;
-      canopyRing.position.y = 3.22;
-      const canopyGlow = new THREE.Mesh(new THREE.TorusGeometry(2.42, 0.05, 10, 64), warmCoveLedMat);
-      canopyGlow.rotation.x = Math.PI / 2;
-      canopyGlow.position.y = 3.12;
-
-      // Central illuminated marble perfume vitrine + Sculpted Faceted Crystal Dior Amphora Centerpiece!
-      const centerPlinth = new THREE.Mesh(new THREE.CylinderGeometry(1.08, 1.14, 1.00, 48), cafeMarbleMat);
-      centerPlinth.position.set(0, 0.54, 0);
-      const centerRim = new THREE.Mesh(new THREE.TorusGeometry(1.10, 0.032, 8, 48), brassGoldMat);
-      centerRim.rotation.x = Math.PI / 2;
-      centerRim.position.set(0, 1.04, 0);
-      const amphoraPts = [
-        new THREE.Vector2(0.02, 0.0),
-        new THREE.Vector2(0.24, 0.02),
-        new THREE.Vector2(0.32, 0.28),
-        new THREE.Vector2(0.28, 0.56),
-        new THREE.Vector2(0.12, 0.78),
-        new THREE.Vector2(0.10, 0.96),
-        new THREE.Vector2(0.14, 1.08),
-        new THREE.Vector2(0.02, 1.14)
-      ];
-      const crystalFlaconMat = new THREE.MeshPhysicalMaterial({
-        color: '#fce7a2',
-        emissive: '#b88628',
-        emissiveIntensity: 0.22,
-        transparent: true,
-        opacity: 0.86,
-        roughness: 0.04,
-        metalness: 0.08,
-        clearcoat: 1.0,
-        envMapIntensity: 1.95
-      });
-      const giantFlacon = new THREE.Mesh(new THREE.LatheGeometry(amphoraPts, 24), crystalFlaconMat);
-      giantFlacon.position.set(0, 1.06, 0);
-      const flaconCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.13, 0.22, 20), brassGoldMat);
-      flaconCollar.position.set(0, 1.88, 0);
-      const flaconCap = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), crystalFlaconMat);
-      flaconCap.position.set(0, 2.16, 0);
-      const diorSpot = new THREE.PointLight('#ffe4b5', 7.5, 9, 1.8);
-      diorSpot.position.set(0, 2.95, 0);
-
-      // 4 Curved Illuminated Glass Cosmetic Vitrines stocked with luxury velvet risers, miniature crystal perfume flacons & warm LED rings!
-      for (const [fx, fz] of [[-1.95, 0], [1.95, 0], [0, -1.95], [0, 1.95]]) {
-        const vitBase = new THREE.Mesh(new THREE.CylinderGeometry(0.50, 0.54, 0.90, 32), ivoryStoneMat);
-        vitBase.position.set(fx, 0.50, fz);
-        const vitBrassRim = new THREE.Mesh(new THREE.TorusGeometry(0.51, 0.024, 8, 32), brassGoldMat);
-        vitBrassRim.rotation.x = Math.PI / 2;
-        vitBrassRim.position.set(fx, 0.95, fz);
-        const vitVelvet = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.40, 0.10, 24), obsidianGlossMat);
-        vitVelvet.position.set(fx, 1.00, fz);
-        const vitLed = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.016, 6, 24), warmCoveLedMat);
-        vitLed.rotation.x = Math.PI / 2;
-        vitLed.position.set(fx, 0.97, fz);
-        const vitGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.62, 28), intGlassPhysMat);
-        vitGlass.position.set(fx, 1.26, fz);
-        kg.add(vitBase, vitBrassRim, vitVelvet, vitLed, vitGlass);
-        for (let fb = 0; fb < 5; fb++) {
-          const fa = (fb / 5) * Math.PI * 2;
-          const fr = fb === 0 ? 0 : 0.20;
-          const miniBot = new THREE.Mesh(bottleSmallGeo, fb % 2 === 0 ? crystalFlaconMat : brassGoldMat);
-          miniBot.scale.set(0.62, fb === 0 ? 1.05 : 0.78, 0.62);
-          miniBot.position.set(fx + Math.cos(fa) * fr, 1.12, fz + Math.sin(fa) * fr);
-          kg.add(miniBot);
+      // Photo-matched 2025 LUXE G Center Pavilions (#149, #389): TOM FORD black/white marble fragrance bar + Bell & Ross matte-black octagonal watch pavilion w/ giant white '&' roof emblem + TUDOR matte-black/crimson pavilion + organic white/gold pebble ottomans!
+      const tfG = new THREE.Group();
+      tfG.position.set(-3.2, 0, 0);
+      const tfDeck = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.08, 3.0), obsidianGlossMat);
+      tfDeck.position.y = 0.04;
+      const tfBar = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.96, 1.35), obsidianGlossMat);
+      tfBar.position.y = 0.52;
+      const tfTop = new THREE.Mesh(new THREE.BoxGeometry(3.28, 0.08, 1.42), cafeMarbleMat);
+      tfTop.position.y = 1.04;
+      const tfCornice = new THREE.Mesh(new THREE.BoxGeometry(3.55, 0.56, 2.25), [obsidianGlossMat, obsidianGlossMat, obsidianGlossMat, kioskSoffitMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TOM FORD', 'PRIVATE BLEND • BEAUTY', '#09090b', '#ffffff', '#d4af37', 512, 128) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TOM FORD', 'PRIVATE BLEND • BEAUTY', '#09090b', '#ffffff', '#d4af37', 512, 128) })]);
+      tfCornice.position.y = 3.05;
+      const tfGoldRim = new THREE.Mesh(new THREE.BoxGeometry(3.62, 0.06, 2.32), brassGoldMat);
+      tfGoldRim.position.y = 2.75;
+      for (const px of [-1.58, 1.58]) {
+        for (const pz of [-0.95, 0.95]) {
+          const post = new THREE.Mesh(new THREE.BoxGeometry(0.10, 2.75, 0.10), brassGoldMat);
+          post.position.set(px, 1.40, pz);
+          tfG.add(post);
         }
       }
-      // Curved Champagne-Gold & Ivory Couture Crown Drum Ring (3x RepeatWrapping -> ZERO horizontal letter stretching on DIOR BEAUTY!)
-      const crownTex = signTex.clone();
-      crownTex.wrapS = THREE.RepeatWrapping;
-      crownTex.wrapT = THREE.ClampToEdgeWrapping;
-      crownTex.repeat.set(3, 1);
-      crownTex.needsUpdate = true;
-      const crownDrum = new THREE.Mesh(
-        new THREE.CylinderGeometry(2.60, 2.60, 0.56, 48, 1, true),
-        new THREE.MeshStandardMaterial({ map: crownTex, emissive: '#fff4dc', emissiveMap: crownTex, emissiveIntensity: 0.38, roughness: 0.26, metalness: 0.14, side: THREE.DoubleSide })
+      // Illuminated perfume risers & bottles atop Tom Ford marble counter
+      for (let pb = -2; pb <= 2; pb++) {
+        const btl = new THREE.Mesh(bottleSmallGeo, pb % 2 === 0 ? obsidianGlossMat : brassGoldMat);
+        btl.scale.set(0.75, 1.15, 0.75);
+        btl.position.set(pb * 0.52, 1.22, 0.15);
+        tfG.add(btl);
+      }
+      tfG.add(tfDeck, tfBar, tfTop, tfCornice, tfGoldRim);
+
+      // Bell & Ross Matte-Black Octagonal Watch Pavilion w/ Giant White '&' Architectural Roof Emblem!
+      const brG = new THREE.Group();
+      brG.position.set(2.4, 0, 0);
+      const brBase = new THREE.Mesh(new THREE.CylinderGeometry(2.15, 2.22, 0.10, 8), obsidianGlossMat);
+      brBase.position.y = 0.05;
+      const brRoof = new THREE.Mesh(new THREE.CylinderGeometry(2.10, 2.10, 0.48, 8), obsidianGlossMat);
+      brRoof.position.y = 3.08;
+      const brSign = new THREE.Mesh(
+        new THREE.CylinderGeometry(2.13, 2.13, 0.42, 8, 1, true),
+        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('BELL & ROSS', 'AVIATION INSTRUMENTS', '#0b0c10', '#ffffff', '#facc15', 512, 96) })
       );
-      crownDrum.position.y = 3.52;
-      const crownCapTop = new THREE.Mesh(new THREE.TorusGeometry(2.60, 0.055, 8, 56), brassGoldMat);
-      crownCapTop.rotation.x = Math.PI / 2;
-      crownCapTop.position.y = 3.80;
-      const crownCapBot = new THREE.Mesh(new THREE.TorusGeometry(2.60, 0.055, 8, 56), brassGoldMat);
-      crownCapBot.rotation.x = Math.PI / 2;
-      crownCapBot.position.y = 3.24;
-      kg.add(rug, goldTrim, haloGlow, canopyRing, canopyGlow, centerPlinth, centerRim, giantFlacon, flaconCollar, flaconCap, diorSpot, crownDrum, crownCapTop, crownCapBot);
-      // 2 Relaxed Dior Beauty Advisors standing cleanly OUTSIDE plinth & vitrines (ZERO counter/glass clipping!)
-      addStaff(-2.85, 1.85, '#1c1d24');
-      addStaff(2.85, -1.85, '#1c1d24');
+      brSign.position.y = 3.08;
+      // Giant Glowing White '&' Roof Emblem atop Bell & Ross Pavilion!
+      const ampPlaque = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.15, 1.15, 0.08, 24),
+        [obsidianGlossMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('&', '', '#0b0c10', '#ffffff', '#ffffff', 256, 256) }), obsidianGlossMat]
+      );
+      ampPlaque.position.y = 3.38;
+      for (let bp = 0; bp < 4; bp++) {
+        const ba = (bp / 4) * Math.PI * 2 + Math.PI * 0.25;
+        const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.85, 0.12), obsidianGlossMat);
+        post.position.set(Math.cos(ba) * 1.72, 1.48, Math.sin(ba) * 1.72);
+        const vit = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.32, 0.62), obsidianGlossMat);
+        vit.position.set(Math.cos(ba) * 0.95, 0.68, Math.sin(ba) * 0.95);
+        const vitG = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.48, 0.56), intGlassPhysMat);
+        vitG.position.set(Math.cos(ba) * 0.95, 1.56, Math.sin(ba) * 0.95);
+        brG.add(post, vit, vitG);
+      }
+      brG.add(brBase, brRoof, brSign, ampPlaque);
+
+      // Adjacent TUDOR Matte-Black & Crimson Shield Totem + 2 Organic Sculpted White/Gold Pebble Ottomans!
+      const tudorG = new THREE.Group();
+      tudorG.position.set(6.4, 0, 0);
+      const tPyl = new THREE.Mesh(new THREE.BoxGeometry(1.65, 2.65, 1.15), obsidianGlossMat);
+      tPyl.position.y = 1.325;
+      const tRed = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.24, 1.20), jayaRedPortalMat);
+      tRed.position.y = 2.55;
+      const tSign = new THREE.Mesh(new THREE.PlaneGeometry(1.48, 0.82), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TUDOR', 'BORN TO DARE • GENÈVE', '#0b0c10', '#ffffff', '#dc2626', 384, 192) }));
+      tSign.position.set(0, 1.82, 0.59);
+      const tSignB = tSign.clone();
+      tSignB.rotation.y = Math.PI;
+      tSignB.position.z = -0.59;
+      tudorG.add(tPyl, tRed, tSign, tSignB);
+
+      for (const [ox, oz] of [[-0.4, 2.35], [-0.4, -2.35]]) {
+        const peb = new THREE.Mesh(new THREE.SphereGeometry(0.68, 18, 12), cafeMarbleMat);
+        peb.scale.set(1.45, 0.42, 0.92);
+        peb.position.set(ox, 0.24, oz);
+        const pebBase = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.78, 0.08, 20), brassGoldMat);
+        pebBase.scale.set(1.3, 1.0, 0.85);
+        pebBase.position.set(ox, 0.04, oz);
+        kg.add(peb, pebBase);
+      }
+      const luxeSpot = new THREE.PointLight('#fff0d0', 7.0, 12, 1.7);
+      luxeSpot.position.set(0, 3.15, 0);
+      kg.add(tfG, brG, tudorG, luxeSpot);
+      addStaff(-3.2, -1.25, '#14161a');
+      addStaff(2.4, 1.45, '#14161a');
     } else if (k.id === 'k-sushizanmai') {
       // Photo-matched 1 Utama SK9A SUSHI ZANMAI: Freestanding OPEN-CONCEPT 2F Highstreet Japanese timber-slatted dining booth/pavilion!
       // Raised warm wood-trimmed open dining platform (5.8m x 3.6m)
@@ -6015,7 +6274,11 @@ export function buildMallArchitecture(scene, interactables) {
         mug.position.set(-1.35 + mg * 0.68, 2.38, 1.05);
         kg.add(mug);
       }
-      kg.add(base, toe, top, signF, signB);
+      // Photo-matched dark charcoal-green roof canopy w/ crisp top-printed white BUNGKUS KAW KAW logo (visible from GF/1F balconies!)
+      const bRoofTopMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('BUNGKUS KAW KAW', 'KOPI • TEH • NASI LEMAK', '#113021', '#ffffff', '#fde047', 512, 256) });
+      const bRoof = new THREE.Mesh(new THREE.BoxGeometry(4.55, 0.14, 2.48), [bungkusForestMat, bungkusForestMat, bRoofTopMat, kioskSoffitMat, bungkusForestMat, bungkusForestMat]);
+      bRoof.position.set(0, 3.16, 0);
+      kg.add(base, toe, top, signF, signB, bRoof);
       addStaff(-0.45, -0.25, '#14532d');
       addStaff(0.75, -0.25, '#14532d');
     } else if (k.id === 'k-kenangan') {
@@ -6039,30 +6302,288 @@ export function buildMallArchitecture(scene, interactables) {
       woodCan.position.set(0, 2.84, -0.22);
       kg.add(base, kick, top, espresso, guard, woodCan);
       addStaff(-0.35, -0.20, '#451a03');
-    } else {
-      // ZUS COFFEE (SK9 Royal Blue Pylon) & secondary concourse kiosks
-      const isZus = k.id === 'k-zus2f';
-      const counterMat = isZus ? zusRoyalBlueMat : kBodyMat;
-      const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.00, 2.4), counterMat);
-      base.position.y = 0.50;
-      const toe = new THREE.Mesh(new THREE.BoxGeometry(4.26, 0.04, 2.46), warmToeKickMat);
-      toe.position.y = 0.06;
-      const top = new THREE.Mesh(new THREE.BoxGeometry(4.36, 0.09, 2.56), counterMarbleMat);
-      top.position.y = 1.05;
-      const espresso = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.54, 0.54), brushedAlumMat);
-      espresso.position.set(-0.95, 1.38, 0.25);
-      const vitrine = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.58, 0.78), intGlassPhysMat);
-      vitrine.position.set(0.85, 1.40, 0.65);
-      for (const px of [-1.85, 1.85]) {
-        const p = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.075, 2.75, 10), isZus ? satinWhiteMat : smokedOakMat);
-        p.position.set(px, 1.38, -0.78);
-        kg.add(p);
+    } else if (k.id === 'k-popmart-robo') {
+      // 1. Photo-matched GK602 POP MART ROBO SHOP: Unmanned bright-yellow dual-bay blind-box vending machine + wavy rainbow vertical-slat backdrop + yellow neon crown (ZERO staff!)
+      const rbMats = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#a855f7', '#ec4899'].map((hex) => new THREE.MeshStandardMaterial({ color: hex, roughness: 0.34 }));
+      for (let s = 0; s < 14; s++) {
+        const slatH = 2.45 + Math.sin(s * 0.65) * 0.38;
+        const slat = new THREE.Mesh(new THREE.BoxGeometry(0.22, slatH, 0.16), rbMats[s % rbMats.length]);
+        slat.position.set(-1.68 + s * 0.26, slatH * 0.5, -0.68);
+        kg.add(slat);
       }
-      const header = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.68, 0.34), [counterMat, counterMat, counterMat, kioskSoffitMat, signFace, signFace]);
-      header.position.set(0, 2.78, -0.78);
-      kg.add(base, toe, top, espresso, vitrine, header);
-      addStaff(-0.35, -0.22, isZus ? '#0f2e78' : '#1e293b');
-      addStaff(0.75, -0.22, isZus ? '#0f2e78' : '#1e293b');
+      for (const mx of [-0.95, 0.95]) {
+        const vm = new THREE.Mesh(new THREE.BoxGeometry(1.58, 2.25, 0.96), mrDiyYellowMat);
+        vm.position.set(mx, 1.125, 0.12);
+        const glass = new THREE.Mesh(new THREE.BoxGeometry(1.22, 1.32, 0.06), intGlassPhysMat);
+        glass.position.set(mx - 0.12, 1.38, 0.61);
+        const touch = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.42, 0.04), sportLedBarMat);
+        touch.position.set(mx + 0.58, 1.25, 0.61);
+        const slot = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.36, 0.08), obsidianGlossMat);
+        slot.position.set(mx - 0.12, 0.42, 0.60);
+        kg.add(vm, glass, touch, slot);
+      }
+      const crownSign = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.52, 0.24), [mrDiyYellowMat, mrDiyYellowMat, mrDiyYellowMat, kioskSoffitMat, signFace, signFace]);
+      crownSign.position.set(0, 2.56, 0.14);
+      kg.add(crownSign);
+    } else if (k.id === 'k-ogawa') {
+      // 2. Photo-matched FK7 OGAWA • POKÉMON: Crimson carpeted wellness lounge + glowing sky-blue OGAWA Pokémon lightbox + 3 sculpted robotic massage chairs (ZERO espresso machine!)
+      const carpet = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.06, 3.6), norenCrimsonMat);
+      carpet.position.y = 0.03;
+      const lbPillar = new THREE.Mesh(
+        new THREE.BoxGeometry(3.8, 2.45, 0.36),
+        [norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'MASTER DRIVE AI MASSAGE CHAIRS', '#0284c7', '#ffffff', '#facc15', 512, 256) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'WELLNESS LOUNGE • FK7', '#0284c7', '#ffffff', '#facc15', 512, 256) })]
+      );
+      lbPillar.position.set(0, 1.28, -1.22);
+      const chairMat = new THREE.MeshStandardMaterial({ color: '#1e1b22', roughness: 0.32, metalness: 0.22 });
+      for (const [cx, trimMat] of [[-1.55, jayaRedPortalMat], [0, mrDiyYellowMat], [1.55, brassGoldMat]]) {
+        const seat = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.46, 1.05), chairMat);
+        seat.position.set(cx, 0.42, 0.55);
+        const back = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.92, 0.26), chairMat);
+        back.position.set(cx, 0.98, 0.08);
+        back.rotation.x = -0.26;
+        const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.72, 1.18), trimMat);
+        sideL.position.set(cx - 0.46, 0.58, 0.52);
+        const sideR = sideL.clone();
+        sideR.position.x = cx + 0.46;
+        kg.add(seat, back, sideL, sideR);
+      }
+      kg.add(carpet, lbPillar);
+      addStaff(-2.0, -0.35, '#991b1b');
+    } else if (k.id === 'k-havaianas') {
+      // 3. Photo-matched FK4 HAVAIANAS: Bright-red open steel canopy sandal island + glowing red havaianas fascia + beach lightbox pillar + sandal display tables!
+      const deck = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.08, 3.0), lightOakMat);
+      deck.position.y = 0.04;
+      for (const px of [-2.25, 2.25]) {
+        for (const pz of [-1.35, 1.35]) {
+          const post = new THREE.Mesh(new THREE.BoxGeometry(0.11, 2.85, 0.11), jayaRedPortalMat);
+          post.position.set(px, 1.46, pz);
+          kg.add(post);
+        }
+      }
+      const canopy = new THREE.Mesh(new THREE.BoxGeometry(4.75, 0.46, 2.95), [jayaRedPortalMat, jayaRedPortalMat, jayaRedPortalMat, kioskSoffitMat, signFace, signFace]);
+      canopy.position.set(0, 2.92, 0);
+      const beachPillar = new THREE.Mesh(new THREE.BoxGeometry(1.15, 2.35, 0.42), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('havaianas', 'BRAZIL SINCE 1962', '#0ea5e9', '#ffffff', '#facc15', 256, 512) }));
+      beachPillar.position.set(-1.35, 1.24, -0.55);
+      const sandalCols = ['#ef4444', '#facc15', '#22c55e', '#38bdf8', '#ec4899', '#f8fafc'];
+      for (const [tx, tz] of [[0.65, 0.65], [0.65, -0.55]]) {
+        const tbl = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.86, 0.82), satinWhiteMat);
+        tbl.position.set(tx, 0.48, tz);
+        kg.add(tbl);
+        for (let s = 0; s < 6; s++) {
+          const pair = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.06, 0.34), new THREE.MeshStandardMaterial({ color: sandalCols[s], roughness: 0.4 }));
+          pair.position.set(tx - 0.78 + s * 0.31, 0.94, tz);
+          kg.add(pair);
+        }
+      }
+      kg.add(deck, canopy, beachPillar);
+      addStaff(1.6, 0.1, '#dc2626');
+    } else if (k.id === 'k-pokedots') {
+      // 4. Photo-matched SK29 pokédots.: Vivid magenta-pink (#d8277c) low curved wall pavilion w/ bold black serif pokédots. (NO roof canopy!)
+      const magMat = new THREE.MeshStandardMaterial({ color: '#d8277c', roughness: 0.36 });
+      const wallCyl = new THREE.Mesh(new THREE.CylinderGeometry(2.05, 2.05, 1.18, 28, 1, false, 0, Math.PI * 1.65), magMat);
+      wallCyl.position.y = 0.59;
+      const topRim = new THREE.Mesh(new THREE.CylinderGeometry(2.12, 2.12, 0.07, 28, 1, false, 0, Math.PI * 1.65), cafeMarbleMat);
+      topRim.position.y = 1.20;
+      const backPyl = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.25, 0.24), [magMat, magMat, magMat, magMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 256) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 256) })]);
+      backPyl.position.set(0, 1.14, -1.45);
+      const pastryCase = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.48, 0.66), intGlassPhysMat);
+      pastryCase.position.set(0, 1.48, 1.38);
+      kg.add(wallCyl, topRim, backPyl, pastryCase);
+      addStaff(0, 0.1, '#111827');
+    } else if (k.id === 'k-tgv-pop') {
+      // 5. Photo-matched EZ101-K BANPRESTO: Light-grey collectibles counter backed by 2 tall glowing white glass anime-figure vitrines (ZERO espresso machine!)
+      const greyMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', roughness: 0.36 });
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.96, 1.35), greyMat);
+      base.position.set(0, 0.48, 0.45);
+      const top = new THREE.Mesh(new THREE.BoxGeometry(4.28, 0.07, 1.42), satinWhiteMat);
+      top.position.set(0, 0.99, 0.45);
+      const figCols = ['#f97316', '#38bdf8', '#ec4899', '#facc15', '#22c55e', '#a855f7'];
+      for (const vx of [-1.25, 1.25]) {
+        const vitFrame = new THREE.Mesh(new THREE.BoxGeometry(1.55, 2.45, 0.62), satinWhiteMat);
+        vitFrame.position.set(vx, 1.225, -0.75);
+        const vitGlass = new THREE.Mesh(new THREE.BoxGeometry(1.42, 1.65, 0.68), intGlassPhysMat);
+        vitGlass.position.set(vx, 1.45, -0.75);
+        kg.add(vitFrame, vitGlass);
+        for (let sh = 0; sh < 3; sh++) {
+          for (let f = -1; f <= 1; f++) {
+            const fig = new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.14, 4, 8), new THREE.MeshStandardMaterial({ color: figCols[(sh * 3 + f + 3) % figCols.length], roughness: 0.3 }));
+            fig.position.set(vx + f * 0.36, 0.88 + sh * 0.48, -0.72);
+            kg.add(fig);
+          }
+        }
+      }
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.35, 0.56, 0.28), [obsidianGlossMat, obsidianGlossMat, obsidianGlossMat, kioskSoffitMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('BANPRESTO', 'ANIME FIGURES & COLLECTIBLES', '#0f172a', '#ffffff', '#38bdf8', 512, 128) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('BANPRESTO', 'ANIME FIGURES & COLLECTIBLES', '#0f172a', '#ffffff', '#38bdf8', 512, 128) })]);
+      header.position.set(0, 2.74, -0.75);
+      kg.add(base, top, header);
+      addStaff(0, -0.05, '#1e293b');
+    } else if (k.id === 'k-zus2f') {
+      // 6. Photo-matched SK9 ZUS COFFEE: Curved white horizontal-ribbed front counter + curved navy-blue overhanging canopy w/ glowing white ZUS COFFEE!
+      const cFront = new THREE.Mesh(new THREE.CylinderGeometry(2.15, 2.15, 1.02, 24, 1, false, -Math.PI * 0.46, Math.PI * 0.92), satinWhiteMat);
+      cFront.position.set(0, 0.51, -0.55);
+      for (let rb = 0; rb < 5; rb++) {
+        const rib = new THREE.Mesh(new THREE.TorusGeometry(2.17, 0.024, 6, 24, Math.PI * 0.90), brushedAlumMat);
+        rib.rotation.x = Math.PI / 2;
+        rib.rotation.z = -Math.PI * 0.95;
+        rib.position.set(0, 0.18 + rb * 0.18, -0.55);
+        kg.add(rib);
+      }
+      const cTop = new THREE.Mesh(new THREE.CylinderGeometry(2.24, 2.24, 0.08, 24, 1, false, -Math.PI * 0.46, Math.PI * 0.92), cafeMarbleMat);
+      cTop.position.set(0, 1.05, -0.55);
+      const backPyl = new THREE.Mesh(new THREE.BoxGeometry(3.4, 2.85, 0.52), zusRoyalBlueMat);
+      backPyl.position.set(0, 1.425, -1.12);
+      const navyCanopy = new THREE.Mesh(new THREE.CylinderGeometry(2.32, 2.32, 0.58, 28, 1, false, -Math.PI * 0.46, Math.PI * 0.92), [zusRoyalBlueMat, zusRoyalBlueMat, kioskSoffitMat]);
+      navyCanopy.position.set(0, 2.86, -0.55);
+      const zusSign = new THREE.Mesh(new THREE.BoxGeometry(3.45, 0.54, 0.14), [zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat, signFace, signFace]);
+      zusSign.position.set(0, 2.86, 1.65);
+      kg.add(cFront, cTop, backPyl, navyCanopy, zusSign);
+      addStaff(-0.45, 0.25, '#0f2e78');
+      addStaff(0.55, 0.25, '#0f2e78');
+    } else if (k.id === 'k-yomaro') {
+      // 7. Photo-matched FK5A YOMARO: Matte-black steel open pergola w/ crisp white LED perimeter outlines & YOMARO signage!
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.00, 2.2), obsidianGlossMat);
+      base.position.y = 0.50;
+      const top = new THREE.Mesh(new THREE.BoxGeometry(4.32, 0.08, 2.32), satinWhiteMat);
+      top.position.y = 1.04;
+      for (const px of [-2.05, 2.05]) {
+        for (const pz of [-1.05, 1.05]) {
+          const post = new THREE.Mesh(new THREE.BoxGeometry(0.10, 2.85, 0.10), obsidianGlossMat);
+          post.position.set(px, 1.425, pz);
+          const led = new THREE.Mesh(new THREE.BoxGeometry(0.03, 2.75, 0.03), sportLedBarMat);
+          led.position.set(px + Math.sign(px) * 0.06, 1.425, pz + Math.sign(pz) * 0.06);
+          kg.add(post, led);
+        }
+      }
+      const topLed = new THREE.Mesh(new THREE.BoxGeometry(4.22, 0.06, 2.22), sportLedBarMat);
+      topLed.position.y = 2.82;
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.25, 0.54, 0.22), [obsidianGlossMat, obsidianGlossMat, obsidianGlossMat, kioskSoffitMat, signFace, signFace]);
+      header.position.set(0, 2.86, 1.05);
+      kg.add(base, top, topLed, header);
+      addStaff(0, -0.15, '#166534');
+    } else if (k.id === 'k-haagen') {
+      // 8. Photo-matched SK5 HÄAGEN-DAZS: White-brick pier & oak-planter open café seating island w/ burgundy chairs & warm coral pendants!
+      const deck = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.08, 3.2), lightOakMat);
+      deck.position.y = 0.04;
+      const counter = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.00, 1.15), norenCrimsonMat);
+      counter.position.set(-0.4, 0.54, -0.55);
+      const top = new THREE.Mesh(new THREE.BoxGeometry(3.52, 0.08, 1.26), cafeMarbleMat);
+      top.position.set(-0.4, 1.08, -0.55);
+      const gelCase = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.54, 0.86), intGlassPhysMat);
+      gelCase.position.set(-0.4, 1.38, -0.25);
+      const brickPier = new THREE.Mesh(new THREE.BoxGeometry(0.85, 2.95, 0.85), satinWhiteMat);
+      brickPier.position.set(1.85, 1.50, -0.85);
+      const hdSign = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.56, 0.22), [norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, kioskSoffitMat, signFace, signFace]);
+      hdSign.position.set(-0.2, 2.86, -0.85);
+      for (const cx of [-1.2, 0.6]) {
+        const tbl = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.74, 14), cafeMarbleMat);
+        tbl.position.set(cx, 0.42, 0.98);
+        const chr = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.78, 0.44), norenCrimsonMat);
+        chr.position.set(cx + 0.58, 0.42, 0.98);
+        const pend = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), new THREE.MeshBasicMaterial({ color: '#fb7185' }));
+        pend.position.set(cx, 2.38, 0.55);
+        kg.add(tbl, chr, pend);
+      }
+      kg.add(deck, counter, top, gelCase, brickPier, hdSign);
+      addStaff(-0.4, -0.95, '#4c0519');
+    } else if (k.id === 'k-chizu') {
+      // 9. Photo-matched SK28 CHIZU チズ: Warm vertical timber-slatted Japanese pergola + white clapboard counter!
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.00, 2.2), satinWhiteMat);
+      base.position.y = 0.50;
+      const top = new THREE.Mesh(new THREE.BoxGeometry(4.32, 0.08, 2.32), lightOakMat);
+      top.position.y = 1.04;
+      for (let sl = -6; sl <= 6; sl++) {
+        const slat = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.75, 0.10), lightOakMat);
+        slat.position.set(sl * 0.32, 1.42, -1.02);
+        kg.add(slat);
+      }
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.58, 0.34), [lightOakMat, lightOakMat, lightOakMat, kioskSoffitMat, signFace, signFace]);
+      header.position.set(0, 2.82, -0.82);
+      const toastCase = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.48, 0.68), intGlassPhysMat);
+      toastCase.position.set(0.65, 1.32, 0.62);
+      kg.add(base, top, header, toastCase);
+      addStaff(-0.35, -0.15, '#78350f');
+    } else if (k.id === 'k-cinnabon') {
+      // 10. Photo-matched GK108 CINNABON: Warm fluted-oak slatted counter w/ illuminated glass cinnamon-roll warmer & navy/white oval plaques!
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.00, 2.3), lightOakMat);
+      base.position.y = 0.50;
+      for (let fl = -12; fl <= 12; fl++) {
+        const flute = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.94, 6), smokedOakMat);
+        flute.position.set(fl * 0.17, 0.50, 1.16);
+        kg.add(flute);
+      }
+      const top = new THREE.Mesh(new THREE.BoxGeometry(4.52, 0.08, 2.42), cafeMarbleMat);
+      top.position.y = 1.04;
+      const rollWarmer = new THREE.Mesh(new THREE.BoxGeometry(1.95, 0.62, 0.82), intGlassPhysMat);
+      rollWarmer.position.set(0.55, 1.40, 0.62);
+      const warmerGlow = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.06, 0.68), intLightWarmMat);
+      warmerGlow.position.set(0.55, 1.68, 0.62);
+      const ovalPlaque = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 0.14, 24), [zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat]);
+      ovalPlaque.rotation.x = Math.PI / 2;
+      ovalPlaque.scale.set(1.65, 1.0, 0.52);
+      ovalPlaque.position.set(0, 2.75, -0.72);
+      const header = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.56, 0.24), [zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat, kioskSoffitMat, signFace, signFace]);
+      header.position.set(0, 2.76, -0.62);
+      kg.add(base, top, rollWarmer, warmerGlow, ovalPlaque, header);
+      addStaff(-0.55, -0.15, '#1e3a8a');
+    } else if (k.id === 'k-nespresso') {
+      // 11. Photo-matched GK104 NESPRESSO: Matte-black & walnut luxury boutique w/ glowing backlit colorful coffee-capsule wall matrix!
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.00, 2.2), obsidianGlossMat);
+      base.position.y = 0.50;
+      const top = new THREE.Mesh(new THREE.BoxGeometry(4.52, 0.08, 2.32), smokedOakMat);
+      top.position.y = 1.04;
+      const capWall = new THREE.Mesh(new THREE.BoxGeometry(3.8, 2.55, 0.28), obsidianGlossMat);
+      capWall.position.set(0, 1.48, -0.95);
+      const capCols = ['#dc2626', '#7c3aed', '#16a34a', '#d97706', '#0284c7', '#be185d', '#ca8a04'];
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 12; c++) {
+          const cap = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.22, 0.06), new THREE.MeshBasicMaterial({ color: capCols[(r + c) % capCols.length] }));
+          cap.position.set(-1.65 + c * 0.30, 0.92 + r * 0.28, -0.78);
+          kg.add(cap);
+        }
+      }
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.56, 0.28), [obsidianGlossMat, obsidianGlossMat, obsidianGlossMat, kioskSoffitMat, signFace, signFace]);
+      header.position.set(0, 2.86, -0.85);
+      kg.add(base, top, capWall, header);
+      addStaff(0.35, -0.10, '#18181b');
+    } else if (k.id === 'k-mynews2f') {
+      // 12. Photo-matched SK109 myNEWS: Matte-black LED-outlined beverage & orange-trimmed convenience kiosk w/ chilled grab-and-go drink cooler!
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.00, 2.2), obsidianGlossMat);
+      base.position.y = 0.50;
+      const oBand = new THREE.Mesh(new THREE.BoxGeometry(4.26, 0.14, 2.26), orangeAccentMat);
+      oBand.position.y = 0.96;
+      const chiller = new THREE.Mesh(new THREE.BoxGeometry(1.75, 2.05, 0.72), obsidianGlossMat);
+      chiller.position.set(-1.05, 1.025, -0.68);
+      const chGlass = new THREE.Mesh(new THREE.BoxGeometry(1.55, 1.65, 0.06), intGlassPhysMat);
+      chGlass.position.set(-1.05, 1.15, -0.30);
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.62, 0.32), [orangeAccentMat, orangeAccentMat, orangeAccentMat, kioskSoffitMat, signFace, signFace]);
+      header.position.set(0, 2.72, -0.68);
+      kg.add(base, oBand, chiller, chGlass, header);
+      addStaff(0.75, -0.10, '#ea580c');
+    } else {
+      // 13. Photo-matched EK5 NEWSPLUS: Open cinema snacks & grab-and-go newsstand w/ glowing red/white newsplus sign, tiered snack racks & cold drink chiller (ZERO espresso machine!)
+      const base = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.94, 2.2), satinWhiteMat);
+      base.position.y = 0.47;
+      const redBand = new THREE.Mesh(new THREE.BoxGeometry(4.46, 0.16, 2.26), jayaRedPortalMat);
+      redBand.position.y = 0.90;
+      // Tiered grab-and-go snack racks + illuminated cold drink chiller!
+      const rackCols = ['#facc15', '#ef4444', '#38bdf8', '#22c55e', '#f97316'];
+      for (let sh = 0; sh < 3; sh++) {
+        const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.05, 0.46), brushedAlumMat);
+        shelf.position.set(-0.95, 1.18 + sh * 0.42, -0.55);
+        kg.add(shelf);
+        for (let sn = 0; sn < 6; sn++) {
+          const bag = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.14), new THREE.MeshStandardMaterial({ color: rackCols[(sh + sn) % rackCols.length], roughness: 0.4 }));
+          bag.position.set(-1.8 + sn * 0.34, 1.34 + sh * 0.42, -0.52);
+          kg.add(bag);
+        }
+      }
+      const chiller = new THREE.Mesh(new THREE.BoxGeometry(1.45, 2.05, 0.72), obsidianGlossMat);
+      chiller.position.set(1.25, 1.025, -0.62);
+      const chGlow = new THREE.Mesh(new THREE.BoxGeometry(1.28, 1.62, 0.05), sportLedBarMat);
+      chGlow.position.set(1.25, 1.16, -0.24);
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.45, 0.62, 0.28), [jayaRedPortalMat, jayaRedPortalMat, jayaRedPortalMat, kioskSoffitMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('newsplus', 'CINEMA SNACKS • DRINKS • EK5', '#dc2626', '#ffffff', '#fde047', 512, 128) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('newsplus', 'CINEMA SNACKS • DRINKS • EK5', '#dc2626', '#ffffff', '#fde047', 512, 128) })]);
+      header.position.set(0, 2.68, -0.62);
+      kg.add(base, redBand, chiller, chGlow, header);
+      addStaff(0.15, 0.22, '#dc2626');
     }
 
     root.add(kg);
