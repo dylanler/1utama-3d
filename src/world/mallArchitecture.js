@@ -3845,8 +3845,8 @@ export function buildMallArchitecture(scene, interactables) {
           cove.position.set(0, eaveY - 0.07, 0.40);
           g.add(lintel, cove);
 
-          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide luxury boutiques (omitted on Chanel, Zara & Coach!)
-          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach) {
+          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide luxury boutiques (omitted on Chanel, Zara, Coach & Diva Karaoke!)
+          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva) {
             const mMat = prof.isLight ? mannequinLinenMat : mannequinLightMat;
             for (const side of [-1, 1]) {
               const mx = side * Math.min(halfW - 1.65, 3.35);
