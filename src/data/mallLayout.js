@@ -261,9 +261,13 @@ export function isAtriumVoid(floorIdx, x, z) {
     const pv = BOUNDS.promenadeVoid;
     if (x > pv.xMin && x < pv.xMax && z > pv.zMin && z < pv.zMax) return true;
   }
-  if (floorIdx >= 1 && floorIdx <= 5) {
-    const rf = BOUNDS.rainforestVoid;
-    if (x > rf.xMin && x < rf.xMax && z > rf.zMin && z < rf.zMax) {
+  if (floorIdx >= 1 && floorIdx <= 6) {
+    // Open-to-the-sky elliptical Rainforest courtyard matching exact glass curtain-wall funnel flare per level!
+    const rxRF = floorIdx <= 3 ? 17.6 : floorIdx === 4 ? 18.0 : floorIdx === 5 ? 18.75 : 19.65;
+    const rzRF = floorIdx <= 3 ? 12.8 : floorIdx === 4 ? 13.1 : floorIdx === 5 ? 13.65 : 14.30;
+    const nxR = (x - 38.0) / rxRF;
+    const nzR = z / rzRF;
+    if (nxR * nxR + nzR * nzR < 1.0) {
       // VERIFIED 2025 WALKTHROUGH (#009, #353): ONLY the 2F Suspension Bridge (floorIdx === 3) spans the Rainforest void!
       if (floorIdx === 3) {
         const rb = BOUNDS.rainbowBridge2F;
@@ -275,9 +279,6 @@ export function isAtriumVoid(floorIdx, x, z) {
   if (floorIdx >= 2 && floorIdx <= 4) {
     const hs = BOUNDS.highstreetVoid;
     if (x > hs.xMin && x < hs.xMax && z > hs.zMin && z < hs.zMax) return true;
-  }
-  if (floorIdx === 6) {
-    if (x > 21.3 && x < 54.7 && z > -10.2 && z < 10.2) return true;
   }
   if (floorIdx >= 1 && floorIdx <= 6) {
     const ov = BOUNDS.ovalVoid;
@@ -519,7 +520,7 @@ export const STORES = [
     { lot: 'LG315', name: 'CELCOMDIGI', sub: '5G Express Flagship Hub', w: 11.2, bg: '#1e40af', fg: '#ffffff', ac: '#facc15', st: 'tech' },
     { lot: 'BT1', name: 'AEROLINE LOUNGE', sub: 'Singapore & Penang Luxury Coach Terminal', w: 23.2, bg: '#1e293b', fg: '#67e8f9', ac: '#22d3ee', st: 'transit' },
     { lot: 'LG316', name: 'SPEEDO', sub: 'Performance Swimwear & Aquatics', w: 11.6, bg: '#0f172a', fg: '#ffffff', ac: '#ef4444', st: 'sports' },
-    { lot: 'LG318', name: 'AL-TAMIJ CURRENCY', sub: 'Licensed Money Changer • Oval LG', w: 11.7, bg: '#14532d', fg: '#dcfce7', ac: '#eab308', st: 'transit' }
+    { lot: 'LG318', name: 'AL-TAMIJ CURRENCY', sub: 'Licensed Money Changer • Oval LG', w: 10.9, bg: '#14532d', fg: '#dcfce7', ac: '#eab308', st: 'transit' }
   ]),
   { id: 'lg309-jayagrocer', name: 'JAYA GROCER', subtitle: 'Gourmet Supermarket • Fresh Produce • Bakery & Organic Pantry', lot: 'LG309', floor: 0, wing: 'The Oval', x: 173.0, z: 0, width: 45.6, side: 'E', brandBg: '#1c1917', brandFg: '#ffffff', accent: '#dc2626', style: 'supermarket' },
 
@@ -838,7 +839,7 @@ export const STORES = [
   // New Wing 3F — The Ledge Art Gallery & XZQT (OV301 — Verified #153, #168, #310!)
   ...strip(4, 'New Wing 3F', 'N', -23.2, 60.8, [
     { lot: '3F-LEDGE', name: 'THE LEDGE ART GALLERY', sub: 'Contemporary Malaysian Visual Arts & Exhibitions', w: 55.0, bg: '#0f172a', fg: '#f8fafc', ac: '#38bdf8', st: 'gallery' },
-    { lot: 'OV301-N', name: 'XZQT ITALIAN DESIGNER LIVING', sub: 'Calligaris • Natuzzi • Luxury Dining Galleries', w: 57.6, bg: '#1c1917', fg: '#fde68a', ac: '#f59e0b', st: 'furniture' }
+    { lot: 'OV301-N', name: 'XZQT ITALIAN DESIGNER LIVING', sub: 'Calligaris • Natuzzi • Luxury Dining Galleries', w: 57.0, bg: '#1c1917', fg: '#fde68a', ac: '#f59e0b', st: 'furniture' }
   ]),
   { id: 'ov301-xzqt', name: 'XZQT FLAGSHIP FURNITURE SHOWROOM', subtitle: 'Imported Italian Leather Sofas & Marble Tables', lot: 'OV301', floor: 4, wing: 'The Oval', x: 173.0, z: 0, width: 45.6, side: 'E', brandBg: '#1c1917', brandFg: '#fde68a', accent: '#eab308', style: 'furniture' },
 
@@ -847,13 +848,13 @@ export const STORES = [
   ...strip(5, 'Entertainment Zone', 'N', -23.2, 14.2, [
     { lot: 'E403', name: 'GSC CINEMAS 1 UTAMA (15 HALLS)', sub: 'BIG 4K Laser • Dolby Atmos • ScreenX 270° • 4DX', w: 54.0, bg: '#1c1917', fg: '#fde047', ac: '#eab308', st: 'cinema' },
     { lot: 'E403-PREST', name: 'GSC PRESTIGE LOUNGE & GSC PLAY', sub: 'VIP Recliner Dining Suites & Family PlayPark', w: 52.0, bg: '#292524', fg: '#fef08a', ac: '#f59e0b', st: 'dining' },
-    { lot: 'OV401', name: 'CELLINI CONTEMPORARY LIVING (4F)', sub: 'Stacked Beneath 5F Stanzo • Motorized Leather Recliners', w: 53.2, bg: '#0f172a', fg: '#e2e8f0', ac: '#38bdf8', st: 'furniture' }
+    { lot: 'OV401', name: 'CELLINI CONTEMPORARY LIVING (4F)', sub: 'Stacked Beneath 5F Stanzo • Motorized Leather Recliners', w: 52.6, bg: '#0f172a', fg: '#e2e8f0', ac: '#38bdf8', st: 'furniture' }
   ]),
   ...strip(5, 'Entertainment Zone', 'S', 23.2, 14.2, [
     { lot: 'EZ401', name: 'WANGSA BOWL (TEN-PIN BOWLING)', sub: 'Tournament Pro Lanes • Cosmic Glow Bowling', w: 40.0, bg: '#1e3a8a', fg: '#fef08a', ac: '#38bdf8', st: 'arcade' },
     { lot: 'EZ402', name: 'TOY CATCHER CLAW ARCADE', sub: '100+ Plushie UFO Catchers & Gachapon Wall', w: 38.0, bg: '#831843', fg: '#fbcfe8', ac: '#f472b6', st: 'toys' },
     { lot: 'EZ502', name: 'DIVA KARAOKE LOUNGE (5F–6F)', sub: 'VIP Themed KTV Suites • Concert Sound', w: 40.0, bg: '#4c1d95', fg: '#f5d0fe', ac: '#e879f9', st: 'arcade' },
-    { lot: 'EZ503', name: 'CROSS FIRE RHYTHM ARCADE', sub: 'maimai DX • Sound Voltex • Taiko • Racing', w: 41.2, bg: '#09090b', fg: '#67e8f9', ac: '#22d3ee', st: 'arcade' }
+    { lot: 'EZ503', name: 'CROSS FIRE RHYTHM ARCADE', sub: 'maimai DX • Sound Voltex • Taiko • Racing', w: 40.4, bg: '#09090b', fg: '#67e8f9', ac: '#22d3ee', st: 'arcade' }
   ]),
   { id: 'ov501-stanzo', name: 'STANZO COLLECTION (5F OVAL)', subtitle: 'Avant-Garde German & Italian Luxury Interiors • Above 4F Cellini', lot: 'OV501', floor: 5, wing: 'The Oval', x: 173.0, z: 0, width: 45.6, side: 'E', brandBg: '#111827', brandFg: '#fde68a', accent: '#f59e0b', style: 'furniture' }
 ];
@@ -1132,7 +1133,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('2F-04', 'Old Wing S140 Toys"R"Us, Wondermama & Centre Court', -106.5, 14.5, -82.0, 18.5, 0.01),
     aimShot('2F-05', 'Old Wing S125 AEON Home, Hokkaido Sushi & Restrooms/Surau', -58.5, 16.0, -34.0, 17.5, 0.01),
     aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -24.5, 5.8, -6.0, 4.5, 0.00),
-    aimShot('2F-07', '2F Rainforest Suspension Bridge & Circular Glass Sky Dome (Photo Exact!)', 38.0, -11.4, 38.0, 13.0, 0.14, 0.15),
+    aimShot('2F-07', '2F Rainforest Suspension Bridge & Circular Glass Sky Dome (Photo Exact!)', 38.0, -11.4, 38.0, 13.0, 0.18, 0.15),
     aimShot('2F-08', '2F Highstreet Starship Galactica, Machines, Cuckoo & Chili’s', 98.5, 14.5, 84.0, -16.5, 0.04),
     aimShot('2F-09', '2F Highstreet SK9A Sushi Zanmai, SK9 ZUS Coffee & Dragon-i', 110.5, 5.5, 117.0, -7.5, -0.02),
     aimShot('2F-10', '2F Oval Hot-Pink Pop Mart, Kaison, Sensory Pod, MR.DIY & Parkson', 136.0, -15.5, 128.0, 22.0, 0.01)
@@ -1162,9 +1163,9 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('4F-10', '4F Oval Panoramic Glass Lifts & 6-Story Dome View', 117.5, 0.0, 158.0, 0.0, 0.02)
   ],
   6: [ // UR — Upper Roof (10 unobstructed Real2Sim shots)
-    aimShot('UR-01', 'UR603A The Secret Garden Entrance & Pergola', 14.4, -13.5, 46.0, -13.5, 0.00),
-    aimShot('UR-02', 'UR603A Secret Garden Lotus Mirror Pond & Orchids', 49.5, 15.2, 59.0, 12.5, -0.14),
-    aimShot('UR-03', 'UR603A Botanical Geodesic Glasshouse Conservatory', 44.5, -12.0, 59.0, -12.0, 0.02),
+    aimShot('UR-01', 'UR603A The Secret Garden Entrance & Pergola', 14.4, -16.8, 46.0, -16.8, 0.00),
+    aimShot('UR-02', 'UR603A Secret Garden Lotus Mirror Pond & Orchids', 49.5, 15.8, 59.0, 12.5, -0.14),
+    aimShot('UR-03', 'UR603A Botanical Geodesic Glasshouse Conservatory', 50.2, -16.2, 59.0, -12.0, 0.02),
     aimShot('UR-04', 'UR602 Padang @ 1U Rooftop Futsal Pitch & Cage', 68.0, -15.5, 89.0, -11.5, -0.02),
     aimShot('UR-05', 'UR603 Baseball Cage @ 1 Utama Batting Nets', 68.0, 16.5, 89.0, 16.5, -0.02),
     aimShot('UR-06', 'UR601 ASCARO Padel Panoramic Courts & Floodlights', 114.5, -24.5, 135.0, -21.0, -0.01),

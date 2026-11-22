@@ -1387,91 +1387,47 @@ export function buildIconicAttractions(scene, interactables) {
     rainforestGroup.add(tallPalm);
   }
 
-  // Graceful Gravity-Sagging Catenary Tropical Lianas anchored onto solid balcony troughs & dressed continuously with clustered hanging vine cards (ZERO rigid diagonal sticks or 3F/4F rim floaters!)
-  const lianaMat = new THREE.MeshStandardMaterial({ color: '#423320', roughness: 0.90, metalness: 0.0 });
-  const lianaConfigs = [
-    { start: new THREE.Vector3(22.6, 18.2, -12.75), end: new THREE.Vector3(32.8, 18.2, -12.75), sag: 2.35, swayZ: 1.05 },
-    { start: new THREE.Vector3(43.2, 18.2, -12.75), end: new THREE.Vector3(53.4, 18.2, -12.75), sag: 2.45, swayZ: 1.15 },
-    { start: new THREE.Vector3(22.6, 12.2, 12.75), end: new THREE.Vector3(32.8, 12.2, 12.75), sag: 2.05, swayZ: -1.10 },
-    { start: new THREE.Vector3(43.2, 12.2, 12.75), end: new THREE.Vector3(53.4, 12.2, 12.75), sag: 2.15, swayZ: -1.05 }
-  ];
-  const lianaLeafGeo = createDrapedVineGeo(0.86, 1.55, 1.9);
-  const lianaLeafSmallGeo = createDrapedVineGeo(0.64, 1.12, 3.3);
-  for (let li = 0; li < lianaConfigs.length; li++) {
-    const cfg = lianaConfigs[li];
-    const catPts = [];
-    for (let k = 0; k <= 8; k++) {
-      const t = k / 8;
-      const arc = Math.sin(t * Math.PI);
-      const px = THREE.MathUtils.lerp(cfg.start.x, cfg.end.x, t);
-      const py = THREE.MathUtils.lerp(cfg.start.y, cfg.end.y, t) - cfg.sag * arc;
-      const pz = THREE.MathUtils.lerp(cfg.start.z, cfg.end.z, t) + cfg.swayZ * arc + Math.sin(t * Math.PI * 2 + li) * 0.22;
-      catPts.push(new THREE.Vector3(px, py, pz));
-    }
-    const curve = new THREE.CatmullRomCurve3(catPts);
-    const vineTube = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.036, 6, false), lianaMat);
-    rainforestGroup.add(vineTube);
-    for (let ci = 0; ci < 8; ci++) {
-      const tPos = 0.09 + (ci / 7) * 0.82;
-      const pt = curve.getPoint(tPos);
-      const leafMat = (li + ci) % 3 === 0 ? botMats.floweringVine : botMats.hangingVine;
-      const useSmall = ci % 2 === 1;
-      const leafCurtain = new THREE.Mesh(useSmall ? lianaLeafSmallGeo : lianaLeafGeo, leafMat);
-      leafCurtain.position.set(pt.x, pt.y - (useSmall ? 0.44 : 0.62), pt.z);
-      leafCurtain.rotation.y = li * 1.15 + tPos * 4.2 + (ci % 2) * 0.8;
-      rainforestGroup.add(leafCurtain);
-    }
-  }
-
-  // Organic Varied Multi-Species Balcony Foliage Troughs (irregular non-grid cluster spacing, varied frond heights & orientations!)
-  const planterBoxMat = new THREE.MeshStandardMaterial({ color: '#3b2e24', roughness: 0.68, metalness: 0.14 });
+  // Curved Elliptical Balcony Foliage & Hanging Vine Drapes STRICTLY seated onto the GF/1F/2F terracotta parapets (ZERO straight corner floaters or 3F glass-wall collisions!)
   const balconyFernGeos = [
-    createArchedFrondGeo(0.62, 1.12, 0.30),
-    createArchedFrondGeo(0.78, 1.48, 0.42),
-    createArchedFrondGeo(0.54, 0.92, 0.24)
+    createArchedFrondGeo(0.58, 1.04, 0.28),
+    createArchedFrondGeo(0.72, 1.36, 0.38),
+    createArchedFrondGeo(0.50, 0.88, 0.22)
   ];
   const vineCurtainGeos = [
-    createDrapedVineGeo(1.35, 1.10, 0.5),
-    createDrapedVineGeo(1.10, 2.85, 2.1),
-    createDrapedVineGeo(1.55, 1.70, 3.8),
-    createDrapedVineGeo(0.92, 3.35, 5.4)
+    createDrapedVineGeo(1.25, 1.15, 0.5),
+    createDrapedVineGeo(1.05, 2.55, 2.1),
+    createDrapedVineGeo(1.40, 1.65, 3.8),
+    createDrapedVineGeo(0.92, 3.05, 5.4)
   ];
-  for (const fy of [12.0, 18.0, 24.0]) {
-    for (const zEdge of [-12.7, 12.7]) {
-      const inwardSign = zEdge < 0 ? 1 : -1;
-      for (const [x1, x2] of [[21.8, 33.4], [42.6, 54.2]]) {
-        const trough = new THREE.Mesh(new THREE.BoxGeometry(x2 - x1, 0.34, 0.52), planterBoxMat);
-        trough.position.set((x1 + x2) * 0.5, fy + 0.17, zEdge);
-        rainforestGroup.add(trough);
-        let vIdx = Math.round(fy * 3 + Math.abs(x1) + (zEdge > 0 ? 17 : 3));
-        let vx = x1 + 0.75 + ((vIdx * 37) % 10) * 0.08;
-        while (vx <= x2 - 0.75) {
-          const jitter = Math.sin(vIdx * 2.31) * 0.32;
-          // Irregular organic hanging vine drape lengths
-          if ((vIdx * 7) % 5 !== 0) {
-            const gIdx = (vIdx * 3) % vineCurtainGeos.length;
-            const dropH = gIdx === 0 ? 1.10 : gIdx === 1 ? 2.85 : gIdx === 2 ? 1.70 : 3.35;
-            const vMat = vIdx % 4 === 0 ? botMats.floweringVine : botMats.hangingVine;
-            const vine = new THREE.Mesh(vineCurtainGeos[gIdx], vMat);
-            vine.position.set(vx + jitter * 0.6, fy - dropH * 0.44 + 0.14, zEdge + inwardSign * (0.32 + (vIdx % 3) * 0.09));
-            vine.rotation.y = Math.sin(vx * 3.1 + fy) * 0.95;
-            rainforestGroup.add(vine);
-          }
-
-          const clumpSize = 2 + (vIdx % 4);
-          for (let f = 0; f < clumpSize; f++) {
-            const geoPick = balconyFernGeos[(vIdx + f) % balconyFernGeos.length];
-            const fern = new THREE.Mesh(geoPick, (f + vIdx) % 2 === 0 ? botMats.frondDeep : botMats.frondWarm);
-            fern.position.set(vx + (f - clumpSize * 0.5) * 0.24 + jitter * 0.4, fy + 0.28 + ((vIdx + f) % 3) * 0.08, zEdge + (f % 2 - 0.5) * 0.12);
-            fern.rotation.y = (inwardSign > 0 ? 0 : Math.PI) + Math.sin(vIdx * 1.7 + f * 2.4) * 1.25;
-            fern.rotation.x = -0.26 + ((vIdx + f) % 3) * 0.19;
-            fern.scale.setScalar(0.82 + ((vIdx * 5 + f) % 5) * 0.11);
-            rainforestGroup.add(fern);
-          }
-          // Non-uniform spacing step breaks up any grid repetition!
-          vx += 1.22 + ((vIdx * 19) % 11) * 0.11;
-          vIdx++;
-        }
+  for (const fy of [6.0, 12.0, 18.0]) {
+    const numSpots = 34;
+    for (let si = 0; si < numSpots; si++) {
+      const ang = (si / numSpots) * Math.PI * 2 + (fy * 0.07);
+      const bx = 38.0 + Math.cos(ang) * 17.36;
+      const bz = Math.sin(ang) * 12.56;
+      // Keep 2F bridge entries (x near 38 at North/South) completely clear!
+      if (fy === 18.0 && Math.abs(bx - 38.0) < 3.0) continue;
+      // Inward radial angle toward Rainforest center (38, 0)
+      const inwardYaw = Math.atan2(38.0 - bx, -bz);
+      const vIdx = Math.round(fy * 5 + si * 7);
+      if ((vIdx * 3) % 5 !== 0) {
+        const gIdx = (vIdx * 3) % vineCurtainGeos.length;
+        const dropH = gIdx === 0 ? 1.15 : gIdx === 1 ? 2.55 : gIdx === 2 ? 1.65 : 3.05;
+        const vMat = vIdx % 4 === 0 ? botMats.floweringVine : botMats.hangingVine;
+        const vine = new THREE.Mesh(vineCurtainGeos[gIdx], vMat);
+        vine.position.set(bx - Math.cos(ang) * 0.28, fy - dropH * 0.42 + 0.10, bz - Math.sin(ang) * 0.24);
+        vine.rotation.y = inwardYaw + Math.sin(si * 2.1) * 0.45;
+        rainforestGroup.add(vine);
+      }
+      const clumpSize = 2 + (vIdx % 3);
+      for (let f = 0; f < clumpSize; f++) {
+        const geoPick = balconyFernGeos[(vIdx + f) % balconyFernGeos.length];
+        const fern = new THREE.Mesh(geoPick, (f + vIdx) % 2 === 0 ? botMats.frondDeep : botMats.frondWarm);
+        fern.position.set(bx + Math.sin(si + f) * 0.22, fy + 0.56 + ((vIdx + f) % 2) * 0.08, bz + Math.cos(si + f) * 0.18);
+        fern.rotation.y = inwardYaw + Math.sin(vIdx * 1.7 + f * 2.4) * 1.05;
+        fern.rotation.x = -0.22 + ((vIdx + f) % 3) * 0.16;
+        fern.scale.setScalar(0.76 + ((vIdx * 5 + f) % 4) * 0.10);
+        rainforestGroup.add(fern);
       }
     }
   }
@@ -1627,12 +1583,16 @@ export function buildIconicAttractions(scene, interactables) {
       }
       rainforestGroup.add(rg);
     }
-    // Glowing green TREETOP ADVENTURE sign mounted on GF/1F Rainforest terracotta balcony (#348!)
+    // Glowing green TREETOP ADVENTURE sign mounted flush onto the curved 1F Rainforest terracotta balcony (#348!)
     const ttSignMat = new THREE.MeshBasicMaterial({
       map: createSignBoardTexture('TREETOP ADVENTURE', 'BY CAMP5 CLIMBING • HIGH ROPES IN THE RAINFOREST', '#14532d', '#fef08a', '#4ade80', 1024, 192)
     });
-    const ttSign = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.96, 0.12), [ttPoleMat, ttPoleMat, ttPoleMat, ttPoleMat, ttSignMat, ttSignMat]);
-    ttSign.position.set(27.5, 11.4, -12.85);
+    const ttSign = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.92, 0.12), [ttPoleMat, ttPoleMat, ttPoleMat, ttPoleMat, ttSignMat, ttSignMat]);
+    const ttAng = -2.22;
+    const ttX = 38.0 + Math.cos(ttAng) * 17.32;
+    const ttZ = Math.sin(ttAng) * 12.52;
+    ttSign.position.set(ttX, 11.88, ttZ);
+    ttSign.rotation.y = Math.atan2(38.0 - ttX, -ttZ);
     rainforestGroup.add(ttSign);
   }
 
@@ -1760,73 +1720,60 @@ export function buildIconicAttractions(scene, interactables) {
   }
 
   // 4. MASSIVE TWIN-FORKED CURVED DARK-GREY TUBULAR STEEL OVERHEAD ARCH TRUSSES
-  //    Sweeping dramatically overhead across the circular glass rainforest dome (media_1795337629668_975ac4eb.jpg!)
+  //    Calibrated to EXACT 2F-07 camera FOV projection of media_1795337629668_975ac4eb.jpg!
   const archCurves = { left: null, right: null };
   for (const s of [-1, 1]) {
-    // Primary grand wishbone tubular steel rib curving from far A-frame pylon UP & OUT across the circular atrium!
+    // Primary grand curved tubular steel arch sweeping from far A-frame pylon UP, OUT & FORWARD overhead across the viewport crown!
     const mainRibPts = [
-      new THREE.Vector3(s * 1.68, 0.2, 11.5),
-      new THREE.Vector3(s * 1.12, 4.4, 10.6),
-      new THREE.Vector3(s * 1.38, 7.2, 8.8),
-      new THREE.Vector3(s * 4.4, 9.0, 3.8),
-      new THREE.Vector3(s * 8.6, 10.0, -3.2),
-      new THREE.Vector3(s * 12.2, 9.6, -10.4),
-      new THREE.Vector3(s * 14.2, 7.6, -14.8)
+      new THREE.Vector3(s * 1.82, 0.2, 11.4),
+      new THREE.Vector3(s * 1.15, 3.8, 10.6),
+      new THREE.Vector3(s * 1.25, 6.2, 8.6),
+      new THREE.Vector3(s * 3.1, 7.6, 3.6),
+      new THREE.Vector3(s * 5.4, 7.8, -2.4),
+      new THREE.Vector3(s * 8.2, 7.0, -7.8),
+      new THREE.Vector3(s * 11.6, 5.2, -11.4)
     ];
     const mainRibCurve = new THREE.CatmullRomCurve3(mainRibPts);
     if (s < 0) archCurves.left = mainRibCurve;
     else archCurves.right = mainRibCurve;
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(mainRibCurve, 48, 0.27, 14, false), darkArchSteelMat));
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(mainRibCurve, 52, 0.30, 14, false), darkArchSteelMat));
 
-    // Secondary forked inner-crown strut meeting the central cross-tie overhead (classic wishbone Y-fork visible top-center of photo!)
-    const forkPts = [
-      new THREE.Vector3(s * 0.72, 7.6, 11.2),
-      new THREE.Vector3(s * 2.15, 8.8, 5.2),
-      new THREE.Vector3(s * 5.2, 10.4, -2.0),
-      new THREE.Vector3(s * 7.8, 10.8, -8.5)
-    ];
-    const forkCurve = new THREE.CatmullRomCurve3(forkPts);
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(forkCurve, 28, 0.19, 10, false), darkArchSteelMat));
+    // Iconic Wishbone V-Strut Tubes converging cleanly from upper crown arch down to top crossbar of far A-frame pylon!
+    const vStrutA = new THREE.LineCurve3(
+      new THREE.Vector3(0, 7.25, 7.8),
+      new THREE.Vector3(s * 4.2, 8.15, -1.8)
+    );
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(vStrutA, 8, 0.19, 10, false), darkArchSteelMat));
   }
-  // Curved overhead tubular cross-tie arches joining left & right wishbone ribs cleanly across the sky dome!
+  // Iconic Top-Center Curved Cross-Arch Pipe + Secondary Crown Tie joining left & right giant ribs (forms exact oval crown opening of photo!)
   const tieConfigs = [
-    { z: -8.2, xSpan: 11.2, yMid: 11.4, yEnd: 9.8, r: 0.24 },
-    { z: -2.2, xSpan: 8.2, yMid: 11.2, yEnd: 9.9, r: 0.22 },
-    { z: 4.2, xSpan: 4.2, yMid: 9.8, yEnd: 8.9, r: 0.18 },
-    { z: 9.6, xSpan: 1.35, yMid: 7.4, yEnd: 7.1, r: 0.14 }
+    { z: -2.2, xSpan: 5.3, yMid: 8.65, yEnd: 7.82, r: 0.26 },
+    { z: -6.8, xSpan: 7.7, yMid: 8.15, yEnd: 7.18, r: 0.22 },
+    { z: 7.8, xSpan: 1.55, yMid: 7.25, yEnd: 6.45, r: 0.15 }
   ];
   for (const tc of tieConfigs) {
     const tieCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-tc.xSpan, tc.yEnd, tc.z),
-      new THREE.Vector3(0, tc.yMid, tc.z - 0.5),
+      new THREE.Vector3(0, tc.yMid, tc.z - 0.35),
       new THREE.Vector3(tc.xSpan, tc.yEnd, tc.z)
     ]);
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(tieCurve, 24, tc.r, 10, false), darkArchSteelMat));
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(tieCurve, 28, tc.r, 10, false), darkArchSteelMat));
   }
 
-  // 5. DIAGONAL BLACK STEEL TENSION SUSPENDER CABLES FANNING FROM OVERHEAD CURVED ARCHES DOWN TO BRIDGE DECK!
+  // 5. CRISP BLACK STEEL TENSION SUSPENDER CABLES DROPPING FROM OVERHEAD CURVED ARCHES TO BRIDGE OUTRIGGERS (ZERO floating cable ends!)
   for (let ci = 0; ci < 9; ci++) {
-    const u = 0.08 + (ci / 8) * 0.80;
-    const zDeck = -11.2 + u * 21.8;
-    const tArch = 0.88 - u * 0.68; // Map deck z=-11..+10 cleanly along arch curve back toward pylon!
+    const u = 0.08 + (ci / 8) * 0.78;
+    const zDeck = -10.4 + u * 20.2;
+    const tArch = 0.86 - u * 0.66;
     for (const s of [-1, 1]) {
       const curve = s < 0 ? archCurves.left : archCurves.right;
-      const topPt = curve.getPoint(Math.max(0.12, Math.min(0.92, tArch)));
-      const botPt = new THREE.Vector3(s * 1.96, 0.08, zDeck);
+      const topPt = curve.getPoint(Math.max(0.14, Math.min(0.90, tArch)));
+      const botPt = new THREE.Vector3(s * 1.94, 0.08, zDeck);
       const cab = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.LineCurve3(botPt, topPt), 4, 0.024, 6, false),
+        new THREE.TubeGeometry(new THREE.LineCurve3(botPt, topPt), 4, 0.026, 6, false),
         blackCableMat
       );
       bridgeGroup.add(cab);
-      // Secondary finer fan cable to outer glass perimeter ring just like media_1795337629668_975ac4eb.jpg!
-      if (ci % 2 === 0) {
-        const outerPt = new THREE.Vector3(s * (8.5 + (1 - u) * 5.2), 7.8 + (1 - u) * 2.2, zDeck - 1.2);
-        const fanCab = new THREE.Mesh(
-          new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(s * 1.98, 0.08, zDeck + 0.5), outerPt), 4, 0.014, 5, false),
-          blackCableMat
-        );
-        bridgeGroup.add(fanCab);
-      }
     }
   }
 
@@ -5126,7 +5073,7 @@ export function buildIconicAttractions(scene, interactables) {
   // A. UR603A THE SECRET GARDEN (Warm Sunlit Cedar Entrance Arch + Warm Grazing Light + 2.5x Denser Botanical Beds + Grounded Entry Steps + Golden Volumetric Sunbeams!)
   {
     const sgArch = new THREE.Group();
-    sgArch.position.set(21.35, 0, -13.5);
+    sgArch.position.set(21.35, 0, -16.8);
     sgArch.rotation.y = Math.PI / 2;
     const matteBronzeBase = new THREE.MeshStandardMaterial({ color: '#4b3f35', roughness: 0.58, metalness: 0.42 });
     const archTimberMat = new THREE.MeshStandardMaterial({
@@ -5170,7 +5117,7 @@ export function buildIconicAttractions(scene, interactables) {
 
     // Soft Golden-Hour Grazing Light high above Secret Garden cedar archway (warm wood glow — ZERO circular point-light ring on deck!)
     const sgWarmLight = new THREE.PointLight('#ffca88', 9.5, 24, 1.65);
-    sgWarmLight.position.set(18.2, 4.6, -13.5);
+    sgWarmLight.position.set(18.2, 4.6, -16.8);
     gardenGroup.add(sgWarmLight);
   }
 
@@ -5350,14 +5297,14 @@ export function buildIconicAttractions(scene, interactables) {
     }
   }
 
-  // Keep central skylight well (x: 21.3..54.7, z: -10.2..+10.2) open & pull foreground palms cleanly inward
+  // Keep circular open-air Rainforest sky well (cx=38, cz=0, rx=19.65, rz=14.30) 100% open (ZERO overhanging rooftop beds!)
   const gardenBeds = [
-    { x: 24, z: -22.2, w: 15, d: 7.4 },
-    { x: 46, z: -22.2, w: 16, d: 7.4 },
+    { x: 24, z: -22.4, w: 15, d: 5.8 },
+    { x: 46, z: -22.4, w: 16, d: 5.8 },
     { x: 24, z: 22.5, w: 14, d: 6.5 },
     { x: 46, z: 22.5, w: 16, d: 6.5 },
-    { x: 16.4, z: -6.4, w: 5.4, d: 5.6 },
-    { x: 34.5, z: -9.8, w: 18.0, d: 2.3 },
+    { x: 16.0, z: -6.4, w: 4.0, d: 5.4 },
+    { x: 16.0, z: 6.4, w: 4.0, d: 5.4 },
     { x: 52.0, z: 21.5, w: 10.0, d: 5.2 }
   ];
   for (let bIdx = 0; bIdx < gardenBeds.length; bIdx++) {
@@ -5407,27 +5354,27 @@ export function buildIconicAttractions(scene, interactables) {
     metalness: 0.0,
     envMapIntensity: 0.05
   });
-  const pergolaDeck = new THREE.Mesh(new THREE.BoxGeometry(22.5, 0.14, 4.35), weatheredRoofTeakMat);
-  pergolaDeck.position.set(31.5, 0.07, -13.78);
+  const pergolaDeck = new THREE.Mesh(new THREE.BoxGeometry(22.5, 0.14, 4.10), weatheredRoofTeakMat);
+  pergolaDeck.position.set(31.5, 0.07, -16.8);
   pergolaDeck.receiveShadow = true;
   // Grounded Double-Bevel Limestone & Dark-Granite Entry Step seated flush into deck (ZERO hovering slab edges!)
-  const entryCurbBase = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.07, 4.78), matteSteelBaseMat);
-  entryCurbBase.position.set(19.86, 0.035, -13.78);
+  const entryCurbBase = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.07, 4.52), matteSteelBaseMat);
+  entryCurbBase.position.set(19.86, 0.035, -16.8);
   entryCurbBase.receiveShadow = true;
-  const entryStep1 = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.055, 4.62), stoneCopingMat);
-  entryStep1.position.set(20.00, 0.088, -13.78);
+  const entryStep1 = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.055, 4.38), stoneCopingMat);
+  entryStep1.position.set(20.00, 0.088, -16.8);
   entryStep1.castShadow = true;
   entryStep1.receiveShadow = true;
-  const entryLedRiser = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.035, 4.25), entryRiserAmberMat);
-  entryLedRiser.position.set(20.23, 0.115, -13.78);
+  const entryLedRiser = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.035, 4.00), entryRiserAmberMat);
+  entryLedRiser.position.set(20.23, 0.115, -16.8);
   gardenGroup.add(pergolaDeck, entryCurbBase, entryStep1, entryLedRiser);
 
-  // Lush Foreground Architectural Limestone Planter Beds with Recessed Bark Mulch & Dense Multi-Layer Tropical Understory!
+  // Lush Foreground Architectural Limestone Planter Beds cleanly flanking z=-16.8 pergola & clear of elliptical sky well!
   for (let fpIdx = 0; fpIdx < 3; fpIdx++) {
     const [fpx, fpz, fpw, fpd] = [
-      [16.8, -17.2, 4.8, 1.8],
-      [16.6, -9.8, 4.4, 1.7],
-      [22.4, -17.6, 5.2, 1.6]
+      [16.8, -19.8, 4.8, 1.5],
+      [16.6, -13.6, 4.2, 1.5],
+      [22.4, -20.0, 5.2, 1.4]
     ][fpIdx];
     buildArchitecturalPlanter(gardenGroup, fpx, fpz, fpw, fpd, 0.44);
     populateTropicalUnderstory(gardenGroup, fpx, fpz, fpw, fpd, 0.40, 100 + fpIdx * 19, {
@@ -5436,8 +5383,8 @@ export function buildIconicAttractions(scene, interactables) {
     });
   }
 
-  // Longitudinal carrying stringer beams & 10 open shadow-casting slats cleanly inset > 0.55m clear of skylight parapet!
-  for (const zBeam of [-15.8, -11.75]) {
+  // Longitudinal carrying stringer beams & 10 open shadow-casting slats cleanly inset clear of circular Rainforest sky well!
+  for (const zBeam of [-18.7, -14.9]) {
     const carrier = new THREE.Mesh(new THREE.BoxGeometry(18.6, 0.24, 0.18), darkTeakPergolaMat);
     carrier.position.set(31.3, 3.28, zBeam);
     carrier.castShadow = true;
@@ -5445,7 +5392,7 @@ export function buildIconicAttractions(scene, interactables) {
     gardenGroup.add(carrier);
   }
   for (let s = 0; s < 10; s++) {
-    const sz = -15.7 + (s / 9) * 3.9;
+    const sz = -18.6 + (s / 9) * 3.6;
     const slat = new THREE.Mesh(new THREE.BoxGeometry(18.4, 0.14, 0.11), darkTeakPergolaMat);
     slat.position.set(31.2, 3.52, sz);
     slat.castShadow = true;
@@ -5458,20 +5405,20 @@ export function buildIconicAttractions(scene, interactables) {
   for (let r = 0; r < 6; r++) {
     const rx = 22.2 + r * 3.3;
     const ray = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 2.75, 6.8, 16, 1, true), sunsetRayMat);
-    ray.position.set(rx, 2.15, -14.4 + (r % 2) * 0.42);
+    ray.position.set(rx, 2.15, -17.4 + (r % 2) * 0.42);
     ray.rotation.z = 0.24;
     ray.rotation.x = 0.72;
     gardenGroup.add(ray);
   }
   // Warm Edison lantern ambient pool illuminating the timber pergola walkway planks!
   const pergolaWalkGlow = new THREE.PointLight('#ffb868', 11, 18, 1.6);
-  pergolaWalkGlow.position.set(29.5, 2.6, -13.78);
+  pergolaWalkGlow.position.set(29.5, 2.6, -16.8);
   gardenGroup.add(pergolaWalkGlow);
 
   const pergolaVineGeo = createDrapedVineGeo(1.25, 1.85, 1.7);
   const topCreepGeo = createDrapedVineGeo(1.85, 2.65, 2.9);
   for (let px = 22.0; px <= 40.0; px += 3.0) {
-    for (const pz of [-15.8, -11.75]) {
+    for (const pz of [-18.7, -14.9]) {
       const basePlate = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, 0.34), matteSteelBaseMat);
       basePlate.position.set(px, 0.14, pz);
       basePlate.castShadow = true;
@@ -5481,45 +5428,45 @@ export function buildIconicAttractions(scene, interactables) {
       post.castShadow = true;
       post.receiveShadow = true;
       const brace = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.62, 0.14), darkTeakPergolaMat);
-      brace.position.set(px, 2.96, pz + (pz < -13.78 ? 0.26 : -0.26));
-      brace.rotation.x = pz < -13.78 ? -Math.PI * 0.25 : Math.PI * 0.25;
+      brace.position.set(px, 2.96, pz + (pz < -16.8 ? 0.26 : -0.26));
+      brace.rotation.x = pz < -16.8 ? -Math.PI * 0.25 : Math.PI * 0.25;
       brace.castShadow = true;
       gardenGroup.add(basePlate, post, brace);
     }
-    const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.22, 4.65), darkTeakPergolaMat);
-    crossBeam.position.set(px, 3.36, -13.78);
+    const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.22, 4.35), darkTeakPergolaMat);
+    crossBeam.position.set(px, 3.36, -16.8);
     crossBeam.castShadow = true;
     gardenGroup.add(crossBeam);
 
     const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.36, 6), edisonCordMat);
-    cord.position.set(px, 3.14, -13.78);
+    cord.position.set(px, 3.14, -16.8);
     const socket = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.08, 8), matteSteelBaseMat);
-    socket.position.set(px, 2.94, -13.78);
+    socket.position.set(px, 2.94, -16.8);
     const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.075, 10, 8), edisonAmberMat);
-    bulb.position.set(px, 2.84, -13.78);
+    bulb.position.set(px, 2.84, -16.8);
     gardenGroup.add(cord, socket, bulb);
 
     if (Math.round(px) % 3 === 0 && px < 40.0) {
       const boll = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.62, 0.16), darkTeakPergolaMat);
-      boll.position.set(px + 1.5, 0.36, px % 6 === 0 ? -11.92 : -15.65);
+      boll.position.set(px + 1.5, 0.36, px % 6 === 0 ? -15.05 : -18.55);
       boll.castShadow = true;
       const bGlass = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.14, 0.14), edisonAmberMat);
-      bGlass.position.set(px + 1.5, 0.64, px % 6 === 0 ? -11.92 : -15.65);
+      bGlass.position.set(px + 1.5, 0.64, px % 6 === 0 ? -15.05 : -18.55);
       const bCap = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.05, 0.20), matteSteelBaseMat);
-      bCap.position.set(px + 1.5, 0.73, px % 6 === 0 ? -11.92 : -15.65);
+      bCap.position.set(px + 1.5, 0.73, px % 6 === 0 ? -15.05 : -18.55);
       gardenGroup.add(boll, bGlass, bCap);
     }
 
     if (px < 40.0) {
       const vL = new THREE.Mesh(pergolaVineGeo, botMats.floweringVine);
-      vL.position.set(px + 1.45, 2.66, -15.62);
+      vL.position.set(px + 1.45, 2.66, -18.52);
       vL.rotation.y = 0.08;
       const vR = new THREE.Mesh(pergolaVineGeo, Math.round(px) % 2 === 0 ? botMats.hangingVine : botMats.floweringVine);
-      vR.position.set(px + 1.55, 2.70, -11.92);
+      vR.position.set(px + 1.55, 2.70, -15.05);
       vR.rotation.y = Math.PI - 0.08;
       const topCreep = new THREE.Mesh(topCreepGeo, botMats.floweringVine);
       topCreep.rotation.x = Math.PI / 2;
-      topCreep.position.set(px + 1.5, 3.62, Math.round(px) % 6 === 0 ? -15.1 : -12.3);
+      topCreep.position.set(px + 1.5, 3.62, Math.round(px) % 6 === 0 ? -18.0 : -15.5);
       gardenGroup.add(vL, vR, topCreep);
     }
   }

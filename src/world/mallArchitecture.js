@@ -874,9 +874,9 @@ export function buildMallArchitecture(scene, interactables) {
       }
 
       if (fIdx >= 1 && fIdx <= 6) {
-        // Circular/elliptical open-air Rainforest courtyard opening (widens slightly on 3F..UR so upper floors never intrude above the glass funnel!)
-        const rxRF = fIdx >= 4 ? 18.8 : 17.6;
-        const rzRF = fIdx >= 4 ? 13.6 : 12.8;
+        // Circular/elliptical open-air Rainforest courtyard opening synced EXACTLY to the flared glass curtain-wall funnel (ZERO upper slab overhang!)
+        const rxRF = fIdx <= 3 ? 17.6 : fIdx === 4 ? 18.0 : fIdx === 5 ? 18.75 : 19.65;
+        const rzRF = fIdx <= 3 ? 12.8 : fIdx === 4 ? 13.1 : fIdx === 5 ? 13.65 : 14.30;
         nwShape.holes.push(ellipsePath(38.0, 0.0, rxRF, rzRF, 56));
 
         // On GF (1), 1F (2) & 2F (3): Curved Warm Terracotta-Ochre Parapet Balconies (#c47c34) + Stainless Vertical Pickets!
@@ -1110,68 +1110,134 @@ export function buildMallArchitecture(scene, interactables) {
     const rfForestTrussMat = new THREE.MeshStandardMaterial({ color: '#1d4d3a', roughness: 0.36, metalness: 0.68, envMapIntensity: 0.85 });
     const rfSilverMullionMat = new THREE.MeshStandardMaterial({ color: '#8f9ea4', roughness: 0.28, metalness: 0.80 });
 
-    // Inverted conical circular gridded glass curtain wall (narrower at 2F base -> flares wider toward open sky!)
+    // Inverted conical circular gridded glass curtain wall (narrower at 2F base -> flares gently toward bright open sky!)
     const funnelH = 15.8;
-    const funnelGeo = new THREE.CylinderGeometry(20.6, 17.6, funnelH, 56, 1, true);
+    const rfZScale = 12.8 / 17.6; // 0.72727 exact match to elliptical floor cutouts!
+    const rfBotR = 17.6;
+    const rfTopR = 19.6;
+    rfFunnelGlassMat.color.set('#f2fafc');
+    rfFunnelGlassMat.emissive.set('#e2f4fa');
+    rfFunnelGlassMat.emissiveIntensity = 0.42;
+    rfFunnelGlassMat.opacity = 0.54;
+    const funnelGeo = new THREE.CylinderGeometry(rfTopR, rfBotR, funnelH, 60, 1, true);
     const funnelMesh = new THREE.Mesh(funnelGeo, rfFunnelGlassMat);
-    funnelMesh.scale.set(1.0, 1.0, 0.735);
+    funnelMesh.scale.set(1.0, 1.0, rfZScale);
     funnelMesh.position.set(38.0, 22.6 + funnelH * 0.5, 0);
     root.add(funnelMesh);
 
+    // Crisp Dark-Charcoal Cornice Soffit Ring right above 2F terracotta balcony beneath glass curtain wall (matches photo shadow line!)
+    {
+      const cornicePts = [];
+      for (let i = 0; i <= 56; i++) {
+        const a = (i / 56) * Math.PI * 2;
+        cornicePts.push(new THREE.Vector3(38.0 + Math.cos(a) * 17.65, 22.42, Math.sin(a) * 17.65 * rfZScale));
+      }
+      root.add(new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cornicePts, true), 64, 0.24, 8, true),
+        new THREE.MeshStandardMaterial({ color: '#272a2e', roughness: 0.45, metalness: 0.45 })
+      ));
+    }
+
     // Crisp 3D Structural Horizontal Ring Beams & Vertical Steel Mullions wrapping the circular glass funnel!
-    const ringHeights = [22.7, 25.4, 28.4, 31.6, 34.8, 38.2];
+    const ringHeights = [22.7, 25.0, 27.6, 30.4, 33.4, 36.2, 38.2];
     for (let rIdx = 0; rIdx < ringHeights.length; rIdx++) {
       const ry = ringHeights[rIdx];
       const frac = (ry - 22.6) / funnelH;
-      const rad = 17.6 + frac * (20.6 - 17.6);
+      const rad = rfBotR + frac * (rfTopR - rfBotR);
       const pts = [];
       for (let i = 0; i <= 56; i++) {
         const a = (i / 56) * Math.PI * 2;
-        pts.push(new THREE.Vector3(38.0 + Math.cos(a) * rad, ry, Math.sin(a) * rad * 0.735));
+        pts.push(new THREE.Vector3(38.0 + Math.cos(a) * rad, ry, Math.sin(a) * rad * rfZScale));
       }
       const ringTube = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, rIdx === 0 || rIdx === ringHeights.length - 1 ? 0.18 : 0.085, 8, true),
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, rIdx === 0 || rIdx === ringHeights.length - 1 ? 0.16 : 0.065, 8, true),
         rIdx === 0 ? rfForestTrussMat : rfSilverMullionMat
       );
       root.add(ringTube);
     }
-    for (let v = 0; v < 28; v++) {
-      const a = (v / 28) * Math.PI * 2;
-      const pBot = new THREE.Vector3(38.0 + Math.cos(a) * 17.6, 22.6, Math.sin(a) * 17.6 * 0.735);
-      const pTop = new THREE.Vector3(38.0 + Math.cos(a) * 20.6, 38.4, Math.sin(a) * 20.6 * 0.735);
+    for (let v = 0; v < 36; v++) {
+      const a = (v / 36) * Math.PI * 2;
+      const pBot = new THREE.Vector3(38.0 + Math.cos(a) * rfBotR, 22.6, Math.sin(a) * rfBotR * rfZScale);
+      const pTop = new THREE.Vector3(38.0 + Math.cos(a) * rfTopR, 38.4, Math.sin(a) * rfTopR * rfZScale);
       const strut = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.LineCurve3(pBot, pTop), 4, v % 4 === 0 ? 0.11 : 0.055, 6, false),
+        new THREE.TubeGeometry(new THREE.LineCurve3(pBot, pTop), 4, v % 4 === 0 ? 0.095 : 0.045, 6, false),
         v % 4 === 0 ? rfForestTrussMat : rfSilverMullionMat
       );
       root.add(strut);
     }
 
     // Forest-green painted tubular steel triangular perimeter truss collar right above 2F balconies (#010, #017!)
-    for (let t = 0; t < 36; t++) {
-      const a1 = (t / 36) * Math.PI * 2;
-      const a2 = ((t + 1) / 36) * Math.PI * 2;
-      const p1 = new THREE.Vector3(38.0 + Math.cos(a1) * 17.5, 22.6, Math.sin(a1) * 17.5 * 0.735);
-      const p2 = new THREE.Vector3(38.0 + Math.cos(a2) * 17.9, 23.6, Math.sin(a2) * 17.9 * 0.735);
-      root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(p1, p2), 2, 0.06, 5, false), rfForestTrussMat));
+    for (let t = 0; t < 40; t++) {
+      const a1 = (t / 40) * Math.PI * 2;
+      const a2 = ((t + 1) / 40) * Math.PI * 2;
+      const p1 = new THREE.Vector3(38.0 + Math.cos(a1) * 17.52, 22.6, Math.sin(a1) * 17.52 * rfZScale);
+      const p2 = new THREE.Vector3(38.0 + Math.cos(a2) * 17.78, 23.65, Math.sin(a2) * 17.78 * rfZScale);
+      root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(p1, p2), 2, 0.055, 5, false), rfForestTrussMat));
     }
 
-    // GF Rainforest Signature Fluted Brown Wood Columns with Staggered Glowing Vertical White LED Bars (#352, #383!)
+    // GF Rainforest Fluted Brown Wood LED Columns (y=6..12, #352/#383) + 1F/2F Warm Cream-Beige Balcony Columns (y=12..22.6, exact photo match!)
     const rfWoodColMat = new THREE.MeshStandardMaterial({ color: '#5c3b22', roughness: 0.52, metalness: 0.08 });
+    const rfCreamColMat = new THREE.MeshStandardMaterial({ color: '#d8cfc0', roughness: 0.50, metalness: 0.06 });
     const rfWhiteLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.8, 1.85, 1.9), toneMapped: false });
-    const rfColAngles = [0.42, 1.05, 2.08, 2.72, 3.55, 4.18, 5.22, 5.86];
-    for (const ang of rfColAngles) {
-      const cx = 38.0 + Math.cos(ang) * 18.8;
-      const cz = Math.sin(ang) * 13.8;
-      const col = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, 17.6, 18), rfWoodColMat);
-      col.position.set(cx, 14.2, cz);
-      root.add(col);
-      for (let lb = 0; lb < 6; lb++) {
-        const la = (lb / 6) * Math.PI * 2;
-        const barH = 1.6 + (lb % 3) * 0.85;
-        const bar = new THREE.Mesh(new THREE.BoxGeometry(0.06, barH, 0.04), rfWhiteLedMat);
-        bar.position.set(cx + Math.cos(la) * 0.57, 10.6 - barH * 0.4, cz + Math.sin(la) * 0.57);
-        bar.rotation.y = -la;
-        root.add(bar);
+    const rfColAngles = [0.38, 0.88, 1.32, 1.82, 2.26, 2.76, 3.52, 4.02, 4.46, 4.96, 5.40, 5.90];
+    for (let ci = 0; ci < rfColAngles.length; ci++) {
+      const ang = rfColAngles[ci];
+      const cx = 38.0 + Math.cos(ang) * 18.25;
+      const cz = Math.sin(ang) * 13.30;
+      // GF brown wood LED column (y = 6.0..12.0) on alternating major piers
+      if (ci % 2 === 0) {
+        const gfCol = new THREE.Mesh(new THREE.CylinderGeometry(0.50, 0.50, 6.0, 16), rfWoodColMat);
+        gfCol.position.set(cx, 9.0, cz);
+        root.add(gfCol);
+        for (let lb = 0; lb < 6; lb++) {
+          const la = (lb / 6) * Math.PI * 2;
+          const barH = 1.6 + (lb % 3) * 0.75;
+          const bar = new THREE.Mesh(new THREE.BoxGeometry(0.055, barH, 0.04), rfWhiteLedMat);
+          bar.position.set(cx + Math.cos(la) * 0.51, 10.4 - barH * 0.4, cz + Math.sin(la) * 0.51);
+          bar.rotation.y = -la;
+          root.add(bar);
+        }
+      }
+      // 1F & 2F warm cream architectural round columns visible right behind curved terracotta parapets in photo!
+      const upperCol = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 10.55, 16), rfCreamColMat);
+      upperCol.position.set(cx, 17.28, cz);
+      root.add(upperCol);
+    }
+
+    // Recessed Dark-Glass Warm-Lit Curved Balcony Storefront Fascia Arcs on 1F & 2F (leaves North/South/East/West walkways 100% open!)
+    const rfGalleryDarkMat = new THREE.MeshStandardMaterial({ color: '#1b1d21', roughness: 0.42, metalness: 0.35 });
+    const rfGalleryGlowMat = new THREE.MeshBasicMaterial({ color: '#ffdf9e' });
+    for (const fy of [12.0, 18.0]) {
+      const arcSegs = 44;
+      for (let i = 0; i < arcSegs; i++) {
+        const a1 = (i / arcSegs) * Math.PI * 2;
+        const a2 = ((i + 1) / arcSegs) * Math.PI * 2;
+        const am = (a1 + a2) * 0.5;
+        // Keep generous open walkways at North (PI*1.5), South (PI*0.5), East (0), and West (PI)!
+        const nearNS = Math.abs(Math.cos(am)) < 0.28;
+        const nearEW = Math.abs(Math.sin(am)) < 0.38;
+        if (nearNS || nearEW) continue;
+        const rxG = 20.6;
+        const rzG = 15.2;
+        const x1 = 38.0 + Math.cos(a1) * rxG;
+        const z1 = Math.sin(a1) * rzG;
+        const x2 = 38.0 + Math.cos(a2) * rxG;
+        const z2 = Math.sin(a2) * rzG;
+        const segLen = Math.hypot(x2 - x1, z2 - z1);
+        const segAng = Math.atan2(x2 - x1, z2 - z1);
+        const mx = (x1 + x2) * 0.5;
+        const mz = (z1 + z2) * 0.5;
+        // Sleek dark upper fascia header & subtle warm interior shop window strip behind 1F/2F terracotta rim
+        const hdr = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.82, segLen + 0.06), rfGalleryDarkMat);
+        hdr.position.set(mx, fy + 4.18, mz);
+        hdr.rotation.y = segAng;
+        root.add(hdr);
+        if (i % 2 === 0) {
+          const glowStrip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.16, segLen * 0.62), rfGalleryGlowMat);
+          glowStrip.position.set(mx, fy + 3.66, mz);
+          glowStrip.rotation.y = segAng;
+          root.add(glowStrip);
+        }
       }
     }
 
