@@ -20,7 +20,8 @@ const PATROL_ROUTES = [
   { floor: 1, x1: -118, z1: -16.2, x2: -44, z2: -16.2, count: 11 },
   { floor: 1, x1: -118, z1: 16.2, x2: -44, z2: 16.2, count: 11 },
   { floor: 1, x1: -24, z1: -1.8, x2: 10, z2: -1.8, count: 6 },
-  { floor: 1, x1: 38, z1: -11.0, x2: 38, z2: 11.0, count: 4 },
+  { floor: 1, x1: 23.0, z1: -0.6, x2: 43.0, z2: -0.6, count: 3 },
+  { floor: 1, x1: 36.8, z1: -10.5, x2: 36.8, z2: 10.5, count: 2 },
   { floor: 1, x1: 62, z1: -15.5, x2: 115, z2: -15.5, count: 9 },
   { floor: 1, x1: 134, z1: -16.8, x2: 156, z2: -16.8, count: 4 },
   { floor: 1, x1: 62, z1: 15.5, x2: 156, z2: 15.5, count: 14 },
@@ -62,9 +63,9 @@ const PATROL_ROUTES = [
   { floor: 5, x1: 24, z1: 16.8, x2: 101, z2: 16.8, count: 6 },
   { floor: 5, x1: 118, z1: 16.2, x2: 156, z2: 16.2, count: 4 },
 
-  // UR Upper Roof: Strictly on Secret Garden & Oval Promenades (|z| >= 15.5, clear of Rainforest skylight rim & sport cages!)
-  { floor: 6, x1: 27, z1: -16.2, x2: 52, z2: -16.2, count: 3 },
-  { floor: 6, x1: 26, z1: 16.2, x2: 52, z2: 16.2, count: 3 },
+  // UR Upper Roof: Strictly on Secret Garden pergola (z=-16.8) & Oval Promenades (clear of elliptical Rainforest rim & conservatory!)
+  { floor: 6, x1: 23, z1: -16.8, x2: 43, z2: -16.8, count: 3 },
+  { floor: 6, x1: 26, z1: 16.8, x2: 48, z2: 16.8, count: 2 },
   { floor: 6, x1: 120, z1: 16.2, x2: 156, z2: 16.2, count: 4 }
 ];
 
@@ -104,9 +105,9 @@ const AMBIENT_VISITORS = [
   { floor: 1, x: 92.5, z: 9.2, rotY: -2.3 },
   { floor: 1, x: 83.2, z: -15.5, rotY: 0.2 },
   { floor: 1, x: 86.4, z: 15.2, rotY: 3.0 },
-  // 1F-06 Promenade CU / Baskin-Robbins / Wong Kok shoppers!
-  { floor: 2, x: -16.5, z: -3.2, rotY: 1.4 },
-  { floor: 2, x: -11.5, z: 2.8, rotY: -1.8 },
+  // 1F-06 Promenade CU / Baskin-Robbins / Wong Kok shoppers (clear of kiosk counters!)
+  { floor: 2, x: -20.5, z: -6.2, rotY: 1.4 },
+  { floor: 2, x: -4.2, z: -5.8, rotY: -1.8 },
   // 2F-05 Concierge visitor cleanly in front of counter (zero counter overlap!)
   { floor: 3, x: -48.8, z: 14.5, rotY: Math.PI / 2 },
   // 3F-01 NextGen VR spectators
@@ -117,12 +118,12 @@ const AMBIENT_VISITORS = [
   { floor: 0, x: -38.5, z: 18.2, rotY: 0.4 },
   { floor: 0, x: -44.0, z: 19.2, rotY: 1.3 },
   { floor: 0, x: -33.5, z: 17.0, rotY: -1.6 },
-  // LG-07 Rainforest Koi Jetty visitors cleanly inset >1.15m inside timber deck (ZERO glass railing or post clipping!)
-  { floor: 0, x: 28.4, z: -0.82, rotY: 0.95, yOff: 0.09 },
-  { floor: 0, x: 29.3, z: 0.96, rotY: 2.15, yOff: 0.09 },
-  // LG-08 Rainforest Arapaima Aquarium admirers on boardwalk
-  { floor: 0, x: 51.8, z: -10.5, rotY: -2.4 },
-  { floor: 0, x: 48.2, z: -11.2, rotY: Math.PI },
+  // G-07 Ground Floor Rainforest Koi Pond wooden boardwalk visitors admiring Koi & 4-story cliff waterfall (Photo 3!)
+  { floor: 1, x: 30.8, z: -0.6, rotY: 0.95, yOff: 0.06 },
+  { floor: 1, x: 34.4, z: 1.2, rotY: 1.35, yOff: 0.06 },
+  // LG-08 Rainforest Arapaima Aquarium admirers on solid LG Rainforest concourse
+  { floor: 0, x: 51.0, z: -8.5, rotY: -2.4 },
+  { floor: 0, x: 46.8, z: -9.6, rotY: Math.PI },
   // 1F-01 Rollerwa outside spectators (offset clear of ROLLERWA SKATE RENTAL sign!)
   { floor: 2, x: -164.8, z: -2.2, rotY: -1.6 },
   { floor: 2, x: -165.0, z: 4.5, rotY: -1.5 },

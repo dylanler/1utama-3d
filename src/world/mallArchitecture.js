@@ -59,7 +59,9 @@ import {
   createDoorPlaqueTexture,
   createRainforestGlassGridTexture,
   createRainforestTerracottaFloorTexture,
-  createCentreCourtCheckeredColumnTexture
+  createCentreCourtCheckeredColumnTexture,
+  createSensoryPodTexture,
+  createLuxeValetVistaTexture
 } from '../graphics/proceduralTextures.js';
 import {
   MarbleReflectorShader,
@@ -570,6 +572,10 @@ export function buildMallArchitecture(scene, interactables) {
       const a2 = ((i + 1) / segs) * Math.PI * 2;
       const am = (a1 + a2) * 0.5;
       if (am < gapAng || am > Math.PI * 2 - gapAng) continue;
+      // Leave clean entrance/exit slots on the North rim where oval-rim escalators (x=132.4..143.6, z=-12.6) enter the Oval!
+      const mxEsc = cx + Math.cos(am) * rx;
+      const mzEsc = cz + Math.sin(am) * rz;
+      if (yFloor >= 5.5 && yFloor <= 24.5 && mzEsc < -11.4 && mxEsc > 131.6 && mxEsc < 144.4) continue;
       addRectBalustrade(
         cx + Math.cos(a1) * rx,
         cz + Math.sin(a1) * rz,
@@ -809,48 +815,17 @@ export function buildMallArchitecture(scene, interactables) {
       const nwShape = rectShape(b.xMin, b.xMax, b.zMin, b.zMax);
 
       if (fIdx === 0) {
-        const kp = BOUNDS.koiPond;
-        nwShape.holes.push(rectPath(kp.xMin, kp.xMax, kp.zMin, kp.zMax));
-
+        // LG beneath the Ground Floor Rainforest Koi Pond is a bright solid LG Rainforest concourse
+        // with warm teak inlay plaza around the Giant Arapaima Aquarium & glass-walled escalator pavilion!
         const rf = BOUNDS.rainforestVoid;
-        const deckShape = rectShape(rf.xMin, rf.xMax, rf.zMin, rf.zMax);
-        deckShape.holes.push(rectPath(kp.xMin, kp.xMax, kp.zMin, kp.zMax));
-        const deckMesh = new THREE.Mesh(
-          new THREE.ExtrudeGeometry(deckShape, { depth: 0.03, bevelEnabled: false }),
-          teakMat
+        const lgPlaza = new THREE.Mesh(
+          new THREE.PlaneGeometry(rf.xMax - rf.xMin - 2.0, rf.zMax - rf.zMin - 2.0),
+          new THREE.MeshStandardMaterial({ map: createRainforestTerracottaFloorTexture(), roughness: 0.26, metalness: 0.05 })
         );
-        deckMesh.rotation.x = -Math.PI / 2;
-        deckMesh.position.y = 0.002;
-        deckMesh.receiveShadow = true;
-        root.add(deckMesh);
-
-        const kj = BOUNDS.koiJetty;
-        const jettyMesh = new THREE.Mesh(
-          new THREE.BoxGeometry(kj.xMax - kj.xMin, 0.14, kj.zMax - kj.zMin),
-          teakMat
-        );
-        jettyMesh.position.set((kj.xMin + kj.xMax) * 0.5, 0.02, 0);
-        jettyMesh.receiveShadow = true;
-        // Solid stone/timber pier foundation extending down into pond bed (y = -1.1) -> ZERO floating railing in G-07!
-        const jettyPier = new THREE.Mesh(
-          new THREE.BoxGeometry(kj.xMax - kj.xMin - 0.15, 1.15, kj.zMax - kj.zMin - 0.15),
-          new THREE.MeshStandardMaterial({ color: '#3b2b1e', roughness: 0.88 })
-        );
-        jettyPier.position.set((kj.xMin + kj.xMax) * 0.5, -0.58, 0);
-        root.add(jettyMesh, jettyPier);
-        addRectBalustrade(kj.xMin, kj.zMin, kj.xMax, kj.zMin, 0.08, 0.92, false);
-        addRectBalustrade(kj.xMin, kj.zMax, kj.xMax, kj.zMax, 0.08, 0.92, false);
-        addRectBalustrade(kj.xMax, kj.zMin, kj.xMax, kj.zMax, 0.08, 0.92, false);
-        // Low architectural timber safety curb framing the Koi Pond boardwalk edge (LG-08!)
-        const curbMat = new THREE.MeshStandardMaterial({ color: '#452b18', roughness: 0.72 });
-        for (const zE of [kp.zMin, kp.zMax]) {
-          const cb = new THREE.Mesh(new THREE.BoxGeometry(kp.xMax - kp.xMin + 0.3, 0.12, 0.20), curbMat);
-          cb.position.set((kp.xMin + kp.xMax) * 0.5, 0.06, zE);
-          root.add(cb);
-        }
-        const cbE = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.12, kp.zMax - kp.zMin + 0.3), curbMat);
-        cbE.position.set(kp.xMax, 0.06, 0);
-        root.add(cbE);
+        lgPlaza.rotation.x = -Math.PI / 2;
+        lgPlaza.position.set(38.0, 0.014, 0.0);
+        lgPlaza.receiveShadow = true;
+        root.add(lgPlaza);
       }
 
       if (fIdx >= 1) {
@@ -861,9 +836,9 @@ export function buildMallArchitecture(scene, interactables) {
       // THE RAINFOREST IS AN OPEN-TO-THE-SKY CIRCULAR COURTYARD (NOT AN INDOOR MALL CEILING!)
       // Punch a wide elliptical open-sky well through GF..UR (fIdx 1..6) so ZERO indoor mall ceilings hover above 2F bridge!
       if (fIdx === 1) {
-        // GF Rainforest Diagonal Terracotta Tile & Beige Limestone Floor around the open courtyard (#352, #383!)
+        // GF Rainforest Glossy Diagonal Terracotta Tile & Limestone Floor around the Ground Floor Koi Pond courtyard (#352, #383!)
         const rfFloorTex = createRainforestTerracottaFloorTexture();
-        const rfTerraFloorMat = new THREE.MeshStandardMaterial({ map: rfFloorTex, roughness: 0.42, metalness: 0.04, envMapIntensity: 0.55 });
+        const rfTerraFloorMat = new THREE.MeshStandardMaterial({ map: rfFloorTex, roughness: 0.24, metalness: 0.05, envMapIntensity: 0.72 });
         const rfRing = rectShape(14.0, 62.0, -22.8, 22.8);
         rfRing.holes.push(ellipsePath(38.0, 0.0, 17.6, 12.8, 52));
         const rfTerraMesh = new THREE.Mesh(new THREE.ShapeGeometry(rfRing), rfTerraFloorMat);
@@ -874,22 +849,26 @@ export function buildMallArchitecture(scene, interactables) {
       }
 
       if (fIdx >= 1 && fIdx <= 6) {
-        // Circular/elliptical open-air Rainforest courtyard opening synced EXACTLY to the flared glass curtain-wall funnel (ZERO upper slab overhang!)
+        // Circular/elliptical open-air Rainforest courtyard spanning GF..UR (full height of the mall!)
         const rxRF = fIdx <= 3 ? 17.6 : fIdx === 4 ? 18.0 : fIdx === 5 ? 18.75 : 19.65;
         const rzRF = fIdx <= 3 ? 12.8 : fIdx === 4 ? 13.1 : fIdx === 5 ? 13.65 : 14.30;
         nwShape.holes.push(ellipsePath(38.0, 0.0, rxRF, rzRF, 56));
 
-        // On GF (1), 1F (2) & 2F (3): Curved Warm Terracotta-Ochre Parapet Balconies (#c47c34) + Stainless Vertical Pickets!
+        // On GF (1): Low curved salmon-terracotta Koi Pond curb cleanly OPEN at West & N/S wooden boardwalk entries (Photo 3!)
+        // On 1F (2) & 2F (3): Curved Muted Salmon-Terracotta Parapet Balconies (#be7c57) + Dense Vertical Stainless Pickets (Photo 1 & 2!)
         if (fIdx <= 3) {
-          const terraBalconyMat = new THREE.MeshStandardMaterial({ color: '#c47c34', roughness: 0.62, metalness: 0.06, envMapIntensity: 0.35 });
-          const terraCapMat = new THREE.MeshStandardMaterial({ color: '#9c5d24', roughness: 0.54, metalness: 0.08 });
+          const terraBalconyMat = new THREE.MeshStandardMaterial({ color: '#be7c57', roughness: 0.62, metalness: 0.05, envMapIntensity: 0.30 });
+          const terraCapMat = new THREE.MeshStandardMaterial({ color: '#8e5a3b', roughness: 0.54, metalness: 0.08 });
           const segs = 56;
           for (let i = 0; i < segs; i++) {
             const a1 = (i / segs) * Math.PI * 2;
             const a2 = ((i + 1) / segs) * Math.PI * 2;
             const am = (a1 + a2) * 0.5;
             const mx = 38.0 + Math.cos(am) * rxRF;
-            // On 2F (fIdx === 3), leave clean 3.9m bridge entry gaps at North (z=-12.8) & South (z=+12.8) around x=38!
+            const mz = Math.sin(am) * rzRF;
+            // On GF (fIdx === 1), leave wide open step-down entries onto the Ground Floor Koi Pond timber boardwalks (West x~20.4 & N/S x~38)!
+            if (fIdx === 1 && ((mx < 22.0 && Math.abs(mz) < 3.6) || Math.abs(mx - 38.0) < 3.4)) continue;
+            // On 2F (fIdx === 3), leave clean bridge entry gaps at North (z=-12.8) & South (z=+12.8) around x=38!
             if (fIdx === 3 && Math.abs(mx - 38.0) < 2.2) continue;
             const x1 = 38.0 + Math.cos(a1) * rxRF;
             const z1 = Math.sin(a1) * rzRF;
@@ -897,23 +876,49 @@ export function buildMallArchitecture(scene, interactables) {
             const z2 = Math.sin(a2) * rzRF;
             const segLen = Math.hypot(x2 - x1, z2 - z1);
             const segAng = Math.atan2(x2 - x1, z2 - z1);
-            // Solid warm terracotta-ochre curved fascia & parapet wall
-            const para = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1.38, segLen + 0.06), terraBalconyMat);
-            para.position.set((x1 + x2) * 0.5, y - 0.14, (z1 + z2) * 0.5);
-            para.rotation.y = segAng;
-            const cap = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.08, segLen + 0.06), terraCapMat);
-            cap.position.set((x1 + x2) * 0.5, y + 0.56, (z1 + z2) * 0.5);
-            cap.rotation.y = segAng;
-            // Stainless steel top rail above terracotta parapet
-            const rail = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.055, segLen + 0.04), steelHandrailMat);
-            rail.position.set((x1 + x2) * 0.5, y + 1.08, (z1 + z2) * 0.5);
-            rail.rotation.y = segAng;
-            root.add(para, cap, rail);
-            if (i % 2 === 0) {
-              const post = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.52, 6), steelHandrailMat);
-              post.position.set(x1, y + 0.82, z1);
-              root.add(post);
+            if (fIdx === 1) {
+              // Low stone/terracotta garden pond curb on Ground Floor (NO high wall hiding the Koi Pond!)
+              const gfCurb = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.34, segLen + 0.06), terraBalconyMat);
+              gfCurb.position.set((x1 + x2) * 0.5, y + 0.14, (z1 + z2) * 0.5);
+              gfCurb.rotation.y = segAng;
+              root.add(gfCurb);
+            } else {
+              // 1F & 2F curved salmon-terracotta parapet wall + dense brushed-steel vertical picket balustrade (Photo 1 & 2!)
+              const para = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.38, segLen + 0.06), terraBalconyMat);
+              para.position.set((x1 + x2) * 0.5, y - 0.12, (z1 + z2) * 0.5);
+              para.rotation.y = segAng;
+              const cap = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, segLen + 0.06), terraCapMat);
+              cap.position.set((x1 + x2) * 0.5, y + 0.58, (z1 + z2) * 0.5);
+              cap.rotation.y = segAng;
+              const topRail = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.065, segLen + 0.04), steelHandrailMat);
+              topRail.position.set((x1 + x2) * 0.5, y + 1.12, (z1 + z2) * 0.5);
+              topRail.rotation.y = segAng;
+              const midRail = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.032, segLen + 0.04), steelHandrailMat);
+              midRail.position.set((x1 + x2) * 0.5, y + 0.66, (z1 + z2) * 0.5);
+              midRail.rotation.y = segAng;
+              root.add(para, cap, topRail, midRail);
+              // Dense vertical steel pickets (~0.24m spacing along each segment) matching Photo 1 & 2!
+              const pCount = Math.max(3, Math.round(segLen / 0.24));
+              for (let p = 0; p < pCount; p++) {
+                const frac = (p + 0.5) / pCount;
+                const px = x1 + (x2 - x1) * frac;
+                const pz = z1 + (z2 - z1) * frac;
+                const picket = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.48, 5), steelHandrailMat);
+                picket.position.set(px, y + 0.89, pz);
+                root.add(picket);
+              }
             }
+          }
+          // Glowing red Nando's balcony sign visible on 1F curved Rainforest gallery (exact Photo 1 detail!)
+          if (fIdx === 2) {
+            const nandosTex = createSignBoardTexture("Nando's", 'PERi-PERi CHICKEN  •  1F RAINFOREST', '#181414', '#ef4444', '#facc15', 512, 128);
+            const nandosSign = new THREE.Mesh(
+              new THREE.PlaneGeometry(3.4, 0.78),
+              new THREE.MeshBasicMaterial({ map: nandosTex, side: THREE.DoubleSide })
+            );
+            nandosSign.position.set(53.2, y + 3.4, 7.6);
+            nandosSign.rotation.y = -2.25;
+            root.add(nandosSign);
           }
         } else {
           // Upper floors (3F, 4F, UR): sleek protective glass safety rim outside the circular glass funnel
@@ -1110,36 +1115,86 @@ export function buildMallArchitecture(scene, interactables) {
     const rfForestTrussMat = new THREE.MeshStandardMaterial({ color: '#1d4d3a', roughness: 0.36, metalness: 0.68, envMapIntensity: 0.85 });
     const rfSilverMullionMat = new THREE.MeshStandardMaterial({ color: '#8f9ea4', roughness: 0.28, metalness: 0.80 });
 
-    // Inverted conical circular gridded glass curtain wall (narrower at 2F base -> flares gently toward bright open sky!)
-    const funnelH = 15.8;
+    // Full-Height Inverted-Conical Clear Gridded-Glass Sky Curtain Wall rising ALL THE WAY to the top of the mall (y = 22.6..38.8 — Photo 1 & 2!)
+    const funnelH = 16.2;
     const rfZScale = 12.8 / 17.6; // 0.72727 exact match to elliptical floor cutouts!
     const rfBotR = 17.6;
     const rfTopR = 19.6;
-    rfFunnelGlassMat.color.set('#f7fcfe');
-    rfFunnelGlassMat.emissive.set('#eaf7fc');
-    rfFunnelGlassMat.emissiveIntensity = 0.55;
-    rfFunnelGlassMat.opacity = 0.48;
+    rfFunnelGlassMat.color.set('#f4fbff');
+    rfFunnelGlassMat.emissive.set('#dff2fc');
+    rfFunnelGlassMat.emissiveIntensity = 0.62;
+    rfFunnelGlassMat.opacity = 0.56;
     const funnelGeo = new THREE.CylinderGeometry(rfTopR, rfBotR, funnelH, 60, 1, true);
     const funnelMesh = new THREE.Mesh(funnelGeo, rfFunnelGlassMat);
     funnelMesh.scale.set(1.0, 1.0, rfZScale);
     funnelMesh.position.set(38.0, 22.6 + funnelH * 0.5, 0);
     root.add(funnelMesh);
 
-    // Crisp Dark-Charcoal Cornice Soffit Ring right above 2F terracotta balcony beneath glass curtain wall (matches photo shadow line!)
+    // Weathered Brushed Steel-Grey Circular Rain Gutter Pipe rimming the 2F glass funnel base (#010, #013!)
     {
-      const cornicePts = [];
+      const gutterPts = [];
       for (let i = 0; i <= 56; i++) {
         const a = (i / 56) * Math.PI * 2;
-        cornicePts.push(new THREE.Vector3(38.0 + Math.cos(a) * 17.65, 22.42, Math.sin(a) * 17.65 * rfZScale));
+        gutterPts.push(new THREE.Vector3(38.0 + Math.cos(a) * 17.58, 22.45, Math.sin(a) * 17.58 * rfZScale));
       }
       root.add(new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cornicePts, true), 64, 0.24, 8, true),
-        new THREE.MeshStandardMaterial({ color: '#272a2e', roughness: 0.45, metalness: 0.45 })
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(gutterPts, true), 64, 0.20, 10, true),
+        new THREE.MeshStandardMaterial({ color: '#7a7d7c', roughness: 0.42, metalness: 0.65 })
       ));
     }
 
-    // Crisp 3D Structural Horizontal Ring Beams & Vertical Steel Mullions wrapping the circular glass funnel!
-    const ringHeights = [22.7, 25.0, 27.6, 30.4, 33.4, 36.2, 38.2];
+    // GIANT CIRCULAR FOREST-GREEN OPEN SPACE-TRUSS SKYLIGHT RING + 8 HANGING BLACK ARCHITECTURAL FLOODLIGHTS (Exact Photo 2!)
+    {
+      const ringSpecs = [
+        { r: 16.5, y: 22.8, rad: 0.14 },
+        { r: 17.5, y: 22.8, rad: 0.14 },
+        { r: 17.2, y: 24.45, rad: 0.13 }
+      ];
+      for (const rs of ringSpecs) {
+        const rPts = [];
+        for (let i = 0; i <= 56; i++) {
+          const a = (i / 56) * Math.PI * 2;
+          rPts.push(new THREE.Vector3(38.0 + Math.cos(a) * rs.r, rs.y, Math.sin(a) * rs.r * rfZScale));
+        }
+        root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(rPts, true), 64, rs.rad, 8, true), rfForestTrussMat));
+      }
+      // Crisp 3D triangular open space-truss web struts around the circular forest-green ring!
+      const trussN = 44;
+      for (let t = 0; t < trussN; t++) {
+        const a1 = (t / trussN) * Math.PI * 2;
+        const a2 = ((t + 1) / trussN) * Math.PI * 2;
+        const am = (a1 + a2) * 0.5;
+        const pIn = new THREE.Vector3(38.0 + Math.cos(a1) * 16.5, 22.8, Math.sin(a1) * 16.5 * rfZScale);
+        const pOut = new THREE.Vector3(38.0 + Math.cos(a1) * 17.5, 22.8, Math.sin(a1) * 17.5 * rfZScale);
+        const pTop = new THREE.Vector3(38.0 + Math.cos(am) * 17.2, 24.45, Math.sin(am) * 17.2 * rfZScale);
+        const pInNext = new THREE.Vector3(38.0 + Math.cos(a2) * 16.5, 22.8, Math.sin(a2) * 16.5 * rfZScale);
+        root.add(
+          new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(pIn, pTop), 2, 0.055, 5, false), rfForestTrussMat),
+          new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(pOut, pTop), 2, 0.055, 5, false), rfForestTrussMat),
+          new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(pInNext, pTop), 2, 0.048, 5, false), rfForestTrussMat),
+          new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(pIn, pOut), 2, 0.05, 5, false), rfForestTrussMat)
+        );
+      }
+      // 8 Hanging Matte-Black Architectural Stadium Floodlights mounted along inner rim of the forest-green truss ring (Photo 2!)
+      const floodMat = new THREE.MeshStandardMaterial({ color: '#14171c', roughness: 0.42, metalness: 0.65 });
+      const floodLensMat = new THREE.MeshBasicMaterial({ color: '#fff8dc' });
+      for (let fl = 0; fl < 8; fl++) {
+        const fa = (fl / 8) * Math.PI * 2 + 0.35;
+        const fx = 38.0 + Math.cos(fa) * 16.3;
+        const fz = Math.sin(fa) * 16.3 * rfZScale;
+        const fg = new THREE.Group();
+        fg.position.set(fx, 22.45, fz);
+        fg.lookAt(38.0, 12.0, 0.0);
+        const housing = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.48, 0.34), floodMat);
+        const lens = new THREE.Mesh(new THREE.PlaneGeometry(0.50, 0.36), floodLensMat);
+        lens.position.z = 0.18;
+        fg.add(housing, lens);
+        root.add(fg);
+      }
+    }
+
+    // Crisp 3D Structural Horizontal Ring Beams & Vertical Steel Mullions wrapping the full-height circular glass wall!
+    const ringHeights = [24.8, 27.4, 30.2, 33.2, 36.0, 38.6];
     for (let rIdx = 0; rIdx < ringHeights.length; rIdx++) {
       const ry = ringHeights[rIdx];
       const frac = (ry - 22.6) / funnelH;
@@ -1150,15 +1205,15 @@ export function buildMallArchitecture(scene, interactables) {
         pts.push(new THREE.Vector3(38.0 + Math.cos(a) * rad, ry, Math.sin(a) * rad * rfZScale));
       }
       const ringTube = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, rIdx === 0 || rIdx === ringHeights.length - 1 ? 0.16 : 0.065, 8, true),
-        rIdx === 0 ? rfForestTrussMat : rfSilverMullionMat
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, rIdx === ringHeights.length - 1 ? 0.16 : 0.065, 8, true),
+        rfSilverMullionMat
       );
       root.add(ringTube);
     }
     for (let v = 0; v < 36; v++) {
       const a = (v / 36) * Math.PI * 2;
       const pBot = new THREE.Vector3(38.0 + Math.cos(a) * rfBotR, 22.6, Math.sin(a) * rfBotR * rfZScale);
-      const pTop = new THREE.Vector3(38.0 + Math.cos(a) * rfTopR, 38.4, Math.sin(a) * rfTopR * rfZScale);
+      const pTop = new THREE.Vector3(38.0 + Math.cos(a) * rfTopR, 38.8, Math.sin(a) * rfTopR * rfZScale);
       const strut = new THREE.Mesh(
         new THREE.TubeGeometry(new THREE.LineCurve3(pBot, pTop), 4, v % 4 === 0 ? 0.095 : 0.045, 6, false),
         v % 4 === 0 ? rfForestTrussMat : rfSilverMullionMat
@@ -1166,79 +1221,40 @@ export function buildMallArchitecture(scene, interactables) {
       root.add(strut);
     }
 
-    // Forest-green painted tubular steel triangular perimeter truss collar right above 2F balconies (#010, #017!)
-    for (let t = 0; t < 40; t++) {
-      const a1 = (t / 40) * Math.PI * 2;
-      const a2 = ((t + 1) / 40) * Math.PI * 2;
-      const p1 = new THREE.Vector3(38.0 + Math.cos(a1) * 17.52, 22.6, Math.sin(a1) * 17.52 * rfZScale);
-      const p2 = new THREE.Vector3(38.0 + Math.cos(a2) * 17.78, 23.65, Math.sin(a2) * 17.78 * rfZScale);
-      root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(p1, p2), 2, 0.055, 5, false), rfForestTrussMat));
-    }
-
-    // GF Rainforest Fluted Brown Wood LED Columns (y=6..12, #352/#383) + 1F/2F Warm Cream-Beige Balcony Columns (y=12..22.6, exact photo match!)
-    const rfWoodColMat = new THREE.MeshStandardMaterial({ color: '#5c3b22', roughness: 0.52, metalness: 0.08 });
-    const rfCreamColMat = new THREE.MeshStandardMaterial({ color: '#d8cfc0', roughness: 0.50, metalness: 0.06 });
-    const rfWhiteLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.8, 1.85, 1.9), toneMapped: false });
+    // GF Fluted Walnut-Teak Wood LED Columns w/ Staggered White Top LEDs, Black Bottom Inlays & Cool-White Ceiling Halo (#352/#382/#383)
+    // + 1F/2F Warm Cream-Beige Architectural Round Columns behind the curved salmon-terracotta balconies (Photo 1 & 2!)
+    const rfWoodColMat = new THREE.MeshStandardMaterial({ color: '#6e4326', map: teakMaps.map, roughness: 0.48, metalness: 0.08 });
+    const rfBlackInlayMat = new THREE.MeshStandardMaterial({ color: '#14161a', roughness: 0.36, metalness: 0.45 });
+    const rfCreamColMat = new THREE.MeshStandardMaterial({ color: '#dfd7c8', roughness: 0.50, metalness: 0.06 });
+    const rfWhiteLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.75, 1.85, 1.95), toneMapped: false });
     const rfColAngles = [0.38, 0.88, 1.32, 1.82, 2.26, 2.76, 3.52, 4.02, 4.46, 4.96, 5.40, 5.90];
     for (let ci = 0; ci < rfColAngles.length; ci++) {
       const ang = rfColAngles[ci];
       const cx = 38.0 + Math.cos(ang) * 18.25;
       const cz = Math.sin(ang) * 13.30;
-      // GF brown wood LED column (y = 6.0..12.0) on alternating major piers
       if (ci % 2 === 0) {
-        const gfCol = new THREE.Mesh(new THREE.CylinderGeometry(0.50, 0.50, 6.0, 16), rfWoodColMat);
-        gfCol.position.set(cx, 9.0, cz);
-        root.add(gfCol);
-        for (let lb = 0; lb < 6; lb++) {
-          const la = (lb / 6) * Math.PI * 2;
-          const barH = 1.6 + (lb % 3) * 0.75;
+        const gfCol = new THREE.Mesh(new THREE.CylinderGeometry(0.54, 0.54, 5.95, 20), rfWoodColMat);
+        gfCol.position.set(cx, 8.98, cz);
+        const haloRing = new THREE.Mesh(new THREE.TorusGeometry(0.58, 0.045, 8, 24), rfWhiteLedMat);
+        haloRing.rotation.x = Math.PI / 2;
+        haloRing.position.set(cx, 11.72, cz);
+        root.add(gfCol, haloRing);
+        for (let lb = 0; lb < 8; lb++) {
+          const la = (lb / 8) * Math.PI * 2;
+          const barH = 1.45 + (lb % 3) * 0.72;
           const bar = new THREE.Mesh(new THREE.BoxGeometry(0.055, barH, 0.04), rfWhiteLedMat);
-          bar.position.set(cx + Math.cos(la) * 0.51, 10.4 - barH * 0.4, cz + Math.sin(la) * 0.51);
+          bar.position.set(cx + Math.cos(la) * 0.55, 10.6 - barH * 0.42, cz + Math.sin(la) * 0.55);
           bar.rotation.y = -la;
-          root.add(bar);
+          const darkH = 1.15 + ((lb + 1) % 3) * 0.45;
+          const darkBar = new THREE.Mesh(new THREE.BoxGeometry(0.055, darkH, 0.036), rfBlackInlayMat);
+          darkBar.position.set(cx + Math.cos(la) * 0.55, 6.0 + darkH * 0.5, cz + Math.sin(la) * 0.55);
+          darkBar.rotation.y = -la;
+          root.add(bar, darkBar);
         }
       }
-      // 1F & 2F warm cream architectural round columns visible right behind curved terracotta parapets in photo!
       const upperCol = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 10.55, 16), rfCreamColMat);
       upperCol.position.set(cx, 17.28, cz);
       root.add(upperCol);
-    }
-
-    // Recessed Dark-Glass Warm-Lit Curved Balcony Storefront Fascia Arcs on 1F & 2F (leaves North/South/East/West walkways 100% open!)
-    const rfGalleryDarkMat = new THREE.MeshStandardMaterial({ color: '#1b1d21', roughness: 0.42, metalness: 0.35 });
-    const rfGalleryGlowMat = new THREE.MeshBasicMaterial({ color: '#ffdf9e' });
-    for (const fy of [12.0, 18.0]) {
-      const arcSegs = 44;
-      for (let i = 0; i < arcSegs; i++) {
-        const a1 = (i / arcSegs) * Math.PI * 2;
-        const a2 = ((i + 1) / arcSegs) * Math.PI * 2;
-        const am = (a1 + a2) * 0.5;
-        // Keep generous open walkways at North (PI*1.5), South (PI*0.5), East (0), and West (PI)!
-        const nearNS = Math.abs(Math.cos(am)) < 0.28;
-        const nearEW = Math.abs(Math.sin(am)) < 0.38;
-        if (nearNS || nearEW) continue;
-        const rxG = 20.6;
-        const rzG = 15.2;
-        const x1 = 38.0 + Math.cos(a1) * rxG;
-        const z1 = Math.sin(a1) * rzG;
-        const x2 = 38.0 + Math.cos(a2) * rxG;
-        const z2 = Math.sin(a2) * rzG;
-        const segLen = Math.hypot(x2 - x1, z2 - z1);
-        const segAng = Math.atan2(x2 - x1, z2 - z1);
-        const mx = (x1 + x2) * 0.5;
-        const mz = (z1 + z2) * 0.5;
-        // Sleek dark upper fascia header & subtle warm interior shop window strip behind 1F/2F terracotta rim
-        const hdr = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.82, segLen + 0.06), rfGalleryDarkMat);
-        hdr.position.set(mx, fy + 4.18, mz);
-        hdr.rotation.y = segAng;
-        root.add(hdr);
-        if (i % 2 === 0) {
-          const glowStrip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.16, segLen * 0.62), rfGalleryGlowMat);
-          glowStrip.position.set(mx, fy + 3.66, mz);
-          glowStrip.rotation.y = segAng;
-          root.add(glowStrip);
-        }
-      }
     }
 
     // Soft open-air daylight volumetric rays pouring down from bright sky into Rainforest Suspension Bridge & Koi Pond!
@@ -1258,17 +1274,17 @@ export function buildMallArchitecture(scene, interactables) {
     domeMesh.position.set(ov.cx, 37.0, ov.cz);
     root.add(domeMesh);
 
-    // Smooth White Conical Oval Skylight Collar + Suspended Central Circular Light Gantry high in 6-story dome crown (#157 — clears 4F-08 sightline!)
+    // Smooth White Conical Oval Skylight Collar tucked strictly BELOW UR slab (y = 35.4..36.85) so BOTH 4F-08 and UR-08 stay 100% clear!
     const whiteConicalMat = new THREE.MeshStandardMaterial({ color: '#eef0f2', roughness: 0.42, metalness: 0.08, side: THREE.DoubleSide });
-    const domeCollar = new THREE.Mesh(new THREE.CylinderGeometry(14.2, 20.1, 2.1, 48, 1, true), whiteConicalMat);
-    domeCollar.scale.set(1.0, 1.0, 0.68);
-    domeCollar.position.set(ov.cx, 37.35, ov.cz);
-    const centerGantry = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 1.15, 32, 1, true), whiteConicalMat);
-    centerGantry.position.set(ov.cx, 35.6, ov.cz);
+    const domeCollar = new THREE.Mesh(new THREE.CylinderGeometry(16.8, 19.8, 1.45, 48, 1, true), whiteConicalMat);
+    domeCollar.scale.set(1.0, 1.0, 0.66);
+    domeCollar.position.set(ov.cx, 36.12, ov.cz);
+    const centerGantry = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.92, 32, 1, true), whiteConicalMat);
+    centerGantry.position.set(ov.cx, 35.45, ov.cz);
     for (let c = 0; c < 4; c++) {
       const ca = (c / 4) * Math.PI * 2;
-      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 5.2, 6), skylightAlumMat);
-      rod.position.set(ov.cx + Math.cos(ca) * 2.45, 38.4, ov.cz + Math.sin(ca) * 2.45);
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 2.2, 6), skylightAlumMat);
+      rod.position.set(ov.cx + Math.cos(ca) * 2.25, 36.8, ov.cz + Math.sin(ca) * 2.25);
       root.add(rod);
     }
     root.add(domeCollar, centerGantry);
@@ -1297,16 +1313,7 @@ export function buildMallArchitecture(scene, interactables) {
     gfWoodBorder.position.y = 6.012;
     root.add(gfWoodBorder);
 
-    // Distinct Stacked 4F CELLINI (y=30..33) & 5F STANZO (y=33.2..36.2) Upper Oval Glass Gallery Band (#157!)
-    const stanzoSignMat = new THREE.MeshBasicMaterial({
-      map: createSignBoardTexture('s t a n z o', '5F OVAL LUXURY INTERIORS • ABOVE 4F CELLINI', '#111827', '#ffffff', '#fde68a', 1024, 160)
-    });
-    for (const sideS of [-1, 1]) {
-      const sSign = new THREE.Mesh(new THREE.PlaneGeometry(8.8, 1.35), stanzoSignMat);
-      sSign.position.set(ov.cx, 34.4, sideS * (ov.rz + 0.35));
-      if (sideS > 0) sSign.rotation.y = Math.PI;
-      root.add(sSign);
-    }
+    // (Removed duplicate floating stanzo boards that were skewered by Oval columns in 4F-10 — OV501 Stanzo renders cleanly on its East Oval wall!)
 
     // 3D Radial Brushed-Aluminum Structural Space-Frame Ribs under the 6-story Oval Glass Skylight Dome!
     for (let r = 0; r < 12; r++) {
@@ -4883,11 +4890,12 @@ export function buildMallArchitecture(scene, interactables) {
         [matteSteelMat, matteSteelMat, matteSteelMat, matteSteelMat, cpSignMat, cpSignMat]
       );
       cpBoard.position.set(0, 3.55, 0.62);
-      // Freestanding Glowing 1PAY Autopay Touch Kiosk beside vestibule door!
+      // Authentic 1 Utama High-Visibility BRIGHT YELLOW Freestanding auto pay / 1PAY Kiosk (#438!)
       const kx = Math.min(halfW - 1.1, doorW * 0.5 + 1.35);
-      const payBody = new THREE.Mesh(new THREE.BoxGeometry(0.72, 1.76, 0.46), matteSteelMat);
-      payBody.position.set(kx, 0.88, 0.68);
-      const payAccent = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.24, 0.48), zoneMat);
+      const yellowAutoPayMat = new THREE.MeshStandardMaterial({ color: '#facc15', roughness: 0.28, metalness: 0.18 });
+      const payBody = new THREE.Mesh(new THREE.BoxGeometry(0.76, 1.82, 0.48), yellowAutoPayMat);
+      payBody.position.set(kx, 0.91, 0.68);
+      const payAccent = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.26, 0.50), new THREE.MeshStandardMaterial({ color: '#18181b', roughness: 0.35 }));
       payAccent.position.set(kx, 1.68, 0.68);
       const payScrTex = createSignBoardTexture('1PAY AUTOPAY', 'SCAN PLATE / TOUCH N GO', '#0f172a', '#ffffff', '#38bdf8', 256, 200);
       const payScr = new THREE.Mesh(
@@ -4938,59 +4946,109 @@ export function buildMallArchitecture(scene, interactables) {
       const ecoPlaque = new THREE.Mesh(new THREE.BoxGeometry(Math.min(5.2, fac.width - 1.6), 0.62, 0.10), [brassGoldMat, brassGoldMat, brassGoldMat, brassGoldMat, ecoMat, ecoMat]);
       ecoPlaque.position.set(0, 2.35, -2.42);
       fg.add(ecoPlaque);
-    } else if (fac.facilityType === 'transit-portal') {
-      // REAL 3D RECEDING SUNLIT GLAZED TRANSIT SKYWALK TUNNEL (MRT Pintu B, E-Street Alfresco, 3F TGV Link — replaces flat white wall!):
-      const tunW = Math.min(fac.width - 1.2, 12.6);
-      const tunD = fac.id === 'fac-mrt-pintu-b' ? 14.5 : 8.5;
-      // Bright azure sky dome plane far at tunnel end + warm sunlit terrazzo floor with diagonal light stripes!
-      const skyEndMat = new THREE.MeshBasicMaterial({ color: '#7cc4f8' });
-      const skyEnd = new THREE.Mesh(new THREE.PlaneGeometry(tunW + 6.0, facH + 2.5), skyEndMat);
-      skyEnd.position.set(0, facH * 0.52, -tunD - 0.2);
-      const tunFloor = new THREE.Mesh(new THREE.BoxGeometry(fac.width, 0.08, tunD + 1.2), intFloorLightMat);
-      tunFloor.position.set(0, 0.03, -tunD * 0.5 + 0.2);
-      const tunCeil = new THREE.Mesh(new THREE.BoxGeometry(tunW + 0.8, 0.16, tunD), satinWhiteMat);
-      tunCeil.position.set(0, facH - 0.10, -tunD * 0.5);
-      fg.add(skyEnd, tunFloor, tunCeil);
-      // 6 Brushed-Steel Structural Portal Arch Ribs receding into the sunlit skywalk + sunlit diagonal floor pools + roadside tropical greenery visible outside glazed tunnel sides!
-      const ribCount = 6;
-      const sunStripeMat = new THREE.MeshBasicMaterial({ color: '#fff3cf', transparent: true, opacity: 0.34, depthWrite: false });
-      for (let r = 0; r < ribCount; r++) {
-        const rz = -1.2 - (r / (ribCount - 1)) * (tunD - 2.2);
-        const topRib = new THREE.Mesh(new THREE.BoxGeometry(tunW, 0.24, 0.28), brushedAlumMat);
-        topRib.position.set(0, facH - 0.24, rz);
-        const ledBar = new THREE.Mesh(new THREE.BoxGeometry(tunW - 1.2, 0.05, 0.12), intLightCoolMat);
-        ledBar.position.set(0, facH - 0.38, rz);
-        const sunStripe = new THREE.Mesh(new THREE.PlaneGeometry(tunW - 2.0, 1.35), sunStripeMat);
-        sunStripe.rotation.x = -Math.PI / 2;
-        sunStripe.rotation.z = 0.24;
-        sunStripe.position.set(0.4, 0.085, rz);
-        fg.add(topRib, ledBar, sunStripe);
-        for (const s of [-1, 1]) {
-          const post = new THREE.Mesh(new THREE.BoxGeometry(0.22, facH - 0.2, 0.26), brushedAlumMat);
-          post.position.set(s * (tunW * 0.5), (facH - 0.2) * 0.5, rz);
-          const handRail = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, tunD / ribCount), steelHandrailMat);
-          handRail.position.set(s * (tunW * 0.5 - 0.22), 1.02, rz);
-          fg.add(post, handRail);
-        }
-      }
-      // Side glazing + lush exterior roadside greenery silhouettes outside the skywalk windows!
+    } else if (fac.facilityType === 'valet-lobby') {
+      // REAL LUXE G MAIN ENTRANCE & VALET PARKING / CENTRAL PARK LOBBY (Between Michael Kors & Coach — Verified #400-#402!)
+      // Strictly inside z = 0..-1.96 so outer mall structural shell NEVER causes black void or side leaks!
+      const lobW = fac.width;
+      const lobD = 1.94;
+      const marbleMat = new THREE.MeshStandardMaterial({ color: '#f4f1ea', roughness: 0.18, metalness: 0.05 });
+      const bronzeMat = new THREE.MeshStandardMaterial({ color: '#453b31', roughness: 0.32, metalness: 0.68 });
+      const champGoldMat = new THREE.MeshStandardMaterial({ color: '#a89060', roughness: 0.28, metalness: 0.72 });
+      const vistaMat = new THREE.MeshBasicMaterial({ map: createLuxeValetVistaTexture() });
+
+      // Luminous sunlit Valet Porte-Cochere & Central Park trees backdrop right behind bronze glass automatic doors!
+      const vistaBack = new THREE.Mesh(new THREE.PlaneGeometry(lobW - 0.3, facH - 0.1), vistaMat);
+      vistaBack.position.set(0, facH * 0.5, -lobD);
+      const lobFloor = new THREE.Mesh(new THREE.BoxGeometry(lobW, 0.08, lobD + 0.4), marbleMat);
+      lobFloor.position.set(0, 0.03, -lobD * 0.5 + 0.1);
+      const lobCeil = new THREE.Mesh(new THREE.BoxGeometry(lobW, 0.14, lobD + 0.4), satinWhiteMat);
+      lobCeil.position.set(0, facH - 0.08, -lobD * 0.5 + 0.1);
+      fg.add(vistaBack, lobFloor, lobCeil);
+
+      // Flanking Calacatta marble piers & warm bronze glass door mullions
       for (const s of [-1, 1]) {
-        const sideGlass = new THREE.Mesh(new THREE.PlaneGeometry(tunD, facH - 0.4), glassBalustradeMat);
-        sideGlass.rotation.y = -s * (Math.PI / 2);
-        sideGlass.position.set(s * (tunW * 0.5), facH * 0.5, -tunD * 0.5);
-        const extSky = new THREE.Mesh(new THREE.PlaneGeometry(tunD + 2.0, facH + 1.0), skyEndMat);
-        extSky.rotation.y = -s * (Math.PI / 2);
-        extSky.position.set(s * (tunW * 0.5 + 3.2), facH * 0.55, -tunD * 0.5);
-        fg.add(sideGlass, extSky);
-        for (let tr = 0; tr < 2; tr++) {
-          const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.52, 12), ivoryStoneMat);
-          pot.position.set(s * (tunW * 0.5 - 0.65), 0.26, -2.2 - tr * 3.4);
-          const palm = createIndoorPalm(0.76);
-          palm.position.set(s * (tunW * 0.5 - 0.65), 0.52, -2.2 - tr * 3.4);
-          fg.add(pot, palm);
-        }
+        const sWall = new THREE.Mesh(new THREE.BoxGeometry(0.68, facH, lobD + 0.25), marbleMat);
+        sWall.position.set(s * (lobW * 0.5 - 0.34), facH * 0.5, -lobD * 0.5 + 0.08);
+        const bTrim = new THREE.Mesh(new THREE.BoxGeometry(0.14, facH, 0.26), bronzeMat);
+        bTrim.position.set(s * (lobW * 0.5 - 0.72), facH * 0.5, 0.18);
+        const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.26, 0.58, 14), marbleMat);
+        pot.position.set(s * (lobW * 0.5 - 1.18), 0.29, -0.45);
+        const palm = createIndoorPalm(0.78);
+        palm.position.set(s * (lobW * 0.5 - 1.18), 0.58, -0.45);
+        fg.add(sWall, bTrim, pot, palm);
       }
-      // Flanking wall wings outside tunnel mouth if fac.width > tunW (e.g. 39.6m MRT Pintu B end wall)
+      // Bronze-framed automatic sliding glass vestibule doors + sunlit transom
+      for (const bx of [-2.4, 0, 2.4]) {
+        const mul = new THREE.Mesh(new THREE.BoxGeometry(0.08, facH - 0.2, 0.16), bronzeMat);
+        mul.position.set(bx, facH * 0.5, -0.88);
+        fg.add(mul);
+      }
+      const doorTransom = new THREE.Mesh(new THREE.BoxGeometry(lobW - 1.2, 0.14, 0.18), bronzeMat);
+      doorTransom.position.set(0, 3.05, -0.88);
+      const doorGlass = new THREE.Mesh(new THREE.PlaneGeometry(lobW - 1.4, facH - 0.4), intGlassPhysMat);
+      doorGlass.position.set(0, facH * 0.5, -0.86);
+      fg.add(doorTransom, doorGlass);
+
+      // Signature Matte-Black & Brushed Champagne-Gold Hanging LUXE G Directional Blade Sign (#401!)
+      const luxeSignTex = createSignBoardTexture('LUXE G  •  VALET PARKING & MAIN ENTRANCE', '← TOILET / LIFT   |   ↑ CENTRAL PARK & VALET   |   → TAXI & E-HAILING', '#1c1814', '#ffffff', '#d4af37', 1024, 160);
+      const luxeSignMat = new THREE.MeshStandardMaterial({ map: luxeSignTex, emissive: '#ffffff', emissiveMap: luxeSignTex, emissiveIntensity: 0.42, roughness: 0.24 });
+      const signW = Math.min(lobW - 1.2, 8.8);
+      const blade = new THREE.Mesh(
+        new THREE.BoxGeometry(signW, 0.86, 0.18),
+        [champGoldMat, champGoldMat, champGoldMat, champGoldMat, luxeSignMat, luxeSignMat]
+      );
+      blade.position.set(0, facH - 0.88, 0.92);
+      for (const rx of [-signW * 0.36, signW * 0.36]) {
+        const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.56, 8), bronzeMat);
+        rod.position.set(rx, facH - 0.22, 0.92);
+        fg.add(rod);
+      }
+      fg.add(blade);
+    } else if (fac.facilityType === 'sensory-baby') {
+      // REAL 2F OVAL SENSORY POD (Vibrant Jigsaw Puzzle Wall) + WARM WOOD BABY ROOM (#159, #161 — ZERO Surau!)
+      const podW = fac.width;
+      const leftW = podW * 0.52;
+      const rightW = podW - leftW;
+      const sensMat = new THREE.MeshStandardMaterial({ map: createSensoryPodTexture(), emissive: '#ffffff', emissiveMap: createSensoryPodTexture(), emissiveIntensity: 0.22, roughness: 0.38 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: '#9c7c5b', roughness: 0.46 });
+      const blueDoorMat = new THREE.MeshStandardMaterial({ color: '#64748b', roughness: 0.40 });
+      // Left half: Jigsaw-puzzle SENSORY POD facade + recessed calm doorway
+      const leftWall = new THREE.Mesh(new THREE.BoxGeometry(leftW, facH, 0.36), sensMat);
+      leftWall.position.set(-podW * 0.5 + leftW * 0.5, facH * 0.5, 0.02);
+      const sensDoor = new THREE.Mesh(new THREE.BoxGeometry(1.55, 2.35, 0.42), new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.35 }));
+      sensDoor.position.set(-podW * 0.5 + leftW * 0.5, 1.18, 0.06);
+      // Right half: Warm wood BABY ROOM fascia + muted grey-blue double doors + red AED box
+      const rightWall = new THREE.Mesh(new THREE.BoxGeometry(rightW, facH, 0.36), woodMat);
+      rightWall.position.set(podW * 0.5 - rightW * 0.5, facH * 0.5, 0.02);
+      const babyDoor = new THREE.Mesh(new THREE.BoxGeometry(1.75, 2.35, 0.42), blueDoorMat);
+      babyDoor.position.set(podW * 0.5 - rightW * 0.5, 1.18, 0.06);
+      const babySignTex = createSignBoardTexture('BABY ROOM', 'NURSING  •  CHANGING  •  FAMILY CARE', '#5c4330', '#ffffff', '#facc15', 512, 128);
+      const babySign = new THREE.Mesh(new THREE.PlaneGeometry(rightW - 0.5, 0.72), new THREE.MeshBasicMaterial({ map: babySignTex }));
+      babySign.position.set(podW * 0.5 - rightW * 0.5, 3.35, 0.22);
+      const aedBox = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.48, 0.14), new THREE.MeshStandardMaterial({ color: '#dc2626', roughness: 0.32 }));
+      aedBox.position.set(podW * 0.5 - 0.45, 1.55, 0.22);
+      fg.add(leftWall, sensDoor, rightWall, babyDoor, babySign, aedBox);
+    } else if (fac.facilityType === 'transit-portal') {
+      // SUNLIT GLAZED TRANSIT PORTAL (Strictly inside z = 0..-1.96 -> ZERO outer black wall clipping & ZERO cyan side leaks!)
+      const tunW = Math.min(fac.width - 0.6, 12.6);
+      const tunD = 1.94;
+      const vistaMat = new THREE.MeshBasicMaterial({ map: createLuxeValetVistaTexture() });
+      const skyEnd = new THREE.Mesh(new THREE.PlaneGeometry(tunW - 0.2, facH - 0.15), vistaMat);
+      skyEnd.position.set(0, facH * 0.5, -tunD);
+      const tunFloor = new THREE.Mesh(new THREE.BoxGeometry(fac.width, 0.08, tunD + 0.4), intFloorLightMat);
+      tunFloor.position.set(0, 0.03, -tunD * 0.5 + 0.1);
+      const tunCeil = new THREE.Mesh(new THREE.BoxGeometry(tunW + 0.4, 0.16, tunD + 0.3), satinWhiteMat);
+      tunCeil.position.set(0, facH - 0.10, -tunD * 0.5 + 0.1);
+      fg.add(skyEnd, tunFloor, tunCeil);
+      for (const s of [-1, 1]) {
+        const sWall = new THREE.Mesh(new THREE.BoxGeometry(0.32, facH, tunD + 0.2), facPlasterMat);
+        sWall.position.set(s * (tunW * 0.5), facH * 0.5, -tunD * 0.5 + 0.05);
+        const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.52, 12), ivoryStoneMat);
+        pot.position.set(s * (tunW * 0.5 - 0.65), 0.26, -0.55);
+        const palm = createIndoorPalm(0.76);
+        palm.position.set(s * (tunW * 0.5 - 0.65), 0.52, -0.55);
+        fg.add(sWall, pot, palm);
+      }
       if (fac.width > tunW + 1.0) {
         const flankW = (fac.width - tunW) * 0.5;
         for (const s of [-1, 1]) {
@@ -5005,18 +5063,17 @@ export function buildMallArchitecture(scene, interactables) {
       const bayW = tunW / bayCount;
       for (let b = 0; b < bayCount; b++) {
         const bx = -tunW * 0.5 + (b + 0.5) * bayW;
-        const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.12, facH, 0.30), brushedAlumMat);
-        mullion.position.set(bx - bayW * 0.5, facH * 0.5, 0.24);
-        // Leave central 2 sliding-door bays open so players see straight down the sunlit skywalk tunnel!
+        const mullion = new THREE.Mesh(new THREE.BoxGeometry(0.12, facH, 0.26), brushedAlumMat);
+        mullion.position.set(bx - bayW * 0.5, facH * 0.5, 0.18);
         if (Math.abs(bx) > bayW * 0.85) {
           const glassPane = new THREE.Mesh(new THREE.PlaneGeometry(bayW - 0.16, facH - 0.45), intGlassPhysMat);
-          glassPane.position.set(bx, facH * 0.5, 0.24);
+          glassPane.position.set(bx, facH * 0.5, 0.18);
           fg.add(glassPane);
         }
         fg.add(mullion);
       }
       const transom = new THREE.Mesh(new THREE.BoxGeometry(fac.width, 0.24, 0.44), brushedAlumMat);
-      transom.position.set(0, facH - 0.18, 0.26);
+      transom.position.set(0, facH - 0.18, 0.24);
       const transitSignTex = createSignBoardTexture(fac.name, fac.subtitle, '#0c4a6e', '#ffffff', fac.zoneColor || '#38bdf8', 1024, 160);
       const transitSignMat = new THREE.MeshStandardMaterial({ map: transitSignTex, emissive: '#ffffff', emissiveMap: transitSignTex, emissiveIntensity: 0.42, roughness: 0.26 });
       const signW = Math.min(fac.width - 1.0, 9.6);
@@ -5024,10 +5081,10 @@ export function buildMallArchitecture(scene, interactables) {
         new THREE.BoxGeometry(signW, 0.96, 0.22),
         [brushedAlumMat, brushedAlumMat, brushedAlumMat, brushedAlumMat, transitSignMat, transitSignMat]
       );
-      gantry.position.set(0, facH - 0.96, 1.15);
+      gantry.position.set(0, facH - 0.96, 0.95);
       for (const rx of [-signW * 0.38, signW * 0.38]) {
         const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.52, 8), brushedAlumMat);
-        rod.position.set(rx, facH - 0.26, 1.15);
+        rod.position.set(rx, facH - 0.26, 0.95);
         fg.add(rod);
       }
       fg.add(transom, gantry);
@@ -5188,41 +5245,49 @@ export function buildMallArchitecture(scene, interactables) {
       babyPlaque.position.set(portalW * 0.5 - 0.08, 1.68, -1.60);
       fg.add(ladiesBaffle, ladiesGlow, ladiesPlaque, babyPlaque);
 
-      // 5. TUCKED INSIDE RIGHT BESIDE THE TOILETS (z = -1.90): THE SURAU / PRAYER ROOM!
-      // Discreet walnut double doors, vertical honey-oak privacy slats, low built-in shoe rack & tasteful dark-emerald/brass interior doorway plaque!
-      const surauDoorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.92, 2.48, 0.14), bronzeTrimMat);
-      surauDoorFrame.position.set(0, 1.24, -corrD + 0.12);
-      const surauDoorL = new THREE.Mesh(new THREE.BoxGeometry(0.82, 2.34, 0.08), walnutDoorMat);
-      surauDoorL.position.set(-0.44, 1.18, -corrD + 0.16);
-      const surauDoorR = new THREE.Mesh(new THREE.BoxGeometry(0.82, 2.34, 0.08), walnutDoorMat);
-      surauDoorR.position.set(0.44, 1.18, -corrD + 0.16);
-      for (const hx of [-0.12, 0.12]) {
-        const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 8), brassGoldMat);
-        handle.position.set(hx, 1.12, -corrD + 0.24);
-        fg.add(handle);
-      }
-      // Subtle vertical honey-oak privacy slats flanking the interior Surau door
-      for (const s of [-1, 1]) {
-        for (let sl = 0; sl < 3; sl++) {
-          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.048, 2.46, 0.10), vertOakMat);
-          slat.position.set(s * (1.06 + sl * 0.16), 1.23, -corrD + 0.16);
-          fg.add(slat);
+      // 5. TUCKED INSIDE RIGHT BESIDE THE TOILETS (z = -1.90): THE SURAU / PRAYER ROOM (ONLY when fac.hasSurau !== false!)
+      if (fac.hasSurau !== false) {
+        const surauDoorFrame = new THREE.Mesh(new THREE.BoxGeometry(1.92, 2.48, 0.14), bronzeTrimMat);
+        surauDoorFrame.position.set(0, 1.24, -corrD + 0.12);
+        const surauDoorL = new THREE.Mesh(new THREE.BoxGeometry(0.82, 2.34, 0.08), walnutDoorMat);
+        surauDoorL.position.set(-0.44, 1.18, -corrD + 0.16);
+        const surauDoorR = new THREE.Mesh(new THREE.BoxGeometry(0.82, 2.34, 0.08), walnutDoorMat);
+        surauDoorR.position.set(0.44, 1.18, -corrD + 0.16);
+        for (const hx of [-0.12, 0.12]) {
+          const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 8), brassGoldMat);
+          handle.position.set(hx, 1.12, -corrD + 0.24);
+          fg.add(handle);
         }
+        for (const s of [-1, 1]) {
+          for (let sl = 0; sl < 3; sl++) {
+            const slat = new THREE.Mesh(new THREE.BoxGeometry(0.048, 2.46, 0.10), vertOakMat);
+            slat.position.set(s * (1.06 + sl * 0.16), 1.23, -corrD + 0.16);
+            fg.add(slat);
+          }
+        }
+        const shoeRackBase = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.52, 0.58), lightOakMat);
+        shoeRackBase.position.set(-portalW * 0.5 + 0.24, 0.26, -1.62);
+        const shoeShelf = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.05, 0.62), walnutDoorMat);
+        shoeShelf.position.set(-portalW * 0.5 + 0.24, 0.54, -1.62);
+        const surauPlaqueTex = createDoorPlaqueTexture('surau', fac.surauGender || 'SURAU', 'PRAYER ROOM • WUDHU INSIDE', '#064e3b', '#ecfdf5', '#d4af37');
+        const surauPlaqueMat = new THREE.MeshStandardMaterial({ map: surauPlaqueTex, emissive: '#ffffff', emissiveMap: surauPlaqueTex, emissiveIntensity: 0.36, roughness: 0.30 });
+        const surauPlaque = new THREE.Mesh(
+          new THREE.BoxGeometry(1.42, 0.38, 0.07),
+          [brassGoldMat, brassGoldMat, brassGoldMat, brassGoldMat, surauPlaqueMat, surauPlaqueMat]
+        );
+        surauPlaque.position.set(0, 2.74, -corrD + 0.22);
+        fg.add(surauDoorFrame, surauDoorL, surauDoorR, shoeRackBase, shoeShelf, surauPlaque);
+      } else {
+        // WC-only & Lift Lobby rear marble vanity mirror & lift doors (NO false Surau!)
+        const liftFrame = new THREE.Mesh(new THREE.BoxGeometry(1.85, 2.42, 0.14), brushedAlumMat);
+        liftFrame.position.set(0, 1.21, -corrD + 0.12);
+        const liftDoorPanel = new THREE.Mesh(new THREE.BoxGeometry(1.64, 2.28, 0.08), new THREE.MeshStandardMaterial({ color: '#94a3b8', roughness: 0.24, metalness: 0.82 }));
+        liftDoorPanel.position.set(0, 1.14, -corrD + 0.16);
+        const wcOnlyTex = createSignBoardTexture('LIFT LOBBY • TOILETS', 'GENTS  •  LADIES  •  OKU  •  BABY CARE', '#2b4c57', '#ffffff', '#7dd3fc', 512, 128);
+        const wcOnlySign = new THREE.Mesh(new THREE.PlaneGeometry(1.75, 0.42), new THREE.MeshBasicMaterial({ map: wcOnlyTex }));
+        wcOnlySign.position.set(0, 2.76, -corrD + 0.22);
+        fg.add(liftFrame, liftDoorPanel, wcOnlySign);
       }
-      // Low built-in timber shoe rack beside the Surau entrance (authentic Malaysian mall surau detail!)
-      const shoeRackBase = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.52, 0.58), lightOakMat);
-      shoeRackBase.position.set(-portalW * 0.5 + 0.24, 0.26, -1.62);
-      const shoeShelf = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.05, 0.62), walnutDoorMat);
-      shoeShelf.position.set(-portalW * 0.5 + 0.24, 0.54, -1.62);
-      // Small tasteful interior emerald-and-brass Surau doorway plaque ABOVE the recessed door
-      const surauPlaqueTex = createDoorPlaqueTexture('surau', fac.surauGender || 'SURAU', 'PRAYER ROOM • WUDHU INSIDE', '#064e3b', '#ecfdf5', '#d4af37');
-      const surauPlaqueMat = new THREE.MeshStandardMaterial({ map: surauPlaqueTex, emissive: '#ffffff', emissiveMap: surauPlaqueTex, emissiveIntensity: 0.36, roughness: 0.30 });
-      const surauPlaque = new THREE.Mesh(
-        new THREE.BoxGeometry(1.42, 0.38, 0.07),
-        [brassGoldMat, brassGoldMat, brassGoldMat, brassGoldMat, surauPlaqueMat, surauPlaqueMat]
-      );
-      surauPlaque.position.set(0, 2.74, -corrD + 0.22);
-      fg.add(surauDoorFrame, surauDoorL, surauDoorR, shoeRackBase, shoeShelf, surauPlaque);
     } else {
       // ONECARD CUSTOMER SERVICE & CONCIERGE LOUNGE:
       // Official 1 Utama burgundy (#a10022) & champagne-gold feature wall + recessed marble customer service desk + dual monitors + lounge seating!

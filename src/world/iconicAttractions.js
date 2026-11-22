@@ -25,7 +25,8 @@ import {
   createWayfindingTexture,
   createSilverMosaicMaps,
   createRainforestBridgeStripeTexture,
-  createBroadleafCanopyClusterTexture
+  createBroadleafCanopyClusterTexture,
+  createAerialRootCurtainTexture
 } from '../graphics/proceduralTextures.js';
 import {
   createKoiPondWaterMaterial,
@@ -628,20 +629,30 @@ export function buildIconicAttractions(scene, interactables) {
   const pondD = kp.zMax - kp.zMin;
   const pondCX = (kp.xMin + kp.xMax) * 0.5;
 
-  // Textured river-pebble pond bed visible through translucent Beer-Lambert water!
-  const pondBed = new THREE.Mesh(
-    new THREE.BoxGeometry(pondW + 0.6, 0.2, pondD + 0.6),
-    botMats.riverBed
-  );
-  pondBed.position.set(pondCX, -1.12, 0);
+  // ==========================================================================
+  // GROUND FLOOR (y = 6.0) RAINFOREST KOI POND, LOW SLATTED TIMBER BOARDWALK,
+  // SMOOTH RIVER-STONE PLANTING ISLAND, WHITE GEESE & 17m CLIFF WATERFALL (Photo 3!)
+  // ==========================================================================
+  const GF_Y = 6.0;
+  const koiWaterY = GF_Y - 0.18; // y = 5.82 (shallow natural Ground Floor Koi Pond basin!)
+  const koiBedY = GF_Y - 0.86;   // y = 5.14 (solid basin sits cleanly above LG ceiling!)
+
+  // Elliptical solid structural basin slab sealing GF Koi Pond bottom cleanly from LG ceiling below
+  const basinGeo = new THREE.CylinderGeometry(17.7, 17.7, 0.26, 52);
+  const pondBed = new THREE.Mesh(basinGeo, botMats.riverBed);
+  pondBed.scale.set(1.0, 1.0, 12.9 / 17.7);
+  pondBed.position.set(38.0, koiBedY, 0);
   pondBed.receiveShadow = true;
   rainforestGroup.add(pondBed);
 
   const rockMat = botMats.wetKarst;
   const wetLowerRockMat = botMats.wetLowerKarst;
   const mossRockMat = botMats.mossKarst;
+  const riverStoneMatGF = new THREE.MeshStandardMaterial({ color: '#787d76', roughness: 0.72, metalness: 0.05 });
+  const lightKarstCliffMat = new THREE.MeshStandardMaterial({ color: '#9ca198', map: botMats.wetKarst.map, roughness: 0.86, metalness: 0.02 });
+  const wetDarkStreakMat = new THREE.MeshStandardMaterial({ color: '#343b37', map: botMats.wetKarst.map, roughness: 0.36, metalness: 0.08 });
 
-  // Pre-build 6 craggy vertex-displaced karst limestone boulder templates (ZERO smooth Play-Doh spheres!)
+  // Pre-build 6 craggy karst limestone boulder templates
   const boulderTemplates = [
     createOrganicBoulderGeo(0.72, 1.3),
     createOrganicBoulderGeo(0.88, 2.9),
@@ -651,40 +662,125 @@ export function buildIconicAttractions(scene, interactables) {
     createOrganicBoulderGeo(0.78, 10.5)
   ];
 
-  // Scattered submerged river cobbles resting on the pebble bed for realistic underwater depth!
-  for (let c = 0; c < 14; c++) {
-    const cb = new THREE.Mesh(boulderTemplates[c % boulderTemplates.length], c % 2 === 0 ? wetLowerRockMat : mossRockMat);
-    cb.scale.set(1.15, 0.42, 0.95);
+  // Smooth rounded river stones resting along Koi Pond bed & stepping-stone edges (Photo 3!)
+  const smoothStoneGeo = new THREE.SphereGeometry(0.55, 14, 10);
+  for (let c = 0; c < 18; c++) {
+    const cb = new THREE.Mesh(smoothStoneGeo, c % 2 === 0 ? riverStoneMatGF : mossRockMat);
+    cb.scale.set(1.15 + (c % 3) * 0.22, 0.42, 0.88 + (c % 2) * 0.24);
     cb.position.set(
-      pondCX + Math.sin(c * 2.4) * (pondW * 0.34),
-      -0.96,
-      Math.cos(c * 1.9) * (pondD * 0.34)
+      38.0 + Math.sin(c * 2.4) * 11.2,
+      koiBedY + 0.18,
+      Math.cos(c * 1.9) * 7.8
     );
     cb.rotation.y = c * 1.1;
     rainforestGroup.add(cb);
   }
 
-  for (let i = 0; i < 40; i++) {
-    const a = (i / 40) * Math.PI * 2;
-    const rx = pondW * 0.49 + Math.sin(i * 3.1) * 0.28;
-    const rz = pondD * 0.49 + Math.cos(i * 2.7) * 0.28;
-    const rock = new THREE.Mesh(
-      boulderTemplates[i % boulderTemplates.length],
-      i % 4 === 0 ? mossRockMat : wetLowerRockMat
-    );
-    rock.scale.set(1.22, 0.68, 1.05);
-    rock.position.set(pondCX + Math.cos(a) * rx, -0.34, Math.sin(a) * rz);
-    rock.rotation.set((i % 3) * 0.14, i * 0.85, ((i + 1) % 3) * 0.12);
-    rock.castShadow = true;
-    rock.receiveShadow = true;
-    rainforestGroup.add(rock);
+  // Elliptical Ground Floor Koi Pond Water Surface (y = 5.82)
+  const koiWaterMat = createKoiPondWaterMaterial();
+  const waterDiskGeo = new THREE.CircleGeometry(17.4, 52);
+  waterDiskGeo.scale(1.0, 12.6 / 17.4, 1.0);
+  const waterMesh = new THREE.Mesh(waterDiskGeo, koiWaterMat);
+  waterMesh.rotation.x = -Math.PI / 2;
+  waterMesh.position.set(38.0, koiWaterY, 0);
+  rainforestGroup.add(waterMesh);
+
+  // LOW SLATTED DARK-MERBAU WOODEN BOARDWALK BRIDGES ACROSS GROUND FLOOR KOI POND (NO TALL GLASS FENCES — EXACT PHOTO 3!)
+  const slatTimberMat = new THREE.MeshStandardMaterial({ color: '#563622', roughness: 0.72, metalness: 0.04 });
+  const slatBearerMat = new THREE.MeshStandardMaterial({ color: '#2b1b11', roughness: 0.84 });
+  function addSlattedBoardwalk(x1, z1, x2, z2, width = 2.55) {
+    const len = Math.hypot(x2 - x1, z2 - z1);
+    const ang = Math.atan2(x2 - x1, z2 - z1);
+    const bg = new THREE.Group();
+    bg.position.set((x1 + x2) * 0.5, GF_Y + 0.02, (z1 + z2) * 0.5);
+    bg.rotation.y = ang;
+    // Two longitudinal timber stringer bearers sitting slightly above water
+    for (const sx of [-width * 0.36, width * 0.36]) {
+      const bearer = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.18, len), slatBearerMat);
+      bearer.position.set(sx, -0.10, 0);
+      bg.add(bearer);
+    }
+    // Individual horizontal dark-merbau wood planks with subtle 2.5cm drainage gaps (exact Photo 3!)
+    const plankCount = Math.max(8, Math.floor(len / 0.24));
+    for (let p = 0; p < plankCount; p++) {
+      const pz = -len * 0.5 + (p + 0.5) * (len / plankCount);
+      const plank = new THREE.Mesh(new THREE.BoxGeometry(width, 0.055, 0.19), slatTimberMat);
+      plank.position.set(0, 0.01, pz);
+      plank.receiveShadow = true;
+      bg.add(plank);
+    }
+    rainforestGroup.add(bg);
+  }
+  // Winding Ground Floor Koi Pond timber boardwalk decks (West entry -> Center -> Waterfall Cliff + North/South connector!)
+  addSlattedBoardwalk(20.0, -0.6, 36.8, -0.6, 2.7);
+  addSlattedBoardwalk(36.2, -0.8, 45.2, 2.4, 2.5);
+  addSlattedBoardwalk(37.2, -13.0, 37.2, 13.0, 2.5);
+
+  // Smooth Rounded Large Grey River Boulders hugging the wooden boardwalk edges (Photo 3 left foreground!)
+  const fgBoulders = [
+    [26.8, 1.35, 1.4, 0.65, 1.0], [28.4, 1.75, 1.2, 0.55, 0.95], [31.2, -2.25, 1.3, 0.62, 0.95],
+    [34.2, 2.15, 1.15, 0.52, 0.9], [41.5, -1.8, 1.35, 0.58, 1.05], [42.6, 3.9, 1.25, 0.62, 0.95]
+  ];
+  for (let i = 0; i < fgBoulders.length; i++) {
+    const [bx, bz, sx, sy, sz] = fgBoulders[i];
+    const rb = new THREE.Mesh(smoothStoneGeo, riverStoneMatGF);
+    rb.scale.set(sx, sy, sz);
+    rb.position.set(bx, koiWaterY + 0.04, bz);
+    rb.rotation.y = i * 0.85;
+    rainforestGroup.add(rb);
   }
 
-  const koiWaterMat = createKoiPondWaterMaterial();
-  const waterMesh = new THREE.Mesh(new THREE.PlaneGeometry(pondW, pondD, 24, 16), koiWaterMat);
-  waterMesh.rotation.x = -Math.PI / 2;
-  waterMesh.position.set(pondCX, -0.22, 0);
-  rainforestGroup.add(waterMesh);
+  // Curved Smooth-Stone-Bordered Central Tropical Planting Island + 2 White Sculptural Geese on River Rocks (Exact Photo 3!)
+  {
+    const islG = new THREE.Group();
+    islG.position.set(32.0, koiWaterY, 6.2);
+    const islSoil = new THREE.Mesh(new THREE.CylinderGeometry(4.4, 4.8, 0.42, 28), new THREE.MeshStandardMaterial({ color: '#2b2016', roughness: 0.95 }));
+    islSoil.scale.set(1.35, 1.0, 0.82);
+    islSoil.position.y = 0.06;
+    islG.add(islSoil);
+    // Necklace of smooth rounded grey-brown river stones lining the curved island curb (Photo 3 right!)
+    for (let s = 0; s < 22; s++) {
+      const a = (s / 22) * Math.PI * 2;
+      const st = new THREE.Mesh(smoothStoneGeo, s % 3 === 0 ? mossRockMat : riverStoneMatGF);
+      st.scale.set(0.68, 0.42, 0.54);
+      st.position.set(Math.cos(a) * 5.8, 0.24, Math.sin(a) * 3.55);
+      st.rotation.y = -a;
+      islG.add(st);
+    }
+    // Lush island elephant-ear & fern understory
+    const islFrond = createArchedFrondGeo(0.68, 1.25, 0.34);
+    for (let f = 0; f < 16; f++) {
+      const a = (f / 16) * Math.PI * 2;
+      const r = 1.4 + (f % 3) * 1.1;
+      const lf = new THREE.Mesh(islFrond, f % 2 === 0 ? botMats.elephantEarLeaf : botMats.frondDeep);
+      lf.position.set(Math.cos(a) * r * 1.25, 0.38, Math.sin(a) * r * 0.72);
+      lf.rotation.set(-0.22, a, 0);
+      islG.add(lf);
+    }
+    // 2 Charming White Sculptural Geese/Ducks perched on river stones at the Koi Pond water's edge (Photo 3 bottom-right!)
+    const gooseMat = new THREE.MeshStandardMaterial({ color: '#ebeae4', roughness: 0.58, metalness: 0.04 });
+    for (const [gx, gz, gRot, standing] of [[-4.8, -3.2, 0.5, true], [-2.9, -4.1, -0.8, false]]) {
+      const gg = new THREE.Group();
+      gg.position.set(gx, 0.14, gz);
+      gg.rotation.y = gRot;
+      const rock = new THREE.Mesh(smoothStoneGeo, riverStoneMatGF);
+      rock.scale.set(0.95, 0.38, 0.78);
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.24, 10, 8), gooseMat);
+      body.scale.set(0.85, 0.78, 1.45);
+      body.position.set(0, standing ? 0.42 : 0.26, 0);
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.075, standing ? 0.38 : 0.24, 8), gooseMat);
+      neck.position.set(0, standing ? 0.66 : 0.42, 0.24);
+      neck.rotation.x = 0.22;
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 8), gooseMat);
+      head.position.set(0, standing ? 0.84 : 0.54, 0.28);
+      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.036, 0.12, 6), gooseMat);
+      beak.rotation.x = Math.PI * 0.5;
+      beak.position.set(0, standing ? 0.83 : 0.53, 0.39);
+      gg.add(rock, body, neck, head, beak);
+      islG.add(gg);
+    }
+    rainforestGroup.add(islG);
+  }
 
   // 34 Streamlined Sculpted Nishikigoi Koi (Smooth LatheGeometry curved fish profile + translucent fanned fins — ZERO rigid torpedo cones!)
   const koiColors = ['#ea580c', '#dc2626', '#f59e0b', '#f8fafc', '#fb7185'];
@@ -714,13 +810,13 @@ export function buildIconicAttractions(scene, interactables) {
     side: THREE.DoubleSide
   });
 
-  for (let i = 0; i < 34; i++) {
+  for (let i = 0; i < 42; i++) {
     const cHex = koiColors[i % koiColors.length];
     const kMat = new THREE.MeshStandardMaterial({
       color: cHex,
-      roughness: 0.24,
+      roughness: 0.22,
       emissive: cHex,
-      emissiveIntensity: 0.14
+      emissiveIntensity: 0.26
     });
     const fish = new THREE.Group();
     const body = new THREE.Mesh(koiBodyGeo, kMat);
@@ -740,11 +836,12 @@ export function buildIconicAttractions(scene, interactables) {
     const tail = new THREE.Mesh(koiTailGeo, koiFinMat);
     tail.position.z = -0.32;
     fish.add(body, spot, pecL, pecR, tail);
-    fish.scale.setScalar(0.82 + (i % 4) * 0.10);
+    fish.scale.setScalar(0.86 + (i % 4) * 0.11);
+    const fishY = koiWaterY - 0.16 - (i % 3) * 0.05;
     fish.position.set(
-      pondCX + (Math.random() - 0.5) * (pondW - 5),
-      -0.46 - (i % 3) * 0.06,
-      (Math.random() - 0.5) * (pondD - 4)
+      38.0 + (Math.random() - 0.5) * 22.0,
+      fishY,
+      (Math.random() - 0.5) * 14.0
     );
     rainforestGroup.add(fish);
     koiList.push({
@@ -753,13 +850,13 @@ export function buildIconicAttractions(scene, interactables) {
       angle: Math.random() * Math.PI * 2,
       speed: 0.95 + Math.random() * 0.65,
       turnSeed: Math.random() * 100,
-      baseY: -0.46 - (i % 3) * 0.06
+      baseY: fishY
     });
   }
 
-  // Sleek Architectural Brushed-Steel & Clear-Glass Koi Pellet Capsule Dispenser!
+  // Sleek Architectural Brushed-Steel & Clear-Glass Koi Pellet Capsule Dispenser on Ground Floor Koi Boardwalk!
   const feederGroup = new THREE.Group();
-  feederGroup.position.set(30.9, 0.08, -1.85);
+  feederGroup.position.set(27.8, GF_Y + 0.05, -1.65);
   const brushedSteelMat = new THREE.MeshStandardMaterial({ color: '#c4cdd8', roughness: 0.22, metalness: 0.88, envMapIntensity: 1.15 });
   const feederBase = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.19, 0.10, 14), brushedSteelMat);
   feederBase.position.y = 0.05;
@@ -798,11 +895,11 @@ export function buildIconicAttractions(scene, interactables) {
     splashCursor = (splashCursor + 1) % 4;
     for (let p = 0; p < 6; p++) {
       const pm = new THREE.Mesh(pelletGeo, pelletMat);
-      pm.position.set(31.2, 0.4, -1.0);
+      pm.position.set(28.2, GF_Y + 0.55, -1.0);
       rainforestGroup.add(pm);
       pelletMeshes.push({
         mesh: pm,
-        vx: (tx - 31.2) * 1.4 + (Math.random() - 0.5) * 1.0,
+        vx: (tx - 28.2) * 1.4 + (Math.random() - 0.5) * 1.0,
         vy: 1.8 + Math.random() * 0.6,
         vz: (tz + 1.0) * 1.4 + (Math.random() - 0.5) * 1.0,
         life: 0.9
@@ -812,61 +909,54 @@ export function buildIconicAttractions(scene, interactables) {
 
   interactables.push({
     id: 'koi-feeder',
-    position: new THREE.Vector3(30.8, 1.1, -1.0),
-    radius: 8.5,
+    position: new THREE.Vector3(27.8, GF_Y + 1.1, -1.0),
+    radius: 9.5,
     priority: 4,
-    prompt: '[E] Toss Koi Pellets into Rainforest Pond (+150 UPoints)',
+    prompt: '[E] Toss Koi Pellets into Ground Floor Rainforest Koi Pond (+150 UPoints)',
     actionType: 'feed-koi',
     stampId: 'spawn-koi-pond'
   });
 
-  // Grounded Layered 6.2m Wet Mossy Karst Limestone Waterfall Cliff at (x=45.6, z=8.6) — ALL boulders cleanly RECESSED BEHIND curved multi-stream waterfall ribbons (ZERO floating rocks!)
+  // MASSIVE 4-STORY (17.2m TALL!) VERTICAL LIGHT-GREY KARST LIMESTONE WATERFALL CLIFF WALL (Exact Photo 1 & Photo 3!)
+  // Rises from Ground Floor Koi Pond (y = 5.4) ALL THE WAY UP past 1F & 2F (y = 22.6) right beside the 2F Suspension Bridge!
   const waterfallCliff = new THREE.Group();
-  waterfallCliff.position.set(45.6, 0, 8.6);
-  waterfallCliff.rotation.y = 0.72;
+  waterfallCliff.position.set(46.5, GF_Y, 8.2);
+  waterfallCliff.rotation.y = 0.78;
 
-  // Solid broad wet-skirt stone terrace rooted deeply into pond bed behind water streams (z >= +0.45)
-  const cliffBase = new THREE.Mesh(createOrganicBoulderGeo(3.2, 8.2), wetLowerRockMat);
-  cliffBase.scale.set(1.45, 0.82, 1.05);
-  cliffBase.position.set(0, 0.35, 1.35);
-  cliffBase.castShadow = true;
-  cliffBase.receiveShadow = true;
-  waterfallCliff.add(cliffBase);
+  // Tall layered rough-hewn light-grey karst rock cliff wall face (10.5m wide x 16.8m tall — Photo 3 left wall!)
+  const cliffBackWall = new THREE.Mesh(new THREE.BoxGeometry(10.8, 16.8, 2.2), lightKarstCliffMat);
+  cliffBackWall.position.set(0, 8.1, 1.45);
+  // Dark glistening wet vertical waterfall channel carved down right-center of cliff (Photo 3!)
+  const wetChute = new THREE.Mesh(new THREE.BoxGeometry(2.65, 16.7, 0.55), wetDarkStreakMat);
+  wetChute.position.set(1.2, 8.1, 0.25);
+  waterfallCliff.add(cliffBackWall, wetChute);
 
-  const cliffFernGeo = createArchedFrondGeo(0.58, 1.25, 0.42);
-  const cliffVineGeo = createDrapedVineGeo(0.85, 2.4, 1.4);
-  for (let r = 0; r < 24; r++) {
-    const t = r / 24;
-    const h = -0.25 + t * 5.75;
-    const col = (r % 5) - 2; // -2, -1, 0, +1, +2
-    const isFlank = Math.abs(col) >= 2;
-    const bx = col * (isFlank ? 1.55 : 0.95) * (1.0 - t * 0.28);
-    // Keep center channel recessed at z >= +0.85..+1.8 while side flanking rock walls frame the waterfall cleanly!
-    const bz = isFlank ? 0.35 + (1 - t) * 0.35 : 0.95 + (1 - t) * 0.55;
-    // Glossy wet lower skirt near water line (h < 1.35) transitioning to mossy upper patches & craggy karst!
-    const bMat = h < 1.35 ? wetLowerRockMat : r % 2 === 0 ? mossRockMat : rockMat;
-    const boulder = new THREE.Mesh(
-      boulderTemplates[r % boulderTemplates.length],
-      bMat
-    );
+  const cliffFernGeo = createArchedFrondGeo(0.75, 1.45, 0.42);
+  const cliffVineGeo = createDrapedVineGeo(1.15, 3.2, 1.4);
+  for (let r = 0; r < 34; r++) {
+    const t = r / 34;
+    const h = 0.2 + t * 15.8;
+    const col = (r % 5) - 2;
+    const bx = col * 2.15 + Math.sin(r * 2.7) * 0.45;
+    const bz = (Math.abs(bx - 1.2) < 1.35) ? 0.58 : 0.22 + (r % 3) * 0.14;
+    const bMat = (Math.abs(bx - 1.2) < 1.55) ? wetDarkStreakMat : r % 3 === 0 ? mossRockMat : lightKarstCliffMat;
+    const boulder = new THREE.Mesh(boulderTemplates[r % boulderTemplates.length], bMat);
     boulder.position.set(bx, h, bz);
-    boulder.scale.set(isFlank ? 1.28 : 1.15, 0.78, 0.96);
-    boulder.rotation.set((r % 4) * 0.14, r * 0.85, 0.12);
-    boulder.castShadow = true;
-    boulder.receiveShadow = true;
+    boulder.scale.set(1.55, 0.95, 0.75);
+    boulder.rotation.set((r % 4) * 0.14, r * 0.85, 0.08);
     waterfallCliff.add(boulder);
 
-    // Tuck lush feathery ferns & draped vines along side rocky flanks (clear of central water ribbons!)
-    if (isFlank && h > 0.5 && h < 5.0) {
-      const cf = new THREE.Mesh(cliffFernGeo, r % 2 === 0 ? botMats.frondDeep : botMats.frondWarm);
-      cf.position.set(bx * 0.96, h + 0.38, bz - 0.48);
-      cf.rotation.y = Math.PI + (col < 0 ? -0.55 : 0.55);
-      cf.rotation.x = 0.20;
+    // Clinging lush green karst ferns & cascading ivy vines across the 4-story limestone cliff (Photo 3!)
+    if (r % 2 === 0 && Math.abs(bx - 1.2) > 1.3) {
+      const cf = new THREE.Mesh(cliffFernGeo, r % 4 === 0 ? botMats.frondWarm : botMats.frondDeep);
+      cf.position.set(bx, h + 0.35, bz - 0.55);
+      cf.rotation.y = Math.PI + Math.sin(r) * 0.6;
+      cf.rotation.x = 0.24;
       waterfallCliff.add(cf);
     }
-    if (isFlank && (r === 17 || r === 22)) {
+    if (r % 5 === 1 && Math.abs(bx - 1.2) > 1.2) {
       const cv = new THREE.Mesh(cliffVineGeo, botMats.hangingVine);
-      cv.position.set(bx * 0.98, h - 0.55, bz - 0.56);
+      cv.position.set(bx, h - 0.9, bz - 0.62);
       waterfallCliff.add(cv);
     }
   }
@@ -918,49 +1008,25 @@ export function buildIconicAttractions(scene, interactables) {
     geo.computeVertexNormals();
     return geo;
   };
-  const wfCenter = new THREE.Mesh(buildCurvedFallGeo(2.55, 5.95, 0.46), waterfallMat);
-  wfCenter.position.set(0, 2.75, -0.32);
-  const wfCenterFoam = new THREE.Mesh(buildCurvedFallGeo(2.42, 5.92, 0.49), wfFoamMat);
-  wfCenterFoam.position.set(0, 2.75, -0.37);
-  const wfLeft = new THREE.Mesh(buildCurvedFallGeo(1.45, 5.15, 0.36), waterfallMat);
-  wfLeft.position.set(-1.18, 2.38, -0.22);
-  const wfLeftFoam = new THREE.Mesh(buildCurvedFallGeo(1.36, 5.12, 0.39), wfFoamMat);
-  wfLeftFoam.position.set(-1.18, 2.38, -0.27);
-  const wfRight = new THREE.Mesh(buildCurvedFallGeo(1.45, 4.85, 0.36), waterfallMat);
-  wfRight.position.set(1.18, 2.24, -0.22);
-  const wfRightFoam = new THREE.Mesh(buildCurvedFallGeo(1.36, 4.82, 0.39), wfFoamMat);
-  wfRightFoam.position.set(1.18, 2.24, -0.27);
-  waterfallCliff.add(wfCenter, wfCenterFoam, wfLeft, wfLeftFoam, wfRight, wfRightFoam);
-
-  // Sculpted aerated whitewater crest rolls spilling cleanly over the upper karst ledges!
+  // Tall 16.4m Shimmering Vertical Waterfall Streams cascading straight down the wet dark karst chute into the Ground Floor Koi Pond!
+  const wfCenter = new THREE.Mesh(buildCurvedFallGeo(2.25, 16.4, 0.28), waterfallMat);
+  wfCenter.position.set(1.2, 8.0, -0.16);
+  const wfCenterFoam = new THREE.Mesh(buildCurvedFallGeo(2.12, 16.3, 0.32), wfFoamMat);
+  wfCenterFoam.position.set(1.2, 8.0, -0.21);
+  const wfRight = new THREE.Mesh(buildCurvedFallGeo(1.10, 14.8, 0.24), waterfallMat);
+  wfRight.position.set(2.35, 7.2, -0.10);
+  const wfRightFoam = new THREE.Mesh(buildCurvedFallGeo(1.02, 14.7, 0.27), wfFoamMat);
+  wfRightFoam.position.set(2.35, 7.2, -0.15);
+  waterfallCliff.add(wfCenter, wfCenterFoam, wfRight, wfRightFoam);
   const whitewaterMat = new THREE.MeshStandardMaterial({
     color: '#dff4ff',
     emissive: '#9fd8ec',
     emissiveIntensity: 0.14,
     roughness: 0.34,
-    metalness: 0.02,
     transparent: true,
-    opacity: 0.68,
+    opacity: 0.55,
     depthWrite: false
   });
-  const crestConfigs = [
-    { x: 0.0, y: 5.56, z: -0.26, w: 2.35, r: 0.22 },
-    { x: -1.16, y: 4.82, z: -0.18, w: 1.32, r: 0.17 },
-    { x: 1.16, y: 4.54, z: -0.18, w: 1.32, r: 0.17 }
-  ];
-  for (const cc of crestConfigs) {
-    const crestPts = [];
-    for (let k = 0; k <= 10; k++) {
-      const u = k / 10 - 0.5;
-      crestPts.push(new THREE.Vector3(cc.x + u * cc.w, cc.y + Math.cos(u * Math.PI) * 0.12, cc.z - Math.cos(u * Math.PI) * 0.14));
-    }
-    const crestTube = new THREE.Mesh(
-      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(crestPts), 16, cc.r, 8, false),
-      whitewaterMat
-    );
-    crestTube.scale.set(1.0, 0.72, 0.85);
-    waterfallCliff.add(crestTube);
-  }
 
   // Soft feathered radial plunge-pool froth decal + animated expanding pond-impact ripple rings + animated rising splash mist puffs!
   const splashFroth = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 4.1), botMats.foamDecal);
@@ -1010,10 +1076,10 @@ export function buildIconicAttractions(scene, interactables) {
   waterfallCliff.add(wfKeyLight1, wfKeyLight2, wfKeyLight3);
   rainforestGroup.add(waterfallCliff);
 
-  // Giant Panoramic Luminous Freshwater Aquarium (LG Rainforest x=48.2, z=-6.5) — Clean Dark Brushed-Bronze Bezel + Low-Glare Fresnel Curved Glass + Streamlined Arapaima (r <= 0.68*R)!
+  // Giant Panoramic Luminous Freshwater Aquarium on Solid LG Rainforest Concourse (x=46.5, y=0, z=-4.5 — ZERO obstructing tree trunks!)
   {
     const aqGroup = new THREE.Group();
-    aqGroup.position.set(48.2, 0, -6.5);
+    aqGroup.position.set(46.5, 0, -4.5);
     const tankR = 2.98;
     const aqRimMat = new THREE.MeshStandardMaterial({ color: '#3b3026', roughness: 0.38, metalness: 0.78, envMapIntensity: 0.58 });
     const base = new THREE.Mesh(new THREE.CylinderGeometry(3.08, 3.18, 0.62, 40), aqRimMat);
@@ -1264,12 +1330,12 @@ export function buildIconicAttractions(scene, interactables) {
     });
   }
 
-  // Lush Lakeside Rainforest Palms strictly below G-bridge level & CLEAR of waterfall and overhead bridge sightline!
+  // Lush Lakeside Rainforest Palms rooted around the Ground Floor Koi Pond (y = 5.75 — ZERO blocking LG Aquarium!)
   const treeSpots = [
-    { x: 24.2, y: -0.2, z: -8.4, s: 1.05, h: 3.4 },
-    { x: 24.6, y: -0.2, z: 8.6, s: 1.05, h: 3.3 },
-    { x: 52.8, y: -0.2, z: 9.8, s: 1.05, h: 3.5 },
-    { x: 40.8, y: -0.2, z: 10.6, s: 0.92, h: 2.6 }
+    { x: 24.2, y: 5.75, z: -8.4, s: 1.05, h: 3.6 },
+    { x: 24.6, y: 5.75, z: 8.6, s: 1.05, h: 3.5 },
+    { x: 51.8, y: 5.75, z: -7.8, s: 1.05, h: 3.8 },
+    { x: 40.2, y: 5.75, z: 9.8, s: 0.96, h: 3.0 }
   ];
   for (let i = 0; i < treeSpots.length; i++) {
     const t = treeSpots[i];
@@ -1367,23 +1433,20 @@ export function buildIconicAttractions(scene, interactables) {
     envMapIntensity: 0.68
   });
 
-  // Soaring Multi-Story 1 Utama Rainforest Canopy Trees (organic asymmetrical heights, orientations & frond sweeps — ZERO repeating grid!)
+  // Soaring Multi-Story 1 Utama Rainforest Canopy Trees rooted on Ground Floor Koi Pond islands (y = 5.75, rising 12-17m up past 2F!)
   const canopyTreeSpots = [
-    { x: 23.2, z: -10.3, h: 21.4, s: 1.62, rot: 0.42, fronds: 17 },
-    { x: 53.5, z: -10.1, h: 19.2, s: 1.48, rot: 1.85, fronds: 15 },
-    { x: 24.4, z: 10.5, h: 22.1, s: 1.56, rot: 2.74, fronds: 16 },
-    { x: 52.4, z: 10.9, h: 17.6, s: 1.42, rot: 0.96, fronds: 14 },
-    { x: 30.2, z: -10.9, h: 14.8, s: 1.26, rot: 3.55, fronds: 13 },
-    { x: 46.8, z: -10.2, h: 18.4, s: 1.46, rot: 4.82, fronds: 16 },
-    { x: 27.4, z: -9.1, h: 11.9, s: 1.18, rot: 5.20, fronds: 12 },
-    { x: 49.9, z: -9.6, h: 15.6, s: 1.35, rot: 1.12, fronds: 14 },
-    { x: 28.8, z: 9.6, h: 13.4, s: 1.24, rot: 2.15, fronds: 13 },
-    { x: 47.4, z: 10.1, h: 16.5, s: 1.38, rot: 4.10, fronds: 15 }
+    { x: 23.6, z: -9.6, h: 15.2, s: 1.52, rot: 0.42, fronds: 17 },
+    { x: 52.5, z: -9.4, h: 13.8, s: 1.42, rot: 1.85, fronds: 15 },
+    { x: 25.0, z: 9.6, h: 16.0, s: 1.50, rot: 2.74, fronds: 16 },
+    { x: 51.4, z: 9.6, h: 12.6, s: 1.38, rot: 0.96, fronds: 14 },
+    { x: 30.2, z: -10.2, h: 11.4, s: 1.24, rot: 3.55, fronds: 13 },
+    { x: 46.8, z: -9.6, h: 13.2, s: 1.40, rot: 4.82, fronds: 16 },
+    { x: 28.4, z: 8.4, h: 10.2, s: 1.22, rot: 2.15, fronds: 13 }
   ];
   for (let i = 0; i < canopyTreeSpots.length; i++) {
     const ct = canopyTreeSpots[i];
     const tallPalm = createTropicalPlant(ct.s, ct.h, ct.fronds, (i * 0.037) % 0.14, i % 3 === 0);
-    tallPalm.position.set(ct.x, -0.25, ct.z);
+    tallPalm.position.set(ct.x, 5.75, ct.z);
     tallPalm.rotation.y = ct.rot;
     rainforestGroup.add(tallPalm);
   }
@@ -1400,34 +1463,34 @@ export function buildIconicAttractions(scene, interactables) {
     createDrapedVineGeo(1.40, 1.65, 3.8),
     createDrapedVineGeo(0.92, 3.05, 5.4)
   ];
-  for (const fy of [6.0, 12.0, 18.0]) {
-    const numSpots = 34;
+  // Dense Lush Tropical Balcony Planter Troughs (Elephant-Ear Alocasia + Monstera + Cascading Ferns spilling over 1F & 2F curved salmon-terracotta balconies — Photo 1 & 2!)
+  for (const fy of [12.0, 18.0]) {
+    const numSpots = 40;
     for (let si = 0; si < numSpots; si++) {
-      const ang = (si / numSpots) * Math.PI * 2 + (fy * 0.07);
-      const bx = 38.0 + Math.cos(ang) * 17.36;
-      const bz = Math.sin(ang) * 12.56;
-      // Keep 2F bridge entries (x near 38 at North/South) completely clear!
+      const ang = (si / numSpots) * Math.PI * 2 + (fy * 0.05);
+      const bx = 38.0 + Math.cos(ang) * 17.28;
+      const bz = Math.sin(ang) * 12.48;
       if (fy === 18.0 && Math.abs(bx - 38.0) < 3.0) continue;
-      // Inward radial angle toward Rainforest center (38, 0)
       const inwardYaw = Math.atan2(38.0 - bx, -bz);
       const vIdx = Math.round(fy * 5 + si * 7);
-      if ((vIdx * 3) % 5 !== 0) {
+      if ((vIdx * 3) % 4 !== 0) {
         const gIdx = (vIdx * 3) % vineCurtainGeos.length;
         const dropH = gIdx === 0 ? 1.15 : gIdx === 1 ? 2.55 : gIdx === 2 ? 1.65 : 3.05;
         const vMat = vIdx % 4 === 0 ? botMats.floweringVine : botMats.hangingVine;
         const vine = new THREE.Mesh(vineCurtainGeos[gIdx], vMat);
-        vine.position.set(bx - Math.cos(ang) * 0.28, fy - dropH * 0.42 + 0.10, bz - Math.sin(ang) * 0.24);
+        vine.position.set(bx - Math.cos(ang) * 0.34, fy - dropH * 0.42 + 0.12, bz - Math.sin(ang) * 0.28);
         vine.rotation.y = inwardYaw + Math.sin(si * 2.1) * 0.45;
         rainforestGroup.add(vine);
       }
-      const clumpSize = 2 + (vIdx % 3);
+      const clumpSize = 3 + (vIdx % 3);
       for (let f = 0; f < clumpSize; f++) {
         const geoPick = balconyFernGeos[(vIdx + f) % balconyFernGeos.length];
-        const fern = new THREE.Mesh(geoPick, (f + vIdx) % 2 === 0 ? botMats.frondDeep : botMats.frondWarm);
-        fern.position.set(bx + Math.sin(si + f) * 0.22, fy + 0.56 + ((vIdx + f) % 2) * 0.08, bz + Math.cos(si + f) * 0.18);
+        const lMat = (f + vIdx) % 3 === 0 ? botMats.elephantEarLeaf : (f + vIdx) % 3 === 1 ? botMats.monsteraLeaf : botMats.frondDeep;
+        const fern = new THREE.Mesh(geoPick, lMat);
+        fern.position.set(bx - Math.cos(ang) * 0.22 + Math.sin(si + f) * 0.22, fy + 0.52 + ((vIdx + f) % 2) * 0.10, bz - Math.sin(ang) * 0.18 + Math.cos(si + f) * 0.18);
         fern.rotation.y = inwardYaw + Math.sin(vIdx * 1.7 + f * 2.4) * 1.05;
-        fern.rotation.x = -0.22 + ((vIdx + f) % 3) * 0.16;
-        fern.scale.setScalar(0.76 + ((vIdx * 5 + f) % 4) * 0.10);
+        fern.rotation.x = -0.18 + ((vIdx + f) % 3) * 0.16;
+        fern.scale.setScalar(0.88 + ((vIdx * 5 + f) % 4) * 0.12);
         rainforestGroup.add(fern);
       }
     }
@@ -1449,7 +1512,10 @@ export function buildIconicAttractions(scene, interactables) {
   const broadleafCardGeo = new THREE.PlaneGeometry(2.55, 2.55);
   function addBroadleafRainforestTree(tx, tz, trunkH, crownR, seed) {
     const tg = new THREE.Group();
-    tg.position.set(tx, -0.35, tz);
+    // Root all broadleaf Rainforest trees on the Ground Floor Koi Pond islands (y = 5.72) so ZERO trunks pierce LG below!
+    const effH = Math.max(8.5, trunkH - 5.8);
+    tg.position.set(tx, 5.72, tz);
+    trunkH = effH;
     // Curved natural rainforest trunk rising from LG pond floor up past 2F bridge
     const leanX = Math.sin(seed * 3.7) * 0.85;
     const leanZ = Math.cos(seed * 2.9) * 0.65;
@@ -1507,20 +1573,23 @@ export function buildIconicAttractions(scene, interactables) {
     addBroadleafRainforestTree(bt.x, bt.z, bt.h, bt.r, bt.s);
   }
 
-  // Iconic Curtains of Long Hanging Brown Aerial Roots (Cissus / Princess Vine Curtains — Verified #010, #016!)
+  // Dramatic Theatrical Curtains of Hanging Reddish-Brown Cissus Aerial Roots draping 13m from the circular gutter pipe (#010, #016!)
+  const aerialRootTex = createAerialRootCurtainTexture();
+  const aerialCurtainMat = new THREE.MeshStandardMaterial({ map: aerialRootTex, transparent: true, alphaTest: 0.14, roughness: 0.90, side: THREE.DoubleSide });
   const aerialRootMat = new THREE.MeshStandardMaterial({ color: '#6b4528', roughness: 0.92, metalness: 0.0 });
-  const rootCurtainAnchors = [
-    { x: 22.8, z: -8.6, w: 4.2, yTop: 22.4, drop: 11.5 },
-    { x: 53.2, z: -8.4, w: 4.4, yTop: 22.4, drop: 11.0 },
-    { x: 22.8, z: 8.6, w: 4.0, yTop: 22.4, drop: 10.5 },
-    { x: 53.2, z: 8.4, w: 4.2, yTop: 22.4, drop: 11.2 }
-  ];
-  for (const rc of rootCurtainAnchors) {
-    for (let r = 0; r < 14; r++) {
-      const t = (r / 13) - 0.5;
-      const len = rc.drop * (0.68 + ((r * 37) % 10) * 0.04);
-      const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.008, len, 4), aerialRootMat);
-      strand.position.set(rc.x + t * rc.w, rc.yTop - len * 0.5, rc.z + Math.sin(r * 1.9) * 0.35);
+  const rootAngles = [-2.55, -2.05, -0.95, -0.55, 0.55, 2.55];
+  for (let ri = 0; ri < rootAngles.length; ri++) {
+    const a = rootAngles[ri];
+    const rx = 38.0 + Math.cos(a) * 16.4;
+    const rz = Math.sin(a) * 11.8;
+    const drop = 11.5 + (ri % 3) * 1.6;
+    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(4.4, drop), aerialCurtainMat);
+    sheet.position.set(rx, 22.4 - drop * 0.5, rz);
+    sheet.rotation.y = Math.atan2(38.0 - rx, -rz);
+    rainforestGroup.add(sheet);
+    for (let r = 0; r < 8; r++) {
+      const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.009, drop * 0.85, 4), aerialRootMat);
+      strand.position.set(rx + (r - 3.5) * 0.42, 22.4 - drop * 0.45, rz + Math.sin(r * 1.9) * 0.25);
       rainforestGroup.add(strand);
     }
   }
@@ -1533,16 +1602,16 @@ export function buildIconicAttractions(scene, interactables) {
     const ttRopeMat = new THREE.MeshStandardMaterial({ color: '#c4b89e', roughness: 0.88 });
     const ttTireMat = new THREE.MeshStandardMaterial({ color: '#1b1d22', roughness: 0.78 });
     const ttPoles = [
-      { x: 29.5, z: -3.4, h: 14.2 },
-      { x: 33.4, z: 4.8, h: 13.8 },
-      { x: 43.4, z: -2.6, h: 14.5 },
-      { x: 47.0, z: 4.6, h: 13.6 }
+      { x: 28.8, z: -5.8, h: 10.6 },
+      { x: 32.8, z: 5.4, h: 10.2 },
+      { x: 43.2, z: -5.2, h: 10.8 },
+      { x: 47.4, z: 4.8, h: 10.2 }
     ];
     for (const p of ttPoles) {
       const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, p.h, 12), ttPoleMat);
-      pole.position.set(p.x, p.h * 0.5 - 0.4, p.z);
+      pole.position.set(p.x, GF_Y + p.h * 0.5 - 0.3, p.z);
       rainforestGroup.add(pole);
-      for (const py of [6.8, 11.4]) {
+      for (const py of [11.6, 15.2]) {
         const plat = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 0.92, 0.10, 20), ttPlatMat);
         plat.position.set(p.x, py, p.z);
         const rim = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.03, 6, 20), ttPoleMat);
@@ -1551,39 +1620,71 @@ export function buildIconicAttractions(scene, interactables) {
         rainforestGroup.add(plat, rim);
       }
     }
-    // Suspended rope-net obstacle bridges connecting yellow poles at y = 7.0 & y = 11.6
+    // Authentic Treetop Adventure Rope Obstacles: Vertically-Suspended Black Rubber Car Tires on White Ropes (#353, #354!)
     const ropePairs = [
-      [ttPoles[0], ttPoles[1], 7.0],
-      [ttPoles[2], ttPoles[3], 7.2],
-      [ttPoles[0], ttPoles[2], 11.6]
+      [ttPoles[0], ttPoles[2], 11.8, 'tires'],
+      [ttPoles[2], ttPoles[3], 15.2, 'planks']
     ];
-    for (const [pa, pb, ry] of ropePairs) {
+    for (const [pa, pb, ry, mode] of ropePairs) {
       const dist = Math.hypot(pb.x - pa.x, pb.z - pa.z);
       const ang = Math.atan2(pb.x - pa.x, pb.z - pa.z);
       const rg = new THREE.Group();
       rg.position.set((pa.x + pb.x) * 0.5, ry, (pa.z + pb.z) * 0.5);
       rg.rotation.y = ang;
-      for (const sx of [-0.46, 0.46]) {
-        const topRope = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, dist, 6), ttRopeMat);
-        topRope.rotation.x = Math.PI / 2;
-        topRope.position.set(sx, 1.05, 0);
-        const botRope = topRope.clone();
-        botRope.position.y = 0.06;
-        rg.add(topRope, botRope);
-      }
-      const slats = Math.max(8, Math.floor(dist / 0.58));
-      for (let s = 0; s < slats; s++) {
-        const tz = -dist * 0.45 + (s / (slats - 1)) * dist * 0.90;
-        const slat = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.04, 0.20), plankMat);
-        slat.position.set(0, 0.02, tz);
-        rg.add(slat);
-        if (s % 3 === 1) {
+      const topCable = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, dist, 6), ttRopeMat);
+      topCable.rotation.x = Math.PI / 2;
+      topCable.position.set(0, 1.55, 0);
+      rg.add(topCable);
+      if (mode === 'tires') {
+        const tCount = Math.max(5, Math.floor(dist / 1.45));
+        for (let t = 0; t < tCount; t++) {
+          const tz = -dist * 0.42 + (t / (tCount - 1)) * dist * 0.84;
+          for (const rs of [-0.14, 0.14]) {
+            const dropRope = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.85, 5), ttRopeMat);
+            dropRope.position.set(rs, 1.12, tz);
+            rg.add(dropRope);
+          }
           const tire = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.11, 8, 16), ttTireMat);
-          tire.position.set(0, 0.72, tz);
+          tire.rotation.y = Math.PI / 2;
+          tire.position.set(0, 0.48, tz);
           rg.add(tire);
+        }
+      } else {
+        const slats = Math.max(8, Math.floor(dist / 0.62));
+        for (let s = 0; s < slats; s++) {
+          const tz = -dist * 0.44 + (s / (slats - 1)) * dist * 0.88;
+          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.04, 0.20), plankMat);
+          slat.position.set(0, 0.04, tz);
+          rg.add(slat);
         }
       }
       rainforestGroup.add(rg);
+    }
+    // GF Treetop Adventure Natural Bamboo Check-In Pavilion on GF Rainforest West Terrace (#357, #362!)
+    {
+      const bamMat = new THREE.MeshStandardMaterial({ color: '#b49256', roughness: 0.62 });
+      const concMat = new THREE.MeshStandardMaterial({ color: '#c4bfb6', roughness: 0.72 });
+      const bG = new THREE.Group();
+      bG.position.set(20.6, GF_Y, -10.8);
+      bG.rotation.y = 0.65;
+      const cntr = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.02, 0.92), concMat);
+      cntr.position.set(0, 0.51, 0);
+      for (const px of [-1.25, 1.25]) {
+        for (const pz of [-0.42, 0.42]) {
+          const bp = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.06, 2.95, 8), bamMat);
+          bp.position.set(px, 1.48, pz);
+          bG.add(bp);
+        }
+      }
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.14, 1.35), bamMat);
+      roof.position.set(0, 2.96, 0);
+      const bSign = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.5, 0.46),
+        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TREETOP ADVENTURE', 'CHECK-IN  •  SERIES PASS 20-40% OFF', '#3f2e1d', '#fef08a', '#4ade80', 512, 128) })
+      );
+      bSign.position.set(0, 2.66, 0.56);
+      bG.add(cntr, roof, bSign);
+      rainforestGroup.add(bG);
     }
     // Glowing green TREETOP ADVENTURE sign mounted flush onto the curved 1F Rainforest terracotta balcony (#348!)
     const ttSignMat = new THREE.MeshBasicMaterial({
@@ -1615,38 +1716,59 @@ export function buildIconicAttractions(scene, interactables) {
     metalness: 0.06,
     envMapIntensity: 0.65
   });
-  const bridgeCurbMat = new THREE.MeshStandardMaterial({ color: '#e2dfd8', roughness: 0.46, metalness: 0.08 });
-  const bridgeGirderMat = new THREE.MeshStandardMaterial({ color: '#b4bcc4', roughness: 0.28, metalness: 0.76, envMapIntensity: 1.05 });
+  const bridgeCurbMat = new THREE.MeshStandardMaterial({ color: '#e4e1d9', roughness: 0.46, metalness: 0.08 });
+  const bridgeGirderMat = new THREE.MeshStandardMaterial({ color: '#9ba3a8', roughness: 0.30, metalness: 0.78, envMapIntensity: 1.15 });
   const chromeRailMat = new THREE.MeshStandardMaterial({ color: '#eef2f6', roughness: 0.12, metalness: 0.94, envMapIntensity: 1.55 });
-  const darkArchSteelMat = new THREE.MeshStandardMaterial({ color: '#454b52', roughness: 0.34, metalness: 0.80, envMapIntensity: 1.10 });
-  const blackPylonMat = new THREE.MeshStandardMaterial({ color: '#1b1f24', roughness: 0.38, metalness: 0.78, envMapIntensity: 0.92 });
-  const blackCableMat = new THREE.MeshStandardMaterial({ color: '#1a1e24', roughness: 0.42, metalness: 0.72 });
+  const silverArchMat = new THREE.MeshStandardMaterial({ color: '#8d969c', roughness: 0.30, metalness: 0.82, envMapIntensity: 1.25 });
+  const steelCableMat = new THREE.MeshStandardMaterial({ color: '#3b4248', roughness: 0.36, metalness: 0.78 });
 
-  // 1. Clean Light-Cream & Dark-Grey Transverse Striped Terrazzo Deck (2.74m wide) + Raised Sloped Curbs + Silver Structural Girders!
-  const deckSlab = new THREE.Mesh(new THREE.BoxGeometry(2.74, 0.22, bridgeSpan), bridgeDeckMat);
-  deckSlab.position.set(0, -0.09, 0);
+  // 1. Clean Cream & Sage-Slate Striped Terrazzo Deck + Raised Curbs (NO ugly flat solid box underneath!)
+  const deckSlab = new THREE.Mesh(new THREE.BoxGeometry(2.74, 0.18, bridgeSpan), bridgeDeckMat);
+  deckSlab.position.set(0, -0.07, 0);
   deckSlab.receiveShadow = true;
   bridgeGroup.add(deckSlab);
 
-  const underSoffit = new THREE.Mesh(new THREE.BoxGeometry(3.38, 0.18, bridgeSpan), bridgeGirderMat);
-  underSoffit.position.set(0, -0.28, 0);
-  bridgeGroup.add(underSoffit);
-
   for (const s of [-1, 1]) {
-    // Raised smooth light-cream concrete side curb flanking the striped walkway
-    const curb = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.24, bridgeSpan), bridgeCurbMat);
-    curb.position.set(s * 1.52, 0.06, 0);
-    // Slanted brushed-silver exterior fascia girder
-    const girder = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.44, bridgeSpan), bridgeGirderMat);
-    girder.position.set(s * 1.72, -0.06, 0);
-    girder.rotation.z = s * -0.14;
-    bridgeGroup.add(curb, girder);
+    const curb = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.22, bridgeSpan), bridgeCurbMat);
+    curb.position.set(s * 1.50, 0.05, 0);
+    bridgeGroup.add(curb);
   }
 
-  // 2. Gently Flared Polished Chrome Tubular Top Handrails + 5 Horizontal Stainless Wire Cables + Vertical Stanchions + Outrigger Brackets!
+  // 1B. TRUE OPEN 3D CAMBERED SILVER-GREY TUBULAR STEEL WARREN SPACE-TRUSS UNDERDECK GIRDER (Exact Photo 1 & Photo 2!)
+  {
+    const trussBays = 16;
+    const zStart = -bridgeSpan * 0.5;
+    const topL = [], topR = [], botC = [];
+    for (let i = 0; i <= trussBays; i++) {
+      const u = i / trussBays;
+      const z = zStart + u * bridgeSpan;
+      const sag = Math.sin(u * Math.PI);
+      const yBot = -0.58 - sag * 0.68; // graceful triangular depth peaking 1.26m deep at midspan!
+      topL.push(new THREE.Vector3(-1.68, -0.14, z));
+      topR.push(new THREE.Vector3(1.68, -0.14, z));
+      botC.push(new THREE.Vector3(0.0, yBot, z));
+    }
+    bridgeGroup.add(
+      new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(topL), 40, 0.085, 8, false), bridgeGirderMat),
+      new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(topR), 40, 0.085, 8, false), bridgeGirderMat),
+      new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(botC), 40, 0.105, 10, false), bridgeGirderMat)
+    );
+    // Open triangular Warren zigzag diagonals & transverse deck crossbeams
+    for (let i = 0; i < trussBays; i++) {
+      bridgeGroup.add(
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(topL[i], topR[i]), 2, 0.055, 6, false), bridgeGirderMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(topL[i], botC[i]), 2, 0.052, 6, false), bridgeGirderMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(topR[i], botC[i]), 2, 0.052, 6, false), bridgeGirderMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(topL[i], botC[i + 1]), 2, 0.048, 6, false), bridgeGirderMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(topR[i], botC[i + 1]), 2, 0.048, 6, false), bridgeGirderMat)
+      );
+    }
+  }
+
+  // 2. Flared Polished Chrome Tubular Top Handrails + Diagonal Knee-Brace Brackets + 5 Stainless Wire Cables + Outriggers!
   const railFlare = (z) => {
     const u = Math.abs(z) / (bridgeSpan * 0.5);
-    return 1.56 + Math.pow(Math.max(0, (u - 0.55) / 0.45), 2.0) * 0.42;
+    return 1.56 + Math.pow(Math.max(0, (u - 0.58) / 0.42), 2.0) * 0.36;
   };
   for (const s of [-1, 1]) {
     const topRailPts = [];
@@ -1662,140 +1784,104 @@ export function buildIconicAttractions(scene, interactables) {
         wirePtsArr[w].push(new THREE.Vector3(s * (railFlare(z) - 0.04), wireYs[w], z));
       }
     }
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(topRailPts), 44, 0.044, 12, false), chromeRailMat));
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(topRailPts), 44, 0.046, 12, false), chromeRailMat));
     bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(subRailPts), 44, 0.018, 8, false), chromeRailMat));
     for (let w = 0; w < 5; w++) {
       bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(wirePtsArr[w]), 36, 0.0085, 6, false), chromeRailMat));
     }
-
-    // Brushed-steel rectangular vertical stanchions + cantilevered horizontal cable outrigger arms (#019!)
     for (let p = 0; p <= 12; p++) {
       const z = -bridgeSpan * 0.46 + (p / 12) * (bridgeSpan * 0.92);
       const rx = s * railFlare(z);
       const post = new THREE.Mesh(new THREE.BoxGeometry(0.055, 1.04, 0.065), bridgeGirderMat);
-      post.position.set(rx - s * 0.04, 0.58, z);
-      const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.045, 0.055), chromeRailMat);
-      bracket.position.set(rx, 1.06, z);
-      const outrigger = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.075, 0.085), bridgeGirderMat);
-      outrigger.position.set(s * 1.94, 0.06, z);
-      bridgeGroup.add(post, bracket, outrigger);
-    }
-  }
-
-  // 3. TALL BLACK TAPERED A-FRAME STEEL LATTICE MAST / PYLON AT FAR END (z = +11.6)
-  //    (Exact Iconic Centerpiece Silhouette of media_1795337629668_975ac4eb.jpg & #009!)
-  const pylonZ = 11.4;
-  for (const s of [-1, 1]) {
-    const legCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(s * 1.95, -0.4, pylonZ + 0.5),
-      new THREE.Vector3(s * 1.25, 3.8, pylonZ + 0.25),
-      new THREE.Vector3(s * 0.72, 7.6, pylonZ),
-      new THREE.Vector3(s * 0.52, 11.6, pylonZ - 0.15),
-      new THREE.Vector3(s * 0.36, 15.8, pylonZ - 0.30)
-    ]);
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(legCurve, 24, 0.135, 10, false), blackPylonMat));
-  }
-  // Horizontal A-frame lattice rungs & diagonal X-bracing struts up the pylon
-  const rungLevels = [
-    { y: 2.6, hw: 1.48 },
-    { y: 4.4, hw: 1.16 },
-    { y: 6.2, hw: 0.88 },
-    { y: 8.0, hw: 0.68 },
-    { y: 9.8, hw: 0.58 },
-    { y: 11.8, hw: 0.50 },
-    { y: 13.8, hw: 0.42 }
-  ];
-  for (let ri = 0; ri < rungLevels.length; ri++) {
-    const rl = rungLevels[ri];
-    const rung = new THREE.Mesh(new THREE.BoxGeometry(rl.hw * 2.05, 0.12, 0.14), blackPylonMat);
-    rung.position.set(0, rl.y, pylonZ + (ri < 2 ? 0.22 : 0.0));
-    bridgeGroup.add(rung);
-    if (ri < rungLevels.length - 1) {
-      const rn = rungLevels[ri + 1];
-      for (const dir of [-1, 1]) {
-        const pA = new THREE.Vector3(dir * rl.hw, rl.y, pylonZ);
-        const pB = new THREE.Vector3(-dir * rn.hw, rn.y, pylonZ);
-        const diagCurve = new THREE.LineCurve3(pA, pB);
-        bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(diagCurve, 4, 0.048, 6, false), blackPylonMat));
-      }
-    }
-  }
-
-  // 4. MASSIVE TWIN-FORKED CURVED DARK-GREY TUBULAR STEEL OVERHEAD ARCH TRUSSES
-  //    Calibrated to EXACT 2F-07 camera FOV projection of media_1795337629668_975ac4eb.jpg!
-  const archCurves = { left: null, right: null };
-  for (const s of [-1, 1]) {
-    // Primary grand curved tubular steel arch sweeping from far A-frame pylon UP, OUT & FORWARD overhead across the viewport crown!
-    const mainRibPts = [
-      new THREE.Vector3(s * 1.82, 0.2, 11.4),
-      new THREE.Vector3(s * 1.15, 3.8, 10.6),
-      new THREE.Vector3(s * 1.25, 6.2, 8.6),
-      new THREE.Vector3(s * 3.1, 7.6, 3.6),
-      new THREE.Vector3(s * 5.4, 7.8, -2.4),
-      new THREE.Vector3(s * 8.2, 7.0, -7.8),
-      new THREE.Vector3(s * 11.6, 5.2, -11.4)
-    ];
-    const mainRibCurve = new THREE.CatmullRomCurve3(mainRibPts);
-    if (s < 0) archCurves.left = mainRibCurve;
-    else archCurves.right = mainRibCurve;
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(mainRibCurve, 52, 0.30, 14, false), darkArchSteelMat));
-
-    // Iconic Wishbone V-Strut Tubes converging cleanly from upper crown arch down to top crossbar of far A-frame pylon!
-    const vStrutA = new THREE.LineCurve3(
-      new THREE.Vector3(0, 7.25, 7.8),
-      new THREE.Vector3(s * 4.2, 8.15, -1.8)
-    );
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(vStrutA, 8, 0.19, 10, false), darkArchSteelMat));
-  }
-  // Iconic Top-Center Curved Cross-Arch Pipe + Secondary Crown Tie joining left & right giant ribs (forms exact oval crown opening of photo!)
-  const tieConfigs = [
-    { z: -2.2, xSpan: 5.3, yMid: 8.65, yEnd: 7.82, r: 0.26 },
-    { z: -6.8, xSpan: 7.7, yMid: 8.15, yEnd: 7.18, r: 0.22 },
-    { z: 7.8, xSpan: 1.55, yMid: 7.25, yEnd: 6.45, r: 0.15 }
-  ];
-  for (const tc of tieConfigs) {
-    const tieCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-tc.xSpan, tc.yEnd, tc.z),
-      new THREE.Vector3(0, tc.yMid, tc.z - 0.35),
-      new THREE.Vector3(tc.xSpan, tc.yEnd, tc.z)
-    ]);
-    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(tieCurve, 28, tc.r, 10, false), darkArchSteelMat));
-  }
-
-  // 5. CRISP BLACK STEEL TENSION SUSPENDER CABLES DROPPING FROM OVERHEAD CURVED ARCHES TO BRIDGE OUTRIGGERS (ZERO floating cable ends!)
-  for (let ci = 0; ci < 9; ci++) {
-    const u = 0.08 + (ci / 8) * 0.78;
-    const zDeck = -10.4 + u * 20.2;
-    const tArch = 0.86 - u * 0.66;
-    for (const s of [-1, 1]) {
-      const curve = s < 0 ? archCurves.left : archCurves.right;
-      const topPt = curve.getPoint(Math.max(0.14, Math.min(0.90, tArch)));
-      const botPt = new THREE.Vector3(s * 1.94, 0.08, zDeck);
-      const cab = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.LineCurve3(botPt, topPt), 4, 0.026, 6, false),
-        blackCableMat
+      post.position.set(rx - s * 0.04, 0.56, z);
+      // Angled diagonal knee-brace bracket supporting top chrome handrail (#019!)
+      const knee = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(rx - s * 0.04, 0.86, z), new THREE.Vector3(rx + s * 0.02, 1.08, z)), 2, 0.018, 6, false),
+        chromeRailMat
       );
-      bridgeGroup.add(cab);
+      const outrigger = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.075, 0.085), bridgeGirderMat);
+      outrigger.position.set(s * 1.88, -0.06, z);
+      bridgeGroup.add(post, knee, outrigger);
     }
   }
 
-  // Recessed Dark-Bronze Architectural Mall Entrance Portal Frame at far bridge landing (z = +13.1, exact match to photo doorway!)
+  // 3. TWIN PARALLEL PARABOLIC WEATHERED-SILVER TUBULAR STEEL LADDER-ARCHES + VERTICAL HANGER CABLES (EXACT PHOTO 1 & PHOTO 2!)
+  //    Spring cleanly from BOTH bridge landings (z = -12.6..+12.6), arching gracefully 7.2m over the center of the Rainforest span!
+  const archSpanZ = 12.6;
+  const archNodes = 24;
+  const archTopPts = { L: [], R: [] };
+  const archBotPts = { L: [], R: [] };
+  for (let i = 0; i <= archNodes; i++) {
+    const u = i / archNodes;
+    const z = -archSpanZ + u * (archSpanZ * 2);
+    const para = 4.0 * u * (1.0 - u); // 0 at both ends, 1.0 at exact midspan z=0!
+    const xSpread = 2.05 - para * 0.92; // arches lean gracefully inward toward crown (2.05m at ends -> 1.13m at crown!)
+    const yLower = -0.10 + para * 6.45;
+    const yUpper = 0.25 + para * 6.95; // twin parallel ladder chords spaced ~0.50m apart!
+    archBotPts.L.push(new THREE.Vector3(-xSpread, yLower, z));
+    archBotPts.R.push(new THREE.Vector3(xSpread, yLower, z));
+    archTopPts.L.push(new THREE.Vector3(-xSpread, yUpper, z));
+    archTopPts.R.push(new THREE.Vector3(xSpread, yUpper, z));
+  }
+  const curveBotL = new THREE.CatmullRomCurve3(archBotPts.L);
+  const curveBotR = new THREE.CatmullRomCurve3(archBotPts.R);
+  const curveTopL = new THREE.CatmullRomCurve3(archTopPts.L);
+  const curveTopR = new THREE.CatmullRomCurve3(archTopPts.R);
+  bridgeGroup.add(
+    new THREE.Mesh(new THREE.TubeGeometry(curveBotL, 48, 0.145, 12, false), silverArchMat),
+    new THREE.Mesh(new THREE.TubeGeometry(curveBotR, 48, 0.145, 12, false), silverArchMat),
+    new THREE.Mesh(new THREE.TubeGeometry(curveTopL, 48, 0.145, 12, false), silverArchMat),
+    new THREE.Mesh(new THREE.TubeGeometry(curveTopR, 48, 0.145, 12, false), silverArchMat)
+  );
+  // Ladder cross-rungs joining upper & lower arch chords + transverse crown ties linking Left & Right arches + vertical stainless hanger cables!
+  for (let i = 1; i < archNodes; i++) {
+    // Rungs within each twin parabolic arch rib
+    bridgeGroup.add(
+      new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(archBotPts.L[i], archTopPts.L[i]), 2, 0.055, 6, false), silverArchMat),
+      new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(archBotPts.R[i], archTopPts.R[i]), 2, 0.055, 6, false), silverArchMat)
+    );
+    // Transverse crown braces joining left & right parabolic arches overhead (for high clearance i = 5..19!)
+    if (i >= 5 && i <= archNodes - 5 && i % 2 === 1) {
+      bridgeGroup.add(
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(archTopPts.L[i], archTopPts.R[i]), 2, 0.075, 8, false), silverArchMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(archBotPts.L[i], archBotPts.R[i]), 2, 0.055, 6, false), silverArchMat)
+      );
+    }
+    // Crisp vertical stainless-steel suspension hanger cables dropping from parabolic arch down to bridge deck outrigger!
+    if (i >= 2 && i <= archNodes - 2 && i % 2 === 0) {
+      const zDeck = archBotPts.L[i].z;
+      bridgeGroup.add(
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(-1.88, -0.06, zDeck), archBotPts.L[i]), 2, 0.022, 6, false), steelCableMat),
+        new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(1.88, -0.06, zDeck), archBotPts.R[i]), 2, 0.022, 6, false), steelCableMat)
+      );
+    }
+  }
+
+  // 4. Recessed Grey Ashlar Stone-Block & White-Louvered Far Bridge Portal (#009, #020) + Glowing FOOD DISTRICT Sign to Left on Curved 2F Rim!
   {
-    const portalMat = new THREE.MeshStandardMaterial({ color: '#1b1d21', roughness: 0.45, metalness: 0.40 });
+    const ashlarMat = new THREE.MeshStandardMaterial({ color: '#6e7275', roughness: 0.72, metalness: 0.12 });
+    const louverMat = new THREE.MeshStandardMaterial({ color: '#dce1e6', roughness: 0.42, metalness: 0.35 });
     for (const px of [-2.25, 2.25]) {
-      const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.42, 4.35, 0.55), portalMat);
-      jamb.position.set(px, 2.18, 13.05);
+      const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.46, 4.35, 0.58), ashlarMat);
+      jamb.position.set(px, 2.18, 13.08);
       bridgeGroup.add(jamb);
     }
-    const lintel = new THREE.Mesh(new THREE.BoxGeometry(4.95, 0.85, 0.58), portalMat);
-    lintel.position.set(0, 3.98, 13.05);
-    const fdPortalSign = new THREE.Mesh(
-      new THREE.PlaneGeometry(3.8, 0.62),
-      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('FOOD DISTRICT', '2F NEW WING • RAINFOREST ENTRANCE', '#16181c', '#ffffff', '#d95d2b', 768, 128) })
+    const lintel = new THREE.Mesh(new THREE.BoxGeometry(5.1, 0.92, 0.62), ashlarMat);
+    lintel.position.set(0, 3.96, 13.08);
+    // Horizontal white/silver louvered ventilation band across portal lintel (#020!)
+    for (let lv = 0; lv < 4; lv++) {
+      const slat = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.08, 0.08), louverMat);
+      slat.position.set(0, 3.68 + lv * 0.16, 12.74);
+      bridgeGroup.add(slat);
+    }
+    // Glowing FOOD DISTRICT sign on the left curved 2F mall wall overlooking the bridge (#009!)
+    const fdSideSign = new THREE.Mesh(
+      new THREE.PlaneGeometry(4.2, 0.78),
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('FOOD DISTRICT', 'PORK-FREE ARTISAN FOOD HALL • 2F', '#181a1f', '#ffffff', '#d95d2b', 768, 144) })
     );
-    fdPortalSign.rotation.y = Math.PI;
-    fdPortalSign.position.set(0, 3.98, 12.74);
-    bridgeGroup.add(lintel, fdPortalSign);
+    fdSideSign.rotation.y = Math.PI - 0.38;
+    fdSideSign.position.set(5.4, 3.55, 11.4);
+    bridgeGroup.add(lintel, fdSideSign);
   }
 
   // Keep bridgePlanks array defined for update() compatibility (zero stray plank sway glitches on smooth terrazzo deck)
@@ -1826,10 +1912,16 @@ export function buildIconicAttractions(scene, interactables) {
     const sgYellowNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.3, 1.85, 0.32), toneMapped: false });
     const sgSlideMat = new THREE.MeshStandardMaterial({ color: '#7e22ce', roughness: 0.24, metalness: 0.22 });
 
-    // Elevated sci-fi playland deck spanning inside 2F Highstreet void
-    const sgDeck = new THREE.Mesh(new THREE.BoxGeometry(15.6, 0.24, 9.6), sgDarkMat);
+    // Elevated sci-fi playland deck spanning inside 2F Highstreet void (bright coffered white soffit w/ warm LED rim underneath — ZERO black slab over LUXE G & 1F!)
+    const sgSoffitWhiteMat = new THREE.MeshStandardMaterial({ color: '#ede7dc', emissive: '#fff4da', emissiveIntensity: 0.36, roughness: 0.55 });
+    const sgDeck = new THREE.Mesh(
+      new THREE.BoxGeometry(15.6, 0.24, 9.6),
+      [sgDarkMat, sgDarkMat, sgDarkMat, sgSoffitWhiteMat, sgDarkMat, sgDarkMat]
+    );
     sgDeck.position.y = 0.08;
-    sg.add(sgDeck);
+    const sgUnderRim = new THREE.Mesh(new THREE.BoxGeometry(14.8, 0.06, 8.8), new THREE.MeshBasicMaterial({ color: '#ffecc2' }));
+    sgUnderRim.position.y = -0.06;
+    sg.add(sgDeck, sgUnderRim);
     // Illuminated octagonal spaceship play pods rising 2 full storeys (y = 0..7.8m!)
     const podA = new THREE.Mesh(new THREE.BoxGeometry(7.2, 4.2, 5.4), sgDarkMat);
     podA.position.set(1.8, 3.6, -0.6);
@@ -4722,10 +4814,10 @@ export function buildIconicAttractions(scene, interactables) {
     chalkBag.position.set(4.85, 1.21, -4.25);
     const cStaff = createArticulatedPerson({ shirt: '#f97316', pants: '#1e293b' });
     cStaff.position.set(5.1, 0, -5.05);
-    // Bench moved cleanly to (4.8, 0, -1.0) — 2.8m CLEAR of Rainforest corner column (19.8, -13.6)!
+    // Bench cleanly offset to (5.8, 0, 1.8) — ZERO NPC clipping on 4F-01!
     const cBench = createSlattedBench(2.2, new THREE.MeshStandardMaterial({ color: '#78350f', roughness: 0.55 }), steelDarkMat);
     cBench.rotation.y = -Math.PI / 2;
-    cBench.position.set(4.8, 0, -1.0);
+    cBench.position.set(5.8, 0, 1.8);
     campGroup.add(cDesk, cTop, cSign, cMon, cRopeCoil, chalkBag, cStaff, cBench);
 
     for (const [cx, cy, cz, shirt] of [[1.05, 1.85, -1.6, '#e11d48'], [2.1, 0.38, 1.5, '#0284c7'], [3.8, 0, 0.2, '#10b981']]) {
@@ -5553,8 +5645,8 @@ export function buildIconicAttractions(scene, interactables) {
       }
     }
   }
-  // Slatted Hardwood Rooftop Benches & Compact Orchid Planters cleanly offset from bench seats (UR-02!)
-  for (const [bx, bz, rot] of [[-5.8, -3.5, 0.45], [-5.8, 3.8, -0.45], [5.8, -3.5, -0.45]]) {
+  // Slatted Hardwood Rooftop Benches cleanly inset clear of curved Rainforest rim railing (UR-02!)
+  for (const [bx, bz, rot] of [[-4.8, 4.6, -0.45], [5.6, -3.5, -0.45], [5.6, 3.8, 0.45]]) {
     const bench = createSlattedBench(2.4, woodPergolaMat, archMetalMat);
     bench.position.set(bx, 0, bz);
     bench.rotation.y = rot;
@@ -6444,8 +6536,8 @@ export function buildIconicAttractions(scene, interactables) {
       if (k.group.position.x > kp.xMax - 1.4) k.angle = -Math.PI * 0.5;
       if (k.group.position.z < kp.zMin + 1.4) k.angle = 0;
       if (k.group.position.z > kp.zMax - 1.4) k.angle = Math.PI;
-      // Keep Koi cleanly submerged below water surface y = -0.22!
-      k.group.position.y = Math.min(-0.34, k.baseY + (feedTimer > 0 ? Math.max(0, Math.sin(elapsed * 9 + k.turnSeed)) * 0.08 : 0));
+      // Keep Koi cleanly submerged right beneath Ground Floor Koi Pond water surface (koiWaterY = 5.82)!
+      k.group.position.y = Math.min(koiWaterY - 0.10, k.baseY + (feedTimer > 0 ? Math.max(0, Math.sin(elapsed * 9 + k.turnSeed)) * 0.07 : 0));
       k.group.rotation.y = k.angle;
       k.tail.rotation.y = Math.sin(elapsed * (feedTimer > 0 ? 18 : 9) + k.turnSeed) * 0.38;
     }
@@ -6455,7 +6547,7 @@ export function buildIconicAttractions(scene, interactables) {
       p.life -= dt;
       p.vy -= 9.8 * dt;
       p.mesh.position.x += p.vx * dt;
-      p.mesh.position.y = Math.max(-0.22, p.mesh.position.y + p.vy * dt);
+      p.mesh.position.y = Math.max(koiWaterY, p.mesh.position.y + p.vy * dt);
       p.mesh.position.z += p.vz * dt;
       if (p.life <= 0) {
         rainforestGroup.remove(p.mesh);

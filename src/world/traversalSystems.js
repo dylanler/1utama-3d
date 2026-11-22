@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { FLOORS, ESCALATOR_BANKS, ELEVATORS } from '../data/mallLayout.js';
-import { createEscalatorStepTexture, createEscalatorStepNormalMap } from '../graphics/proceduralTextures.js';
+import { createEscalatorStepTexture, createEscalatorStepNormalMap, createImaxEscalatorTexture } from '../graphics/proceduralTextures.js';
 import { collapseStaticMeshes } from './batchUtils.js';
 
 export function buildTraversalSystems(scene, interactables, onLiftArrived) {
@@ -16,13 +16,13 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
   const stepNorm = createEscalatorStepNormalMap();
 
   const stepMetalMat = new THREE.MeshStandardMaterial({
-    color: '#e4eaf2',
+    color: '#2b323c',
     map: stepTex,
     normalMap: stepNorm,
-    normalScale: new THREE.Vector2(1.15, 1.15),
-    roughness: 0.28,
-    metalness: 0.84,
-    envMapIntensity: 1.45
+    normalScale: new THREE.Vector2(1.20, 1.20),
+    roughness: 0.34,
+    metalness: 0.72,
+    envMapIntensity: 1.15
   });
   const stepYellowMat = new THREE.MeshStandardMaterial({
     color: '#facc15',
@@ -46,6 +46,26 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     roughness: 0.18,
     metalness: 0.28,
     envMapIntensity: 1.15
+  });
+  const handrailBurgundyMat = new THREE.MeshStandardMaterial({
+    color: '#7c1d24',
+    roughness: 0.22,
+    metalness: 0.24,
+    envMapIntensity: 1.05
+  });
+  const imaxBalTex = createImaxEscalatorTexture();
+  const imaxBalMat = new THREE.MeshStandardMaterial({
+    map: imaxBalTex,
+    emissive: '#0284c7',
+    emissiveIntensity: 0.18,
+    roughness: 0.26,
+    metalness: 0.16
+  });
+  const rfGreenEnamelMat = new THREE.MeshStandardMaterial({
+    color: '#14532d',
+    roughness: 0.26,
+    metalness: 0.28,
+    envMapIntensity: 0.95
   });
   const escGlassMat = new THREE.MeshPhysicalMaterial({
     color: '#cdeee8',
@@ -114,16 +134,16 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     const flipX = dx < 0;
     incline.rotation.z = flipX ? Math.atan2(-dy, -dx) : angle;
     const activeTrussMat = bank.theme === 'rainforest-green'
-      ? new THREE.MeshStandardMaterial({ color: '#166534', roughness: 0.34, metalness: 0.42 })
+      ? rfGreenEnamelMat
       : bank.theme === 'tgv-imax'
-      ? new THREE.MeshStandardMaterial({ color: '#0284c7', emissive: '#0369a1', emissiveIntensity: 0.25, roughness: 0.32, metalness: 0.25 })
+      ? new THREE.MeshStandardMaterial({ color: '#2b2826', roughness: 0.42, metalness: 0.45 })
       : bank.theme === 'oval-led'
-      ? new THREE.MeshStandardMaterial({ color: '#e2e8f0', emissive: '#fff4d8', emissiveIntensity: 0.28, roughness: 0.28, metalness: 0.65 })
+      ? new THREE.MeshStandardMaterial({ color: '#e2e8f0', emissive: '#fff4d8', emissiveIntensity: 0.34, roughness: 0.28, metalness: 0.65 })
       : trussMat;
     const activeBalMat = bank.theme === 'tgv-imax'
-      ? new THREE.MeshStandardMaterial({ color: '#0284c7', emissive: '#0369a1', emissiveIntensity: 0.30, roughness: 0.28 })
+      ? imaxBalMat
       : bank.theme === 'rainforest-green'
-      ? new THREE.MeshPhysicalMaterial({ color: '#4ade80', transparent: true, opacity: 0.44, roughness: 0.08, side: THREE.DoubleSide, depthWrite: false })
+      ? rfGreenEnamelMat
       : escGlassMat;
 
     // Recessed dark step-chain underbed tucked strictly BELOW all 34 steps
@@ -160,7 +180,7 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       skirtLed.position.set(0, 0.10, zSide * 0.87);
       incline.add(skirtLed);
 
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(length + 0.65, 0.075, 0.095), handrailBlackMat);
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(length + 0.65, 0.075, 0.095), bank.theme === 'tgv-imax' ? handrailBurgundyMat : handrailBlackMat);
       rail.position.set(0, 0.95, zSide);
       incline.add(rail);
     }
@@ -897,7 +917,9 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     let bestYDiff = Infinity;
     for (const esc of escalatorData) {
       if (Math.abs(pz - esc.z) > esc.width * 0.78) continue;
-      if (px < esc.xStart - 1.45 || px > esc.xEnd + 1.15) continue;
+      const xLo = Math.min(esc.xStart, esc.xEnd) - 1.45;
+      const xHi = Math.max(esc.xStart, esc.xEnd) + 1.45;
+      if (px < xLo || px > xHi) continue;
       const t = THREE.MathUtils.clamp((px - esc.xStart) / esc.dx, 0, 1);
       const rampY = esc.y0 + t * esc.dy;
       const yDiff = Math.abs(py - rampY);
@@ -907,7 +929,7 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
           esc,
           t,
           rampY,
-          vx: esc.direction * 2.65
+          vx: esc.direction * Math.sign(esc.dx) * 2.65
         };
       }
     }

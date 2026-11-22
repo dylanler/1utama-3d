@@ -98,7 +98,7 @@ export const BOUNDS = {
   rooftop: { xMin: 12, xMax: 178, zMin: -30, zMax: 30, walkZ: 28.0, walkXMin: 14.0, walkXMax: 175.5 },
 
   centreCourtVoid: { xMin: -98, xMax: -50, zMin: -10.5, zMax: 10.5 },
-  promenadeVoid: { xMin: -19.5, xMax: 4.5, zMin: -3.2, zMax: 3.2 },
+  promenadeVoid: { xMin: -4.2, xMax: 6.8, zMin: -3.2, zMax: 3.2 },
   rainforestVoid: { xMin: 20, xMax: 56, zMin: -13.0, zMax: 13.0 },
   koiPond: { xMin: 23, xMax: 53, zMin: -10.2, zMax: 10.2 },
   koiJetty: { xMin: 22.5, xMax: 31.8, zMin: -2.4, zMax: 2.4 },
@@ -243,12 +243,7 @@ export function isAtriumVoid(floorIdx, x, z) {
     if (x > w.xMin && x < w.xMax && z > w.zMin && z < w.zMax) return true;
   }
   if (floorIdx === 0) {
-    const kp = BOUNDS.koiPond;
-    const kj = BOUNDS.koiJetty;
-    if (x > kp.xMin && x < kp.xMax && z > kp.zMin && z < kp.zMax) {
-      if (x >= kj.xMin && x <= kj.xMax && z >= kj.zMin && z <= kj.zMax) return false;
-      return true;
-    }
+    // LG beneath the Ground Floor Rainforest Koi Pond is solid walkable LG Rainforest concourse!
     return false;
   }
   // VERIFIED 2025 WALKTHROUGH (#064, #442, #454): Old Wing Ground Floor Centre Court is SOLID event floor; void opens on 1F (floorIdx >= 2)!
@@ -262,13 +257,17 @@ export function isAtriumVoid(floorIdx, x, z) {
     if (x > pv.xMin && x < pv.xMax && z > pv.zMin && z < pv.zMax) return true;
   }
   if (floorIdx >= 1 && floorIdx <= 6) {
-    // Open-to-the-sky elliptical Rainforest courtyard matching exact glass curtain-wall funnel flare per level!
+    // Open-to-the-sky elliptical Rainforest courtyard spanning GF..UR (full height of the mall!)
     const rxRF = floorIdx <= 3 ? 17.6 : floorIdx === 4 ? 18.0 : floorIdx === 5 ? 18.75 : 19.65;
     const rzRF = floorIdx <= 3 ? 12.8 : floorIdx === 4 ? 13.1 : floorIdx === 5 ? 13.65 : 14.30;
     const nxR = (x - 38.0) / rxRF;
     const nzR = z / rzRF;
     if (nxR * nxR + nzR * nzR < 1.0) {
-      // VERIFIED 2025 WALKTHROUGH (#009, #353): ONLY the 2F Suspension Bridge (floorIdx === 3) spans the Rainforest void!
+      // GROUND FLOOR (floorIdx === 1): Walkable low dark-timber slatted boardwalks directly across the Ground Floor Koi Pond (Photo 3!)
+      if (floorIdx === 1) {
+        if ((x >= 19.8 && x <= 46.8 && Math.abs(z) <= 3.3) || (x >= 33.8 && x <= 40.4 && Math.abs(z) <= 13.2)) return false;
+      }
+      // 2F (floorIdx === 3): Open-Air Parabolic-Arch Rainforest Suspension Bridge spans the treetops!
       if (floorIdx === 3) {
         const rb = BOUNDS.rainbowBridge2F;
         if (x >= rb.xMin && x <= rb.xMax && z >= rb.zMin && z <= rb.zMax) return false;
@@ -456,7 +455,7 @@ export const STORES = [
   { id: 'lg101s-bless', name: 'KEDAI BLESS', subtitle: 'Community Thrift & Preloved Finds', lot: 'LG126', floor: 0, wing: 'Old Wing', x: -125.8, z: 15.8, width: 12.4, side: 'W', brandBg: '#065f46', brandFg: '#ecfdf5', accent: '#34d399', style: 'fashion' },
   { id: 'lg125-aeon', name: 'AEON', subtitle: 'Japanese Department Store & Home Essentials', lot: 'LG125', floor: 0, wing: 'Old Wing', x: -29.2, z: -15.8, width: 12.4, side: 'E', brandBg: '#831843', brandFg: '#ffffff', accent: '#f472b6', style: 'anchor' },
   { id: 'lg125s-aeon', name: 'AEON SUPERMARKET', subtitle: 'Sushi • Fresh Produce • Japanese Groceries', lot: 'LG125B', floor: 0, wing: 'Old Wing', x: -29.2, z: 15.8, width: 12.4, side: 'E', brandBg: '#9d174d', brandFg: '#ffffff', accent: '#f472b6', style: 'supermarket' },
-  { id: 'lg301-montigo', name: 'MONTIGO', subtitle: 'Insulated Tumblers & Lifestyle Drinkware', lot: 'LG301', floor: 0, wing: 'New Wing', x: 13.4, z: -16.4, width: 13.2, side: 'W', brandBg: '#0f172a', brandFg: '#fde68a', accent: '#38bdf8', style: 'fashion' },
+  { id: 'lg301-famousamos', name: 'FAMOUS AMOS • GARRETT', subtitle: 'Freshly Baked Chocolate Chip Cookies • LG Entry', lot: 'LG301', floor: 0, wing: 'New Wing', x: 13.4, z: -16.4, width: 13.2, side: 'W', brandBg: '#451a03', brandFg: '#fde68a', accent: '#f59e0b', style: 'bakery' },
   { id: 'lg358-richese', name: 'RICHEESE FACTORY', subtitle: 'Fire Wings • Rich Cheese Dip', lot: 'LG356', floor: 0, wing: 'Rainforest', x: 13.4, z: 16.4, width: 13.2, side: 'W', brandBg: '#b91c1c', brandFg: '#fef08a', accent: '#facc15', style: 'dining' },
 
   ...strip(0, 'Old Wing', 'N', -22.2, -125.2, [
@@ -511,9 +510,9 @@ export const STORES = [
   ...strip(0, 'New Wing LG', 'S', 23.2, 13.8, [
     { lot: 'LG357-LG358', name: 'PARK’S BAGELS', sub: 'Artisan Hand-Rolled Bagels & Cream Cheese', w: 11.1, bg: '#f5efe6', fg: '#1c1814', ac: '#d97706', st: 'bakery' },
     { lot: 'LG350', name: 'FISH & CO.', sub: 'Rainforest Waterside Seafood in a Pan', w: 11.2, bg: '#0f172a', fg: '#bae6fd', ac: '#38bdf8', st: 'dining' },
+    { lot: 'LG352', name: 'IPPUDO 一風堂', sub: 'Hakata Tonkotsu Ramen • LG Rainforest', w: 22.4, bg: '#18181b', fg: '#ffffff', ac: '#dc2626', st: 'japanese' },
     { lot: 'LG353-LG355', name: 'SECRET RECIPE', sub: 'Malaysian Artisan Cakes • Opposite Montigo', w: 11.1, bg: '#881337', fg: '#ffe4e6', ac: '#fb7185', st: 'bakery' },
     { lot: 'LG348', name: 'ABSOLUTE THAI', sub: 'Authentic Thai Street Cuisine • Opposite Huawei', w: 11.2, bg: '#1c1917', fg: '#fde68a', ac: '#f59e0b', st: 'dining' },
-    { lot: 'LG352', name: 'IPPUDO 一風堂', sub: 'Hakata Tonkotsu Ramen Overlooking Koi Pond', w: 22.4, bg: '#18181b', fg: '#ffffff', ac: '#dc2626', st: 'japanese' },
     { lot: 'LG340', name: 'LANEIGE', sub: 'K-Beauty Water Sleeping Mask & Skincare', w: 11.4, bg: '#1e3a8a', fg: '#e0f2fe', ac: '#60a5fa', st: 'beauty' },
     { lot: 'LG342', name: 'SK JEWELLERY', sub: 'Contemporary Gold & Lab-Grown Diamonds', w: 11.5, bg: '#1e1b4b', fg: '#fde68a', ac: '#d4af37', st: 'luxury' },
     { lot: 'LG310', name: 'BMS ORGANICS', sub: 'Organic Wholefoods & Wellness Café', w: 11.1, bg: '#14532d', fg: '#dcfce7', ac: '#4ade80', st: 'supermarket' },
@@ -596,7 +595,7 @@ export const STORES = [
     { lot: 'G358', name: 'STEVE MADDEN • MELANGÉ', sub: 'New York Runway Footwear & Designer Handbags', w: 11.4, bg: '#18181b', fg: '#ffffff', ac: '#e4e4e7', st: 'luxury' },
     { lot: 'G357', name: 'CALVIN KLEIN', sub: 'Minimalist Tailoring & Underwear Flagship', w: 11.0, bg: '#141416', fg: '#ffffff', ac: '#a1a1aa', st: 'luxury' },
     { lot: 'G359', name: 'LACOSTE', sub: 'French Tennis Heritage Polo & Footwear', w: 10.6, bg: '#14532d', fg: '#ffffff', ac: '#22c55e', st: 'fashion' },
-    { lot: 'G309', name: 'COACH', sub: 'New York Runway Leather • Opposite Michael Kors', w: 12.2, bg: '#1c1917', fg: '#fde68a', ac: '#d4af37', st: 'luxury' },
+    { lot: 'G345-G347', name: 'L’OCCITANE', sub: 'Provence Botanical Skincare • Yellow Arch Portal (#380)', w: 12.2, bg: '#eab308', fg: '#ffffff', ac: '#facc15', st: 'beauty' },
     { lot: 'G328', name: 'LANCÔME', sub: 'French Haute Skincare • Adjacent to YSL Beauty', w: 10.4, bg: '#111111', fg: '#ffffff', ac: '#ec4899', st: 'beauty' },
     { lot: 'G329', name: 'YSL BEAUTY', sub: 'Yves Saint Laurent Couture Cosmetics & Fragrance', w: 10.4, bg: '#111111', fg: '#ffffff', ac: '#d4af37', st: 'beauty' },
     { lot: 'G330', name: 'CHANEL', sub: 'GF Luxe Haute Parfumerie & Beauté', w: 11.0, bg: '#09090b', fg: '#ffffff', ac: '#fbbf24', st: 'luxury' },
@@ -614,7 +613,7 @@ export const STORES = [
   ]),
   // Open GF Luxe Main Entrance / Valet Parking / Central Park Portal (`fac-luxeg-entrance`, x=79.5, w=11.0, z=23.2 — Verified #400–#402!)
   ...strip(1, 'LUXE G', 'S', 23.2, 85.4, [
-    { lot: 'G345-G347', name: 'L’OCCITANE', sub: 'Provence Botanical Skincare • Opposite Madam Kwan’s', w: 10.8, bg: '#f5e8c8', fg: '#451a03', ac: '#d97706', st: 'beauty' },
+    { lot: 'G309', name: 'COACH', sub: 'New York Runway Leather • Directly Right of Valet Main Entrance (#400)', w: 10.8, bg: '#1c1917', fg: '#fde68a', ac: '#d4af37', st: 'luxury' },
     { lot: 'G342-G343', name: 'MADAM KWAN’S', sub: 'Iconic Malaysian Nasi Bojari • Next to Maybank Oval', w: 12.6, bg: '#451a03', fg: '#fde68a', ac: '#d97706', st: 'dining' },
     { lot: 'G341B', name: 'MAYBANK • LAMY', sub: 'Oval Banking Branch & German Writing Instruments', w: 11.8, bg: '#facc15', fg: '#111827', ac: '#eab308', st: 'transit' },
     { lot: 'G311-G312', name: 'LULULEMON • PURAS', sub: 'Technical Yoga Apparel & Pure Aromatherapy', w: 11.8, bg: '#881337', fg: '#ffffff', ac: '#fb7185', st: 'sports' },
@@ -789,7 +788,8 @@ export const STORES = [
     { lot: 'S313', name: 'CILI KAMPUNG', sub: 'Rattan-Weave Langkawi Masak Lemak Cili Api', w: 10.4, bg: '#2b2019', fg: '#fde68a', ac: '#f59e0b', st: 'dining' },
     { lot: 'S313A', name: 'DRAGON-I', sub: 'Xiao Long Bao & La Mian • Facing Sushi Zanmai', w: 11.2, bg: '#7f1d1d', fg: '#fde68a', ac: '#ef4444', st: 'dining' },
     { lot: 'S317', name: 'GETHÁ • SOTHYS PARIS', sub: 'Sleep Kingdom Natural Latex Mattresses & Spa', w: 10.0, bg: '#1e3a8a', fg: '#ffffff', ac: '#60a5fa', st: 'furniture' },
-    { lot: 'S319', name: 'MR. D.I.Y.', sub: 'Hardware • Home Improvement • Beside Parkson Elite!', w: 18.8, bg: '#0b0c10', fg: '#facc15', ac: '#dc2626', st: 'books' }
+    { lot: 'S319', name: 'MR. D.I.Y.', sub: 'Hardware • Home Improvement • Beside Home’s Harmony & Parkson!', w: 11.4, bg: '#0b0c10', fg: '#facc15', ac: '#dc2626', st: 'books' },
+    { lot: 'S319A', name: 'HOME’S HARMONY', sub: 'Luxury Bedding • Towels & Living • Beside Parkson Elite (Map L2!)', w: 7.3, bg: '#ede6da', fg: '#1c1814', ac: '#b4944e', st: 'furniture' }
   ]),
   // 2F South: Food District (Rainforest Bridge Edge #009!) -> outside (S343) -> Salomon (S342) -> Birkenstock (S341) -> PUMA (S345) -> KAISON (S335A taupe wood!) -> VICTORIA FACELIFT -> POP MART (S333 HOT PINK!) -> REMAX (S332A) -> [Sensory Pod & Baby Room] -> HONOR -> TOP TOY (S330) -> PONEY / TREEHOUSE -> HOBILITY (S322) -> PARKSON ELITE!
   ...strip(3, 'New Wing 2F', 'S', 23.2, 13.8, [
@@ -865,7 +865,7 @@ export const STORES = [
 // ============================================================================
 export const MALL_FACILITIES = [
   // Multi-Level Color-Coded Car Park Lobbies & Exterior Drop-Off Portals (NEVER Storefronts!)
-  { id: 'fac-luxeg-entrance', facilityType: 'transit-portal', zoneColor: '#b4944e', name: 'LUXE G MAIN ENTRANCE • VALET PARKING & CENTRAL PARK', subtitle: 'Between Michael Kors & Coach • Valet Parking • Taxi Stand • E-Hailing Lounge (#400–#402)', lot: 'GF-VALET', floor: 1, wing: 'LUXE G', x: 79.6, z: 23.2, width: 11.2, side: 'S' },
+  { id: 'fac-luxeg-entrance', facilityType: 'valet-lobby', zoneColor: '#b4944e', name: 'LUXE G MAIN ENTRANCE • VALET PARKING & CENTRAL PARK', subtitle: 'Between Michael Kors & Coach • Valet Parking • Taxi Stand • E-Hailing Lounge (#400–#402)', lot: 'GF-VALET', floor: 1, wing: 'LUXE G', x: 79.6, z: 23.2, width: 11.2, side: 'S' },
   { id: 'fac-cp-yellow-south', facilityType: 'carpark-lobby', zoneColor: '#eab308', name: 'YELLOW ZONE CAR PARK ACCESS (3F)', subtitle: '1PAY Ticketless LPR • Preferred Parking Level 3 Bays', lot: 'CP-YELLOW3', floor: 4, wing: 'Old Wing', x: -101.4, z: 22.2, width: 47.6, side: 'S' },
   { id: 'fac-cp-yellow-east', facilityType: 'carpark-lobby', zoneColor: '#eab308', name: 'YELLOW ZONE CAR PARK LOBBY', subtitle: '1PAY Ticketless LPR Autopay • Centre Court Level 3 Access', lot: 'CP-CC3', floor: 4, wing: 'Old Wing', x: -29.2, z: 15.8, width: 12.4, side: 'E' },
   { id: 'fac-cp-red-west', facilityType: 'carpark-lobby', zoneColor: '#dc2626', name: 'RED ZONE HIGHSTREET CAR PARK LOBBY', subtitle: '1PAY Autopay Kiosk • Level 3 Preferred Car Park Bays', lot: 'CP-HS3', floor: 4, wing: 'New Wing', x: 13.4, z: 16.4, width: 13.2, side: 'W' },
@@ -882,9 +882,9 @@ export const MALL_FACILITIES = [
   // Recessed Restroom, Baby Care, Sensory Pod & Surau (Prayer Room) Service Corridors (Tucked BESIDE Toilets — Verified #025, #135, #159, #200, #320, #506!)
   { id: 'fac-surau-g1ue', facilityType: 'restroom-surau', surauGender: 'SURAU LELAKI & WANITA', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & PRAYER ROOM (GF 1UE)', subtitle: 'Beside G618 IJN First Pharmacy • Gents & Ladies • Baby Room • Lift & Prayer Room (#506)', lot: 'G1UE-WC/SURAU', floor: 1, wing: '1 Utama E', x: -162.8, z: 20.2, width: 7.8, side: 'S' },
   { id: 'fac-surau-f1ua', facilityType: 'restroom-surau', surauGender: 'SURAU WANITA', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU WANITA (1F OLD WING)', subtitle: 'Gents & Ladies Toilets • OKU • Baby Care • Surau Wanita & Wudhu', lot: 'F1-WC/SURAU', floor: 2, wing: 'Old Wing', x: -71.3, z: 22.2, width: 6.4, side: 'S' },
-  { id: 'fac-rf-2f-wc', facilityType: 'restroom-surau', surauGender: 'WC • BABY CARE', zoneColor: '#3f362e', name: '2F RAINFOREST WEST LIFT LOBBY & RESTROOMS', subtitle: 'Immediately West of ASICS (S302) • Gents & Ladies WC • Lift Lobby (#025)', lot: 'S301-WC', floor: 3, wing: 'Rainforest', x: 13.4, z: -16.4, width: 13.2, side: 'W' },
-  { id: 'fac-surau-s1ua', facilityType: 'restroom-surau', surauGender: 'SURAU LELAKI', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU LELAKI (2F OLD WING)', subtitle: 'Gents & Ladies Toilets • OKU • Baby Care • Surau Lelaki & Wudhu', lot: 'S1-WC/SURAU', floor: 3, wing: 'Old Wing', x: -32.8, z: 22.2, width: 6.4, side: 'S' },
-  { id: 'fac-2f-sensory-baby', facilityType: 'restroom-surau', surauGender: 'SENSORY POD • BABY ROOM', zoneColor: '#3f362e', name: '2F OVAL SENSORY POD, BABY ROOM & RESTROOMS', subtitle: 'Inclusive Sensory Pod • Nursing Room • Oval Rim Beside Escalators (#159, #161)', lot: 'S2-BABY/POD', floor: 3, wing: 'The Oval', x: 155.4, z: 23.2, width: 7.4, side: 'S' },
+  { id: 'fac-rf-2f-wc', facilityType: 'restroom-surau', hasSurau: false, surauGender: 'WC ONLY', zoneColor: '#2b4c57', name: '2F RAINFOREST WEST LIFT LOBBY & RESTROOMS', subtitle: 'Immediately West of ASICS (S302) • Gents & Ladies WC • Lift Lobby (#025)', lot: 'S301-WC', floor: 3, wing: 'Rainforest', x: 13.4, z: -16.4, width: 13.2, side: 'W' },
+  { id: 'fac-surau-s1ua', facilityType: 'restroom-surau', hasSurau: true, surauGender: 'SURAU LELAKI', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU LELAKI (2F OLD WING)', subtitle: 'Gents & Ladies Toilets • OKU • Baby Care • Surau Lelaki & Wudhu', lot: 'S1-WC/SURAU', floor: 3, wing: 'Old Wing', x: -32.8, z: 22.2, width: 6.4, side: 'S' },
+  { id: 'fac-2f-sensory-baby', facilityType: 'sensory-baby', hasSurau: false, surauGender: 'SENSORY POD • BABY ROOM', zoneColor: '#ec4899', name: '2F OVAL SENSORY POD & BABY ROOM', subtitle: 'Vibrant Jigsaw Sensory Pod & Warm Wood Baby Care Room (#159, #161)', lot: 'S2-BABY/POD', floor: 3, wing: 'The Oval', x: 155.4, z: 23.2, width: 7.4, side: 'S' },
   { id: 'fac-surau-t1up', facilityType: 'restroom-surau', surauGender: 'SURAU LELAKI & WANITA', zoneColor: '#3f362e', name: 'RESTROOMS, BABY ROOM & SURAU (3F HIGHSTREET)', subtitle: 'Verified 3F New Wing Prayer Room & Restrooms (#320 sign) • Male & Female Surau', lot: 'T1-WC/SURAU', floor: 4, wing: 'New Wing', x: 100.8, z: 23.2, width: 34.0, side: 'S' },
 
   // ONECARD Customer Service & Concierge Lounges
@@ -956,14 +956,14 @@ export const LANDMARKS = [
   },
   {
     id: 'spawn-koi-pond',
-    name: 'LG Rainforest Koi Pond, Ippudo & Arapaima Tank',
-    wing: 'New Wing • LG Rainforest',
-    floor: 0,
-    x: 26.5,
-    z: 1.4,
-    yaw: -1.78,
+    name: 'GF Rainforest Koi Pond, Timber Boardwalk & 4-Story Waterfall',
+    wing: 'New Wing • Ground Floor (G) Rainforest',
+    floor: 1,
+    x: 26.2,
+    z: -0.4,
+    yaw: -1.94,
     category: 'Eco Landmark',
-    description: 'Toss pellets to 32 Nishikigoi fish on the jetty beside the cascading waterfall, Ippudo (LG352), and the giant Arapaima aquarium.',
+    description: 'Walk directly across the low dark-timber Koi Pond boardwalk on Ground Floor beside 42 swimming Nishikigoi, river stones, white geese & the soaring 4-story limestone cliff waterfall.',
     isStamp: true,
     upoints: 150
   },
@@ -1097,19 +1097,19 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('LG-04', 'Old Wing LG Bungkus Kaw Kaw & Kenangan Concourse', -72.0, -6.5, -92.0, 2.5, 0.00),
     aimShot('LG-05', 'Old Wing LG125 AEON & La Boheme', -53.0, 17.5, -33.0, 14.5, 0.01),
     aimShot('LG-06', 'LG Promenade Wok Hey, Winter Time & Sealantis Scuba Pool', -27.2, -5.8, -7.5, 8.8, 0.00),
-    aimShot('LG-07', 'LG Rainforest Koi Pond, Waterfall & Ippudo', 24.0, -1.6, 43.0, 6.5, -0.04),
-    aimShot('LG-08', 'LG Rainforest Giant Arapaima Aquarium', 56.5, -12.8, 47.5, -6.5, -0.02),
+    aimShot('LG-07', 'LG Rainforest Concourse, Ippudo Ramen & Glass Escalators', 24.5, 4.2, 46.5, 22.0, 0.01),
+    aimShot('LG-08', 'LG Rainforest Giant Panoramic Arapaima Aquarium', 55.2, -11.4, 46.5, -4.5, 0.01),
     aimShot('LG-09', 'LG Highstreet Garrett Popcorn, Adidas & Teh Tarik Club', 74.8, -13.2, 84.8, -12.6, 0.01),
     aimShot('LG-10', 'LG Oval Backlit Fascia, Jaya Grocer LG309 & HEYTEA', 119.5, -11.2, 150.5, 1.8, 0.04)
   ],
   1: [ // G (10 unobstructed Real2Sim shots)
-    aimShot('G-01', '1UE MRT Pintu B Skywalk, Mixue, Pasar Eatai & Pop Mart Robo', -154.0, 6.0, -176.0, 0.0, 0.01),
+    aimShot('G-01', '1UE MRT Pintu B Skywalk, Mixue, Pasar Eatai & Pop Mart Robo', -158.0, 2.5, -178.0, 0.0, 0.01),
     aimShot('G-02', '1UE Giant Chess Courtyard, SportsDirect & Prayer Room/WC Corridor', -148.5, 4.2, -138.0, 12.6, -0.06),
     aimShot('G-03', 'Old Wing Solid GF Centre Court Heritage Pavilion & Checkered Columns', -56.5, -14.8, -74.5, 0.5, 0.02),
     aimShot('G-04', 'Old Wing G139C Sephora, M·A·C & Starbucks Reserve', -102.0, 12.2, -82.5, 19.6, 0.02),
     aimShot('G-05', 'Old Wing G115 Sa Sa, Haidilao, Nadeje & G125 AEON', -64.0, -14.8, -36.0, -16.5, 0.01),
     aimShot('G-06', 'GF Promenade PUTIEN G213A, Lavender, Tai Er & TGI Fridays', -26.5, 5.2, -8.0, -9.5, 0.00),
-    aimShot('G-07', 'GF Rainforest Terracotta Balcony, Treetop Adventure & Green Escalators', 21.8, -15.5, 43.0, 4.5, -0.04),
+    aimShot('G-07', 'GF Rainforest Koi Pond Boardwalk, Geese & 4-Story Cliff Waterfall (Photo 3!)', 25.2, -0.4, 45.8, 7.6, 0.08),
     aimShot('G-08', 'LUXE G Main Entrance, Coach Opposite Michael Kors & Lancôme/YSL', 79.5, -2.5, 79.5, 22.8, 0.01),
     aimShot('G-09', 'LUXE G Tom Ford/Replica Pavilion, Chanel, M&S & Zara', 98.2, -1.8, 81.5, -1.2, 0.00),
     aimShot('G-10', 'GF Oval Skylight Dome, Rim Escalators, LED Columns & Parkson Elite', 119.5, 10.5, 146.0, -7.5, 0.14)
@@ -1119,9 +1119,9 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('1F-02', '1UE F601 Game On Sports Hub Rainbow Arch & NextGen', -156.5, 9.0, -168.0, -17.5, 0.01),
     aimShot('1F-03', 'Old Wing F101 Nitori, F102 Uniqlo & Brands Outlet', -98.0, -13.5, -122.0, -17.5, 0.01),
     aimShot('1F-04', 'Old Wing F142 Neal’s Yard, HOOGA, iORA & Centre Court', -121.0, 14.5, -94.0, 19.5, 0.01),
-    aimShot('1F-05', 'Old Wing F118 Brands Outlet, Vincci & Boost Juice', -74.0, -15.5, -46.0, -19.0, 0.01),
-    aimShot('1F-06', '1F Promenade Void, Baskin-Robbins, CU & Sun Paradise', -25.5, 5.6, -5.5, 5.2, 0.00),
-    aimShot('1F-07', '1F Rainforest Canopy Overlook: Nando’s, Starbucks & Treetop Adventure', 41.0, -15.5, 27.5, 23.2, -0.04),
+    aimShot('1F-05', 'Old Wing F118 Brands Outlet, Vincci & Boost Juice', -69.5, -14.2, -44.0, -18.0, 0.01),
+    aimShot('1F-06', '1F Promenade Void, Baskin-Robbins, CU & Sun Paradise', -25.8, -5.8, -4.0, 2.5, -0.02),
+    aimShot('1F-07', '1F Rainforest Balcony Vista: Open-Air Parabolic-Arch Bridge & Waterfall (Photo 1!)', 22.0, -11.8, 41.5, 4.5, 0.22),
     aimShot('1F-08', '1F Highstreet Havaianas, Outpozt, Xixili, Swarovski & Pandora', 78.5, 10.5, 58.0, 18.0, 0.01),
     aimShot('1F-09', '1F Highstreet Yomaro, Pull&Bear, HLA & Owala Kiosk', 102.0, -10.5, 76.0, -16.0, 0.01),
     aimShot('1F-10', '1F Oval F319 Decathlon Adjacent to F320 Parkson & Padini', 142.0, -17.2, 168.0, -16.5, 0.01)
@@ -1129,7 +1129,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
   3: [ // 2F (10 unobstructed Real2Sim shots)
     aimShot('2F-01', '1UE S601 WINDLAB Indoor Skydiving & S611 PJPAC', -151.0, 10.5, -174.0, -9.5, 0.01),
     aimShot('2F-02', 'Outdoor 2F Saranghae Finger-Heart / Skywalker Rooftop Bridge', -143.1, -24.4, -138.8, -37.2, -0.34, 4.4),
-    aimShot('2F-03', 'Old Wing S101 Harvey Norman, LEGO & Blue TGV IMAX Escalator', -98.0, -14.0, -118.0, -4.0, 0.01),
+    aimShot('2F-03', 'Old Wing S101 Harvey Norman, LEGO & Blue TGV IMAX Escalator', -95.0, -15.2, -116.0, -3.5, 0.01),
     aimShot('2F-04', 'Old Wing S140 Toys"R"Us, Wondermama & Centre Court', -106.5, 14.5, -82.0, 18.5, 0.01),
     aimShot('2F-05', 'Old Wing S125 AEON Home, Hokkaido Sushi & Restrooms/Surau', -58.5, 16.0, -34.0, 17.5, 0.01),
     aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -25.8, -5.8, -4.0, 2.0, -0.02),
@@ -1144,15 +1144,15 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('3F-03', 'Old Wing EZ101 TGV Maybank IMAX Double-Height Foyer', -116.5, -12.5, -104.0, -22.2, 0.02),
     aimShot('3F-04', 'Old Wing TGV Bites Concessions, Banpresto & Junior Halls 1–7', -101.0, -14.0, -77.5, -18.5, 0.01),
     aimShot('3F-05', 'Old Wing 3F Yellow Zone Car Park Lobby & 1PAY Autopay', -101.4, 13.4, -101.4, 22.2, 0.02),
-    aimShot('3F-06', '3F Sportszone EZ216A Celebrity Fitness Bridge', -31.0, 0.0, 6.0, 0.0, 0.01),
-    aimShot('3F-07', '3F Rainforest Circular Glass Dome & Treetop Atrium Overlook', 23.5, 16.2, 41.0, 4.5, -0.14),
+    aimShot('3F-06', '3F Sportszone EZ216A Celebrity Fitness Bridge', -25.5, 0.0, 6.0, 0.0, 0.03),
+    aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 22.8, -14.2, 40.5, 3.8, -0.18),
     aimShot('3F-08', '3F Highstreet The Ledge Art Gallery Exhibitions', 70.0, -13.5, 92.0, -20.5, 0.01),
     aimShot('3F-09', '3F Highstreet Concierge & Restrooms/Surau Service Corridor', 94.0, 11.5, 100.8, 23.2, -0.02),
     aimShot('3F-10', '3F Oval OV301 XZQT Showroom & Purple Carpark Lobby', 138.0, -16.5, 168.0, 6.0, 0.01)
   ],
   5: [ // 4F–5F Entertainment Zone (10 unobstructed Real2Sim shots)
     aimShot('4F-01', 'EZ501 Camp5 24m Climbing Gym & Crash Mats', 24.5, -18.8, 14.5, -15.2, 0.04),
-    aimShot('4F-02', 'E403 GSC Cinemas 15-Screen Golden Foyer', 60.0, 4.5, 40.0, -23.2, 0.02),
+    aimShot('4F-02', 'EZ403 GSC Cinemas 15-Screen Wood-Slat Foyer & Concessions', 58.5, -12.5, 42.0, -23.2, 0.03),
     aimShot('4F-03', 'E403 GSC Prestige Lounge, GSC Play & EK5 Newsplus', 64.5, -6.5, 90.0, -19.0, 0.01),
     aimShot('4F-04', 'EZ401 Wangsa Bowl 10-Pin Bowling Lanes & Pinsetters', 20.5, 14.2, 38.0, 21.5, -0.02),
     aimShot('4F-05', 'EZ402 Toy Catcher UFO Claw Machine Arcade', 56.5, 9.5, 74.5, 22.0, 0.00),

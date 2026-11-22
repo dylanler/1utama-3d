@@ -7190,7 +7190,8 @@ export function createRestroomWayfindingTexture(surauLabel = 'SURAU') {
   ctx.lineWidth = 3;
   ctx.strokeRect(6, 6, w - 12, h - 12);
 
-  // Minimalist crisp vector pictograms on left: Male | Female | OKU | Baby | Mosque Dome
+  const hasSurau = !/WC ONLY|WC • BABY CARE/i.test(surauLabel);
+  // Minimalist crisp vector pictograms on left: Male | Female | OKU | Baby (plus Mosque Dome ONLY if Surau present!)
   const drawMan = (cx, cy) => {
     ctx.fillStyle = '#f8fafc';
     ctx.beginPath(); ctx.arc(cx, cy - 26, 9, 0, Math.PI * 2); ctx.fill();
@@ -7235,14 +7236,14 @@ export function createRestroomWayfindingTexture(surauLabel = 'SURAU') {
   ctx.fillStyle = '#524940';
   ctx.fillRect(212, 34, 2, 92);
 
-  drawMosque(252, 82);
+  if (hasSurau) drawMosque(252, 82);
 
   // Clean bilingual Malaysian mall wayfinding typography (auto-fitted — ZERO right-edge clipping!)
   ctx.fillStyle = '#f8fafc';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.font = '700 30px "Plus Jakarta Sans", "Jost", sans-serif';
-  ctx.fillText(`RESTROOMS  •  BABY ROOM  •  ${surauLabel}`, 296, 62, 696);
+  ctx.fillText(hasSurau ? `RESTROOMS  •  BABY ROOM  •  ${surauLabel}` : 'RESTROOMS  •  OKU  •  BABY ROOM  •  LIFT LOBBY', hasSurau ? 296 : 234, 62, 696);
 
   ctx.fillStyle = '#d4b882';
   ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
@@ -7343,16 +7344,17 @@ export function createRainforestBridgeStripeTexture() {
     ctx.fillRect(sx, sy, 2, 2);
   }
 
-  // Alternating transverse dark charcoal-grey (#4d5459) and light cream (#e6e3db) non-slip tile bands in center (100% match to media_1795265138674_d367ad8b.jpg & #009/#019!)
-  const bandH = 32;
-  const sideMargin = 68;
-  for (let y = 0; y < h; y += bandH * 2) {
-    ctx.fillStyle = '#4e555b';
-    ctx.fillRect(sideMargin, y, w - sideMargin * 2, bandH);
-    // Subtle dark-slate micro-grain on dark bands
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  // Alternating transverse muted sage-slate (#5b6661, 40%) and light cream (#e8e6de, 60%) terrazzo walkway bands (#009/#019 + Photo 1 & 2!)
+  const pitch = 68;
+  const darkH = 28;
+  const sideMargin = 72;
+  for (let y = 0; y < h; y += pitch) {
+    ctx.fillStyle = '#5b6661';
+    ctx.fillRect(sideMargin, y, w - sideMargin * 2, darkH);
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
     ctx.fillRect(sideMargin, y + 2, w - sideMargin * 2, 3);
   }
+  const bandH = 34;
   // Fine architectural tile grout lines (horizontal + vertical border seams)
   ctx.strokeStyle = 'rgba(92, 96, 100, 0.28)';
   ctx.lineWidth = 2;
@@ -7451,8 +7453,182 @@ export function createRainforestTerracottaFloorTexture() {
     }
   }
   ctx.restore();
-  const tex = finalizeTexture(c, { repeatX: 0.28, repeatY: 0.28, srgb: true });
+  const tex = finalizeTexture(c, { repeatX: 0.125, repeatY: 0.125, srgb: true });
   cachedRfTerracottaTex = tex;
+  return tex;
+}
+
+let cachedImaxEscTex = null;
+export function createImaxEscalatorTexture() {
+  if (cachedImaxEscTex) return cachedImaxEscTex;
+  const w = 1024;
+  const h = 256;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, w, 0);
+  g.addColorStop(0, '#005fa8');
+  g.addColorStop(0.5, '#0072ce');
+  g.addColorStop(1, '#00569c');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx.fillRect(0, 0, w, 12);
+  ctx.fillRect(0, h - 14, w, 14);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 84px Impact, "Arial Black", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('EXPERIENCE IT IN IMAX', w * 0.5, h * 0.50);
+  ctx.font = '700 24px system-ui, sans-serif';
+  ctx.fillStyle = '#e0f2fe';
+  ctx.fillText('TGV CINEMAS 3F  •  MAYBANK IMAX LASER', w * 0.5, h * 0.84);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  cachedImaxEscTex = tex;
+  return tex;
+}
+
+let cachedSensoryPodTex = null;
+export function createSensoryPodTexture() {
+  if (cachedSensoryPodTex) return cachedSensoryPodTex;
+  const w = 1024;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  // Vibrant multi-colored jigsaw-puzzle autism-inclusive wall (#161!)
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0, 0, w, h);
+  const pCols = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#facc15'];
+  const cw = 128;
+  const ch = 128;
+  for (let gx = 0; gx < 8; gx++) {
+    for (let gy = 0; gy < 4; gy++) {
+      ctx.fillStyle = pCols[(gx * 3 + gy * 5) % pCols.length];
+      ctx.globalAlpha = 0.84;
+      ctx.fillRect(gx * cw + 4, gy * ch + 4, cw - 8, ch - 8);
+      ctx.beginPath();
+      ctx.arc((gx + 1) * cw, gy * ch + ch * 0.5, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(gx * cw + cw * 0.5, (gy + 1) * ch, 22, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.globalAlpha = 1.0;
+  // Crisp white banner panel for SENSORY POD 3D colorful block letters
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.fillRect(110, 88, 804, 152);
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(110, 88, 804, 152);
+  const letters = 'SENSORY POD';
+  ctx.font = '900 84px "Arial Black", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < letters.length; i++) {
+    ctx.fillStyle = pCols[i % pCols.length];
+    ctx.fillText(letters[i], 195 + i * 64, 156);
+  }
+  ctx.fillStyle = '#334155';
+  ctx.font = '700 22px system-ui, sans-serif';
+  ctx.fillText('1 UTAMA INCLUSIVE CALM ROOM  •  2F OVAL', w * 0.5, 218);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  cachedSensoryPodTex = tex;
+  return tex;
+}
+
+let cachedValetVistaTex = null;
+export function createLuxeValetVistaTexture() {
+  if (cachedValetVistaTex) return cachedValetVistaTex;
+  const w = 1024;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  // Bright tropical Malaysian daylight sky over Central Park & Valet Porte-Cochere (#400-#401!)
+  const sky = ctx.createLinearGradient(0, 0, 0, h * 0.65);
+  sky.addColorStop(0, '#8cc8f2');
+  sky.addColorStop(0.65, '#d6eefc');
+  sky.addColorStop(1, '#f4f8fb');
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, w, h);
+  // Shaded outdoor porte-cochere roof overhang at top
+  ctx.fillStyle = '#3b3630';
+  ctx.fillRect(0, 0, w, 74);
+  ctx.fillStyle = '#d4af37';
+  ctx.fillRect(0, 74, w, 8);
+  // Lush green Central Park tropical tree line across background
+  for (let i = 0; i < 18; i++) {
+    const tx = i * 64 + 10;
+    const tr = 58 + (i % 4) * 18;
+    ctx.fillStyle = i % 3 === 0 ? '#1f5e2c' : i % 3 === 1 ? '#2f7a38' : '#4a9844';
+    ctx.beginPath();
+    ctx.arc(tx, 278 - (i % 3) * 14, tr, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // Sunlit cream porte-cochere drive apron & granite curb
+  ctx.fillStyle = '#d8d2c6';
+  ctx.fillRect(0, 326, w, 186);
+  ctx.fillStyle = '#a49b8d';
+  ctx.fillRect(0, 322, w, 14);
+  // Subtle luxury valet SUV silhouette & champagne Valet podium sign
+  ctx.fillStyle = '#1f232a';
+  ctx.beginPath();
+  ctx.roundRect(620, 290, 210, 62, 14);
+  ctx.fill();
+  ctx.fillStyle = '#9ec5e6';
+  ctx.fillRect(654, 298, 134, 24);
+  ctx.fillStyle = '#0f172a';
+  ctx.beginPath();
+  ctx.arc(665, 352, 20, 0, Math.PI * 2);
+  ctx.arc(785, 352, 20, 0, Math.PI * 2);
+  ctx.fill();
+  // Warm sunlight bloom rays
+  const sun = ctx.createRadialGradient(w * 0.42, 160, 12, w * 0.42, 160, 280);
+  sun.addColorStop(0, 'rgba(255,250,230,0.68)');
+  sun.addColorStop(1, 'rgba(255,250,230,0)');
+  ctx.fillStyle = sun;
+  ctx.fillRect(0, 0, w, h);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  cachedValetVistaTex = tex;
+  return tex;
+}
+
+let cachedAerialRootTex = null;
+export function createAerialRootCurtainTexture() {
+  if (cachedAerialRootTex) return cachedAerialRootTex;
+  const w = 256;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, w, h);
+  const shades = ['#6e462b', '#875838', '#52321e', '#9c6b47', '#4a2d1b'];
+  for (let i = 0; i < 64; i++) {
+    const sx = (i / 64) * w + ((i * 17) % 7) - 3;
+    const drop = h * (0.52 + ((i * 31) % 10) * 0.048);
+    ctx.strokeStyle = shades[i % shades.length];
+    ctx.lineWidth = 1.6 + (i % 3) * 0.7;
+    ctx.beginPath();
+    ctx.moveTo(sx, 0);
+    ctx.bezierCurveTo(sx + Math.sin(i) * 5, drop * 0.35, sx - Math.cos(i) * 5, drop * 0.72, sx + Math.sin(i * 1.7) * 4, drop);
+    ctx.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  cachedAerialRootTex = tex;
   return tex;
 }
 

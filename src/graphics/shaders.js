@@ -752,16 +752,16 @@ export function createKoiPondWaterMaterial() {
         float ndotv = max(dot(norm, viewDir), 0.0);
         float fres = pow(1.0 - ndotv, 3.8);
 
-        // Deep natural shaded emerald-slate Beer-Lambert water absorption (clear amber-jade shallow edges -> rich emerald depths!)
+        // Authentic Photo 3 Ground-Floor Rainforest Koi Pond Water: rich natural dark olive-emerald basin with luminous dappled sky sheen so bright orange/white Koi fish pop!
         float edgeDist = min(min(vUv.x, 1.0 - vUv.x), min(vUv.y, 1.0 - vUv.y));
         float shallowFactor = 1.0 - smoothstep(0.0, 0.28, edgeDist);
-        vec3 waterCol = mix(vec3(0.012, 0.068, 0.064), vec3(0.048, 0.175, 0.135), shallowFactor);
+        vec3 waterCol = mix(vec3(0.018, 0.042, 0.032), vec3(0.046, 0.095, 0.068), shallowFactor);
 
-        // Crisp organic animated underwater Voronoi caustic sunlight ribbons dancing across pond bed & rocks!
+        // Soft organic underwater dappled sunlight caustics dancing gently over river stones
         float c1 = voronoiCaustic(p * 1.65 + vec2(t * 0.08, -t * 0.06), t);
         float c2 = voronoiCaustic(p * 2.55 - vec2(t * 0.06, t * 0.07), t * 1.15);
-        float causticNet = pow(clamp(c1 * 0.65 + c2 * 0.58, 0.0, 1.0), 1.32);
-        waterCol += vec3(0.36, 0.74, 0.62) * causticNet * (0.68 + 0.48 * shallowFactor);
+        float causticNet = pow(clamp(c1 * 0.65 + c2 * 0.58, 0.0, 1.0), 1.45);
+        waterCol += vec3(0.24, 0.42, 0.30) * causticNet * (0.45 + 0.38 * shallowFactor);
 
         // Grazing Fresnel reflection capturing warm Ippudo timber lights, dark canopy & bright overhead skylight!
         vec3 reflDir = reflect(-viewDir, norm);
@@ -790,8 +790,8 @@ export function createKoiPondWaterMaterial() {
         }
         waterCol += vec3(0.78, 0.92, 0.96) * ringFoam * 0.26;
 
-        // Soft aerated whitewater plunge froth around waterfall base
-        float wfDist = length(vWorldPos.xz - vec2(44.2, 7.6));
+        // Soft aerated whitewater plunge froth around 4-story cliff waterfall base (45.8, 7.6)
+        float wfDist = length(vWorldPos.xz - vec2(45.8, 7.6));
         float plungeFoam = smoothstep(3.8, 0.7, wfDist) * (0.40 + 0.60 * fbm(p * 3.8 - vec2(0.0, t * 2.2)));
         waterCol = mix(waterCol, vec3(0.84, 0.92, 0.96), plungeFoam * 0.58);
 
