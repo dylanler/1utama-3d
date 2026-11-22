@@ -177,7 +177,7 @@ export class PlayerController {
 
     const sinY = Math.sin(this.yaw);
     const cosY = Math.cos(this.yaw);
-    const vx = (-sinY * fwd + cosY * strafe) * moveSpeed;
+    let vx = (-sinY * fwd + cosY * strafe) * moveSpeed;
     const vz = (-cosY * fwd - sinY * strafe) * moveSpeed;
 
     // Auto-summon any nearby elevator on this floor so its doors are open as the player walks up!
@@ -216,20 +216,20 @@ export class PlayerController {
     let escVx = 0;
     const escBefore = this.traversal.getEscalatorConveyor(this.footPos.x, this.footPos.y, this.footPos.z);
     if (escBefore) {
-      if (this.escalatorTravelDir === 0) {
-        // Auto-detect boarding end: bottom (xStart) travels UP (+1), top (xEnd) travels DOWN (-1)!
-        if (escBefore.t < 0.28) this.escalatorTravelDir = 1;
-        else if (escBefore.t > 0.72) this.escalatorTravelDir = -1;
-        else this.escalatorTravelDir = escBefore.esc.direction;
-      }
-      if (Math.abs(vx) > 1.35) {
-        this.escalatorTravelDir = Math.sign(vx);
-      }
+      // Strictly enforce each escalator's true one-way mechanical direction!
+      // esc.direction === 1 ALWAYS moves UP (xStart -> xEnd); esc.direction === -1 ALWAYS moves DOWN (xEnd -> xStart).
+      const esc = escBefore.esc;
+      const dirSign = esc.dx >= 0 ? 1 : -1;
+      this.escalatorTravelDir = esc.direction * dirSign;
       if (
-        (this.escalatorTravelDir === 1 && this.footPos.x < escBefore.esc.xEnd + 0.85) ||
-        (this.escalatorTravelDir === -1 && this.footPos.x > escBefore.esc.xStart - 1.10)
+        (this.escalatorTravelDir > 0 && (this.footPos.x - esc.xEnd) < 0.85) ||
+        (this.escalatorTravelDir < 0 && (this.footPos.x - esc.xStart) > -0.85)
       ) {
-        escVx = this.escalatorTravelDir * 2.95;
+        escVx = this.escalatorTravelDir * 3.15;
+      }
+      // Prevent walking backwards against the escalator's mechanical direction
+      if (vx * escVx < 0) {
+        vx = 0;
       }
     } else {
       this.escalatorTravelDir = 0;

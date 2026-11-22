@@ -805,11 +805,11 @@ export function buildIconicAttractions(scene, interactables) {
       lf.scale.setScalar(0.92 + (f % 4) * 0.16);
       islG.add(lf);
     }
-    // 2 Organic Sculpted White Stone Geese perched on wet mossy river boulders at the Koi Pond water's edge (Photo 3 bottom-right!)
+    // 2 Organic Sculpted White Stone Geese perched on wet mossy river boulders at the Koi Pond water's edge (oriented in graceful profile for G-07 — Photo 3 bottom-right!)
     const gooseMat = new THREE.MeshStandardMaterial({ color: '#eeede6', roughness: 0.46, metalness: 0.04 });
     const gooseBillMat = new THREE.MeshStandardMaterial({ color: '#d8d2c5', roughness: 0.42, metalness: 0.05 });
     const gooseEyeMat = new THREE.MeshStandardMaterial({ color: '#1f2421', roughness: 0.22 });
-    for (const [gx, gz, gRot, standing] of [[-4.75, -3.15, 0.42, true], [-2.95, -4.05, -0.78, false]]) {
+    for (const [gx, gz, gRot, standing] of [[-4.75, -3.15, -1.35, true], [-2.95, -4.05, -1.92, false]]) {
       const gg = new THREE.Group();
       gg.position.set(gx, -0.04, gz);
       gg.rotation.y = gRot;
@@ -1058,25 +1058,27 @@ export function buildIconicAttractions(scene, interactables) {
     const h = 0.2 + t * 15.8;
     const col = (r % 5) - 2;
     const bx = col * 2.15 + Math.sin(r * 2.7) * 0.45;
-    const bz = (Math.abs(bx - 1.2) < 1.35) ? 0.58 : 0.22 + (r % 3) * 0.14;
-    const bMat = (Math.abs(bx - 1.2) < 1.55) ? wetDarkStreakMat : r % 3 === 0 ? mossRockMat : lightKarstCliffMat;
+    // Keep the entire waterfall chute (bx = -0.65..+3.75) 100% clear of protruding cliff boulders so ZERO dark rocks float on the whitewater stream!
+    if (Math.abs(bx - 1.55) < 2.22) continue;
+    const bz = 0.48 + (r % 3) * 0.14;
+    const bMat = r % 3 === 0 ? mossRockMat : lightKarstCliffMat;
     const boulder = new THREE.Mesh(boulderTemplates[r % boulderTemplates.length], bMat);
     boulder.position.set(bx, h, bz);
-    boulder.scale.set(1.55, 0.95, 0.75);
+    boulder.scale.set(1.45, 0.92, 0.65);
     boulder.rotation.set((r % 4) * 0.14, r * 0.85, 0.08);
     waterfallCliff.add(boulder);
 
-    // Clinging lush green karst ferns & cascading ivy vines across the 4-story limestone cliff (Photo 3!)
-    if (r % 2 === 0 && Math.abs(bx - 1.2) > 1.3) {
+    // Clinging lush green karst ferns & cascading ivy vines across the 4-story limestone cliff flanks (Photo 3!)
+    if (r % 2 === 0) {
       const cf = new THREE.Mesh(cliffFernGeo, r % 4 === 0 ? botMats.frondWarm : botMats.frondDeep);
-      cf.position.set(bx, h + 0.35, bz - 0.55);
+      cf.position.set(bx, h + 0.35, bz - 0.48);
       cf.rotation.y = Math.PI + Math.sin(r) * 0.6;
       cf.rotation.x = 0.24;
       waterfallCliff.add(cf);
     }
-    if (r % 5 === 1 && Math.abs(bx - 1.2) > 1.2) {
+    if (r % 5 === 1) {
       const cv = new THREE.Mesh(cliffVineGeo, botMats.hangingVine);
-      cv.position.set(bx, h - 0.9, bz - 0.62);
+      cv.position.set(bx, h - 0.9, bz - 0.54);
       waterfallCliff.add(cv);
     }
   }
@@ -1726,28 +1728,25 @@ export function buildIconicAttractions(scene, interactables) {
     const ttRopeMat = new THREE.MeshStandardMaterial({ color: '#c4b89e', roughness: 0.88 });
     const ttTireMat = new THREE.MeshStandardMaterial({ color: '#1b1d22', roughness: 0.78 });
     const ttPoles = [
-      { x: 28.8, z: -5.8, h: 10.6 },
-      { x: 32.8, z: 5.4, h: 10.2 },
-      { x: 43.2, z: -5.2, h: 10.8 },
-      { x: 47.4, z: 4.8, h: 10.2 }
+      { x: 24.4, z: -9.4, h: 9.8 },
+      { x: 30.2, z: -10.4, h: 9.8 }
     ];
     for (const p of ttPoles) {
-      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, p.h, 12), ttPoleMat);
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.11, p.h, 12), ttPoleMat);
       pole.position.set(p.x, GF_Y + p.h * 0.5 - 0.3, p.z);
       rainforestGroup.add(pole);
-      for (const py of [11.6, 15.2]) {
-        const plat = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 0.92, 0.10, 20), ttPlatMat);
+      for (const py of [11.6, 14.8]) {
+        const plat = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.08, 18), ttPlatMat);
         plat.position.set(p.x, py, p.z);
-        const rim = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.03, 6, 20), ttPoleMat);
+        const rim = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.022, 6, 18), ttPoleMat);
         rim.rotation.x = Math.PI / 2;
-        rim.position.set(p.x, py + 0.05, p.z);
+        rim.position.set(p.x, py + 0.04, p.z);
         rainforestGroup.add(plat, rim);
       }
     }
-    // Authentic Treetop Adventure Rope Obstacles: Vertically-Suspended Black Rubber Car Tires on White Ropes (#353, #354!)
+    // Tucked Treetop Adventure North-West perimeter rope obstacle (keeps G-07 Koi Pond & 1F-07 Bridge/Waterfall vistas 100% unobstructed matching Photos 1 & 3!)
     const ropePairs = [
-      [ttPoles[0], ttPoles[2], 11.8, 'tires'],
-      [ttPoles[2], ttPoles[3], 15.2, 'planks']
+      [ttPoles[0], ttPoles[1], 11.8, 'tires']
     ];
     for (const [pa, pb, ry, mode] of ropePairs) {
       const dist = Math.hypot(pb.x - pa.x, pb.z - pa.z);

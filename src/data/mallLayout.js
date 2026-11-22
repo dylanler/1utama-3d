@@ -98,7 +98,7 @@ export const BOUNDS = {
   rooftop: { xMin: 12, xMax: 178, zMin: -30, zMax: 30, walkZ: 28.0, walkXMin: 14.0, walkXMax: 175.5 },
 
   centreCourtVoid: { xMin: -98, xMax: -50, zMin: -10.5, zMax: 10.5 },
-  promenadeVoid: { xMin: -4.2, xMax: 6.8, zMin: -3.2, zMax: 3.2 },
+  promenadeVoid: { xMin: 0.4, xMax: 5.8, zMin: -2.6, zMax: 2.6 },
   rainforestVoid: { xMin: 20, xMax: 56, zMin: -13.0, zMax: 13.0 },
   koiPond: { xMin: 23, xMax: 53, zMin: -10.2, zMax: 10.2 },
   koiJetty: { xMin: 22.5, xMax: 31.8, zMin: -2.4, zMax: 2.4 },
@@ -220,8 +220,8 @@ export const ELEVATORS = [
 export function getEscalatorWellsForFloor(floorIdx) {
   return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx && e.wing !== 'oval-rim').map((e) => ({
     esc: e,
-    xMin: Math.min(e.xStart, e.xEnd) - 1.65,
-    xMax: Math.max(e.xStart, e.xEnd) + 0.95,
+    xMin: Math.min(e.xStart, e.xEnd) - 0.45,
+    xMax: Math.max(e.xStart, e.xEnd) - 0.04,
     zMin: e.z - e.width * 0.74,
     zMax: e.z + e.width * 0.74
   }));
@@ -932,7 +932,7 @@ export const KIOSKS = [
   { id: 'k-pokedots', lot: 'SK29', name: 'pokédots. • CHIANG MAI', sub: 'Hot-Pink Pavilion Opposite Celebrity Fitness (#026, #029)', floor: 3, x: 9.6, z: -6.4, color: '#ec1878', accent: '#fce7f3', kind: 'bakery' },
   { id: 'k-haagen', lot: 'SK5', name: 'HÄAGEN-DAZS • NEW ERA', sub: 'Atrium Ice Cream Booth Opposite OPPO (#147, #193)', floor: 3, x: 64.5, z: -9.8, color: '#4c0519', accent: '#fde68a', kind: 'bakery' },
   { id: 'k-zus2f', lot: 'SK9', name: 'ZUS COFFEE', sub: 'Spanish Latte • Back-to-Back w/ Sushi Zanmai (#176, #188)', floor: 3, x: 105.5, z: -7.5, color: '#1e3a8a', accent: '#fbbf24', kind: 'cafe' },
-  { id: 'k-sushizanmai', lot: 'SK9A', name: 'SUSHI ZANMAI 寿司三昧', sub: 'Open-Concept Timber-Slatted Conveyor Sushi Pavilion (#188)', floor: 3, x: 117.0, z: -6.5, color: '#8ab14c', accent: '#dc2626', kind: 'sushi-booth' },
+  { id: 'k-sushizanmai', lot: 'SK9A', name: 'SUSHI ZANMAI 寿司三昧', sub: 'Open-Concept Timber-Slatted Conveyor Sushi Pavilion (#188)', floor: 3, x: 115.2, z: -6.5, color: '#8ab14c', accent: '#dc2626', kind: 'sushi-booth' },
 
   // 3F & 4F Kiosks (Verified #038: TGV Banpresto/Collectibles Kiosk inside 3F TGV Foyer!)
   { id: 'k-tgv-pop', lot: 'EZ101-K', name: 'TGV BANPRESTO • BITES', sub: 'Collectibles Display & Cinema Concessions (#038)', floor: 4, x: -87.0, z: -15.2, color: '#1e293b', accent: '#38bdf8', kind: 'popcorn' },
@@ -1106,7 +1106,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
   ],
   1: [ // G (10 unobstructed Real2Sim shots)
     aimShot('G-01', '1UE MRT Pintu B Skywalk, Mixue, Pasar Eatai & Pop Mart Robo', -158.0, 2.5, -178.0, 0.0, 0.01),
-    aimShot('G-02', '1UE Giant Chess Courtyard, SportsDirect & Prayer Room/WC Corridor', -148.5, 4.2, -138.0, 12.6, -0.06),
+    aimShot('G-02', '1UE Giant Chess Courtyard, SportsDirect & Prayer Room/WC Corridor', -144.5, 2.5, -156.5, 16.5, -0.02),
     aimShot('G-03', 'Old Wing Solid GF Centre Court Heritage Pavilion & Checkered Columns', -56.5, -14.8, -74.5, 0.5, 0.02),
     aimShot('G-04', 'Old Wing G139C Sephora, M·A·C & Starbucks Reserve', -102.0, 12.2, -82.5, 19.6, 0.02),
     aimShot('G-05', 'Old Wing G115 Sa Sa, Haidilao, Nadeje & G125 AEON', -64.0, -14.8, -36.0, -16.5, 0.01),
@@ -1137,7 +1137,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -25.8, -5.8, -4.0, 2.0, -0.02),
     aimShot('2F-07', '2F Rainforest Suspension Bridge & Circular Glass Sky Dome (Photo Exact!)', 38.0, -11.4, 38.0, 13.0, 0.18, 0.15),
     aimShot('2F-08', '2F Highstreet Starship Galactica, Machines, Cuckoo & Chili’s', 98.5, 14.5, 84.0, -16.5, 0.04),
-    aimShot('2F-09', '2F Highstreet SK9A Sushi Zanmai, SK9 ZUS Coffee & Dragon-i', 110.5, 5.5, 117.0, -7.5, -0.02),
+    aimShot('2F-09', '2F Highstreet SK9A Sushi Zanmai, SK9 ZUS Coffee & Dragon-i', 109.8, 6.2, 110.4, -7.0, -0.02),
     aimShot('2F-10', '2F Oval Hot-Pink Pop Mart, Kaison, Sensory Pod, MR.DIY & Parkson', 147.0, -14.8, 126.0, 21.5, 0.01)
   ],
   4: [ // 3F (10 unobstructed Real2Sim shots)

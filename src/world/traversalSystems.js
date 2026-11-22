@@ -173,11 +173,28 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
 
     // Upper horizontal machine-head truss soffit return seated 100% flush with ceiling coffer (y = y1 - 0.605..y1 - 0.02)!
     const upperTrussHead = new THREE.Mesh(
-      new THREE.BoxGeometry(1.16, 0.585, bank.width * 0.90),
+      new THREE.BoxGeometry(1.36, 0.585, bank.width * 0.92),
       activeTrussMat
     );
-    upperTrussHead.position.set(bank.xEnd + dirSign * 0.44, y1 - 0.3125, bank.z);
+    upperTrussHead.position.set(bank.xEnd + dirSign * 0.48, y1 - 0.3125, bank.z);
     root.add(upperTrussHead);
+
+    // For well-cutout escalators (all except oval-rim), seal the side well-collar soffit gaps flush with the ceiling coffer!
+    if (bank.wing !== 'oval-rim') {
+      const wellSoffitMat = new THREE.MeshStandardMaterial({ color: '#f0ece4', roughness: 0.42, metalness: 0.05 });
+      const wellXMin = Math.min(bank.xStart, bank.xEnd) - 0.45;
+      const wellXMax = Math.max(bank.xStart, bank.xEnd) - 0.04;
+      const wellLen = wellXMax - wellXMin;
+      const wellCenterX = (wellXMin + wellXMax) * 0.5;
+      for (const zSign of [-1, 1]) {
+        const sideClosure = new THREE.Mesh(
+          new THREE.BoxGeometry(wellLen, 0.585, bank.width * 0.30),
+          wellSoffitMat
+        );
+        sideClosure.position.set(wellCenterX, y1 - 0.3125, bank.z + zSign * (bank.width * 0.60));
+        root.add(sideClosure);
+      }
+    }
 
     // Glass/Themed side balustrades + skirt guards + warm 3000K skirt LEDs + black moving rubber handrails
     // All aligned to identical span (length + 0.04) and vertical-height-compensated localX so rail NEVER protrudes past glass!
