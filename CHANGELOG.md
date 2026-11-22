@@ -1,5 +1,22 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
+## Round-18 (In Progress — Final Full-Fidelity Visual Polish Across All 30 Verified Shots)
+- **3F `TGV Maybank IMAX` (`EZ101`)**: Prioritize `TGV` above `MAYBANK` in `getStoreBrandProfile()` so `EZ101` renders its corrugated pale-grey steel wall + yellow `Maybank` box + glowing cyan `IMAX®` + red `TGV Cinemas` (fixing `Maybank • LAMY`), and lift `Bites` hanging pergola vines above the signage bar so text stays 100% crisp.
+- **4F–5F Entertainment Zone Polish**:
+  - **5F `Cross Fire` (`EZ503`)**: Separate the 2 glowing-wheel `MotoGP` racing bikes cleanly East of all 5 `maimai DX PRiSM` cabinets (zero collision!) and lower the neon infinity-mirror medallion cleanly clear of `"CROSS FIRE"`.
+  - **4F `GSC Cinemas` (`EZ403`)**: Add dark contrast plaque behind GSC format rows (`BIG | SCREENX | 4DX | ATMOS`) + 3 glowing backlit movie poster lightboxes across the concession walls.
+  - **4F `Wangsa Bowl` (`EZ401`)**: Shift & trim the retro multicolor bowling-pin mural wall cleanly clear of the `"Wangsa BOWL • LANES 9–16"` hood.
+  - **5F `Diva Karaoke` (`EZ502`)**: Replace interior luxury handbag shelves & mannequin behind the neoclassical reception lobby with a warm-lit neoclassical taupe/gold KTV VIP suite corridor backdrop (`VIP 01 • VIP 02 • VIP 03`).
+  - **4F `Cellini` (`OV401`)**: Furnish the showroom with sculpted L-shaped cream leather sectionals, walnut coffee tables, glowing floor arc lamps & minimalist wall art.
+  - **4F `Newsplus` (`EK5`)**: Add 4-sided glowing red/white `newsplus` header branding so it reads crisply from `4F-03`.
+- **Concourse Kiosks & Anchor Fixes**:
+  - **`k-pokedots` (`SK29`)**: Solidify full 360° magenta base skirt (`DoubleSide` + closed drum so zero floating left countertop wing!), shift kiosk East clear of Promenade column, raise `pokédots.` logo above staff height.
+  - **`k-ogawa` (`FK7`)**: Shift kiosk East clear of Promenade blue-banded column & escalator rail, raise `OGAWA × POKÉMON` lightbox above massage chair backrests, and offset staff beside chairs.
+  - **`k-zus2f` (`SK9`)**: Wrap curved `ZUS COFFEE` fascia seamlessly along the outer curved navy canopy (zero letter clipping).
+  - **`1F-10 Decathlon`**: Raise green AstroTurf pad (`y = 0.085`) above store slab and cap center indigo pier strictly at `eaveY` below the glowing white Orbit logo.
+  - **`LUXE G` (`G-08`/`G-09`)**: Offset `G-08` camera cleanly in front of `TOM FORD`, add 4-sided `TUDOR` shield signage staggered clear of `Bell & Ross`, and apply `3×` repeat wrapping on the octagonal `BELL & ROSS` fascia drum.
+  - **Rainforest (`1F-07`, `1F-08`)**: Flip mirrored `Nando's` balcony sign (`rotation.y += Math.PI`) and position `1F-07` cleanly between perimeter columns & trees at `(20.0, 1.4)` for a 100% unobstructed Photo 1 vista.
+
 ## Round-17 (Completed — Entertainment Zone, Anchors, LUXE G, 13 Bespoke Kiosks & LG Rainforest Ceiling)
 - **Round-16b Visual Polish**: Add bright coffered plaster ceiling soffit + warm recessed LED cove ring directly beneath the Ground Floor Koi Pond basin in LG Rainforest, remove stretched flat `lgPlaza` quad, lift 4 stray `treeSpots` palm-base boulders up to GF (`y = 5.83`), add dense ferns/elephant-ear foliage on the GF Koi planting island, refine `createLuxeValetVistaTexture()`, and unblock `1F-07`, `3F-07`, and `2F-03` camera angles.
 - **3F–5F Entertainment Zone & 2F Starship Galactica Photo-Exact Rebuild**:
