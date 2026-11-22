@@ -56,7 +56,10 @@ import {
   createWindlabBackwallSignTexture,
   createPhotoismStripTexture,
   createRestroomWayfindingTexture,
-  createDoorPlaqueTexture
+  createDoorPlaqueTexture,
+  createRainforestGlassGridTexture,
+  createRainforestTerracottaFloorTexture,
+  createCentreCourtCheckeredColumnTexture
 } from '../graphics/proceduralTextures.js';
 import {
   MarbleReflectorShader,
@@ -717,7 +720,7 @@ export function buildMallArchitecture(scene, interactables) {
       const ow = BOUNDS.oldWing;
       const shape = rectShape(ow.xMin, ow.xMax, ow.zMin, ow.zMax);
 
-      if (fIdx >= 1) {
+      if (fIdx >= 2) {
         const cc = BOUNDS.centreCourtVoid;
         shape.holes.push(rectPath(cc.xMin, cc.xMax, cc.zMin, cc.zMax));
         shape.holes.push(rectPath(-101.7, -98.7, -1.5, 1.5));
@@ -747,11 +750,44 @@ export function buildMallArchitecture(scene, interactables) {
       addSlab(fIdx, shape, y, oldWingFloorMat, ceilWarmMat, '#e8dbc4');
     }
 
-    // --- C. PROMENADE BRIDGE (LG..3F) ---
+    // --- C. PROMENADE BRIDGE (LG..3F — Open Central Atrium Void on 1F & 2F + Escalator Wells + Blue-Teal Fluted Columns!) ---
     if (floor.hasPromenade) {
       const pr = BOUNDS.promenade;
       const prShape = rectShape(pr.xMin, pr.xMax, pr.zMin, pr.zMax);
+      if (fIdx === 2 || fIdx === 3) {
+        const pv = BOUNDS.promenadeVoid;
+        prShape.holes.push(rectPath(pv.xMin, pv.xMax, pv.zMin, pv.zMax));
+        addRectVoidCollar(pv.xMin, pv.xMax, pv.zMin, pv.zMax, y, 0.22);
+        addRectBalustrade(pv.xMin, pv.zMin, pv.xMax, pv.zMin, y);
+        addRectBalustrade(pv.xMin, pv.zMax, pv.xMax, pv.zMax, y);
+        addRectBalustrade(pv.xMin, pv.zMin, pv.xMin, pv.zMax, y);
+        addRectBalustrade(pv.xMax, pv.zMin, pv.xMax, pv.zMax, y);
+      } else if (fIdx === 1) {
+        for (const w of wells.filter((item) => item.esc.wing === 'promenade')) {
+          prShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
+          addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
+          addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y);
+          addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y);
+        }
+      }
       addSlab(fIdx, prShape, y, newWingFloorMat, ceilWoodMat, '#d8e0eb');
+      // Iconic Promenade White Fluted Columns w/ 3-Tone Gradient Blue/Teal Base Bands (#030, #202, #279, #412!)
+      if (fIdx >= 1 && fIdx <= 3) {
+        const prColWhiteMat = new THREE.MeshStandardMaterial({ color: '#eef2f6', roughness: 0.42 });
+        const prBlueBands = ['#93c5fd', '#3b82f6', '#1e4e6e'];
+        for (const px of [-21.2, -7.5, 5.5]) {
+          for (const pz of [-4.1, 4.1]) {
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 5.35, 18), prColWhiteMat);
+            shaft.position.set(px, y + 2.68, pz);
+            root.add(shaft);
+            prBlueBands.forEach((hex, bi) => {
+              const band = new THREE.Mesh(new THREE.CylinderGeometry(0.435, 0.435, 0.42, 18), new THREE.MeshStandardMaterial({ color: hex, roughness: 0.44 }));
+              band.position.set(px, y + 1.06 - bi * 0.42, pz);
+              root.add(band);
+            });
+          }
+        }
+      }
       // Sleek architectural bronze threshold divider strip along Old Wing <-> Promenade marble transition!
       const thresh = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 21.0), brassGoldMat);
       thresh.position.set(-28.0, y + 0.008, 0);
@@ -821,33 +857,78 @@ export function buildMallArchitecture(scene, interactables) {
         nwShape.holes.push(rectPath(16.0, 19.0, -1.5, 1.5));
       }
 
-      if (fIdx >= 1 && fIdx <= 5) {
-        const rf = BOUNDS.rainforestVoid;
-        nwShape.holes.push(rectPath(rf.xMin, rf.xMax, rf.zMin, rf.zMax));
-        addRectVoidCollar(rf.xMin, rf.xMax, rf.zMin, rf.zMax, y, 0.24);
-        if (fIdx === 1 || fIdx === 3) {
-          const rb = BOUNDS.rainbowBridge2F;
-          addRectBalustrade(rf.xMin, rf.zMin, rb.xMin, rf.zMin, y);
-          addRectBalustrade(rb.xMax, rf.zMin, rf.xMax, rf.zMin, y);
-          addRectBalustrade(rf.xMin, rf.zMax, rb.xMin, rf.zMax, y);
-          addRectBalustrade(rb.xMax, rf.zMax, rf.xMax, rf.zMax, y);
+      // VERIFIED 2025 WALKTHROUGH (#009, #010, #016, #018, #352, #383) & USER PHOTO (media_1795337629668_975ac4eb.jpg):
+      // THE RAINFOREST IS AN OPEN-TO-THE-SKY CIRCULAR COURTYARD (NOT AN INDOOR MALL CEILING!)
+      // Punch a wide elliptical open-sky well through GF..UR (fIdx 1..6) so ZERO indoor mall ceilings hover above 2F bridge!
+      if (fIdx === 1) {
+        // GF Rainforest Diagonal Terracotta Tile & Beige Limestone Floor around the open courtyard (#352, #383!)
+        const rfFloorTex = createRainforestTerracottaFloorTexture();
+        const rfTerraFloorMat = new THREE.MeshStandardMaterial({ map: rfFloorTex, roughness: 0.42, metalness: 0.04, envMapIntensity: 0.55 });
+        const rfRing = rectShape(14.0, 62.0, -22.8, 22.8);
+        rfRing.holes.push(ellipsePath(38.0, 0.0, 17.6, 12.8, 52));
+        const rfTerraMesh = new THREE.Mesh(new THREE.ShapeGeometry(rfRing), rfTerraFloorMat);
+        rfTerraMesh.rotation.x = -Math.PI / 2;
+        rfTerraMesh.position.y = y + 0.014;
+        rfTerraMesh.receiveShadow = true;
+        root.add(rfTerraMesh);
+      }
+
+      if (fIdx >= 1 && fIdx <= 6) {
+        // Circular/elliptical open-air Rainforest courtyard opening (widens slightly on 3F..UR so upper floors never intrude above the glass funnel!)
+        const rxRF = fIdx >= 4 ? 18.8 : 17.6;
+        const rzRF = fIdx >= 4 ? 13.6 : 12.8;
+        nwShape.holes.push(ellipsePath(38.0, 0.0, rxRF, rzRF, 56));
+
+        // On GF (1), 1F (2) & 2F (3): Curved Warm Terracotta-Ochre Parapet Balconies (#c47c34) + Stainless Vertical Pickets!
+        if (fIdx <= 3) {
+          const terraBalconyMat = new THREE.MeshStandardMaterial({ color: '#c47c34', roughness: 0.62, metalness: 0.06, envMapIntensity: 0.35 });
+          const terraCapMat = new THREE.MeshStandardMaterial({ color: '#9c5d24', roughness: 0.54, metalness: 0.08 });
+          const segs = 56;
+          for (let i = 0; i < segs; i++) {
+            const a1 = (i / segs) * Math.PI * 2;
+            const a2 = ((i + 1) / segs) * Math.PI * 2;
+            const am = (a1 + a2) * 0.5;
+            const mx = 38.0 + Math.cos(am) * rxRF;
+            // On 2F (fIdx === 3), leave clean 3.9m bridge entry gaps at North (z=-12.8) & South (z=+12.8) around x=38!
+            if (fIdx === 3 && Math.abs(mx - 38.0) < 2.2) continue;
+            const x1 = 38.0 + Math.cos(a1) * rxRF;
+            const z1 = Math.sin(a1) * rzRF;
+            const x2 = 38.0 + Math.cos(a2) * rxRF;
+            const z2 = Math.sin(a2) * rzRF;
+            const segLen = Math.hypot(x2 - x1, z2 - z1);
+            const segAng = Math.atan2(x2 - x1, z2 - z1);
+            // Solid warm terracotta-ochre curved fascia & parapet wall
+            const para = new THREE.Mesh(new THREE.BoxGeometry(0.26, 1.38, segLen + 0.06), terraBalconyMat);
+            para.position.set((x1 + x2) * 0.5, y - 0.14, (z1 + z2) * 0.5);
+            para.rotation.y = segAng;
+            const cap = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.08, segLen + 0.06), terraCapMat);
+            cap.position.set((x1 + x2) * 0.5, y + 0.56, (z1 + z2) * 0.5);
+            cap.rotation.y = segAng;
+            // Stainless steel top rail above terracotta parapet
+            const rail = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.055, segLen + 0.04), steelHandrailMat);
+            rail.position.set((x1 + x2) * 0.5, y + 1.08, (z1 + z2) * 0.5);
+            rail.rotation.y = segAng;
+            root.add(para, cap, rail);
+            if (i % 2 === 0) {
+              const post = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.52, 6), steelHandrailMat);
+              post.position.set(x1, y + 0.82, z1);
+              root.add(post);
+            }
+          }
         } else {
-          addRectBalustrade(rf.xMin, rf.zMin, rf.xMax, rf.zMin, y);
-          addRectBalustrade(rf.xMin, rf.zMax, rf.xMax, rf.zMax, y);
+          // Upper floors (3F, 4F, UR): sleek protective glass safety rim outside the circular glass funnel
+          const segs = 48;
+          for (let i = 0; i < segs; i++) {
+            const a1 = (i / segs) * Math.PI * 2;
+            const a2 = ((i + 1) / segs) * Math.PI * 2;
+            addRectBalustrade(
+              38.0 + Math.cos(a1) * (rxRF + 0.15), Math.sin(a1) * (rzRF + 0.15),
+              38.0 + Math.cos(a2) * (rxRF + 0.15), Math.sin(a2) * (rzRF + 0.15),
+              y, 1.08, false
+            );
+          }
         }
-        addRectBalustrade(rf.xMin, rf.zMin, rf.xMin, rf.zMax, y);
-        addRectBalustrade(rf.xMax, rf.zMin, rf.xMax, rf.zMax, y);
       }
-
-      // Punch wide full-span sunlit skylight opening on UR (fIdx === 6) matching Rainforest void (x: 20.3..55.7, z: -12.7..+12.7)!
-      if (fIdx === 6) {
-        nwShape.holes.push(rectPath(20.3, 55.7, -12.7, 12.7));
-        addRectBalustrade(20.1, -12.9, 55.9, -12.9, y, 1.05, false);
-        addRectBalustrade(20.1, 12.9, 55.9, 12.9, y, 1.05, false);
-        addRectBalustrade(20.1, -12.9, 20.1, 12.9, y, 1.05, false);
-        addRectBalustrade(55.9, -12.9, 55.9, 12.9, y, 1.05, false);
-      }
-
       if (fIdx >= 2 && fIdx <= 4) {
         const hs = BOUNDS.highstreetVoid;
         nwShape.holes.push(rectPath(hs.xMin, hs.xMax, hs.zMin, hs.zMax));
@@ -1008,60 +1089,99 @@ export function buildMallArchitecture(scene, interactables) {
   }
 
   {
-    // Full-span Smooth 48-Segment Rainforest Glass Skylight Vault seated flush ON TOP of UR opening (x: 20.3..55.7, z: -12.7..+12.7, y=37.10)!
-    const rfSky = new THREE.Mesh(
-      new THREE.CylinderGeometry(12.85, 12.85, 35.8, 48, 1, true, 0, Math.PI),
-      skylightMat
-    );
-    rfSky.rotation.z = Math.PI / 2;
-    rfSky.scale.set(0.36, 1, 1);
-    rfSky.position.set(38.0, 37.10, 0);
-    root.add(rfSky);
-    for (const xE of [20.3, 55.7]) {
-      const rfGable = new THREE.Mesh(new THREE.CircleGeometry(12.85, 48, 0, Math.PI), skylightMat);
-      rfGable.rotation.y = Math.PI / 2;
-      rfGable.scale.set(1, 0.36, 1);
-      rfGable.position.set(xE, 37.10, 0);
-      root.add(rfGable);
-    }
-    // Smooth 3D Brushed-Aluminum Space-Frame Skylight Arch Ribs + Purlins!
-    for (let rx = 23.8; rx <= 52.2; rx += 5.68) {
-      const archPts = [];
-      for (let k = 0; k <= 28; k++) {
-        const a = (k / 28) * Math.PI;
-        archPts.push(new THREE.Vector3(rx, 37.10 + Math.sin(a) * 12.75 * 0.36, Math.cos(a) * 12.75));
+    // ========================================================================
+    // REAL 1 UTAMA OPEN-AIR CIRCULAR GRIDDED-GLASS RAINFOREST CURTAIN-WALL FUNNEL
+    // (100% Photo-Exact to media_1795337629668_975ac4eb.jpg & Video #009, #010, #017!)
+    // Rises from 2F balcony crown (y = 22.6) flaring slightly outward up into BRIGHT OPEN SKY (y = 38.4) — ZERO enclosed ceiling!
+    // ========================================================================
+    const rfGlassTex = createRainforestGlassGridTexture();
+    const rfFunnelGlassMat = new THREE.MeshStandardMaterial({
+      map: rfGlassTex,
+      color: '#e8f6f5',
+      emissive: '#cceef4',
+      emissiveIntensity: 0.24,
+      transparent: true,
+      opacity: 0.62,
+      roughness: 0.12,
+      metalness: 0.25,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const rfForestTrussMat = new THREE.MeshStandardMaterial({ color: '#1d4d3a', roughness: 0.36, metalness: 0.68, envMapIntensity: 0.85 });
+    const rfSilverMullionMat = new THREE.MeshStandardMaterial({ color: '#8f9ea4', roughness: 0.28, metalness: 0.80 });
+
+    // Inverted conical circular gridded glass curtain wall (narrower at 2F base -> flares wider toward open sky!)
+    const funnelH = 15.8;
+    const funnelGeo = new THREE.CylinderGeometry(20.6, 17.6, funnelH, 56, 1, true);
+    const funnelMesh = new THREE.Mesh(funnelGeo, rfFunnelGlassMat);
+    funnelMesh.scale.set(1.0, 1.0, 0.735);
+    funnelMesh.position.set(38.0, 22.6 + funnelH * 0.5, 0);
+    root.add(funnelMesh);
+
+    // Crisp 3D Structural Horizontal Ring Beams & Vertical Steel Mullions wrapping the circular glass funnel!
+    const ringHeights = [22.7, 25.4, 28.4, 31.6, 34.8, 38.2];
+    for (let rIdx = 0; rIdx < ringHeights.length; rIdx++) {
+      const ry = ringHeights[rIdx];
+      const frac = (ry - 22.6) / funnelH;
+      const rad = 17.6 + frac * (20.6 - 17.6);
+      const pts = [];
+      for (let i = 0; i <= 56; i++) {
+        const a = (i / 56) * Math.PI * 2;
+        pts.push(new THREE.Vector3(38.0 + Math.cos(a) * rad, ry, Math.sin(a) * rad * 0.735));
       }
-      const rib = new THREE.Mesh(
-        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(archPts), 28, 0.14, 10, false),
-        skylightAlumMat
+      const ringTube = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, rIdx === 0 || rIdx === ringHeights.length - 1 ? 0.18 : 0.085, 8, true),
+        rIdx === 0 ? rfForestTrussMat : rfSilverMullionMat
       );
-      rib.castShadow = true;
-      root.add(rib);
+      root.add(ringTube);
+    }
+    for (let v = 0; v < 28; v++) {
+      const a = (v / 28) * Math.PI * 2;
+      const pBot = new THREE.Vector3(38.0 + Math.cos(a) * 17.6, 22.6, Math.sin(a) * 17.6 * 0.735);
+      const pTop = new THREE.Vector3(38.0 + Math.cos(a) * 20.6, 38.4, Math.sin(a) * 20.6 * 0.735);
+      const strut = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.LineCurve3(pBot, pTop), 4, v % 4 === 0 ? 0.11 : 0.055, 6, false),
+        v % 4 === 0 ? rfForestTrussMat : rfSilverMullionMat
+      );
+      root.add(strut);
     }
 
-    // Clean architectural silver-slate skylight curb on UR
-    for (const zE of [-12.7, 12.7]) {
-      const curb = new THREE.Mesh(new THREE.BoxGeometry(35.8, 0.56, 0.45), skylightAlumMat);
-      curb.position.set(38.0, 37.02, zE);
-      root.add(curb);
-    }
-    for (const xE of [20.3, 55.7]) {
-      const curb = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.56, 25.8), skylightAlumMat);
-      curb.position.set(xE, 37.02, 0);
-      root.add(curb);
+    // Forest-green painted tubular steel triangular perimeter truss collar right above 2F balconies (#010, #017!)
+    for (let t = 0; t < 36; t++) {
+      const a1 = (t / 36) * Math.PI * 2;
+      const a2 = ((t + 1) / 36) * Math.PI * 2;
+      const p1 = new THREE.Vector3(38.0 + Math.cos(a1) * 17.5, 22.6, Math.sin(a1) * 17.5 * 0.735);
+      const p2 = new THREE.Vector3(38.0 + Math.cos(a2) * 17.9, 23.6, Math.sin(a2) * 17.9 * 0.735);
+      root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(p1, p2), 2, 0.06, 5, false), rfForestTrussMat));
     }
 
-    // Dramatic Multi-Shaft Volumetric Crepuscular God Rays pouring down into Rainforest Atrium, Rainbow Bridge & Koi Pond!
-    const rfRayMat = createVolumetricGodRayMaterial('#fff0c8', 0.32);
+    // GF Rainforest Signature Fluted Brown Wood Columns with Staggered Glowing Vertical White LED Bars (#352, #383!)
+    const rfWoodColMat = new THREE.MeshStandardMaterial({ color: '#5c3b22', roughness: 0.52, metalness: 0.08 });
+    const rfWhiteLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.8, 1.85, 1.9), toneMapped: false });
+    const rfColAngles = [0.42, 1.05, 2.08, 2.72, 3.55, 4.18, 5.22, 5.86];
+    for (const ang of rfColAngles) {
+      const cx = 38.0 + Math.cos(ang) * 18.8;
+      const cz = Math.sin(ang) * 13.8;
+      const col = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, 17.6, 18), rfWoodColMat);
+      col.position.set(cx, 14.2, cz);
+      root.add(col);
+      for (let lb = 0; lb < 6; lb++) {
+        const la = (lb / 6) * Math.PI * 2;
+        const barH = 1.6 + (lb % 3) * 0.85;
+        const bar = new THREE.Mesh(new THREE.BoxGeometry(0.06, barH, 0.04), rfWhiteLedMat);
+        bar.position.set(cx + Math.cos(la) * 0.57, 10.6 - barH * 0.4, cz + Math.sin(la) * 0.57);
+        bar.rotation.y = -la;
+        root.add(bar);
+      }
+    }
+
+    // Soft open-air daylight volumetric rays pouring down from bright sky into Rainforest Suspension Bridge & Koi Pond!
+    const rfRayMat = createVolumetricGodRayMaterial('#fff5dc', 0.24);
     godRayMaterials.push(rfRayMat);
-    const rfRay = new THREE.Mesh(new THREE.CylinderGeometry(8.5, 16.5, 37.0, 28, 1, true), rfRayMat);
-    rfRay.position.set(37, 18.2, 0);
-    rfRay.rotation.z = -0.18;
-    const rfRay2 = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 12.2, 35.0, 24, 1, true), rfRayMat);
-    rfRay2.position.set(42, 17.8, 3.2);
-    rfRay2.rotation.z = -0.22;
-    rfRay2.rotation.x = 0.12;
-    root.add(rfRay, rfRay2);
+    const rfRay = new THREE.Mesh(new THREE.CylinderGeometry(10.5, 16.5, 36.0, 28, 1, true), rfRayMat);
+    rfRay.position.set(38, 18.0, 0);
+    rfRay.rotation.z = -0.10;
+    root.add(rfRay);
   }
 
   {
@@ -1071,6 +1191,56 @@ export function buildMallArchitecture(scene, interactables) {
     domeMesh.scale.set(ov.rx + 0.5, 5.2, ov.rz + 0.5);
     domeMesh.position.set(ov.cx, 37.0, ov.cz);
     root.add(domeMesh);
+
+    // Smooth White Conical Oval Skylight Collar + Suspended Central Circular Light Gantry (#157!)
+    const whiteConicalMat = new THREE.MeshStandardMaterial({ color: '#eef0f2', roughness: 0.42, metalness: 0.08, side: THREE.DoubleSide });
+    const domeCollar = new THREE.Mesh(new THREE.CylinderGeometry(11.5, 19.6, 3.6, 48, 1, true), whiteConicalMat);
+    domeCollar.scale.set(1.0, 1.0, 0.66);
+    domeCollar.position.set(ov.cx, 35.4, ov.cz);
+    const centerGantry = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 1.45, 32, 1, true), whiteConicalMat);
+    centerGantry.position.set(ov.cx, 31.2, ov.cz);
+    for (let c = 0; c < 4; c++) {
+      const ca = (c / 4) * Math.PI * 2;
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 8.5, 6), skylightAlumMat);
+      rod.position.set(ov.cx + Math.cos(ca) * 2.6, 35.8, ov.cz + Math.sin(ca) * 2.6);
+      root.add(rod);
+    }
+    root.add(domeCollar, centerGantry);
+
+    // Glowing Backlit Frosted-White Curved LG->G Oval Parapet Fascia + Warm Dark Wood GF Promenade Border (#154, #372, #373!)
+    const ovalBacklitMat = new THREE.MeshStandardMaterial({
+      color: '#fffef8',
+      emissive: '#fff8e2',
+      emissiveIntensity: 0.72,
+      roughness: 0.24,
+      side: THREE.DoubleSide
+    });
+    const ovalBacklitRing = new THREE.Mesh(new THREE.CylinderGeometry(ov.rx + 0.04, ov.rx + 0.04, 1.35, 56, 1, true, 0.42, Math.PI * 2 - 0.84), ovalBacklitMat);
+    ovalBacklitRing.scale.set(1.0, 1.0, ov.rz / ov.rx);
+    ovalBacklitRing.position.set(ov.cx, 5.25, ov.cz);
+    root.add(ovalBacklitRing);
+
+    const gfOvalWoodShape = ellipsePath(ov.cx, ov.cz, ov.rx + 2.8, ov.rz + 2.4, 52);
+    const gfOvalWoodOuter = new THREE.Shape(gfOvalWoodShape.getPoints(52));
+    gfOvalWoodOuter.holes.push(ellipsePath(ov.cx, ov.cz, ov.rx + 0.05, ov.rz + 0.05, 52));
+    const gfWoodBorder = new THREE.Mesh(
+      new THREE.ShapeGeometry(gfOvalWoodOuter),
+      new THREE.MeshStandardMaterial({ color: '#6b472d', roughness: 0.44, metalness: 0.06 })
+    );
+    gfWoodBorder.rotation.x = -Math.PI / 2;
+    gfWoodBorder.position.y = 6.012;
+    root.add(gfWoodBorder);
+
+    // Distinct Stacked 4F CELLINI (y=30..33) & 5F STANZO (y=33.2..36.2) Upper Oval Glass Gallery Band (#157!)
+    const stanzoSignMat = new THREE.MeshBasicMaterial({
+      map: createSignBoardTexture('s t a n z o', '5F OVAL LUXURY INTERIORS • ABOVE 4F CELLINI', '#111827', '#ffffff', '#fde68a', 1024, 160)
+    });
+    for (const sideS of [-1, 1]) {
+      const sSign = new THREE.Mesh(new THREE.PlaneGeometry(8.8, 1.35), stanzoSignMat);
+      sSign.position.set(ov.cx, 34.4, sideS * (ov.rz + 0.35));
+      if (sideS > 0) sSign.rotation.y = Math.PI;
+      root.add(sSign);
+    }
 
     // 3D Radial Brushed-Aluminum Structural Space-Frame Ribs under the 6-story Oval Glass Skylight Dome!
     for (let r = 0; r < 12; r++) {
@@ -1103,19 +1273,15 @@ export function buildMallArchitecture(scene, interactables) {
     const curbGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(curbPts, true), 64, 0.28, 8, true);
     root.add(new THREE.Mesh(curbGeo, skylightAlumMat));
 
-    // Dramatic Multi-Beam Volumetric Sunlight Shafts streaming from Oval Dome onto EV Hypercar Stage & G Concourse!
-    const ovalRayMat = createVolumetricGodRayMaterial('#fff2cc', 0.34);
+    // Dramatic Multi-Beam Volumetric Sunlight Shafts streaming from Oval Dome onto G & LG Concourse!
+    const ovalRayMat = createVolumetricGodRayMaterial('#fff2cc', 0.30);
     godRayMaterials.push(ovalRayMat);
     const ovalRay = new THREE.Mesh(new THREE.CylinderGeometry(11.0, 19.0, 38.0, 32, 1, true), ovalRayMat);
     ovalRay.scale.set(1.12, 1, 0.78);
     ovalRay.position.set(ov.cx, 18.5, ov.cz);
     ovalRay.rotation.z = -0.14;
-    const ovalCenterBeam = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 10.5, 37.0, 28, 1, true), ovalRayMat);
-    ovalCenterBeam.position.set(ov.cx - 2.0, 18.2, ov.cz + 1.5);
-    ovalCenterBeam.rotation.z = -0.18;
-    root.add(ovalRay, ovalCenterBeam);
+    root.add(ovalRay);
   }
-
   // Dramatic Highstreet Multi-Story Void Volumetric Skylight Shafts (Shot 8 GF Luxe warm-vs-cool depth — ZERO detached ceiling ribs blocking escalators!)
   {
     const hsRayMat = createVolumetricGodRayMaterial('#fff0cc', 0.28);
@@ -1182,9 +1348,9 @@ export function buildMallArchitecture(scene, interactables) {
     for (const x of [-99, -82, -65, -49]) {
       for (const z of [-11.3, 11.3]) colPositions.push({ x, y: 14.7, z, h: 29.4, r: 0.52, floors: [0, 1, 2, 3, 4] });
     }
-    // Rainforest corner columns (h = 36.35 stops cleanly UNDER UR slab y=37.0 -> ZERO UR-01 floor Z-fighting!)
-    for (const x of [19.8, 56.2]) {
-      for (const z of [-13.6, 13.6]) colPositions.push({ x, y: 18.175, z, h: 36.35, r: 0.54, floors: [0, 1, 2, 3, 4, 5] });
+    // Rainforest corner columns stop cleanly at 2F cornice (y=22.8) UNDER the circular glass curtain-wall sky funnel!
+    for (const x of [19.4, 56.6]) {
+      for (const z of [-13.8, 13.8]) colPositions.push({ x, y: 11.4, z, h: 22.8, r: 0.50, floors: [0, 1, 2, 3] });
     }
     // Highstreet columns RIGHT on void rim (z = ±6.8, stops cleanly under 3F ceiling y=29.4!)
     for (const x of [70.2, 85.0, 99.8]) {
@@ -1276,6 +1442,47 @@ export function buildMallArchitecture(scene, interactables) {
     instCapitals.instanceMatrix.needsUpdate = true;
     instUplights.instanceMatrix.needsUpdate = true;
     root.add(instPlinths, instCollars, instCapitals, instUplights);
+
+    // Iconic Old Wing Centre Court Red/White Checkered Column Wraps on GF, 1F, 2F (#064, #453!)
+    const ccWrapMat = new THREE.MeshStandardMaterial({ map: createCentreCourtCheckeredColumnTexture(), roughness: 0.36, metalness: 0.12 });
+    for (const x of [-99, -82, -65, -49]) {
+      for (const z of [-11.3, 11.3]) {
+        for (const fy of [6.0, 12.0, 18.0]) {
+          const wrap = new THREE.Mesh(new THREE.CylinderGeometry(0.555, 0.555, 2.75, 20, 1, true), ccWrapMat);
+          wrap.position.set(x, fy + 2.45, z);
+          root.add(wrap);
+        }
+      }
+    }
+
+    // Iconic Oval Atrium Cylindrical Vertical Glowing White LED-Slatted Columns (LG/1F/2F #154/#373) + Gold-Banded Brushed Stainless Columns on GF (#372)!
+    const ovalLedRibMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.75, 1.82, 1.92), toneMapped: false });
+    const ovalChromeMat = new THREE.MeshStandardMaterial({ color: '#c4cdd6', roughness: 0.22, metalness: 0.88, envMapIntensity: 1.35 });
+    for (let i = 0; i < 10; i++) {
+      const a = ((i + 0.5) / 10) * Math.PI * 2;
+      if (Math.abs(Math.sin(a)) < 0.28) continue;
+      if (Math.abs(Math.sin(a)) < 0.36 && Math.cos(a) > 0) continue;
+      const cx = 138 + Math.cos(a) * 20.4;
+      const cz = Math.sin(a) * 13.7;
+      // GF brushed stainless steel column sleeve with 2 signature horizontal brass bands (#372!)
+      const gfCol = new THREE.Mesh(new THREE.CylinderGeometry(0.585, 0.585, 4.95, 22), ovalChromeMat);
+      gfCol.position.set(cx, 8.65, cz);
+      const band1 = new THREE.Mesh(new THREE.CylinderGeometry(0.60, 0.60, 0.08, 22), brassGoldMat);
+      band1.position.set(cx, 7.6, cz);
+      const band2 = band1.clone();
+      band2.position.y = 9.7;
+      root.add(gfCol, band1, band2);
+      // LG, 1F & 2F vertical glowing white LED ribs wrapping each Oval column (#154, #373!)
+      for (const fy of [0.0, 12.0, 18.0]) {
+        for (let r = 0; r < 10; r++) {
+          const ra = (r / 10) * Math.PI * 2;
+          const rib = new THREE.Mesh(new THREE.BoxGeometry(0.05, 4.55, 0.045), ovalLedRibMat);
+          rib.position.set(cx + Math.cos(ra) * 0.59, fy + 2.75, cz + Math.sin(ra) * 0.59);
+          rib.rotation.y = -ra;
+          root.add(rib);
+        }
+      }
+    }
   }
 
   // ==========================================================================
@@ -1415,7 +1622,7 @@ export function buildMallArchitecture(scene, interactables) {
   const adidasCubeMaps = createMosaicTileMaps('#edf2f7', '#ffffff', '#cbd5e1', 2, 5);
   const adidasFrostedMat = new THREE.MeshStandardMaterial({ map: adidasCubeMaps.map, normalMap: adidasCubeMaps.normalMap, color: '#f8fafc', emissive: '#e6edf6', emissiveIntensity: 0.38, roughness: 0.18, metalness: 0.10, envMapIntensity: 0.92 });
   const adidasCyanLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.08, 1.55, 2.25), toneMapped: false });
-  const popMartLimeMat = new THREE.MeshStandardMaterial({ color: '#d4e426', emissive: '#b5c812', emissiveIntensity: 0.34, roughness: 0.24, metalness: 0.06 });
+  const popMartLimeMat = new THREE.MeshStandardMaterial({ color: '#ec1878', emissive: '#c81262', emissiveIntensity: 0.36, roughness: 0.24, metalness: 0.06 });
   const topToyCyanLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.18, 1.75, 2.20), toneMapped: false });
   const topToyMagentaLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.10, 0.28, 1.45), toneMapped: false });
   const mrDiyOrangeMat = new THREE.MeshStandardMaterial({ color: '#f97316', roughness: 0.38, metalness: 0.06 });
@@ -5189,10 +5396,20 @@ export function buildMallArchitecture(scene, interactables) {
       });
       const szLogoPlane = new THREE.Mesh(new THREE.PlaneGeometry(2.68, 1.68), szLogoMat);
       szLogoPlane.position.set(1.24, 1.66, 1.75);
-      const szLogoBack = szLogoPlane.clone();
-      szLogoBack.position.z = 1.57;
-      szLogoBack.rotation.y = Math.PI;
-      kg.add(szLogoPlane, szLogoBack);
+      // Authentic frosted vertical-striped half-glass perimeter screen & 4 glowing round cream globe pendants (#188!)
+      const szGlassMat = new THREE.MeshPhysicalMaterial({ color: '#eef4f0', transparent: true, opacity: 0.42, roughness: 0.22 });
+      const szHalfGlass = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.08, 0.05), szGlassMat);
+      szHalfGlass.position.set(0, 0.66, -1.72);
+      const szGlobeMat = new THREE.MeshStandardMaterial({ color: '#fff8e8', emissive: '#ffd282', emissiveIntensity: 0.95, roughness: 0.30 });
+      for (let gp = 0; gp < 4; gp++) {
+        const gx = -2.1 + gp * 1.4;
+        const globe = new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 12), szGlobeMat);
+        globe.position.set(gx, 3.08, 0.95);
+        const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 1.15, 6), obsidianGlossMat);
+        cord.position.set(gx, 3.72, 0.95);
+        kg.add(globe, cord);
+      }
+      kg.add(szLogoPlane, szHalfGlass);
 
       // Left open dark slate-tiled & green-tinted glass cashier bar + POS terminal + red ONE CARD floor mat!
       const slateTileMat = new THREE.MeshStandardMaterial({ color: '#2b3330', roughness: 0.56, metalness: 0.08 });
@@ -5254,7 +5471,8 @@ export function buildMallArchitecture(scene, interactables) {
       const podBoard = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.42, 0.05), sushiSlatWoodMat);
       podBoard.position.set(-2.55, 1.12, 1.98);
       podBoard.rotation.x = -0.45;
-      const menuPage = new THREE.Mesh(new THREE.PlaneGeometry(0.48, 0.34), new THREE.MeshStandardMaterial({ color: '#fffaf0', emissive: '#fffbeb', emissiveIntensity: 0.35 }));
+      const szMenuTex = createSignBoardTexture('SUSHI ZANMAI MENU', 'SALMON • UNAGI • TEMPURA • RAMEN • ONE CARD', '#fffaf0', '#18181b', '#8ab14c', 512, 320);
+      const menuPage = new THREE.Mesh(new THREE.PlaneGeometry(0.48, 0.34), new THREE.MeshStandardMaterial({ map: szMenuTex, emissive: '#ffffff', emissiveMap: szMenuTex, emissiveIntensity: 0.32 }));
       menuPage.position.set(-2.55, 1.15, 2.01);
       menuPage.rotation.x = -0.45;
       for (const sx of [-1.25, -0.45]) {
@@ -5968,7 +6186,7 @@ export function buildMallArchitecture(scene, interactables) {
 
   // Cinema Foyer Velvet Stanchions, Self-Ticketing E-Kiosks & Movie Standees (3F TGV EZ101 + 4F GSC EZ403!)
   const cinemaFoyers = [
-    { f: 4, x: -102, z: -20.2, accent: '#f43f5e', title: 'TGV IMAX' },
+    { f: 4, x: -102, z: -20.2, accent: '#0284c7', title: 'MAYBANK IMAX' },
     { f: 5, x: 56, z: -20.4, accent: '#eab308', title: 'GSC BIG 4DX' }
   ];
   const velvetRopeMat = new THREE.MeshStandardMaterial({ color: '#991b1b', roughness: 0.55 });

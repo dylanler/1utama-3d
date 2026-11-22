@@ -6649,17 +6649,17 @@ export function createSushiZanmaiLogoTexture() {
     ctx.restore();
   });
 
-  // Horizontal bold brush-script "Sushi Zanmai" spanning across center-right with radiant warm backlit halo!
+  // Horizontal bold brush-script "Sushi Zanmai" spanning across center-right with radiant warm backlit halo (unclipped full 'i'!)
   ctx.save();
   ctx.textAlign = 'left';
-  ctx.font = 'italic 900 104px "Georgia", "Times New Roman", serif';
+  ctx.font = 'italic 900 88px "Georgia", "Times New Roman", serif';
   ctx.shadowColor = '#fffde7';
-  ctx.shadowBlur = 24;
+  ctx.shadowBlur = 22;
   ctx.strokeStyle = '#fffde7';
-  ctx.lineWidth = 14;
-  ctx.strokeText('Sushi Zanmai', 300, 314);
+  ctx.lineWidth = 13;
+  ctx.strokeText('Sushi Zanmai', 282, 314, 650);
   ctx.fillStyle = '#0d0d0d';
-  ctx.fillText('Sushi Zanmai', 300, 314);
+  ctx.fillText('Sushi Zanmai', 282, 314, 650);
   ctx.restore();
 
   // Authentic crimson-red rectangular スシ stamp nestled at bottom-center of the green brush ring!
@@ -7308,13 +7308,185 @@ export function createDoorPlaqueTexture(iconKind, title, subtitle, bgHex = '#272
   ctx.fillStyle = fgHex;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.font = '800 38px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText(title, 148, 62);
+  ctx.font = '800 36px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText(title, 148, 62, 342);
   ctx.fillStyle = accentHex;
   ctx.font = '600 22px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText(subtitle, 148, 106);
+  ctx.fillText(subtitle, 148, 106, 342);
 
   const tex = finalizeTexture(c, { srgb: true });
   cachedDoorPlaques.set(key, tex);
+  return tex;
+}
+
+// ============================================================================
+// ROUND-15 PHOTO-EXACT 1 UTAMA LANDMARK TEXTURES
+// (Rainforest Striped Bridge Deck, Circular Glass Funnel, Terracotta Tile Floor, Checkered Centre Court Columns!)
+// ============================================================================
+let cachedRfBridgeStripeTex = null;
+export function createRainforestBridgeStripeTexture() {
+  if (cachedRfBridgeStripeTex) return cachedRfBridgeStripeTex;
+  const w = 512;
+  const h = 1024;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+
+  // Light cream-terrazzo walkway base (#e8e5dd) with subtle stone speckle
+  ctx.fillStyle = '#e8e5dd';
+  ctx.fillRect(0, 0, w, h);
+  for (let i = 0; i < 900; i++) {
+    const sx = (i * 197) % w;
+    const sy = (i * 313) % h;
+    ctx.fillStyle = i % 2 === 0 ? 'rgba(130,126,118,0.12)' : 'rgba(255,255,255,0.18)';
+    ctx.fillRect(sx, sy, 2, 2);
+  }
+
+  // Alternating transverse dark charcoal-grey (#4d5459) and light cream (#e6e3db) non-slip tile bands in center (100% match to media_1795265138674_d367ad8b.jpg & #009/#019!)
+  const bandH = 32;
+  const sideMargin = 68;
+  for (let y = 0; y < h; y += bandH * 2) {
+    ctx.fillStyle = '#4e555b';
+    ctx.fillRect(sideMargin, y, w - sideMargin * 2, bandH);
+    // Subtle dark-slate micro-grain on dark bands
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(sideMargin, y + 2, w - sideMargin * 2, 3);
+  }
+  // Fine architectural tile grout lines (horizontal + vertical border seams)
+  ctx.strokeStyle = 'rgba(92, 96, 100, 0.28)';
+  ctx.lineWidth = 2;
+  for (let y = 0; y <= h; y += bandH) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  for (const vx of [sideMargin, w - sideMargin, w * 0.5]) {
+    ctx.beginPath();
+    ctx.moveTo(vx, 0);
+    ctx.lineTo(vx, h);
+    ctx.stroke();
+  }
+
+  const tex = finalizeTexture(c, { repeatX: 1, repeatY: 4, srgb: true });
+  cachedRfBridgeStripeTex = tex;
+  return tex;
+}
+
+let cachedRfGlassGridTex = null;
+export function createRainforestGlassGridTexture() {
+  if (cachedRfGlassGridTex) return cachedRfGlassGridTex;
+  const w = 512;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+
+  // Bright daylight sky-tinted clear structural curtain-wall glass (#d4ebea) matching circular Rainforest glass funnel
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0.0, 'rgba(232, 246, 250, 0.30)');
+  g.addColorStop(0.55, 'rgba(198, 232, 232, 0.34)');
+  g.addColorStop(1.0, 'rgba(164, 210, 206, 0.44)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  // Crisp vertical & horizontal brushed dark-silver / forest-green curtain-wall mullions
+  ctx.fillStyle = '#384644';
+  const cols = 4;
+  const rows = 4;
+  for (let i = 0; i <= cols; i++) {
+    ctx.fillRect(Math.round((i / cols) * w) - 4, 0, 8, h);
+  }
+  for (let j = 0; j <= rows; j++) {
+    ctx.fillRect(0, Math.round((j / rows) * h) - 4, w, 8);
+  }
+  // Fine metallic highlight edge on mullions
+  ctx.fillStyle = 'rgba(220, 238, 236, 0.45)';
+  for (let i = 0; i < cols; i++) {
+    ctx.fillRect(Math.round((i / cols) * w) + 4, 0, 2, h);
+  }
+
+  const tex = finalizeTexture(c, { repeatX: 10, repeatY: 2.5, srgb: true });
+  cachedRfGlassGridTex = tex;
+  return tex;
+}
+
+let cachedRfTerracottaTex = null;
+export function createRainforestTerracottaFloorTexture() {
+  if (cachedRfTerracottaTex) return cachedRfTerracottaTex;
+  const w = 512;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+
+  // Authentic GF Rainforest diagonal terracotta tile + beige limestone border grid (#352, #383!)
+  ctx.fillStyle = '#c9b99e';
+  ctx.fillRect(0, 0, w, h);
+  ctx.save();
+  ctx.translate(w / 2, h / 2);
+  ctx.rotate(Math.PI / 4);
+  const cell = 148;
+  for (let gx = -4; gx <= 4; gx++) {
+    for (let gy = -4; gy <= 4; gy++) {
+      const x0 = gx * cell;
+      const y0 = gy * cell;
+      ctx.fillStyle = '#b97856';
+      ctx.fillRect(x0 + 16, y0 + 16, cell - 32, cell - 32);
+      // 3x3 sub-tiles inside each terracotta square
+      ctx.strokeStyle = 'rgba(92, 54, 34, 0.35)';
+      ctx.lineWidth = 2;
+      const sub = (cell - 32) / 3;
+      for (let k = 1; k < 3; k++) {
+        ctx.beginPath();
+        ctx.moveTo(x0 + 16 + k * sub, y0 + 16);
+        ctx.lineTo(x0 + 16 + k * sub, y0 + cell - 16);
+        ctx.moveTo(x0 + 16, y0 + 16 + k * sub);
+        ctx.lineTo(x0 + cell - 16, y0 + 16 + k * sub);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.restore();
+  const tex = finalizeTexture(c, { repeatX: 6, repeatY: 6, srgb: true });
+  cachedRfTerracottaTex = tex;
+  return tex;
+}
+
+let cachedCcColumnTex = null;
+export function createCentreCourtCheckeredColumnTexture() {
+  if (cachedCcColumnTex) return cachedCcColumnTex;
+  const w = 512;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+
+  // Iconic Old Wing Centre Court crimson-red column wrap with red/white checkered top & bottom collars (#064, #453!)
+  ctx.fillStyle = '#c81e2b';
+  ctx.fillRect(0, 0, w, h);
+  const sq = 32;
+  for (const yStart of [0, 32, h - 64, h - 32]) {
+    for (let x = 0; x < w; x += sq) {
+      const alt = ((x / sq) + (yStart / sq)) % 2 === 0;
+      ctx.fillStyle = alt ? '#ffffff' : '#b91c1c';
+      ctx.fillRect(x, yStart, sq, sq);
+    }
+  }
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '900 44px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('CENTRE COURT', w * 0.5, h * 0.44);
+  ctx.font = '700 24px "Plus Jakarta Sans", sans-serif';
+  ctx.fillStyle = '#fde68a';
+  ctx.fillText('1 UTAMA • OLD WING', w * 0.5, h * 0.56);
+
+  const tex = finalizeTexture(c, { srgb: true });
+  cachedCcColumnTex = tex;
   return tex;
 }

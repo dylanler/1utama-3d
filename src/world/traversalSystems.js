@@ -110,26 +110,42 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     incline.rotation.z = angle;
     g.add(incline);
 
-    // Recessed dark step-chain underbed tucked strictly BELOW all 34 steps (y = -0.44 -> ZERO smooth blank ramp covering lower steps!)
+    // Properly orient incline for BOTH positive-dx and negative-dx crisscrossing escalators!
+    const flipX = dx < 0;
+    incline.rotation.z = flipX ? Math.atan2(-dy, -dx) : angle;
+    const activeTrussMat = bank.theme === 'rainforest-green'
+      ? new THREE.MeshStandardMaterial({ color: '#166534', roughness: 0.34, metalness: 0.42 })
+      : bank.theme === 'tgv-imax'
+      ? new THREE.MeshStandardMaterial({ color: '#0284c7', emissive: '#0369a1', emissiveIntensity: 0.25, roughness: 0.32, metalness: 0.25 })
+      : bank.theme === 'oval-led'
+      ? new THREE.MeshStandardMaterial({ color: '#e2e8f0', emissive: '#fff4d8', emissiveIntensity: 0.28, roughness: 0.28, metalness: 0.65 })
+      : trussMat;
+    const activeBalMat = bank.theme === 'tgv-imax'
+      ? new THREE.MeshStandardMaterial({ color: '#0284c7', emissive: '#0369a1', emissiveIntensity: 0.30, roughness: 0.28 })
+      : bank.theme === 'rainforest-green'
+      ? new THREE.MeshPhysicalMaterial({ color: '#4ade80', transparent: true, opacity: 0.44, roughness: 0.08, side: THREE.DoubleSide, depthWrite: false })
+      : escGlassMat;
+
+    // Recessed dark step-chain underbed tucked strictly BELOW all 34 steps
     const underBed = new THREE.Mesh(new THREE.BoxGeometry(length - 1.2, 0.14, bank.width * 0.78), skirtDarkMat);
     underBed.position.y = -0.44;
     incline.add(underBed);
 
-    // Brushed Stainless-Steel Hitachi Architectural Under-Truss (tucked cleanly inside floor slabs -> ZERO ceiling overhang block!)
+    // Architectural Under-Truss (Themed: Rainforest Green, TGV IMAX Blue, Oval Backlit Silver, or Standard Brushed Steel!)
     const truss = new THREE.Mesh(
       new THREE.BoxGeometry(length - 1.35, 0.36, bank.width * 0.90),
-      trussMat
+      activeTrussMat
     );
     truss.position.y = -0.64;
     incline.add(truss);
 
-    // Glass side balustrades + stainless skirt guards + warm 3000K skirt LEDs + black moving rubber handrails
+    // Glass/Themed side balustrades + skirt guards + warm 3000K skirt LEDs + black moving rubber handrails
     for (const zSide of [-bank.width * 0.44, bank.width * 0.44]) {
-      const skirt = new THREE.Mesh(new THREE.BoxGeometry(length + 0.35, 0.24, 0.08), skirtDarkMat);
+      const skirt = new THREE.Mesh(new THREE.BoxGeometry(length + 0.35, 0.24, 0.08), bank.theme === 'rainforest-green' ? activeTrussMat : skirtDarkMat);
       skirt.position.set(0, -0.02, zSide * 0.92);
       incline.add(skirt);
 
-      const glass = new THREE.Mesh(new THREE.BoxGeometry(length + 0.45, 0.90, 0.032), escGlassMat);
+      const glass = new THREE.Mesh(new THREE.BoxGeometry(length + 0.45, 0.90, 0.032), activeBalMat);
       glass.position.set(0, 0.48, zSide);
       incline.add(glass);
 
@@ -152,9 +168,10 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     root.add(g);
 
     // Horizontal Top & Bottom Grooved Stainless Comb Landing Plates + Yellow Comb Teeth + Curved Handrail Newels!
+    const dirSign = dx >= 0 ? 1 : -1;
     for (const endInfo of [
-      { x: bank.xStart - 0.56, y: y0, isEntry: bank.direction === 1, sign: -1 },
-      { x: bank.xEnd + 0.56, y: y1, isEntry: bank.direction === -1, sign: 1 }
+      { x: bank.xStart - dirSign * 0.56, y: y0, isEntry: bank.direction === 1, sign: -dirSign },
+      { x: bank.xEnd + dirSign * 0.56, y: y1, isEntry: bank.direction === -1, sign: dirSign }
     ]) {
       const plate = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.05, bank.width * 1.02), combPlateMat);
       plate.position.set(endInfo.x, endInfo.y + 0.015, bank.z);
@@ -215,7 +232,7 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
         stepDummy.updateMatrix();
         instSteps.setMatrixAt(idx, stepDummy.matrix);
 
-        stepDummy.position.set(sx - 0.185, sy + 0.114, esc.z);
+        stepDummy.position.set(sx - (esc.dx >= 0 ? 0.185 : -0.185), sy + 0.114, esc.z);
         stepDummy.scale.set(1.0, 1.0, 1.0);
         stepDummy.updateMatrix();
         instStepTrims.setMatrixAt(idx, stepDummy.matrix);

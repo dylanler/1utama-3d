@@ -23,7 +23,8 @@ import {
   createBowlingScoreTexture,
   createStrikeZoneTexture,
   createWayfindingTexture,
-  createSilverMosaicMaps
+  createSilverMosaicMaps,
+  createRainforestBridgeStripeTexture
 } from '../graphics/proceduralTextures.js';
 import {
   createKoiPondWaterMaterial,
@@ -1475,364 +1476,480 @@ export function buildIconicAttractions(scene, interactables) {
     }
   }
 
-  {
-    const gBridge = new THREE.Group();
-    gBridge.position.set(38.0, 6.0, 0);
-    const gDeck = new THREE.Mesh(new THREE.BoxGeometry(3.55, 0.36, 26.15), plankMat);
-    gDeck.position.y = -0.17;
-    gDeck.receiveShadow = true;
-    gBridge.add(gDeck);
-    // Substantial Structural Steel Girder Fascia + Warm Timber Underside Soffit (ZERO paper-thin bridge slab in Shot 3!)
-    const soffitMat = new THREE.MeshStandardMaterial({ color: '#9c724c', emissive: '#452b16', emissiveIntensity: 0.32, roughness: 0.62 });
-    const soffitPanel = new THREE.Mesh(new THREE.BoxGeometry(3.40, 0.18, 25.8), soffitMat);
-    soffitPanel.position.y = -0.44;
-    gBridge.add(soffitPanel);
-    const soffitLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.12, 0.84, 0.44) });
-    for (const xSide of [-1.56, 1.56]) {
-      const underLed = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.04, 25.6), soffitLedMat);
-      underLed.position.set(xSide, -0.54, 0);
-      gBridge.add(underLed);
+  // ==========================================================================
+  // 1B. REAL 1 UTAMA OPEN-AIR RAINFOREST: 2F SUSPENSION BRIDGE, A-FRAME PYLON,
+  //     TWIN-FORKED CURVED TUBULAR ARCHES, BROADLEAF CANOPY, AERIAL ROOTS & TREETOP ADVENTURE!
+  //     (100% Photo-Exact to media_1795337629668_975ac4eb.jpg + 2025 Video #008-#020, #348-#358!)
+  // ==========================================================================
+
+  // Lush Broadleaf Tropical Rainforest Tree Generator (Full sunlit emerald/chartreuse leafy crowns framing BOTH sides of 2F bridge!)
+  const broadleafMats = [
+    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#3b8c32', alphaTest: 0.36, roughness: 0.68, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#63b33a', alphaTest: 0.36, roughness: 0.64, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#246628', alphaTest: 0.36, roughness: 0.72, side: THREE.DoubleSide })
+  ];
+  const broadleafCardGeo = new THREE.PlaneGeometry(2.35, 2.35);
+  function addBroadleafRainforestTree(tx, tz, trunkH, crownR, seed) {
+    const tg = new THREE.Group();
+    tg.position.set(tx, -0.35, tz);
+    // Curved natural rainforest trunk rising from LG pond floor up past 2F bridge
+    const leanX = Math.sin(seed * 3.7) * 0.85;
+    const leanZ = Math.cos(seed * 2.9) * 0.65;
+    const trunkCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(leanX * 0.45, trunkH * 0.48, leanZ * 0.45),
+      new THREE.Vector3(leanX, trunkH, leanZ)
+    ]);
+    const trunk = new THREE.Mesh(new THREE.TubeGeometry(trunkCurve, 12, 0.24, 8, false), botMats.trunkMat);
+    trunk.castShadow = true;
+    tg.add(trunk);
+    // 3 spreading upper limbs supporting dense multi-layered leafy broadleaf foliage clusters
+    const crownAnchors = [
+      new THREE.Vector3(leanX, trunkH, leanZ),
+      new THREE.Vector3(leanX + Math.cos(seed) * crownR * 0.48, trunkH - 1.4, leanZ + Math.sin(seed) * crownR * 0.48),
+      new THREE.Vector3(leanX + Math.cos(seed + 2.1) * crownR * 0.52, trunkH - 2.3, leanZ + Math.sin(seed + 2.1) * crownR * 0.52),
+      new THREE.Vector3(leanX + Math.cos(seed + 4.2) * crownR * 0.45, trunkH - 0.8, leanZ + Math.sin(seed + 4.2) * crownR * 0.45)
+    ];
+    for (let bi = 1; bi < crownAnchors.length; bi++) {
+      const limbCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(leanX * 0.75, trunkH - 3.6, leanZ * 0.75),
+        crownAnchors[bi]
+      ]);
+      tg.add(new THREE.Mesh(new THREE.TubeGeometry(limbCurve, 6, 0.09, 6, false), botMats.trunkMat));
     }
-    const ribSilverMat = new THREE.MeshStandardMaterial({ color: '#9aa7b8', roughness: 0.28, metalness: 0.84 });
-    for (let rz = -11.5; rz <= 11.5; rz += 2.3) {
-      const crossRib = new THREE.Mesh(new THREE.BoxGeometry(3.82, 0.22, 0.18), ribSilverMat);
-      crossRib.position.set(0, -0.46, rz);
-      gBridge.add(crossRib);
+    for (let ci = 0; ci < crownAnchors.length; ci++) {
+      const anc = crownAnchors[ci];
+      for (let lf = 0; lf < 7; lf++) {
+        const ang = (lf / 7) * Math.PI * 2 + seed + ci;
+        const rad = (lf === 0 ? 0.1 : 0.42 + (lf % 3) * 0.36) * crownR * 0.55;
+        const card = new THREE.Mesh(broadleafCardGeo, broadleafMats[(lf + ci + Math.round(seed * 7)) % broadleafMats.length]);
+        card.position.set(anc.x + Math.cos(ang) * rad, anc.y + ((lf % 3) - 1) * 0.72, anc.z + Math.sin(ang) * rad);
+        card.rotation.set(((lf % 3) - 1) * 0.55, ang, Math.sin(lf + seed) * 0.45);
+        card.scale.setScalar(0.88 + (lf % 3) * 0.24);
+        tg.add(card);
+      }
     }
-    for (const zEnd of [-13.0, 13.0]) {
-      const abut = new THREE.Mesh(new THREE.BoxGeometry(3.92, 0.64, 0.48), ribSilverMat);
-      abut.position.set(0, -0.32, zEnd);
-      gBridge.add(abut);
-    }
-    // Ultra-clear low-iron glass balustrade (depthWrite: false, opacity: 0.22) + warm upper-bridge walker fill lighting (ZERO dark ghost silhouettes!)
-    const clearBridgeGlassMat = new THREE.MeshPhysicalMaterial({
-      color: '#eef8ff',
-      transparent: true,
-      opacity: 0.22,
-      roughness: 0.04,
-      metalness: 0.04,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.04,
-      envMapIntensity: 0.75,
-      depthWrite: false,
-      side: THREE.FrontSide
-    });
-    for (const xSide of [-1.74, 1.74]) {
-      const stringer = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.56, 26.15), ribSilverMat);
-      stringer.position.set(xSide, -0.26, 0);
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.96, 26.0), clearBridgeGlassMat);
-      rail.position.set(xSide, 0.52, 0);
-      const capRail = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 26.0), brassMat);
-      capRail.position.set(xSide, 1.04, 0);
-      gBridge.add(stringer, rail, capRail);
-    }
-    for (const bz of [-6.5, 0, 6.5]) {
-      const gBridgeWarm = new THREE.PointLight('#ffe8c4', 6.5, 16, 1.5);
-      gBridgeWarm.position.set(0, 2.35, bz);
-      gBridge.add(gBridgeWarm);
-    }
-    rainforestGroup.add(gBridge);
-    interactables.push({
-      id: 'g-canopy-bridge-koi',
-      position: new THREE.Vector3(38.0, 7.3, 0),
-      radius: 10.5,
-      priority: 3,
-      prompt: '[E] Drop Koi Pellets from G Rainforest Canopy Bridge (+150 UPoints)',
-      actionType: 'feed-koi',
-      stampId: 'spawn-koi-pond'
-    });
+    rainforestGroup.add(tg);
   }
 
-  // 2F ICONIC RAINBOW SUSPENSION BRIDGE (y = 18.0, x = 38) — Far-end anchor posts lowered cleanly below FOOD DISTRICT fascia (100% unobstructed D from 2F-07!)
+  // Lush leafy rainforest trees framing BOTH LEFT (+X in 2F-07) & RIGHT (-X in 2F-07) flanks of the 2F suspension bridge (strictly outside bridge x=36..40!)
+  const broadleafSpots = [
+    { x: 32.8, z: -5.4, h: 21.8, r: 3.8, s: 1.1 },
+    { x: 32.4, z: 3.6, h: 20.4, r: 3.5, s: 2.3 },
+    { x: 31.2, z: -9.2, h: 19.6, r: 3.2, s: 3.7 },
+    { x: 43.2, z: -4.2, h: 21.2, r: 3.8, s: 4.5 },
+    { x: 43.8, z: 4.8, h: 20.8, r: 3.7, s: 5.9 },
+    { x: 44.6, z: -9.0, h: 19.2, r: 3.3, s: 6.4 },
+    { x: 26.8, z: -3.2, h: 22.4, r: 4.1, s: 7.2 },
+    { x: 49.4, z: 1.8, h: 22.0, r: 4.0, s: 8.8 },
+    { x: 33.8, z: 8.6, h: 19.0, r: 3.0, s: 9.4 },
+    { x: 42.4, z: 8.8, h: 18.8, r: 3.1, s: 10.2 }
+  ];
+  for (const bt of broadleafSpots) {
+    addBroadleafRainforestTree(bt.x, bt.z, bt.h, bt.r, bt.s);
+  }
+
+  // Iconic Curtains of Long Hanging Brown Aerial Roots (Cissus / Princess Vine Curtains — Verified #010, #016!)
+  const aerialRootMat = new THREE.MeshStandardMaterial({ color: '#6b4528', roughness: 0.92, metalness: 0.0 });
+  const rootCurtainAnchors = [
+    { x: 22.8, z: -8.6, w: 4.2, yTop: 22.4, drop: 11.5 },
+    { x: 53.2, z: -8.4, w: 4.4, yTop: 22.4, drop: 11.0 },
+    { x: 22.8, z: 8.6, w: 4.0, yTop: 22.4, drop: 10.5 },
+    { x: 53.2, z: 8.4, w: 4.2, yTop: 22.4, drop: 11.2 }
+  ];
+  for (const rc of rootCurtainAnchors) {
+    for (let r = 0; r < 14; r++) {
+      const t = (r / 13) - 0.5;
+      const len = rc.drop * (0.68 + ((r * 37) % 10) * 0.04);
+      const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.008, len, 4), aerialRootMat);
+      strand.position.set(rc.x + t * rc.w, rc.yTop - len * 0.5, rc.z + Math.sin(r * 1.9) * 0.35);
+      rainforestGroup.add(strand);
+    }
+  }
+
+  // TREETOP ADVENTURE (by Camp5 Climbing Gym — Verified #014, #018, #348, #353, #358!)
+  // Iconic yellow steel vertical poles (#e5a922), round white checker-plate platforms, suspended rope bridges, hanging black car tires & glowing green wall sign!
+  {
+    const ttPoleMat = new THREE.MeshStandardMaterial({ color: '#e5a922', roughness: 0.34, metalness: 0.45 });
+    const ttPlatMat = new THREE.MeshStandardMaterial({ color: '#e6e4de', roughness: 0.48, metalness: 0.25 });
+    const ttRopeMat = new THREE.MeshStandardMaterial({ color: '#c4b89e', roughness: 0.88 });
+    const ttTireMat = new THREE.MeshStandardMaterial({ color: '#1b1d22', roughness: 0.78 });
+    const ttPoles = [
+      { x: 29.5, z: -3.4, h: 14.2 },
+      { x: 33.4, z: 4.8, h: 13.8 },
+      { x: 43.4, z: -2.6, h: 14.5 },
+      { x: 47.0, z: 4.6, h: 13.6 }
+    ];
+    for (const p of ttPoles) {
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, p.h, 12), ttPoleMat);
+      pole.position.set(p.x, p.h * 0.5 - 0.4, p.z);
+      rainforestGroup.add(pole);
+      for (const py of [6.8, 11.4]) {
+        const plat = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 0.92, 0.10, 20), ttPlatMat);
+        plat.position.set(p.x, py, p.z);
+        const rim = new THREE.Mesh(new THREE.TorusGeometry(0.92, 0.03, 6, 20), ttPoleMat);
+        rim.rotation.x = Math.PI / 2;
+        rim.position.set(p.x, py + 0.05, p.z);
+        rainforestGroup.add(plat, rim);
+      }
+    }
+    // Suspended rope-net obstacle bridges connecting yellow poles at y = 7.0 & y = 11.6
+    const ropePairs = [
+      [ttPoles[0], ttPoles[1], 7.0],
+      [ttPoles[2], ttPoles[3], 7.2],
+      [ttPoles[0], ttPoles[2], 11.6]
+    ];
+    for (const [pa, pb, ry] of ropePairs) {
+      const dist = Math.hypot(pb.x - pa.x, pb.z - pa.z);
+      const ang = Math.atan2(pb.x - pa.x, pb.z - pa.z);
+      const rg = new THREE.Group();
+      rg.position.set((pa.x + pb.x) * 0.5, ry, (pa.z + pb.z) * 0.5);
+      rg.rotation.y = ang;
+      for (const sx of [-0.46, 0.46]) {
+        const topRope = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, dist, 6), ttRopeMat);
+        topRope.rotation.x = Math.PI / 2;
+        topRope.position.set(sx, 1.05, 0);
+        const botRope = topRope.clone();
+        botRope.position.y = 0.06;
+        rg.add(topRope, botRope);
+      }
+      const slats = Math.max(8, Math.floor(dist / 0.58));
+      for (let s = 0; s < slats; s++) {
+        const tz = -dist * 0.45 + (s / (slats - 1)) * dist * 0.90;
+        const slat = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.04, 0.20), plankMat);
+        slat.position.set(0, 0.02, tz);
+        rg.add(slat);
+        if (s % 3 === 1) {
+          const tire = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.11, 8, 16), ttTireMat);
+          tire.position.set(0, 0.72, tz);
+          rg.add(tire);
+        }
+      }
+      rainforestGroup.add(rg);
+    }
+    // Glowing green TREETOP ADVENTURE sign mounted on GF/1F Rainforest terracotta balcony (#348!)
+    const ttSignMat = new THREE.MeshBasicMaterial({
+      map: createSignBoardTexture('TREETOP ADVENTURE', 'BY CAMP5 CLIMBING • HIGH ROPES IN THE RAINFOREST', '#14532d', '#fef08a', '#4ade80', 1024, 192)
+    });
+    const ttSign = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.96, 0.12), [ttPoleMat, ttPoleMat, ttPoleMat, ttPoleMat, ttSignMat, ttSignMat]);
+    ttSign.position.set(27.5, 11.4, -12.85);
+    rainforestGroup.add(ttSign);
+  }
+
+  // ==========================================================================
+  // 2F ICONIC OPEN-AIR RAINFOREST SUSPENSION BRIDGE ("RAINBOW BRIDGE")
+  // (100% Photo-Exact to media_1795337629668_975ac4eb.jpg & Video #009, #019, #020!)
+  // ==========================================================================
   const bridgeGroup = new THREE.Group();
   bridgeGroup.position.set(38.0, 18.0, 0);
   rainforestGroup.add(bridgeGroup);
 
-  const nearPostH = 3.25;
-  const farPostH = 2.48; // Projects strictly below y=21.0 at z=+23.2 -> FOOD DISTRICT sign 100% unobstructed!
-  const getRainbowCableY = (u) => {
-    const endH = (nearPostH - 0.12) * (1 - u) + (farPostH - 0.08) * u;
-    return 1.18 + (endH - 1.18) * Math.pow((u - 0.5) * 2, 2);
-  };
-
-  for (const zEnd of [-13.4, 13.4]) {
-    const isFar = zEnd > 0;
-    const pH = isFar ? farPostH : nearPostH;
-    for (const xSide of [-1.76, 1.76]) {
-      const pylon = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.145, pH, 12), steelDarkMat);
-      pylon.position.set(xSide, pH * 0.5, zEnd);
-      pylon.castShadow = true;
-      const anchorCap = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.115, 0.12, 12), brassMat);
-      anchorCap.position.set(xSide, pH + 0.04, zEnd);
-      bridgeGroup.add(pylon, anchorCap);
-    }
-    // Keep overhead tie-bar ONLY on near entry pylon (behind 2F-07 camera), leaving far vista to FOOD DISTRICT 100% open!
-    if (!isFar) {
-      const crossBar = new THREE.Mesh(new THREE.BoxGeometry(3.80, 0.18, 0.18), steelDarkMat);
-      crossBar.position.set(0, pH - 0.12, zEnd);
-      crossBar.castShadow = true;
-      bridgeGroup.add(crossBar);
-    }
-  }
-
-  // Sleek Brushed-Aluminum LED Edge Channels + Stainless Safety Handrail & Tension Cables
-  const bridgeLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.05, 0.78, 0.42) });
-  const brushedCableMat = new THREE.MeshStandardMaterial({ color: '#c4ceda', roughness: 0.24, metalness: 0.88, envMapIntensity: 1.05 });
-  const alumChannelMat = new THREE.MeshStandardMaterial({ color: '#bfc8d4', roughness: 0.22, metalness: 0.88, envMapIntensity: 1.10 });
-  for (const xSide of [-1.72, 1.72]) {
-    const channelOuter = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.26, 27.0), alumChannelMat);
-    channelOuter.position.set(xSide, -0.04, 0);
-    const channelLip = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.045, 27.0), alumChannelMat);
-    channelLip.position.set(xSide * 0.98, 0.095, 0);
-    const edgeLed = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.032, 26.4), bridgeLedMat);
-    edgeLed.position.set(xSide * 0.925, 0.072, 0);
-    // Mid-height architectural stainless safety handrail + 3 horizontal steel safety tension cables (ZERO open fall gaps!)
-    const handrail = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 26.8, 10), brushedCableMat);
-    handrail.rotation.x = Math.PI / 2;
-    handrail.position.set(xSide, 1.02, 0);
-    bridgeGroup.add(channelOuter, channelLip, edgeLed, handrail);
-    for (const wy of [0.30, 0.54, 0.78]) {
-      const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 26.8, 6), brushedCableMat);
-      wire.rotation.x = Math.PI / 2;
-      wire.position.set(xSide, wy, 0);
-      bridgeGroup.add(wire);
-    }
-
-    const cablePts = [];
-    for (let i = 0; i <= 40; i++) {
-      const u = i / 40;
-      const z = -13.4 + u * 26.8;
-      cablePts.push(new THREE.Vector3(xSide, getRainbowCableY(u), z));
-    }
-    const cableGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(cablePts), 56, 0.056, 14, false);
-    bridgeGroup.add(new THREE.Mesh(cableGeo, brushedCableMat));
-  }
-
-  // Warm overhead illumination on 2F Rainbow Bridge so bridge walkers read crisply
-  for (const bz of [-6.0, 4.0]) {
-    const rbWarm = new THREE.PointLight('#ffe8c4', 5.5, 16, 1.5);
-    rbWarm.position.set(0, 2.55, bz);
-    bridgeGroup.add(rbWarm);
-  }
-
-  // Crisp 3D Beveled Wooden Deck Planks (ExtrudeGeometry chamfered slat + recessed dark shadow slot — NOT flat painted lines!)
-  const plankShape = new THREE.Shape();
-  const pw = 0.80;
-  const ph = 0.12;
-  const bev = 0.022;
-  plankShape.moveTo(-pw * 0.5, -ph * 0.5);
-  plankShape.lineTo(pw * 0.5, -ph * 0.5);
-  plankShape.lineTo(pw * 0.5, ph * 0.5 - bev);
-  plankShape.lineTo(pw * 0.5 - bev, ph * 0.5);
-  plankShape.lineTo(-pw * 0.5 + bev, ph * 0.5);
-  plankShape.lineTo(-pw * 0.5, ph * 0.5 - bev);
-  plankShape.closePath();
-  const beveledPlankGeo = new THREE.ExtrudeGeometry(plankShape, {
-    depth: 3.44,
-    bevelEnabled: true,
-    bevelSegments: 2,
-    steps: 1,
-    bevelSize: 0.012,
-    bevelThickness: 0.014
+  const bridgeSpan = 26.8;
+  const bridgeStripeTex = createRainforestBridgeStripeTexture();
+  const bridgeDeckMat = new THREE.MeshStandardMaterial({
+    map: bridgeStripeTex,
+    color: '#ffffff',
+    roughness: 0.42,
+    metalness: 0.06,
+    envMapIntensity: 0.65
   });
-  beveledPlankGeo.center();
-  beveledPlankGeo.rotateY(Math.PI / 2);
-  // Normalize UVs to true world-meter coordinates (U along plank span X, V across plank width Z) for crisp wood-grain!
-  {
-    const pAttr = beveledPlankGeo.attributes.position;
-    const uvAttr = beveledPlankGeo.attributes.uv;
-    for (let ui = 0; ui < pAttr.count; ui++) {
-      uvAttr.setXY(ui, pAttr.getX(ui) * 0.42 + 0.5, pAttr.getZ(ui) * 0.85 + 0.5);
+  const bridgeCurbMat = new THREE.MeshStandardMaterial({ color: '#e2dfd8', roughness: 0.46, metalness: 0.08 });
+  const bridgeGirderMat = new THREE.MeshStandardMaterial({ color: '#b4bcc4', roughness: 0.28, metalness: 0.76, envMapIntensity: 1.05 });
+  const chromeRailMat = new THREE.MeshStandardMaterial({ color: '#eef2f6', roughness: 0.12, metalness: 0.94, envMapIntensity: 1.55 });
+  const darkArchSteelMat = new THREE.MeshStandardMaterial({ color: '#454b52', roughness: 0.34, metalness: 0.80, envMapIntensity: 1.10 });
+  const blackPylonMat = new THREE.MeshStandardMaterial({ color: '#1b1f24', roughness: 0.38, metalness: 0.78, envMapIntensity: 0.92 });
+  const blackCableMat = new THREE.MeshStandardMaterial({ color: '#1a1e24', roughness: 0.42, metalness: 0.72 });
+
+  // 1. Clean Light-Cream & Dark-Grey Transverse Striped Terrazzo Deck (2.74m wide) + Raised Sloped Curbs + Silver Structural Girders!
+  const deckSlab = new THREE.Mesh(new THREE.BoxGeometry(2.74, 0.22, bridgeSpan), bridgeDeckMat);
+  deckSlab.position.set(0, -0.09, 0);
+  deckSlab.receiveShadow = true;
+  bridgeGroup.add(deckSlab);
+
+  const underSoffit = new THREE.Mesh(new THREE.BoxGeometry(3.38, 0.18, bridgeSpan), bridgeGirderMat);
+  underSoffit.position.set(0, -0.28, 0);
+  bridgeGroup.add(underSoffit);
+
+  for (const s of [-1, 1]) {
+    // Raised smooth light-cream concrete side curb flanking the striped walkway
+    const curb = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.24, bridgeSpan), bridgeCurbMat);
+    curb.position.set(s * 1.52, 0.06, 0);
+    // Slanted brushed-silver exterior fascia girder
+    const girder = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.44, bridgeSpan), bridgeGirderMat);
+    girder.position.set(s * 1.72, -0.06, 0);
+    girder.rotation.z = s * -0.14;
+    bridgeGroup.add(curb, girder);
+  }
+
+  // 2. Gently Flared Polished Chrome Tubular Top Handrails + 5 Horizontal Stainless Wire Cables + Vertical Stanchions + Outrigger Brackets!
+  const railFlare = (z) => {
+    const u = Math.abs(z) / (bridgeSpan * 0.5);
+    return 1.56 + Math.pow(Math.max(0, (u - 0.55) / 0.45), 2.0) * 0.42;
+  };
+  for (const s of [-1, 1]) {
+    const topRailPts = [];
+    const subRailPts = [];
+    const wirePtsArr = [[], [], [], [], []];
+    const wireYs = [0.28, 0.44, 0.60, 0.76, 0.92];
+    for (let i = 0; i <= 36; i++) {
+      const z = -bridgeSpan * 0.5 + (i / 36) * bridgeSpan;
+      const rx = s * railFlare(z);
+      topRailPts.push(new THREE.Vector3(rx, 1.12, z));
+      subRailPts.push(new THREE.Vector3(rx * 0.985, 1.02, z));
+      for (let w = 0; w < 5; w++) {
+        wirePtsArr[w].push(new THREE.Vector3(s * (railFlare(z) - 0.04), wireYs[w], z));
+      }
     }
-    uvAttr.needsUpdate = true;
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(topRailPts), 44, 0.044, 12, false), chromeRailMat));
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(subRailPts), 44, 0.018, 8, false), chromeRailMat));
+    for (let w = 0; w < 5; w++) {
+      bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(wirePtsArr[w]), 36, 0.0085, 6, false), chromeRailMat));
+    }
+
+    // Brushed-steel rectangular vertical stanchions + cantilevered horizontal cable outrigger arms (#019!)
+    for (let p = 0; p <= 12; p++) {
+      const z = -bridgeSpan * 0.46 + (p / 12) * (bridgeSpan * 0.92);
+      const rx = s * railFlare(z);
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.055, 1.04, 0.065), bridgeGirderMat);
+      post.position.set(rx - s * 0.04, 0.58, z);
+      const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.045, 0.055), chromeRailMat);
+      bracket.position.set(rx, 1.06, z);
+      const outrigger = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.075, 0.085), bridgeGirderMat);
+      outrigger.position.set(s * 1.94, 0.06, z);
+      bridgeGroup.add(post, bracket, outrigger);
+    }
   }
 
-  // Procedural weathered tropical merbau timber plank grain texture (rich fibrous grain + natural weathering)
-  const rbPlankC = document.createElement('canvas');
-  rbPlankC.width = 512;
-  rbPlankC.height = 256;
-  const rbpCtx = rbPlankC.getContext('2d');
-  rbpCtx.fillStyle = '#9b6a3e';
-  rbpCtx.fillRect(0, 0, 512, 256);
-  for (let g = 0; g < 180; g++) {
-    const gy = (g * 7.3) % 256;
-    const gh = 1.5 + (g % 3);
-    rbpCtx.fillStyle = g % 3 === 0 ? 'rgba(62, 36, 16, 0.22)' : g % 3 === 1 ? 'rgba(196, 146, 94, 0.16)' : 'rgba(116, 86, 58, 0.14)';
-    rbpCtx.fillRect(0, gy, 512, gh);
+  // 3. TALL BLACK TAPERED A-FRAME STEEL LATTICE MAST / PYLON AT FAR END (z = +11.6)
+  //    (Exact Iconic Centerpiece Silhouette of media_1795337629668_975ac4eb.jpg & #009!)
+  const pylonZ = 11.4;
+  for (const s of [-1, 1]) {
+    const legCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(s * 1.95, -0.4, pylonZ + 0.5),
+      new THREE.Vector3(s * 1.25, 3.8, pylonZ + 0.25),
+      new THREE.Vector3(s * 0.72, 7.6, pylonZ),
+      new THREE.Vector3(s * 0.52, 11.6, pylonZ - 0.15),
+      new THREE.Vector3(s * 0.36, 15.8, pylonZ - 0.30)
+    ]);
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(legCurve, 24, 0.135, 10, false), blackPylonMat));
   }
-  for (let k = 0; k < 14; k++) {
-    const kx = 40 + ((k * 97) % 430);
-    const ky = 18 + ((k * 53) % 220);
-    rbpCtx.strokeStyle = 'rgba(54, 30, 14, 0.24)';
-    rbpCtx.lineWidth = 2;
-    rbpCtx.beginPath();
-    rbpCtx.ellipse(kx, ky, 18 + (k % 3) * 8, 5 + (k % 2) * 3, 0, 0, Math.PI * 2);
-    rbpCtx.stroke();
-  }
-  const rbPlankTex = new THREE.CanvasTexture(rbPlankC);
-  rbPlankTex.colorSpace = THREE.SRGBColorSpace;
-  rbPlankTex.wrapS = rbPlankTex.wrapT = THREE.RepeatWrapping;
-  rbPlankTex.anisotropy = 8;
-
-  const plankDarkGrooveMat = new THREE.MeshStandardMaterial({ color: '#1c120b', roughness: 0.94 });
-  const deckPlankWarmMats = [
-    new THREE.MeshStandardMaterial({ color: '#b88556', map: rbPlankTex, normalMap: bridgeTeakMaps.normalMap, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.78, metalness: 0.02, envMapIntensity: 0.35 }),
-    new THREE.MeshStandardMaterial({ color: '#a67448', map: rbPlankTex, normalMap: bridgeTeakMaps.normalMap, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.82, metalness: 0.02, envMapIntensity: 0.32 }),
-    new THREE.MeshStandardMaterial({ color: '#c49264', map: rbPlankTex, normalMap: bridgeTeakMaps.normalMap, normalScale: new THREE.Vector2(0.75, 0.75), roughness: 0.76, metalness: 0.02, envMapIntensity: 0.35 })
+  // Horizontal A-frame lattice rungs & diagonal X-bracing struts up the pylon
+  const rungLevels = [
+    { y: 2.6, hw: 1.48 },
+    { y: 4.4, hw: 1.16 },
+    { y: 6.2, hw: 0.88 },
+    { y: 8.0, hw: 0.68 },
+    { y: 9.8, hw: 0.58 },
+    { y: 11.8, hw: 0.50 },
+    { y: 13.8, hw: 0.42 }
   ];
-  const rainbowHex = ['#b81d48', '#c8501c', '#b87614', '#0e7c58', '#0e7496', '#2852b8', '#6838b8'];
-  const bridgePlanks = [];
-  const shackleGeo = new THREE.CylinderGeometry(0.052, 0.052, 0.14, 10);
-  for (let i = 0; i < 28; i++) {
-    const u = (i + 0.5) / 28;
-    const z = -13.3 + u * 26.6;
-    const plankGroup = new THREE.Group();
-    const plankSlats = new THREE.Mesh(beveledPlankGeo, deckPlankWarmMats[i % deckPlankWarmMats.length]);
-    plankSlats.receiveShadow = true;
-    plankSlats.castShadow = true;
-    const slotBase = new THREE.Mesh(new THREE.BoxGeometry(3.40, 0.04, 0.94), plankDarkGrooveMat);
-    slotBase.position.y = -0.065;
-    plankGroup.add(plankSlats, slotBase);
-    plankGroup.position.set(0, -0.02, z);
-    bridgeGroup.add(plankGroup);
-    bridgePlanks.push({ mesh: plankGroup, u });
-
-    const hMat = new THREE.MeshPhysicalMaterial({
-      color: rainbowHex[i % rainbowHex.length],
-      emissive: rainbowHex[i % rainbowHex.length],
-      emissiveIntensity: 0.14,
-      roughness: 0.28,
-      metalness: 0.78,
-      clearcoat: 0.70,
-      clearcoatRoughness: 0.18,
-      envMapIntensity: 0.92
-    });
-    const cableY = getRainbowCableY(u);
-    for (const xSide of [-1.72, 1.72]) {
-      const hanger = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, cableY, 10), hMat);
-      hanger.position.set(xSide, cableY * 0.5, z);
-      const botShackle = new THREE.Mesh(shackleGeo, brassMat);
-      botShackle.position.set(xSide, 0.11, z);
-      const midClamp = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.08, 8), steelDarkMat);
-      midClamp.position.set(xSide, 1.02, z);
-      const topShackle = new THREE.Mesh(shackleGeo, brassMat);
-      topShackle.position.set(xSide, cableY - 0.04, z);
-      bridgeGroup.add(hanger, botShackle, midClamp, topShackle);
+  for (let ri = 0; ri < rungLevels.length; ri++) {
+    const rl = rungLevels[ri];
+    const rung = new THREE.Mesh(new THREE.BoxGeometry(rl.hw * 2.05, 0.12, 0.14), blackPylonMat);
+    rung.position.set(0, rl.y, pylonZ + (ri < 2 ? 0.22 : 0.0));
+    bridgeGroup.add(rung);
+    if (ri < rungLevels.length - 1) {
+      const rn = rungLevels[ri + 1];
+      for (const dir of [-1, 1]) {
+        const pA = new THREE.Vector3(dir * rl.hw, rl.y, pylonZ);
+        const pB = new THREE.Vector3(-dir * rn.hw, rn.y, pylonZ);
+        const diagCurve = new THREE.LineCurve3(pA, pB);
+        bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(diagCurve, 4, 0.048, 6, false), blackPylonMat));
+      }
     }
   }
 
-  // Architectural Heritage Cast-Bronze Canopy Eco-Bell cleanly mounted on the RIGHT flank (-X in 2F-07) with dark contact-shadow AO decal!
-  {
-    const bellG = new THREE.Group();
-    bellG.position.set(-1.42, 0.04, -5.8);
-    addShadow(bellG, 0.04, 0.015, 0, 0.85, 0.85);
-    const bellAoDisc = new THREE.Mesh(
-      new THREE.CircleGeometry(0.30, 20),
-      new THREE.MeshBasicMaterial({ color: '#140e08', transparent: true, opacity: 0.44, depthWrite: false })
-    );
-    bellAoDisc.rotation.x = -Math.PI / 2;
-    bellAoDisc.position.y = 0.012;
-    bellG.add(bellAoDisc);
-    const castIronMat = new THREE.MeshStandardMaterial({ color: '#24272d', roughness: 0.42, metalness: 0.82 });
-    const bronzeBellMat = new THREE.MeshStandardMaterial({ color: '#9c7838', roughness: 0.34, metalness: 0.78, envMapIntensity: 0.82 });
-    const brushedBrassYokeMat = new THREE.MeshStandardMaterial({ color: '#9c7838', roughness: 0.36, metalness: 0.76, envMapIntensity: 0.78 });
-    const bellTimberMat = deckPlankWarmMats[1];
-    const ropeCreamMat = new THREE.MeshStandardMaterial({ color: '#dfd2bc', roughness: 0.88 });
-
-    const flange = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.19, 0.07, 16), castIronMat);
-    flange.position.y = 0.035;
-    const brassCollarBot = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.12, 0.08, 12), brushedBrassYokeMat);
-    brassCollarBot.position.y = 0.10;
-    const bPost = new THREE.Mesh(new THREE.BoxGeometry(0.115, 1.46, 0.115), bellTimberMat);
-    bPost.position.y = 0.80;
-    bPost.castShadow = true;
-
-    // Refined Tiered Aged-Bronze Pagoda Roof Cap crowning the Eco-Bell post!
-    const pagodaLower = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.16, 4), brushedBrassYokeMat);
-    pagodaLower.rotation.y = Math.PI * 0.25;
-    pagodaLower.position.set(0, 1.58, 0);
-    const pagodaNeck = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.07, 0.13), castIronMat);
-    pagodaNeck.position.set(0, 1.66, 0);
-    const pagodaUpper = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.14, 4), brushedBrassYokeMat);
-    pagodaUpper.rotation.y = Math.PI * 0.25;
-    pagodaUpper.position.set(0, 1.75, 0);
-    const pagodaFinial = new THREE.Mesh(new THREE.SphereGeometry(0.038, 10, 8), bronzeBellMat);
-    pagodaFinial.position.set(0, 1.84, 0);
-
-    // Cantilevered sculpted timber + aged-bronze bracket arm extending inward (+X)
-    const bArm = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.09, 0.09), bellTimberMat);
-    bArm.position.set(0.22, 1.44, 0);
-    bArm.castShadow = true;
-    const kneeBrace = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.065, 0.065), brushedBrassYokeMat);
-    kneeBrace.position.set(0.16, 1.29, 0);
-    kneeBrace.rotation.z = Math.PI * 0.25;
-    const ironStrap = new THREE.Mesh(new THREE.BoxGeometry(0.145, 0.13, 0.13), brushedBrassYokeMat);
-    ironStrap.position.set(0.0, 1.44, 0);
-
-    // Refined Brushed-Brass Sculpted Yoke (curved twin scroll crown + cast hanger beam!)
-    const yokeBar = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.045, 0.06), brushedBrassYokeMat);
-    yokeBar.position.set(0.38, 1.38, 0);
-    const yokeArch = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.022, 8, 18, Math.PI), brushedBrassYokeMat);
-    yokeArch.position.set(0.38, 1.30, 0);
-    const yokePivot = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.036, 0.09, 12), brushedBrassYokeMat);
-    yokePivot.position.set(0.38, 1.35, 0);
-    for (const sx of [-0.075, 0.075]) {
-      const scrollCheek = new THREE.Mesh(new THREE.SphereGeometry(0.028, 8, 8), brushedBrassYokeMat);
-      scrollCheek.position.set(0.38 + sx, 1.34, 0);
-      bellG.add(scrollCheek);
-    }
-
-    const bellProfile = [
-      new THREE.Vector2(0.018, 0.29),
-      new THREE.Vector2(0.062, 0.265),
-      new THREE.Vector2(0.088, 0.18),
-      new THREE.Vector2(0.115, 0.085),
-      new THREE.Vector2(0.172, 0.022),
-      new THREE.Vector2(0.182, 0.0),
-      new THREE.Vector2(0.155, 0.012)
+  // 4. MASSIVE TWIN-FORKED CURVED DARK-GREY TUBULAR STEEL OVERHEAD ARCH TRUSSES
+  //    Sweeping dramatically overhead across the circular glass rainforest dome (media_1795337629668_975ac4eb.jpg!)
+  const archCurves = { left: null, right: null };
+  for (const s of [-1, 1]) {
+    // Primary grand wishbone tubular steel rib curving from far A-frame pylon UP & OUT across the circular atrium!
+    const mainRibPts = [
+      new THREE.Vector3(s * 1.68, 0.2, 11.5),
+      new THREE.Vector3(s * 1.12, 4.4, 10.6),
+      new THREE.Vector3(s * 1.38, 7.2, 8.8),
+      new THREE.Vector3(s * 4.4, 9.0, 3.8),
+      new THREE.Vector3(s * 8.6, 10.0, -3.2),
+      new THREE.Vector3(s * 12.2, 9.6, -10.4),
+      new THREE.Vector3(s * 14.2, 7.6, -14.8)
     ];
-    const bellMesh = new THREE.Mesh(new THREE.LatheGeometry(bellProfile, 28), bronzeBellMat);
-    bellMesh.position.set(0.38, 1.03, 0);
-    bellMesh.castShadow = true;
-    const soundBowRing = new THREE.Mesh(new THREE.TorusGeometry(0.156, 0.012, 6, 24), brushedBrassYokeMat);
-    soundBowRing.rotation.x = Math.PI / 2;
-    soundBowRing.position.set(0.38, 1.08, 0);
-    const clapper = new THREE.Mesh(new THREE.SphereGeometry(0.036, 10, 10), castIronMat);
-    clapper.position.set(0.38, 1.00, 0);
-    const pullRope = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.010, 0.42, 8), ropeCreamMat);
-    pullRope.position.set(0.38, 0.78, 0);
-    const tassel = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.028, 0.07, 8), bronzeBellMat);
-    tassel.position.set(0.38, 0.55, 0);
-    bellG.add(
-      flange, brassCollarBot, bPost,
-      pagodaLower, pagodaNeck, pagodaUpper, pagodaFinial,
-      bArm, kneeBrace, ironStrap,
-      yokeBar, yokeArch, yokePivot,
-      bellMesh, soundBowRing, clapper, pullRope, tassel
-    );
-    bridgeGroup.add(bellG);
+    const mainRibCurve = new THREE.CatmullRomCurve3(mainRibPts);
+    if (s < 0) archCurves.left = mainRibCurve;
+    else archCurves.right = mainRibCurve;
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(mainRibCurve, 48, 0.27, 14, false), darkArchSteelMat));
+
+    // Secondary forked inner-crown strut meeting the central cross-tie overhead (classic wishbone Y-fork visible top-center of photo!)
+    const forkPts = [
+      new THREE.Vector3(s * 0.72, 7.6, 11.2),
+      new THREE.Vector3(s * 2.15, 8.8, 5.2),
+      new THREE.Vector3(s * 5.2, 10.4, -2.0),
+      new THREE.Vector3(s * 7.8, 10.8, -8.5)
+    ];
+    const forkCurve = new THREE.CatmullRomCurve3(forkPts);
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(forkCurve, 28, 0.19, 10, false), darkArchSteelMat));
   }
+  // Curved overhead tubular cross-tie arches joining left & right wishbone ribs cleanly across the sky dome!
+  const tieConfigs = [
+    { z: -8.2, xSpan: 11.2, yMid: 11.4, yEnd: 9.8, r: 0.24 },
+    { z: -2.2, xSpan: 8.2, yMid: 11.2, yEnd: 9.9, r: 0.22 },
+    { z: 4.2, xSpan: 4.2, yMid: 9.8, yEnd: 8.9, r: 0.18 },
+    { z: 9.6, xSpan: 1.35, yMid: 7.4, yEnd: 7.1, r: 0.14 }
+  ];
+  for (const tc of tieConfigs) {
+    const tieCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-tc.xSpan, tc.yEnd, tc.z),
+      new THREE.Vector3(0, tc.yMid, tc.z - 0.5),
+      new THREE.Vector3(tc.xSpan, tc.yEnd, tc.z)
+    ]);
+    bridgeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(tieCurve, 24, tc.r, 10, false), darkArchSteelMat));
+  }
+
+  // 5. DIAGONAL BLACK STEEL TENSION SUSPENDER CABLES FANNING FROM OVERHEAD CURVED ARCHES DOWN TO BRIDGE DECK!
+  for (let ci = 0; ci < 9; ci++) {
+    const u = 0.08 + (ci / 8) * 0.80;
+    const zDeck = -11.2 + u * 21.8;
+    const tArch = 0.88 - u * 0.68; // Map deck z=-11..+10 cleanly along arch curve back toward pylon!
+    for (const s of [-1, 1]) {
+      const curve = s < 0 ? archCurves.left : archCurves.right;
+      const topPt = curve.getPoint(Math.max(0.12, Math.min(0.92, tArch)));
+      const botPt = new THREE.Vector3(s * 1.96, 0.08, zDeck);
+      const cab = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.LineCurve3(botPt, topPt), 4, 0.024, 6, false),
+        blackCableMat
+      );
+      bridgeGroup.add(cab);
+      // Secondary finer fan cable to outer glass perimeter ring just like media_1795337629668_975ac4eb.jpg!
+      if (ci % 2 === 0) {
+        const outerPt = new THREE.Vector3(s * (8.5 + (1 - u) * 5.2), 7.8 + (1 - u) * 2.2, zDeck - 1.2);
+        const fanCab = new THREE.Mesh(
+          new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(s * 1.98, 0.08, zDeck + 0.5), outerPt), 4, 0.014, 5, false),
+          blackCableMat
+        );
+        bridgeGroup.add(fanCab);
+      }
+    }
+  }
+
+  // Keep bridgePlanks array defined for update() compatibility (zero stray plank sway glitches on smooth terrazzo deck)
+  const bridgePlanks = [];
 
   interactables.push(
     {
       id: 'rainbow-bridge-bell',
-      position: new THREE.Vector3(38.0, 19.1, -6.5),
+      position: new THREE.Vector3(38.0, 19.1, -4.5),
       radius: 9.5,
       priority: 4,
-      prompt: '[E] Ring Canopy Eco-Bell on 2F Rainbow Suspension Bridge (+150 UPoints)',
-      actionType: 'ring-rainbow-bell',
-      stampId: 'spawn-rainbow-bridge-2f'
-    },
-    {
-      id: 'rainbow-bridge-bell-south',
-      position: new THREE.Vector3(38.0, 19.1, 6.5),
-      radius: 9.5,
-      priority: 4,
-      prompt: '[E] Ring Canopy Eco-Bell on 2F Rainbow Suspension Bridge (+150 UPoints)',
+      prompt: '[E] Enjoy Open-Air Rainforest Suspension Bridge Vista (+150 UPoints)',
       actionType: 'ring-rainbow-bell',
       stampId: 'spawn-rainbow-bridge-2f'
     }
   );
+
+  // ==========================================================================
+  // 2B. 2F HIGHSTREET: STARSHIP GALACTICA 2-STOREY NEON SCI-FI PLAYLAND (Verified #148, #171-#172, #190-#191!)
+  // ==========================================================================
+  {
+    const sg = new THREE.Group();
+    sg.position.set(85.0, 18.0, 0.0);
+    const sgDarkMat = new THREE.MeshStandardMaterial({ color: '#141928', roughness: 0.40, metalness: 0.55 });
+    const sgPanelMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.38, metalness: 0.35 });
+    const sgCyanNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.25, 1.9, 2.5), toneMapped: false });
+    const sgPinkNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 0.35, 1.5), toneMapped: false });
+    const sgYellowNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.3, 1.85, 0.32), toneMapped: false });
+    const sgSlideMat = new THREE.MeshStandardMaterial({ color: '#7e22ce', roughness: 0.24, metalness: 0.22 });
+
+    // Elevated sci-fi playland deck spanning inside 2F Highstreet void
+    const sgDeck = new THREE.Mesh(new THREE.BoxGeometry(15.6, 0.24, 9.6), sgDarkMat);
+    sgDeck.position.y = 0.08;
+    sg.add(sgDeck);
+    // Illuminated octagonal spaceship play pods rising 2 full storeys (y = 0..7.8m!)
+    const podA = new THREE.Mesh(new THREE.BoxGeometry(7.2, 4.2, 5.4), sgDarkMat);
+    podA.position.set(1.8, 3.6, -0.6);
+    const podB = new THREE.Mesh(new THREE.BoxGeometry(5.8, 3.4, 4.6), sgPanelMat);
+    podB.position.set(2.4, 6.2, -0.8);
+    // Glowing cyan & magenta neon sci-fi edge ribs
+    for (const py of [1.8, 4.2, 6.6]) {
+      const rib = new THREE.Mesh(new THREE.BoxGeometry(7.35, 0.09, 5.55), py === 4.2 ? sgPinkNeon : sgCyanNeon);
+      rib.position.set(1.8, py, -0.6);
+      sg.add(rib);
+    }
+    // Iconic glowing blue spiral staircase + twisted purple tube slide on left side (#171!)
+    for (let st = 0; st < 22; st++) {
+      const a = st * 0.42;
+      const step = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.07, 0.36), st % 2 === 0 ? sgDarkMat : sgCyanNeon);
+      step.position.set(-4.2 + Math.cos(a) * 0.95, 0.25 + st * 0.24, 0.6 + Math.sin(a) * 0.95);
+      step.rotation.y = -a;
+      sg.add(step);
+    }
+    const slidePts = [];
+    for (let k = 0; k <= 18; k++) {
+      const t = k / 18;
+      slidePts.push(new THREE.Vector3(-2.4 + Math.cos(t * Math.PI * 2.2) * 1.15, 5.4 - t * 4.8, 1.4 + Math.sin(t * Math.PI * 2.2) * 1.15));
+    }
+    const tubeSlide = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(slidePts), 32, 0.48, 12, false), sgSlideMat);
+    // Glowing "GO >>" neon portal frame + STARSHIP GALACTICA marquee sign & ticket counter (#171!)
+    const goSignMat = new THREE.MeshBasicMaterial({
+      map: createSignBoardTexture('STARSHIP GALACTICA', 'GO >>  •  2F HIGHSTREET PLAYLAND', '#0c1636', '#67e8f9', '#facc15', 1024, 256)
+    });
+    const marquee = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.25, 0.16), [sgDarkMat, sgDarkMat, sgDarkMat, sgDarkMat, goSignMat, goSignMat]);
+    marquee.position.set(-4.8, 2.55, 3.8);
+    const tktCounter = new THREE.Mesh(new THREE.BoxGeometry(3.8, 1.04, 1.15), sgPanelMat);
+    tktCounter.position.set(-4.8, 0.62, 3.8);
+    const tktGlow = new THREE.Mesh(new THREE.BoxGeometry(3.86, 0.08, 1.20), sgYellowNeon);
+    tktGlow.position.set(-4.8, 1.16, 3.8);
+    sg.add(podA, podB, tubeSlide, marquee, tktCounter, tktGlow);
+    root.add(sg);
+  }
+
+  // ==========================================================================
+  // 2C. 1 UTAMA E GF: OPEN-AIR GIANT CHESSBOARD COURTYARD & GREEN FACADE FINS (Verified #120, #518!)
+  // ==========================================================================
+  {
+    const chessG = new THREE.Group();
+    chessG.position.set(-139.0, 6.02, 11.4);
+    const sqSize = 0.72;
+    const whiteTileMat = new THREE.MeshStandardMaterial({ color: '#f1f5f9', roughness: 0.24, metalness: 0.04 });
+    const blackTileMat = new THREE.MeshStandardMaterial({ color: '#18181b', roughness: 0.28, metalness: 0.08 });
+    const whitePieceMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.22, metalness: 0.06 });
+    const blackPieceMat = new THREE.MeshStandardMaterial({ color: '#14161a', roughness: 0.24, metalness: 0.14 });
+    const greenFinMat = new THREE.MeshPhysicalMaterial({ color: '#10b981', transparent: true, opacity: 0.56, roughness: 0.30, metalness: 0.22, side: THREE.DoubleSide });
+
+    // 8x8 Giant Checkered Board
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const sq = new THREE.Mesh(new THREE.BoxGeometry(sqSize, 0.03, sqSize), (r + c) % 2 === 0 ? whiteTileMat : blackTileMat);
+        sq.position.set((c - 3.5) * sqSize, 0.015, (r - 3.5) * sqSize);
+        chessG.add(sq);
+      }
+    }
+    // 16 Sculpted Oversized Playable Chess Pieces (LatheGeometry kings, queens, rooks, pawns!)
+    const pieceProfile = [
+      new THREE.Vector2(0.0, 0.0), new THREE.Vector2(0.18, 0.0), new THREE.Vector2(0.16, 0.10),
+      new THREE.Vector2(0.10, 0.24), new THREE.Vector2(0.08, 0.54), new THREE.Vector2(0.13, 0.62),
+      new THREE.Vector2(0.09, 0.74), new THREE.Vector2(0.12, 0.86), new THREE.Vector2(0.0, 0.94)
+    ];
+    const pieceGeo = new THREE.LatheGeometry(pieceProfile, 16);
+    const pieceSpots = [
+      [-2.5, -2.5, 0, 1.05], [-1.8, -2.5, 0, 0.92], [-0.4, -2.5, 0, 1.15], [0.4, -2.5, 0, 1.12], [1.8, -2.5, 0, 0.92], [2.5, -2.5, 0, 1.05],
+      [-1.1, -1.1, 0, 0.80], [0.4, -0.4, 0, 0.82],
+      [-2.5, 2.5, 1, 1.05], [-1.8, 2.5, 1, 0.92], [-0.4, 2.5, 1, 1.15], [0.4, 2.5, 1, 1.12], [1.8, 2.5, 1, 0.92], [2.5, 2.5, 1, 1.05],
+      [-0.4, 0.4, 1, 0.82], [1.1, 1.1, 1, 0.80]
+    ];
+    for (const [px, pz, isW, sc] of pieceSpots) {
+      const pc = new THREE.Mesh(pieceGeo, isW ? whitePieceMat : blackPieceMat);
+      pc.position.set(px, 0.03, pz);
+      pc.scale.setScalar(sc);
+      chessG.add(pc);
+    }
+    // Iconic Slanted Translucent Green Architectural Louver Fins along rear edge (#518!)
+    for (let f = -3; f <= 3; f++) {
+      const fin = new THREE.Mesh(new THREE.BoxGeometry(0.10, 5.2, 0.72), greenFinMat);
+      fin.position.set(f * 0.95, 2.6, 3.6);
+      fin.rotation.z = -0.32;
+      chessG.add(fin);
+    }
+    root.add(chessG);
+  }
 
   // ==========================================================================
   // 2. 1 UTAMA E ATTRACTIONS: LG601 FLOWRIDER, F603A ROLLERWA, S601 WINDLAB
@@ -3754,7 +3871,7 @@ export function buildIconicAttractions(scene, interactables) {
   let festiveIndex = 0;
 
   const stageGroup = new THREE.Group();
-  stageGroup.position.set(-74, 0, 0);
+  stageGroup.position.set(-74, 6.0, 0);
   root.add(stageGroup);
   addShadow(stageGroup, 0, 0, 0, 21.0, 21.0);
 
@@ -4148,7 +4265,7 @@ export function buildIconicAttractions(scene, interactables) {
   for (let bi = 0; bi < 2; bi++) {
     const [bx, bz] = bi === 0 ? [-87.5, -7.8] : [-85.5, 8.2];
     const baz = new THREE.Group();
-    baz.position.set(bx, 0, bz);
+    baz.position.set(bx, 6.0, bz);
     baz.rotation.y = bi === 0 ? 0.18 : Math.PI - 0.18;
 
     // Stepped travertine & carved dark-timber plinth
