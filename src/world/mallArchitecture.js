@@ -4534,7 +4534,7 @@ export function buildMallArchitecture(scene, interactables) {
       scis1.rotation.z = 0.55;
       const scis2 = scis1.clone();
       scis2.rotation.z = -0.55;
-      g.add(cLeftPier, amberTransom, craftBench, scis1, scis2);
+      g.add(amberTransom, craftBench, scis1, scis2);
     } else if (isZara) {
       // Photo-matched 1 Utama G319 ZARA: Monumental horizontal warm-beige travertine center-left pier + right L-shaped wrap-around corner glass display box on low stone plinth!
       const zCenterPier = new THREE.Mesh(new THREE.BoxGeometry(1.38, storeH, 0.98), ivoryStoneMat);
