@@ -1,6 +1,6 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
-## Round-18 (In Progress — Final Full-Fidelity Visual Polish Across All 30 Verified Shots)
+## Round-18 (Completed — Final Full-Fidelity Visual Polish Across All 30 Verified Shots)
 - **3F `TGV Maybank IMAX` (`EZ101`)**: Prioritize `TGV` above `MAYBANK` in `getStoreBrandProfile()` so `EZ101` renders its corrugated pale-grey steel wall + yellow `Maybank` box + glowing cyan `IMAX®` + red `TGV Cinemas` (fixing `Maybank • LAMY`), and lift `Bites` hanging pergola vines above the signage bar so text stays 100% crisp.
 - **4F–5F Entertainment Zone Polish**:
   - **5F `Cross Fire` (`EZ503`)**: Separate the 2 glowing-wheel `MotoGP` racing bikes cleanly East of all 5 `maimai DX PRiSM` cabinets (zero collision!) and lower the neon infinity-mirror medallion cleanly clear of `"CROSS FIRE"`.

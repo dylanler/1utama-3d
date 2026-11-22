@@ -4974,8 +4974,8 @@ export function buildIconicAttractions(scene, interactables) {
     }
     const muralTex = new THREE.CanvasTexture(muralC);
     muralTex.colorSpace = THREE.SRGBColorSpace;
-    const pinMural = new THREE.Mesh(new THREE.BoxGeometry(0.18, 3.6, 4.2), new THREE.MeshStandardMaterial({ map: muralTex, roughness: 0.45 }));
-    pinMural.position.set(-6.05, 1.82, -0.2);
+    const pinMural = new THREE.Mesh(new THREE.BoxGeometry(0.18, 3.6, 2.8), new THREE.MeshStandardMaterial({ map: muralTex, roughness: 0.45 }));
+    pinMural.position.set(-6.45, 1.82, 0.35);
     bowlGroup.add(deckPad, hood, hoodGlow, pinMural);
 
     for (let l = 0; l < 4; l++) {
@@ -5201,7 +5201,23 @@ export function buildIconicAttractions(scene, interactables) {
     }
     bearG.add(bTorso, bStripe, bHead);
 
-    divaArch.add(ledFrame, ledScreen, divaDesk, divaTop, divaBrassTrim, divaFrontSign, divaStaff, bearG);
+    // Warm-lit Neoclassical KTV VIP Suite Backwall sealing off any generic boutique shelves behind reception!
+    const ktvBackWall = new THREE.Mesh(new THREE.BoxGeometry(10.8, 5.2, 0.16), taupeWainMat);
+    ktvBackWall.position.set(0, 2.6, 1.95);
+    const ktvSuiteSign = new THREE.Mesh(
+      new THREE.PlaneGeometry(5.6, 1.15),
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('VIP 01  •  VIP 02  •  VIP 03', 'PRIVATE CONCERT KARAOKE SUITES', '#2b1b26', '#fde68a', '#f472b6', 768, 192) })
+    );
+    ktvSuiteSign.rotation.y = Math.PI;
+    ktvSuiteSign.position.set(0, 2.65, 1.84);
+    for (const dx of [-2.4, 0, 2.4]) {
+      const vipDoor = new THREE.Mesh(new THREE.BoxGeometry(1.15, 2.35, 0.08), new THREE.MeshStandardMaterial({ color: '#3b242c', roughness: 0.42 }));
+      vipDoor.position.set(dx, 1.18, 1.85);
+      const vipTrim = new THREE.Mesh(new THREE.BoxGeometry(1.24, 2.42, 0.04), brassMat);
+      vipTrim.position.set(dx, 1.21, 1.87);
+      divaArch.add(vipDoor, vipTrim);
+    }
+    divaArch.add(ktvBackWall, ktvSuiteSign, ledFrame, ledScreen, divaDesk, divaTop, divaBrassTrim, divaFrontSign, divaStaff, bearG);
     root.add(divaArch);
     addShadow(root, 123.5, 30.0, 20.8, 9.2, 3.6);
 
@@ -5212,7 +5228,7 @@ export function buildIconicAttractions(scene, interactables) {
     const btnWhiteMat = new THREE.MeshBasicMaterial({ color: '#fef08a' });
     for (let m = 0; m < 5; m++) {
       const cab = new THREE.Group();
-      cab.position.set(143 + m * 2.8, 30.0, 20.8);
+      cab.position.set(141.6 + m * 2.45, 30.0, 20.8);
       const body = new THREE.Mesh(new THREE.BoxGeometry(1.62, 2.28, 1.15), new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.28 }));
       body.position.y = 1.14;
       const sideStripe = new THREE.Mesh(new THREE.BoxGeometry(1.66, 0.32, 1.05), new THREE.MeshStandardMaterial({ color: m % 2 === 0 ? '#0284c7' : '#db2777', roughness: 0.3 }));
@@ -5244,16 +5260,16 @@ export function buildIconicAttractions(scene, interactables) {
         cab.add(pl);
       }
       root.add(cab);
-      addShadow(root, 143 + m * 2.8, 30.0, 20.8, 2.2, 1.8);
+      addShadow(root, 141.6 + m * 2.45, 30.0, 20.8, 2.2, 1.8);
     }
-    // Photo-matched 5F EZ503 Cross Fire: Brushed-steel & Cobalt-blue entrance portal + Circular Neon Infinity-Mirror Medallion + 2 MotoGP Racing Bikes w/ Glowing Blue LED Wheels!
+    // Photo-matched 5F EZ503 Cross Fire: Brushed-steel & Cobalt-blue entrance portal + Circular Neon Infinity-Mirror Medallion (cleanly clear of fascia!) + 2 MotoGP Racing Bikes cleanly EAST of maimai DX!
     const cfPortal = new THREE.Group();
-    cfPortal.position.set(148.6, 30.0, 21.8);
+    cfPortal.position.set(149.2, 30.0, 21.8);
     const cfCobaltMat = new THREE.MeshStandardMaterial({ color: '#1d4ed8', roughness: 0.28, metalness: 0.45 });
     const cfSteelMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', roughness: 0.26, metalness: 0.82 });
     const cfCyanNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.22, 1.95, 2.55), toneMapped: false });
     const cfOrangeNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.45, 0.88, 0.18), toneMapped: false });
-    for (const px of [-7.8, 7.8]) {
+    for (const px of [-9.4, 9.8]) {
       const pier = new THREE.Mesh(new THREE.BoxGeometry(0.65, 5.2, 0.55), cfSteelMat);
       pier.position.set(px, 2.6, 0);
       const colEdge = new THREE.Mesh(new THREE.BoxGeometry(0.14, 5.2, 0.62), cfCobaltMat);
@@ -5262,21 +5278,21 @@ export function buildIconicAttractions(scene, interactables) {
       ledStrip.position.set(px - Math.sign(px) * 0.42, 2.6, -0.28);
       cfPortal.add(pier, colEdge, ledStrip);
     }
-    // Circular Neon Infinity-Mirror Medallion mounted above arcade bay!
+    // Circular Neon Infinity-Mirror Medallion mounted cleanly below fascia (y=3.35) on East arcade wing!
     for (let ir = 0; ir < 3; ir++) {
-      const infRing = new THREE.Mesh(new THREE.TorusGeometry(0.82 - ir * 0.22, 0.045, 8, 32), ir === 1 ? cfOrangeNeon : cfCyanNeon);
-      infRing.position.set(0, 4.25, -0.32 + ir * 0.06);
+      const infRing = new THREE.Mesh(new THREE.TorusGeometry(0.72 - ir * 0.19, 0.042, 8, 32), ir === 1 ? cfOrangeNeon : cfCyanNeon);
+      infRing.position.set(6.4, 3.35, -0.28 + ir * 0.05);
       cfPortal.add(infRing);
     }
-    const infBack = new THREE.Mesh(new THREE.CircleGeometry(0.84, 28), new THREE.MeshStandardMaterial({ color: '#090b14', roughness: 0.08, metalness: 0.92 }));
+    const infBack = new THREE.Mesh(new THREE.CircleGeometry(0.74, 28), new THREE.MeshStandardMaterial({ color: '#090b14', roughness: 0.08, metalness: 0.92 }));
     infBack.rotation.y = Math.PI;
-    infBack.position.set(0, 4.25, -0.14);
+    infBack.position.set(6.4, 3.35, -0.14);
     cfPortal.add(infBack);
 
-    // 2 Sculpted MotoGP Arcade Racing Bikes with Glowing Electric-Blue LED Wheels!
-    for (const [bx, bodyHex] of [[-5.6, '#dc2626'], [-3.4, '#2563eb']]) {
+    // 2 Sculpted MotoGP Arcade Racing Bikes cleanly EAST of maimai DX (world x=154.6 & 156.9 — ZERO overlap!)
+    for (const [bx, bodyHex] of [[5.4, '#dc2626'], [7.7, '#2563eb']]) {
       const bikeG = new THREE.Group();
-      bikeG.position.set(bx, 0, -2.6);
+      bikeG.position.set(bx, 0, -1.65);
       const bikeMat = new THREE.MeshStandardMaterial({ color: bodyHex, roughness: 0.22, metalness: 0.35 });
       const plat = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.14, 2.15), steelDarkMat);
       plat.position.y = 0.07;

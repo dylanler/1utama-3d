@@ -944,7 +944,7 @@ export function buildMallArchitecture(scene, interactables) {
               new THREE.MeshBasicMaterial({ map: nandosTex, side: THREE.DoubleSide })
             );
             nandosSign.position.set(53.2, y + 3.4, 7.6);
-            nandosSign.rotation.y = -2.25;
+            nandosSign.rotation.y = 0.89;
             root.add(nandosSign);
           }
         } else {
@@ -4858,8 +4858,9 @@ export function buildMallArchitecture(scene, interactables) {
       const decBlueMat = new THREE.MeshStandardMaterial({ color: '#2c2e83', roughness: 0.34, metalness: 0.18 });
       const turfMat = new THREE.MeshStandardMaterial({ color: '#16a34a', roughness: 0.92 });
       for (const px of [-halfW + 0.58, 0, halfW - 0.58]) {
-        const dPier = new THREE.Mesh(new THREE.BoxGeometry(1.16, storeH, 1.02), decBlueMat);
-        dPier.position.set(px, storeH * 0.5, 0.32);
+        const pH = px === 0 ? eaveY - 0.04 : storeH;
+        const dPier = new THREE.Mesh(new THREE.BoxGeometry(1.16, pH, 1.02), decBlueMat);
+        dPier.position.set(px, pH * 0.5, 0.32);
         g.add(dPier);
       }
       // Central backlit hiker / sport adventure photo pillar!
@@ -4868,9 +4869,9 @@ export function buildMallArchitecture(scene, interactables) {
         new THREE.MeshBasicMaterial({ map: createSignBoardTexture('DECATHLON', 'READY TO PLAY? • 70+ SPORTS', '#1e3a8a', '#ffffff', '#38bdf8', 256, 512) })
       );
       hikerScr.position.set(0, 1.95, 0.86);
-      // Green AstroTurf outdoor display island w/ sculpted dome tent & pop-up soccer goal!
-      const turfPad = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.05, 2.2), turfMat);
-      turfPad.position.set(-3.6, 0.03, -1.15);
+      // Vibrant Green AstroTurf outdoor display island raised cleanly ABOVE store floor (y=0.085) w/ dome tent & soccer goal!
+      const turfPad = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.06, 2.4), turfMat);
+      turfPad.position.set(-3.6, 0.085, -1.15);
       const tentDome = new THREE.Mesh(new THREE.SphereGeometry(0.95, 14, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), new THREE.MeshStandardMaterial({ color: '#0284c7', roughness: 0.55 }));
       tentDome.scale.set(1.15, 0.92, 1.05);
       tentDome.position.set(-4.5, 0.06, -1.15);
@@ -4929,10 +4930,14 @@ export function buildMallArchitecture(scene, interactables) {
       bitesTop.position.set(bitesX, 1.05, -1.45);
       const bitesHeader = new THREE.Mesh(new THREE.BoxGeometry(4.65, 0.64, 0.24), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('Bites', 'POPCORN • COMBOS • DRINKS', '#0284c7', '#ffffff', '#fef08a', 512, 128) }));
       bitesHeader.position.set(bitesX, 2.92, -1.05);
-      for (let vn = -4; vn <= 4; vn++) {
-        const vine = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.03, 0.68 + (Math.abs(vn) % 2) * 0.25, 6), vineMat);
-        vine.position.set(bitesX + vn * 0.48, 2.38, -0.94);
-        g.add(vine);
+      // Lush hanging greenery garland draped cleanly ALONG TOP pergola beam ABOVE Bites text (ZERO text overlap!)
+      const garland = new THREE.Mesh(new THREE.BoxGeometry(4.75, 0.18, 0.28), vineMat);
+      garland.position.set(bitesX, 3.32, -1.04);
+      g.add(garland);
+      for (const vx of [-2.32, 2.32]) {
+        const sideVine = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.035, 1.45, 6), vineMat);
+        sideVine.position.set(bitesX + vx, 2.65, -1.02);
+        g.add(sideVine);
       }
       // White backlit "Now Seating • Halls 1 2 3 4 5 6 7" & "TGV JUNIOR" directory wall (right-center!)
       const hallX = Math.min(innerW * 0.24, 5.2);
@@ -4976,15 +4981,52 @@ export function buildMallArchitecture(scene, interactables) {
         mon.position.set(mx, 2.75, -intD + 0.28);
         g.add(mon);
       }
+      // 4 Glowing Backlit Cinema Movie Poster Lightboxes illuminating the flanking gold-framed GSC wall bays!
+      const posterSpecs = [
+        [-innerW * 0.38, 'NOW SHOWING • BIG 4K', 'GALAXY ODYSSEY • DOLBY ATMOS', '#0f172a', '#38bdf8', '#facc15'],
+        [-innerW * 0.24, 'SCREENX 270°', 'MIDNIGHT VELOCITY • LIVE NOW', '#3b0764', '#f472b6', '#fde047'],
+        [innerW * 0.24, '4DX EXPERIENCE', 'TITAN HORIZON • MOTION SEATS', '#7f1d1d', '#fde047', '#fb923c'],
+        [innerW * 0.38, 'GSC PRESTIGE', 'VIP DINING RECLINER SUITES', '#1c1917', '#fef08a', '#d4af37']
+      ];
+      for (const [px, t1, t2, bg, fg, ac] of posterSpecs) {
+        const pBox = new THREE.Mesh(
+          new THREE.BoxGeometry(4.4, 2.1, 0.08),
+          new THREE.MeshBasicMaterial({ map: createSignBoardTexture(t1, t2, bg, fg, ac, 512, 256) })
+        );
+        pBox.position.set(px, 2.25, -intD + 0.24);
+        g.add(pBox);
+      }
     } else if (isCellini) {
-      // Photo-matched 4F OV401 Cellini: Matte-charcoal architectural monolith piers + glowing sky-blue vertical accent LED + warm oak showroom!
+      // Photo-matched 4F OV401 Cellini: Matte-charcoal architectural monolith piers + glowing sky-blue vertical accent LED + richly furnished Italian leather sectional showroom!
       const skyLedMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.28, 1.65, 2.35), toneMapped: false });
+      const sofaCreamMat = new THREE.MeshStandardMaterial({ color: '#e8e2d6', roughness: 0.62 });
+      const sofaSlateMat = new THREE.MeshStandardMaterial({ color: '#475569', roughness: 0.68 });
       for (const side of [-1, 1]) {
         const cPier = new THREE.Mesh(new THREE.BoxGeometry(1.15, storeH, 0.96), obsidianGlossMat);
         cPier.position.set(side * (halfW - 0.58), storeH * 0.5, 0.28);
         const cLed = new THREE.Mesh(new THREE.BoxGeometry(0.06, eaveY - 0.2, 0.06), skyLedMat);
         cLed.position.set(side * (halfW - 1.18), eaveY * 0.5, 0.72);
         g.add(cPier, cLed);
+      }
+      // 3 Designer Living Room Vignettes (L-shaped leather sectionals + walnut coffee tables + glowing floor lamps + framed wall art!)
+      for (let v = -1; v <= 1; v++) {
+        const vx = v * Math.min(innerW * 0.26, 9.5);
+        const sMat = v === 0 ? sofaSlateMat : sofaCreamMat;
+        const rug = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.03, 2.4), creamTileMat);
+        rug.position.set(vx, 0.07, -1.65);
+        const sofaMain = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.44, 0.96), sMat);
+        sofaMain.position.set(vx, 0.28, -2.15);
+        const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.52, 0.22), sMat);
+        sofaBack.position.set(vx, 0.68, -2.52);
+        const chaise = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.44, 1.65), sMat);
+        chaise.position.set(vx - 1.12, 0.28, -1.55);
+        const tbl = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.36, 0.75), smokedOakMat);
+        tbl.position.set(vx + 0.45, 0.24, -1.15);
+        const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.03, 1.85, 8), brassGoldMat);
+        lampPole.position.set(vx + 1.85, 0.96, -2.25);
+        const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.32, 12), intLightWarmMat);
+        lampShade.position.set(vx + 1.85, 1.88, -2.25);
+        g.add(rug, sofaMain, sofaBack, chaise, tbl, lampPole, lampShade);
       }
     } else if (isLoccitane) {
       // Photo-matched LUXE G L'OCCITANE: Provence sunshine-yellow (#eab308) arched boutique window frames & limestone mullions!
@@ -5691,9 +5733,12 @@ export function buildMallArchitecture(scene, interactables) {
       brBase.position.y = 0.05;
       const brRoof = new THREE.Mesh(new THREE.CylinderGeometry(2.10, 2.10, 0.48, 8), obsidianGlossMat);
       brRoof.position.y = 3.08;
+      const brTex = createSignBoardTexture('BELL & ROSS', 'AVIATION INSTRUMENTS', '#0b0c10', '#ffffff', '#facc15', 512, 96);
+      brTex.wrapS = THREE.RepeatWrapping;
+      brTex.repeat.set(3, 1);
       const brSign = new THREE.Mesh(
         new THREE.CylinderGeometry(2.13, 2.13, 0.42, 8, 1, true),
-        new THREE.MeshBasicMaterial({ map: createSignBoardTexture('BELL & ROSS', 'AVIATION INSTRUMENTS', '#0b0c10', '#ffffff', '#facc15', 512, 96) })
+        new THREE.MeshBasicMaterial({ map: brTex })
       );
       brSign.position.y = 3.08;
       // Giant Glowing White '&' Roof Emblem atop Bell & Ross Pavilion!
@@ -5714,19 +5759,21 @@ export function buildMallArchitecture(scene, interactables) {
       }
       brG.add(brBase, brRoof, brSign, ampPlaque);
 
-      // Adjacent TUDOR Matte-Black & Crimson Shield Totem + 2 Organic Sculpted White/Gold Pebble Ottomans!
+      // Adjacent TUDOR Matte-Black & Crimson Shield Totem (staggered clear of Bell & Ross + crisp 4-sided branding!)
       const tudorG = new THREE.Group();
-      tudorG.position.set(6.4, 0, 0);
-      const tPyl = new THREE.Mesh(new THREE.BoxGeometry(1.65, 2.65, 1.15), obsidianGlossMat);
-      tPyl.position.y = 1.325;
-      const tRed = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.24, 1.20), jayaRedPortalMat);
-      tRed.position.y = 2.55;
-      const tSign = new THREE.Mesh(new THREE.PlaneGeometry(1.48, 0.82), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TUDOR', 'BORN TO DARE • GENÈVE', '#0b0c10', '#ffffff', '#dc2626', 384, 192) }));
-      tSign.position.set(0, 1.82, 0.59);
-      const tSignB = tSign.clone();
-      tSignB.rotation.y = Math.PI;
-      tSignB.position.z = -0.59;
-      tudorG.add(tPyl, tRed, tSign, tSignB);
+      tudorG.position.set(5.4, 0, -2.6);
+      const tSignMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('TUDOR', 'BORN TO DARE • GENÈVE', '#0b0c10', '#ffffff', '#dc2626', 384, 192) });
+      const tPyl = new THREE.Mesh(new THREE.BoxGeometry(1.22, 2.55, 1.22), obsidianGlossMat);
+      tPyl.position.y = 1.275;
+      const tRed = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.20, 1.28), jayaRedPortalMat);
+      tRed.position.y = 2.48;
+      for (const [sx, sz, rot] of [[0, 0.625, 0], [0, -0.625, Math.PI], [0.625, 0, Math.PI * 0.5], [-0.625, 0, -Math.PI * 0.5]]) {
+        const ts = new THREE.Mesh(new THREE.PlaneGeometry(1.12, 0.68), tSignMat);
+        ts.position.set(sx, 1.76, sz);
+        ts.rotation.y = rot;
+        tudorG.add(ts);
+      }
+      tudorG.add(tPyl, tRed);
 
       for (const [ox, oz] of [[-0.4, 2.35], [-0.4, -2.35]]) {
         const peb = new THREE.Mesh(new THREE.SphereGeometry(0.68, 18, 12), cafeMarbleMat);
@@ -6329,11 +6376,14 @@ export function buildMallArchitecture(scene, interactables) {
       // 2. Photo-matched FK7 OGAWA • POKÉMON: Crimson carpeted wellness lounge + glowing sky-blue OGAWA Pokémon lightbox + 3 sculpted robotic massage chairs (ZERO espresso machine!)
       const carpet = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.06, 3.6), norenCrimsonMat);
       carpet.position.y = 0.03;
+      const ogBase = new THREE.Mesh(new THREE.BoxGeometry(3.8, 1.42, 0.34), norenCrimsonMat);
+      ogBase.position.set(0, 0.71, -1.22);
       const lbPillar = new THREE.Mesh(
-        new THREE.BoxGeometry(3.8, 2.45, 0.36),
-        [norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'MASTER DRIVE AI MASSAGE CHAIRS', '#0284c7', '#ffffff', '#facc15', 512, 256) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'WELLNESS LOUNGE • FK7', '#0284c7', '#ffffff', '#facc15', 512, 256) })]
+        new THREE.BoxGeometry(3.84, 1.48, 0.36),
+        [norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, norenCrimsonMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'MASTER DRIVE AI MASSAGE CHAIRS', '#0284c7', '#ffffff', '#facc15', 512, 192) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('OGAWA  ×  POKÉMON', 'WELLNESS LOUNGE • FK7', '#0284c7', '#ffffff', '#facc15', 512, 192) })]
       );
-      lbPillar.position.set(0, 1.28, -1.22);
+      lbPillar.position.set(0, 2.16, -1.22);
+      kg.add(ogBase);
       const chairMat = new THREE.MeshStandardMaterial({ color: '#1e1b22', roughness: 0.32, metalness: 0.22 });
       for (const [cx, trimMat] of [[-1.55, jayaRedPortalMat], [0, mrDiyYellowMat], [1.55, brassGoldMat]]) {
         const seat = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.46, 1.05), chairMat);
@@ -6348,7 +6398,7 @@ export function buildMallArchitecture(scene, interactables) {
         kg.add(seat, back, sideL, sideR);
       }
       kg.add(carpet, lbPillar);
-      addStaff(-2.0, -0.35, '#991b1b');
+      addStaff(2.35, 0.35, '#991b1b');
     } else if (k.id === 'k-havaianas') {
       // 3. Photo-matched FK4 HAVAIANAS: Bright-red open steel canopy sandal island + glowing red havaianas fascia + beach lightbox pillar + sandal display tables!
       const deck = new THREE.Mesh(new THREE.BoxGeometry(4.8, 0.08, 3.0), lightOakMat);
@@ -6378,18 +6428,20 @@ export function buildMallArchitecture(scene, interactables) {
       kg.add(deck, canopy, beachPillar);
       addStaff(1.6, 0.1, '#dc2626');
     } else if (k.id === 'k-pokedots') {
-      // 4. Photo-matched SK29 pokédots.: Vivid magenta-pink (#d8277c) low curved wall pavilion w/ bold black serif pokédots. (NO roof canopy!)
-      const magMat = new THREE.MeshStandardMaterial({ color: '#d8277c', roughness: 0.36 });
-      const wallCyl = new THREE.Mesh(new THREE.CylinderGeometry(2.05, 2.05, 1.18, 28, 1, false, 0, Math.PI * 1.65), magMat);
-      wallCyl.position.y = 0.59;
-      const topRim = new THREE.Mesh(new THREE.CylinderGeometry(2.12, 2.12, 0.07, 28, 1, false, 0, Math.PI * 1.65), cafeMarbleMat);
-      topRim.position.y = 1.20;
-      const backPyl = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.25, 0.24), [magMat, magMat, magMat, magMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 256) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 256) })]);
-      backPyl.position.set(0, 1.14, -1.45);
-      const pastryCase = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.48, 0.66), intGlassPhysMat);
-      pastryCase.position.set(0, 1.48, 1.38);
-      kg.add(wallCyl, topRim, backPyl, pastryCase);
-      addStaff(0, 0.1, '#111827');
+      // 4. Photo-matched SK29 pokédots.: Vivid magenta-pink (#d8277c) FULL SOLID curved counter drum (ZERO floating wing!) + elevated serif pokédots. pylon + offset staff!
+      const magMat = new THREE.MeshStandardMaterial({ color: '#d8277c', roughness: 0.36, side: THREE.DoubleSide });
+      const wallCyl = new THREE.Mesh(new THREE.CylinderGeometry(1.98, 1.98, 1.06, 32), magMat);
+      wallCyl.position.y = 0.53;
+      const topRim = new THREE.Mesh(new THREE.CylinderGeometry(2.06, 2.06, 0.07, 32), cafeMarbleMat);
+      topRim.position.y = 1.09;
+      const backBase = new THREE.Mesh(new THREE.BoxGeometry(2.35, 1.35, 0.24), magMat);
+      backBase.position.set(0, 0.68, -1.55);
+      const backPyl = new THREE.Mesh(new THREE.BoxGeometry(2.38, 1.25, 0.26), [magMat, magMat, magMat, magMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 220) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('pokédots.', 'DONUTS & MATCHA • SK29', '#d8277c', '#111827', '#ffffff', 512, 220) })]);
+      backPyl.position.set(0, 1.98, -1.55);
+      const pastryCase = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.46, 0.64), intGlassPhysMat);
+      pastryCase.position.set(-0.35, 1.36, 1.15);
+      kg.add(wallCyl, topRim, backBase, backPyl, pastryCase);
+      addStaff(1.15, -0.45, '#111827');
     } else if (k.id === 'k-tgv-pop') {
       // 5. Photo-matched EZ101-K BANPRESTO: Light-grey collectibles counter backed by 2 tall glowing white glass anime-figure vitrines (ZERO espresso machine!)
       const greyMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', roughness: 0.36 });
@@ -6433,8 +6485,11 @@ export function buildMallArchitecture(scene, interactables) {
       backPyl.position.set(0, 1.425, -1.12);
       const navyCanopy = new THREE.Mesh(new THREE.CylinderGeometry(2.32, 2.32, 0.58, 28, 1, false, -Math.PI * 0.46, Math.PI * 0.92), [zusRoyalBlueMat, zusRoyalBlueMat, kioskSoffitMat]);
       navyCanopy.position.set(0, 2.86, -0.55);
-      const zusSign = new THREE.Mesh(new THREE.BoxGeometry(3.45, 0.54, 0.14), [zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat, zusRoyalBlueMat, signFace, signFace]);
-      zusSign.position.set(0, 2.86, 1.65);
+      const zusSign = new THREE.Mesh(
+        new THREE.CylinderGeometry(2.35, 2.35, 0.50, 28, 1, true, -Math.PI * 0.44, Math.PI * 0.88),
+        signFace
+      );
+      zusSign.position.set(0, 2.86, -0.55);
       kg.add(cFront, cTop, backPyl, navyCanopy, zusSign);
       addStaff(-0.45, 0.25, '#0f2e78');
       addStaff(0.55, 0.25, '#0f2e78');
@@ -6580,8 +6635,9 @@ export function buildMallArchitecture(scene, interactables) {
       chiller.position.set(1.25, 1.025, -0.62);
       const chGlow = new THREE.Mesh(new THREE.BoxGeometry(1.28, 1.62, 0.05), sportLedBarMat);
       chGlow.position.set(1.25, 1.16, -0.24);
-      const header = new THREE.Mesh(new THREE.BoxGeometry(4.45, 0.62, 0.28), [jayaRedPortalMat, jayaRedPortalMat, jayaRedPortalMat, kioskSoffitMat, new THREE.MeshBasicMaterial({ map: createSignBoardTexture('newsplus', 'CINEMA SNACKS • DRINKS • EK5', '#dc2626', '#ffffff', '#fde047', 512, 128) }), new THREE.MeshBasicMaterial({ map: createSignBoardTexture('newsplus', 'CINEMA SNACKS • DRINKS • EK5', '#dc2626', '#ffffff', '#fde047', 512, 128) })]);
-      header.position.set(0, 2.68, -0.62);
+      const npMat = new THREE.MeshBasicMaterial({ map: createSignBoardTexture('newsplus', 'CINEMA SNACKS • DRINKS • EK5', '#dc2626', '#ffffff', '#fde047', 512, 128) });
+      const header = new THREE.Mesh(new THREE.BoxGeometry(4.45, 0.62, 2.24), [npMat, npMat, jayaRedPortalMat, kioskSoffitMat, npMat, npMat]);
+      header.position.set(0, 2.68, 0.0);
       kg.add(base, redBand, chiller, chGlow, header);
       addStaff(0.15, 0.22, '#dc2626');
     }

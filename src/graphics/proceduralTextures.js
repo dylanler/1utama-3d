@@ -2875,6 +2875,9 @@ export function getStoreBrandProfile(store) {
   if (uName.includes('DENZA') || uName.includes('FRED PERRY')) {
     return { facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 12, displayTitle: 'DENZA  •  FRED PERRY', brandKey: 'denza-fred', isLight: false };
   }
+  if (uName.includes('TGV')) {
+    return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'tgv-corrugated-imax', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'TGV CINEMAS', brandKey: 'tgv', isLight: true };
+  }
   if (uName.includes('MAYBANK')) {
     return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'maybank-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'Maybank  •  LAMY', brandKey: 'maybank', isLight: true };
   }
@@ -4858,19 +4861,24 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'gsc': {
-        // Photo-matched 4F EZ403 GSC Cinemas: Matte-black gold-halo GSC filmstrip emblem + 2 rows of glowing format logos!
-        targetCtx.fillStyle = isEmissive ? '#facc15' : '#141414';
-        targetCtx.fillRect(-355, 36, 220, 120);
-        targetCtx.strokeStyle = '#facc15';
-        targetCtx.lineWidth = 6;
-        targetCtx.strokeRect(-355, 36, 220, 120);
+        // Photo-matched 4F EZ403 GSC Cinemas: Matte-black gold-halo GSC filmstrip emblem + sleek charcoal contrast plaque for glowing format rows!
+        if (!isEmissive) {
+          targetCtx.fillStyle = '#141414';
+          targetCtx.fillRect(-355, 34, 780, 124);
+          targetCtx.strokeStyle = '#facc15';
+          targetCtx.lineWidth = 6;
+          targetCtx.strokeRect(-355, 34, 220, 124);
+          targetCtx.strokeStyle = 'rgba(250, 204, 21, 0.45)';
+          targetCtx.lineWidth = 3;
+          targetCtx.strokeRect(-130, 34, 555, 124);
+        }
         targetCtx.fillStyle = isEmissive ? '#fef08a' : '#facc15';
         fillAutoFitText(targetCtx, 'GSC', -245, 122, 185, 86, '900', '"Jost", sans-serif', 6);
-        // 2 Rows of glowing GSC signature cinema format logos
-        targetCtx.fillStyle = isEmissive ? '#ffffff' : '#18181b';
-        fillAutoFitText(targetCtx, 'BIG   |   SCREENX   |   4DX   |   ATMOS', 135, 82, 520, 34, '800', '"Jost", sans-serif', 6);
-        targetCtx.fillStyle = isEmissive ? '#fde047' : '#78350f';
-        fillAutoFitText(targetCtx, 'PRESTIGE LOUNGE   •   play PARK   •   15 HALLS', 135, 134, 520, 28, '700', '"Jost", sans-serif', 6);
+        // 2 Crisp High-Contrast Glowing Rows of GSC Cinema Formats!
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'BIG   |   SCREENX   |   4DX   |   ATMOS', 148, 84, 515, 34, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = '#fde047';
+        fillAutoFitText(targetCtx, 'PRESTIGE LOUNGE   •   play PARK   •   15 HALLS', 148, 134, 515, 28, '700', '"Jost", sans-serif', 6);
         break;
       }
 
