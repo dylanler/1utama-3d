@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>1 Utama Shopping Centre 3D — Petaling Jaya, Malaysia | Interactive Three.js Walkthrough</title>
+    <meta
+      name="description"
+      content="Explore 1 Utama Shopping Centre in Bandar Utama, Petaling Jaya, Malaysia in real-time 3D — Old Wing, Linkbridge, The Rainforest, Rainbow Bridge, Highstreet, The Oval, 1 Utama E FlowRider & AirRider, and The Secret Garden."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Figtree:wght@400;500;600;700;800;900&family=Jost:wght@400;500;600;700;800&family=Montserrat:wght@400;600;700;800&family=Noto+Serif+JP:wght@600;800&family=Oswald:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <!-- LAUNCH / WELCOME SPLASH OVERLAY (Official 1utama.com.my Theme) -->
+    <div id="intro-overlay" class="overlay-visible">
+      <div class="intro-card">
+        <div class="ou-header-ribbon">
+          <span class="ou-ribbon-orange">1UTAMA.COM.MY • OFFICIAL PORTAL</span>
+          <span class="ou-ribbon-gold">IT’S ALL IN ONE • BANDAR UTAMA, PETALING JAYA</span>
+        </div>
+        <div class="intro-inner">
+          <div class="ou-brand-row">
+            <svg class="ou-crest-svg" viewBox="0 0 64 64" width="60" height="60" aria-hidden="true">
+              <defs>
+                <linearGradient id="ouGold" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f7ca59"/>
+                  <stop offset="55%" stop-color="#e9b03f"/>
+                  <stop offset="100%" stop-color="#c98512"/>
+                </linearGradient>
+              </defs>
+              <circle cx="32" cy="32" r="30" fill="#a10022"/>
+              <circle cx="32" cy="32" r="26.5" fill="url(#ouGold)" stroke="#ffffff" stroke-width="1.8"/>
+              <text x="32" y="34" text-anchor="middle" fill="#a10022" font-family="Figtree,sans-serif" font-weight="900" font-size="29">1</text>
+              <text x="32" y="48" text-anchor="middle" fill="#7c0018" font-family="Figtree,sans-serif" font-weight="800" font-size="9.5" letter-spacing="0.6">UTAMA</text>
+            </svg>
+            <div>
+              <div class="intro-eyebrow">
+                <span class="malaysia-pill">BANDAR UTAMA • SELANGOR • MALAYSIA</span>
+                <span class="scale-pill">7 WALKABLE LEVELS • 1UTAMA.COM.MY DIRECTORY</span>
+              </div>
+              <h1>1 UTAMA <span>SHOPPING CENTRE</span></h1>
+            </div>
+          </div>
+          <p class="intro-lead">
+            Explore Malaysia’s iconic megamall in real-time 3D — cross-checked lot-by-lot against
+            <strong>1utama.com.my</strong> across <strong>1 Utama E (1UE 6xx)</strong>,
+            <strong>Old Wing Centre Court (1xx)</strong>, <strong>Promenade (2xx)</strong>,
+            <strong>The Rainforest</strong>, <strong>GF Luxe &amp; Highstreet (3xx)</strong>,
+            <strong>The Oval</strong>, <strong>Entertainment Zone (EZ)</strong>, and
+            <strong>Upper Roof (Secret Garden, ASCARO Padel &amp; Padang)</strong>.
+          </p>
+
+          <div class="feature-chips">
+            <span>2F Rainbow Bridge &amp; Food District</span>
+            <span>LG Koi Pond &amp; Ippudo (LG352)</span>
+            <span>1UE FlowRider, Rollerwa &amp; WINDLAB</span>
+            <span>Outdoor Saranghae Finger-Heart Bridge</span>
+            <span>Jaya Grocer (LG309) &amp; Parkson Elite</span>
+            <span>Secret Garden (UR603A) &amp; ASCARO Padel</span>
+          </div>
+
+          <div class="intro-actions">
+            <button id="btn-enter-mall" class="btn-primary">
+              ENTER 1 UTAMA (2F RAINBOW BRIDGE)
+            </button>
+            <button id="btn-open-map-intro" class="btn-secondary">
+              BROWSE OFFICIAL MALL DIRECTORY
+            </button>
+          </div>
+
+          <div class="intro-controls-hint">
+            <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Walk</span>
+            <span><kbd>Shift</kbd> Sprint</span>
+            <span><kbd>Mouse</kbd> Look (Click or Drag)</span>
+            <span><kbd>E</kbd> Interact</span>
+            <span><kbd>M</kbd> Directory &amp; Fast Travel</span>
+            <span><kbd>T</kbd> Time / Monsoon</span>
+            <span><kbd>P</kbd> Photo Mode</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE IN-GAME HUD -->
+    <div id="hud">
+      <!-- Top-Left Zone & Atmosphere Controls -->
+      <div class="hud-top-left">
+        <div class="location-card">
+          <div id="hud-floor-badge" class="floor-badge">G</div>
+          <div class="location-meta">
+            <div id="hud-wing" class="wing-label">THE RAINFOREST</div>
+            <div id="hud-zone" class="zone-label">RAINBOW SUSPENSION BRIDGE</div>
+          </div>
+        </div>
+
+        <div class="quick-toolbar">
+          <button id="btn-directory" class="hud-chip" title="Open Mall Directory & Fast Travel (M)">
+            <span>Directory &amp; Map</span> <kbd>M</kbd>
+          </button>
+          <button id="btn-weather" class="hud-chip" title="Cycle Time of Day & Tropical Monsoon (T)">
+            <span id="label-weather">PJ Sunny Day</span> <kbd>T</kbd>
+          </button>
+          <button id="btn-quality" class="hud-chip" title="Toggle Graphics Preset">
+            <span id="label-quality">Quality: Ultra</span>
+          </button>
+          <button id="btn-audio" class="hud-chip" title="Toggle Spatial Soundscape (V)">
+            <span id="label-audio">Audio: On</span> <kbd>V</kbd>
+          </button>
+          <button id="btn-photo" class="hud-chip" title="Toggle Clean Photo Mode (P)">
+            <span>Photo</span> <kbd>P</kbd>
+          </button>
+        </div>
+
+        <div id="buff-pill" class="buff-pill hidden">
+          Kopitiam Caffeine Boost Active (+28% Speed)
+        </div>
+      </div>
+
+      <!-- Top-Right Live Vector Minimap & ONECARD Quest Tracker -->
+      <div class="hud-top-right">
+        <div class="minimap-card">
+          <div class="minimap-header">
+            <span id="minimap-title">LEVEL G • LIVE FLOORPLAN</span>
+            <span id="fps-counter">60 FPS</span>
+          </div>
+          <canvas id="minimap-canvas" width="248" height="106"></canvas>
+          <div class="minimap-legend">
+            <span><i class="dot-old"></i>Old Wing</span>
+            <span><i class="dot-rf"></i>Rainforest</span>
+            <span><i class="dot-oval"></i>Oval / 1U-E</span>
+          </div>
+        </div>
+
+        <div class="onecard-widget">
+          <div class="onecard-top">
+            <span class="onecard-brand">ONECARD EXPLORER</span>
+            <span id="upoints-val" class="upoints-badge">0 UPoints</span>
+          </div>
+          <div class="stamp-bar-bg">
+            <div id="stamp-bar-fill" class="stamp-bar-fill" style="width: 0%"></div>
+          </div>
+          <div id="stamp-status" class="stamp-sub">0 / 8 Iconic Landmarks Stamped</div>
+        </div>
+      </div>
+
+      <!-- Center Reticle & Contextual Interaction Prompt -->
+      <div id="reticle"></div>
+
+      <button id="interaction-prompt" class="interaction-prompt hidden">
+        <span id="interaction-text">[E] Interact</span>
+      </button>
+
+      <!-- Panoramic Glass Elevator Floor Selector -->
+      <div id="elevator-panel" class="elevator-panel hidden">
+        <div class="elev-title">PANORAMIC GLASS LIFT</div>
+        <div class="elev-sub">Select Floor (Click or Keys 1–7)</div>
+        <div id="elevator-buttons" class="elev-btn-grid"></div>
+      </div>
+
+      <!-- Celebration / Discovery Toast -->
+      <div id="toast-banner" class="toast-banner hidden"></div>
+
+      <!-- Bottom Hints Strip -->
+      <div class="hud-bottom-bar">
+        <span>Walk across <strong>Escalators</strong> or step into <strong>Glass Bubble Lifts</strong> to travel all 7 floors</span>
+        <span class="sep">•</span>
+        <span>Press <kbd>M</kbd> anytime to fast-travel to any wing, cinema, FlowRider, or Secret Garden</span>
+      </div>
+    </div>
+
+    <!-- PHOTO MODE OVERLAY -->
+    <div id="photo-overlay" class="hidden">
+      <div class="photo-frame-corners"></div>
+      <div class="photo-bar">
+        <span>1 UTAMA 3D PHOTO MODE — Move &amp; frame your shot</span>
+        <div>
+          <button id="btn-snap-photo" class="btn-primary btn-sm">Download Postcard PNG</button>
+          <button id="btn-exit-photo" class="btn-secondary btn-sm">Exit Photo Mode (P)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE DIGITAL MALL DIRECTORY & FAST-TRAVEL MODAL (Official 1utama.com.my Style) -->
+    <div id="directory-modal" class="modal-backdrop hidden">
+      <div class="directory-dialog">
+        <div class="directory-header">
+          <div class="dir-brand-left">
+            <svg class="ou-crest-svg ou-crest-sm" viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+              <circle cx="32" cy="32" r="30" fill="#a10022"/>
+              <circle cx="32" cy="32" r="26.5" fill="#e9b03f" stroke="#ffffff" stroke-width="2"/>
+              <text x="32" y="35" text-anchor="middle" fill="#a10022" font-family="Figtree,sans-serif" font-weight="900" font-size="29">1</text>
+              <text x="32" y="48" text-anchor="middle" fill="#7c0018" font-family="Figtree,sans-serif" font-weight="800" font-size="9.5" letter-spacing="0.6">UTAMA</text>
+            </svg>
+            <div>
+              <div class="dir-kicker">1 UTAMA SHOPPING CENTRE • OFFICIAL DIRECTORY</div>
+              <h2>SHOPS, DINING &amp; INSTANT FAST-TRAVEL</h2>
+            </div>
+          </div>
+          <button id="btn-close-directory" class="btn-close" aria-label="Close Directory">✕</button>
+        </div>
+        <div class="dir-orange-banner">
+          <span>MALL DIRECTORY &amp; FLOORPLAN</span>
+          <span id="dir-banner-sub" class="dir-banner-sub">IT’S ALL IN ONE • CLICK ANY SINGLE-BRAND OUTLET TO TELEPORT</span>
+        </div>
+
+        <div class="dir-search-row">
+          <input id="dir-search-input" type="search" placeholder="Search 308 official outlets by brand or lot number (e.g. Jaya Grocer, LG309, Ippudo, Chanel, Next Gen)..." autocomplete="off" />
+          <div id="dir-cat-pills" class="dir-cat-pills"></div>
+        </div>
+        <div id="dir-floor-tabs" class="dir-floor-tabs"></div>
+
+        <div class="directory-body">
+          <div class="dir-section dir-landmarks-compact">
+            <h3>QUICK-JUMP LANDMARKS</h3>
+            <div id="dir-landmarks-grid" class="landmarks-strip"></div>
+          </div>
+
+          <div class="dir-section">
+            <h3 id="dir-section-title">OFFICIAL SINGLE-BRAND OUTLETS (<span id="dir-store-count">168</span> STORES)</h3>
+            <div id="dir-stores-grid" class="stores-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE VIRTUAL TOUCH CONTROLS -->
+    <div id="mobile-controls" class="mobile-controls">
+      <div id="joystick-zone" class="joystick-zone">
+        <div id="joystick-knob" class="joystick-knob"></div>
+      </div>
+      <div class="mobile-right-btns">
+        <button id="btn-mobile-interact" class="mob-btn">ACT</button>
+        <button id="btn-mobile-map" class="mob-btn">MAP</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
