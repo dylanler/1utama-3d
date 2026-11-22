@@ -7451,8 +7451,79 @@ export function createRainforestTerracottaFloorTexture() {
     }
   }
   ctx.restore();
-  const tex = finalizeTexture(c, { repeatX: 6, repeatY: 6, srgb: true });
+  const tex = finalizeTexture(c, { repeatX: 0.28, repeatY: 0.28, srgb: true });
   cachedRfTerracottaTex = tex;
+  return tex;
+}
+
+let cachedBroadleafCanopyTex = null;
+export function createBroadleafCanopyClusterTexture() {
+  if (cachedBroadleafCanopyTex) return cachedBroadleafCanopyTex;
+  const w = 512;
+  const h = 512;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, w, h);
+
+  // Thin dark woody branching twigs radiating from center
+  ctx.strokeStyle = '#3b2b1d';
+  ctx.lineCap = 'round';
+  for (let b = 0; b < 9; b++) {
+    const ang = (b / 9) * Math.PI * 2 + 0.25;
+    const len = 140 + (b % 3) * 35;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.5, h * 0.52);
+    ctx.quadraticCurveTo(
+      w * 0.5 + Math.cos(ang + 0.2) * len * 0.55,
+      h * 0.52 + Math.sin(ang + 0.2) * len * 0.55,
+      w * 0.5 + Math.cos(ang) * len,
+      h * 0.52 + Math.sin(ang) * len
+    );
+    ctx.stroke();
+  }
+
+  // 78 layered individual pointed tropical rainforest leaves (sunlit lime-emerald -> mid rainforest green -> deep shaded forest green)
+  const palette = ['#215524', '#2c6e2c', '#3b8832', '#4da13a', '#68b842', '#1b4720', '#7dc44e'];
+  for (let i = 0; i < 78; i++) {
+    const ring = i < 16 ? 0.24 : i < 44 ? 0.56 : 0.82;
+    const ang = i * 2.39996 + (i % 5) * 0.14;
+    const dist = ring * 188 + ((i * 29) % 34) - 17;
+    const lx = w * 0.5 + Math.cos(ang) * dist;
+    const ly = h * 0.5 + Math.sin(ang) * dist;
+    const lw = 18 + (i % 5) * 4.5;
+    const lh = 44 + (i % 6) * 8.5;
+    const rot = ang + Math.sin(i * 1.7) * 0.55;
+
+    ctx.save();
+    ctx.translate(lx, ly);
+    ctx.rotate(rot);
+    // Pointed botanical tropical leaf silhouette
+    ctx.fillStyle = palette[i % palette.length];
+    ctx.beginPath();
+    ctx.moveTo(0, -lh * 0.5);
+    ctx.bezierCurveTo(lw * 0.9, -lh * 0.18, lw * 0.85, lh * 0.28, 0, lh * 0.5);
+    ctx.bezierCurveTo(-lw * 0.85, lh * 0.28, -lw * 0.9, -lh * 0.18, 0, -lh * 0.5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Fine sunlit central midrib & subtle veins
+    ctx.strokeStyle = i % 3 === 0 ? 'rgba(182, 232, 118, 0.45)' : 'rgba(22, 54, 24, 0.35)';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(0, -lh * 0.42);
+    ctx.lineTo(0, lh * 0.44);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  tex.needsUpdate = true;
+  cachedBroadleafCanopyTex = tex;
   return tex;
 }
 

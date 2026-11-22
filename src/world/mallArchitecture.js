@@ -1115,10 +1115,10 @@ export function buildMallArchitecture(scene, interactables) {
     const rfZScale = 12.8 / 17.6; // 0.72727 exact match to elliptical floor cutouts!
     const rfBotR = 17.6;
     const rfTopR = 19.6;
-    rfFunnelGlassMat.color.set('#f2fafc');
-    rfFunnelGlassMat.emissive.set('#e2f4fa');
-    rfFunnelGlassMat.emissiveIntensity = 0.42;
-    rfFunnelGlassMat.opacity = 0.54;
+    rfFunnelGlassMat.color.set('#f7fcfe');
+    rfFunnelGlassMat.emissive.set('#eaf7fc');
+    rfFunnelGlassMat.emissiveIntensity = 0.55;
+    rfFunnelGlassMat.opacity = 0.48;
     const funnelGeo = new THREE.CylinderGeometry(rfTopR, rfBotR, funnelH, 60, 1, true);
     const funnelMesh = new THREE.Mesh(funnelGeo, rfFunnelGlassMat);
     funnelMesh.scale.set(1.0, 1.0, rfZScale);
@@ -1258,17 +1258,17 @@ export function buildMallArchitecture(scene, interactables) {
     domeMesh.position.set(ov.cx, 37.0, ov.cz);
     root.add(domeMesh);
 
-    // Smooth White Conical Oval Skylight Collar + Suspended Central Circular Light Gantry (#157!)
+    // Smooth White Conical Oval Skylight Collar + Suspended Central Circular Light Gantry high in 6-story dome crown (#157 — clears 4F-08 sightline!)
     const whiteConicalMat = new THREE.MeshStandardMaterial({ color: '#eef0f2', roughness: 0.42, metalness: 0.08, side: THREE.DoubleSide });
-    const domeCollar = new THREE.Mesh(new THREE.CylinderGeometry(11.5, 19.6, 3.6, 48, 1, true), whiteConicalMat);
-    domeCollar.scale.set(1.0, 1.0, 0.66);
-    domeCollar.position.set(ov.cx, 35.4, ov.cz);
-    const centerGantry = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 1.45, 32, 1, true), whiteConicalMat);
-    centerGantry.position.set(ov.cx, 31.2, ov.cz);
+    const domeCollar = new THREE.Mesh(new THREE.CylinderGeometry(14.2, 20.1, 2.1, 48, 1, true), whiteConicalMat);
+    domeCollar.scale.set(1.0, 1.0, 0.68);
+    domeCollar.position.set(ov.cx, 37.35, ov.cz);
+    const centerGantry = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 1.15, 32, 1, true), whiteConicalMat);
+    centerGantry.position.set(ov.cx, 35.6, ov.cz);
     for (let c = 0; c < 4; c++) {
       const ca = (c / 4) * Math.PI * 2;
-      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 8.5, 6), skylightAlumMat);
-      rod.position.set(ov.cx + Math.cos(ca) * 2.6, 35.8, ov.cz + Math.sin(ca) * 2.6);
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 5.2, 6), skylightAlumMat);
+      rod.position.set(ov.cx + Math.cos(ca) * 2.45, 38.4, ov.cz + Math.sin(ca) * 2.45);
       root.add(rod);
     }
     root.add(domeCollar, centerGantry);
@@ -1414,10 +1414,7 @@ export function buildMallArchitecture(scene, interactables) {
     for (const x of [-99, -82, -65, -49]) {
       for (const z of [-11.3, 11.3]) colPositions.push({ x, y: 14.7, z, h: 29.4, r: 0.52, floors: [0, 1, 2, 3, 4] });
     }
-    // Rainforest corner columns stop cleanly at 2F cornice (y=22.8) UNDER the circular glass curtain-wall sky funnel!
-    for (const x of [19.4, 56.6]) {
-      for (const z of [-13.8, 13.8]) colPositions.push({ x, y: 11.4, z, h: 22.8, r: 0.50, floors: [0, 1, 2, 3] });
-    }
+    // Legacy rectangular Rainforest corner columns removed (replaced by 12 curved elliptical Rainforest rim columns!)
     // Highstreet columns RIGHT on void rim (z = ±6.8, stops cleanly under 3F ceiling y=29.4!)
     for (const x of [70.2, 85.0, 99.8]) {
       for (const z of [-6.8, 6.8]) colPositions.push({ x, y: 14.7, z, h: 29.4, r: 0.48, floors: [0, 1, 2, 3, 4] });

@@ -1104,7 +1104,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
   ],
   1: [ // G (10 unobstructed Real2Sim shots)
     aimShot('G-01', '1UE MRT Pintu B Skywalk, Mixue, Pasar Eatai & Pop Mart Robo', -154.0, 6.0, -176.0, 0.0, 0.01),
-    aimShot('G-02', '1UE Giant Chess Courtyard, SportsDirect & Prayer Room/WC Corridor', -151.0, -6.5, -162.8, 20.2, 0.01),
+    aimShot('G-02', '1UE Giant Chess Courtyard, SportsDirect & Prayer Room/WC Corridor', -148.5, 4.2, -138.0, 12.6, -0.06),
     aimShot('G-03', 'Old Wing Solid GF Centre Court Heritage Pavilion & Checkered Columns', -56.5, -14.8, -74.5, 0.5, 0.02),
     aimShot('G-04', 'Old Wing G139C Sephora, M·A·C & Starbucks Reserve', -102.0, 12.2, -82.5, 19.6, 0.02),
     aimShot('G-05', 'Old Wing G115 Sa Sa, Haidilao, Nadeje & G125 AEON', -64.0, -14.8, -36.0, -16.5, 0.01),
@@ -1112,7 +1112,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('G-07', 'GF Rainforest Terracotta Balcony, Treetop Adventure & Green Escalators', 21.8, -15.5, 43.0, 4.5, -0.04),
     aimShot('G-08', 'LUXE G Main Entrance, Coach Opposite Michael Kors & Lancôme/YSL', 79.5, -2.5, 79.5, 22.8, 0.01),
     aimShot('G-09', 'LUXE G Tom Ford/Replica Pavilion, Chanel, M&S & Zara', 98.2, -1.8, 81.5, -1.2, 0.00),
-    aimShot('G-10', 'GF Oval Skylight Dome, Rim Escalators, LED Columns & Parkson Elite', 124.5, 12.5, 146.0, -11.5, 0.14)
+    aimShot('G-10', 'GF Oval Skylight Dome, Rim Escalators, LED Columns & Parkson Elite', 119.5, 10.5, 146.0, -7.5, 0.14)
   ],
   2: [ // 1F (10 unobstructed Real2Sim shots)
     aimShot('1F-01', '1UE District K F603A Rollerwa & Cafe Disco', -156.5, 3.5, -178.0, -1.5, -0.02),
@@ -1132,11 +1132,11 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('2F-03', 'Old Wing S101 Harvey Norman, LEGO & Blue TGV IMAX Escalator', -98.0, -14.0, -118.0, -4.0, 0.01),
     aimShot('2F-04', 'Old Wing S140 Toys"R"Us, Wondermama & Centre Court', -106.5, 14.5, -82.0, 18.5, 0.01),
     aimShot('2F-05', 'Old Wing S125 AEON Home, Hokkaido Sushi & Restrooms/Surau', -58.5, 16.0, -34.0, 17.5, 0.01),
-    aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -24.5, 5.8, -6.0, 4.5, 0.00),
+    aimShot('2F-06', '2F Promenade Open Void, SK2A Samsung, Celebrity Fitness & Dzi Kingdom', -25.8, -5.8, -4.0, 2.0, -0.02),
     aimShot('2F-07', '2F Rainforest Suspension Bridge & Circular Glass Sky Dome (Photo Exact!)', 38.0, -11.4, 38.0, 13.0, 0.18, 0.15),
     aimShot('2F-08', '2F Highstreet Starship Galactica, Machines, Cuckoo & Chili’s', 98.5, 14.5, 84.0, -16.5, 0.04),
     aimShot('2F-09', '2F Highstreet SK9A Sushi Zanmai, SK9 ZUS Coffee & Dragon-i', 110.5, 5.5, 117.0, -7.5, -0.02),
-    aimShot('2F-10', '2F Oval Hot-Pink Pop Mart, Kaison, Sensory Pod, MR.DIY & Parkson', 136.0, -15.5, 128.0, 22.0, 0.01)
+    aimShot('2F-10', '2F Oval Hot-Pink Pop Mart, Kaison, Sensory Pod, MR.DIY & Parkson', 147.0, -14.8, 126.0, 21.5, 0.01)
   ],
   4: [ // 3F (10 unobstructed Real2Sim shots)
     aimShot('3F-01', '1UE T601 PJPAC Level 3, NextGen Mezzanine & MRT Overlook', -152.5, 8.5, -174.0, -4.5, 0.01),

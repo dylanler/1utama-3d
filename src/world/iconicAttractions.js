@@ -24,7 +24,8 @@ import {
   createStrikeZoneTexture,
   createWayfindingTexture,
   createSilverMosaicMaps,
-  createRainforestBridgeStripeTexture
+  createRainforestBridgeStripeTexture,
+  createBroadleafCanopyClusterTexture
 } from '../graphics/proceduralTextures.js';
 import {
   createKoiPondWaterMaterial,
@@ -1438,13 +1439,14 @@ export function buildIconicAttractions(scene, interactables) {
   //     (100% Photo-Exact to media_1795337629668_975ac4eb.jpg + 2025 Video #008-#020, #348-#358!)
   // ==========================================================================
 
-  // Lush Broadleaf Tropical Rainforest Tree Generator (Full sunlit emerald/chartreuse leafy crowns framing BOTH sides of 2F bridge!)
+  // Photorealistic Multi-Leaf Broadleaf Tropical Rainforest Tree Generator (78-leaf botanical cutout clusters — ZERO cartoon oval blobs!)
+  const broadleafClusterTex = createBroadleafCanopyClusterTexture();
   const broadleafMats = [
-    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#3b8c32', alphaTest: 0.36, roughness: 0.68, side: THREE.DoubleSide }),
-    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#63b33a', alphaTest: 0.36, roughness: 0.64, side: THREE.DoubleSide }),
-    new THREE.MeshStandardMaterial({ map: botMats.shrubLeafCard.map, color: '#246628', alphaTest: 0.36, roughness: 0.72, side: THREE.DoubleSide })
+    new THREE.MeshStandardMaterial({ map: broadleafClusterTex, color: '#d8f0cf', alphaTest: 0.32, roughness: 0.68, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ map: broadleafClusterTex, color: '#eefad4', alphaTest: 0.32, roughness: 0.64, side: THREE.DoubleSide }),
+    new THREE.MeshStandardMaterial({ map: broadleafClusterTex, color: '#b4d8b0', alphaTest: 0.32, roughness: 0.72, side: THREE.DoubleSide })
   ];
-  const broadleafCardGeo = new THREE.PlaneGeometry(2.35, 2.35);
+  const broadleafCardGeo = new THREE.PlaneGeometry(2.55, 2.55);
   function addBroadleafRainforestTree(tx, tz, trunkH, crownR, seed) {
     const tg = new THREE.Group();
     tg.position.set(tx, -0.35, tz);
@@ -1488,18 +1490,18 @@ export function buildIconicAttractions(scene, interactables) {
     rainforestGroup.add(tg);
   }
 
-  // Lush leafy rainforest trees framing BOTH LEFT (+X in 2F-07) & RIGHT (-X in 2F-07) flanks of the 2F suspension bridge (strictly outside bridge x=36..40!)
+  // Balanced photorealistic rainforest tree canopy framing LEFT (+X in 2F-07: sunlit mid-crown matching photo!) & RIGHT (-X in 2F-07: lush lower canopy revealing curved terracotta balconies!)
   const broadleafSpots = [
-    { x: 32.8, z: -5.4, h: 21.8, r: 3.8, s: 1.1 },
-    { x: 32.4, z: 3.6, h: 20.4, r: 3.5, s: 2.3 },
-    { x: 31.2, z: -9.2, h: 19.6, r: 3.2, s: 3.7 },
-    { x: 43.2, z: -4.2, h: 21.2, r: 3.8, s: 4.5 },
-    { x: 43.8, z: 4.8, h: 20.8, r: 3.7, s: 5.9 },
-    { x: 44.6, z: -9.0, h: 19.2, r: 3.3, s: 6.4 },
-    { x: 26.8, z: -3.2, h: 22.4, r: 4.1, s: 7.2 },
-    { x: 49.4, z: 1.8, h: 22.0, r: 4.0, s: 8.8 },
-    { x: 33.8, z: 8.6, h: 19.0, r: 3.0, s: 9.4 },
-    { x: 42.4, z: 8.8, h: 18.8, r: 3.1, s: 10.2 }
+    { x: 31.6, z: -5.2, h: 18.6, r: 3.1, s: 1.1 },
+    { x: 32.2, z: 3.8, h: 19.2, r: 3.2, s: 2.3 },
+    { x: 30.8, z: -9.2, h: 18.2, r: 2.9, s: 3.7 },
+    { x: 44.0, z: -4.6, h: 21.4, r: 3.6, s: 4.5 },
+    { x: 44.2, z: 4.6, h: 20.2, r: 3.4, s: 5.9 },
+    { x: 45.2, z: -8.8, h: 19.4, r: 3.1, s: 6.4 },
+    { x: 26.4, z: -2.4, h: 20.0, r: 3.5, s: 7.2 },
+    { x: 49.6, z: 1.8, h: 21.6, r: 3.8, s: 8.8 },
+    { x: 33.6, z: 8.4, h: 18.2, r: 2.8, s: 9.4 },
+    { x: 42.6, z: 8.6, h: 18.4, r: 2.9, s: 10.2 }
   ];
   for (const bt of broadleafSpots) {
     addBroadleafRainforestTree(bt.x, bt.z, bt.h, bt.r, bt.s);
@@ -1777,6 +1779,25 @@ export function buildIconicAttractions(scene, interactables) {
     }
   }
 
+  // Recessed Dark-Bronze Architectural Mall Entrance Portal Frame at far bridge landing (z = +13.1, exact match to photo doorway!)
+  {
+    const portalMat = new THREE.MeshStandardMaterial({ color: '#1b1d21', roughness: 0.45, metalness: 0.40 });
+    for (const px of [-2.25, 2.25]) {
+      const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.42, 4.35, 0.55), portalMat);
+      jamb.position.set(px, 2.18, 13.05);
+      bridgeGroup.add(jamb);
+    }
+    const lintel = new THREE.Mesh(new THREE.BoxGeometry(4.95, 0.85, 0.58), portalMat);
+    lintel.position.set(0, 3.98, 13.05);
+    const fdPortalSign = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.8, 0.62),
+      new THREE.MeshBasicMaterial({ map: createSignBoardTexture('FOOD DISTRICT', '2F NEW WING • RAINFOREST ENTRANCE', '#16181c', '#ffffff', '#d95d2b', 768, 128) })
+    );
+    fdPortalSign.rotation.y = Math.PI;
+    fdPortalSign.position.set(0, 3.98, 12.74);
+    bridgeGroup.add(lintel, fdPortalSign);
+  }
+
   // Keep bridgePlanks array defined for update() compatibility (zero stray plank sway glitches on smooth terrazzo deck)
   const bridgePlanks = [];
 
@@ -1840,11 +1861,13 @@ export function buildIconicAttractions(scene, interactables) {
     });
     const marquee = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.25, 0.16), [sgDarkMat, sgDarkMat, sgDarkMat, sgDarkMat, goSignMat, goSignMat]);
     marquee.position.set(-4.8, 2.55, 3.8);
+    const podMarquee = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 1.75), goSignMat);
+    podMarquee.position.set(1.8, 3.55, 2.13);
     const tktCounter = new THREE.Mesh(new THREE.BoxGeometry(3.8, 1.04, 1.15), sgPanelMat);
     tktCounter.position.set(-4.8, 0.62, 3.8);
     const tktGlow = new THREE.Mesh(new THREE.BoxGeometry(3.86, 0.08, 1.20), sgYellowNeon);
     tktGlow.position.set(-4.8, 1.16, 3.8);
-    sg.add(podA, podB, tubeSlide, marquee, tktCounter, tktGlow);
+    sg.add(podA, podB, tubeSlide, marquee, podMarquee, tktCounter, tktGlow);
     root.add(sg);
   }
 
