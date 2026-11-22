@@ -1,5 +1,8 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
+## Round-19 (In Progress — Swarm Full-Fidelity Final Pass: Wayfinding, WC Corridors, Proshop/Gym Interiors, Escalator & Bridge Polish)
+- **Swarm Full-Fidelity Final Pass**: Starting coordinated multi-agent polish across wayfinding totems, WC-only service corridors, Camp5 proshop & Celebrity Fitness gym interiors, escalator & Rainforest bridge details, and full visual verification across all floors.
+
 ## Round-18 (Completed — Final Full-Fidelity Visual Polish Across All 30 Verified Shots)
 - **3F `TGV Maybank IMAX` (`EZ101`)**: Prioritize `TGV` above `MAYBANK` in `getStoreBrandProfile()` so `EZ101` renders its corrugated pale-grey steel wall + yellow `Maybank` box + glowing cyan `IMAX®` + red `TGV Cinemas` (fixing `Maybank • LAMY`), and lift `Bites` hanging pergola vines above the signage bar so text stays 100% crisp.
 - **4F–5F Entertainment Zone Polish**:
