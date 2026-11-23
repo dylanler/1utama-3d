@@ -220,7 +220,7 @@ export const ELEVATORS = [
 export function getEscalatorWellsForFloor(floorIdx) {
   return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx && e.wing !== 'oval-rim').map((e) => ({
     esc: e,
-    xMin: Math.min(e.xStart, e.xEnd) - 0.45,
+    xMin: Math.min(e.xStart, e.xEnd) + 0.15,
     xMax: Math.max(e.xStart, e.xEnd) - 0.04,
     zMin: e.z - e.width * 0.74,
     zMax: e.z + e.width * 0.74

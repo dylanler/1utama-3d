@@ -182,7 +182,7 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     // For well-cutout escalators (all except oval-rim), seal the side well-collar soffit gaps flush with the ceiling coffer!
     if (bank.wing !== 'oval-rim') {
       const wellSoffitMat = new THREE.MeshStandardMaterial({ color: '#f0ece4', roughness: 0.42, metalness: 0.05 });
-      const wellXMin = Math.min(bank.xStart, bank.xEnd) - 0.45;
+      const wellXMin = Math.min(bank.xStart, bank.xEnd) + 0.15;
       const wellXMax = Math.max(bank.xStart, bank.xEnd) - 0.04;
       const wellLen = wellXMax - wellXMin;
       const wellCenterX = (wellXMin + wellXMax) * 0.5;
