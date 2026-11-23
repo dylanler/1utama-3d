@@ -221,10 +221,9 @@ export class PlayerController {
       const esc = escBefore.esc;
       const dirSign = esc.dx >= 0 ? 1 : -1;
       this.escalatorTravelDir = esc.direction * dirSign;
-      if (
-        (this.escalatorTravelDir > 0 && (this.footPos.x - esc.xEnd) < 0.85) ||
-        (this.escalatorTravelDir < 0 && (this.footPos.x - esc.xStart) > -0.85)
-      ) {
+      const destX = esc.direction === 1 ? esc.xEnd : esc.xStart;
+      const signedPastDest = (this.footPos.x - destX) * this.escalatorTravelDir;
+      if (signedPastDest < 1.15) {
         escVx = this.escalatorTravelDir * 3.15;
       }
       // Prevent walking backwards against the escalator's mechanical direction

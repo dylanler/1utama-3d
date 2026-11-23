@@ -572,10 +572,6 @@ export function buildMallArchitecture(scene, interactables) {
       const a2 = ((i + 1) / segs) * Math.PI * 2;
       const am = (a1 + a2) * 0.5;
       if (am < gapAng || am > Math.PI * 2 - gapAng) continue;
-      // Leave clean entrance/exit slots on the North rim where oval-rim escalators (x=132.4..143.6, z=-12.6) enter the Oval!
-      const mxEsc = cx + Math.cos(am) * rx;
-      const mzEsc = cz + Math.sin(am) * rz;
-      if (yFloor >= 5.5 && yFloor <= 24.5 && mzEsc < -11.4 && mxEsc > 131.6 && mxEsc < 144.4) continue;
       addRectBalustrade(
         cx + Math.cos(a1) * rx,
         cz + Math.sin(a1) * rz,
@@ -635,6 +631,10 @@ export function buildMallArchitecture(scene, interactables) {
         // Only cap the back well edge on the VERY TOP terminus floor (NEVER block stacked escalator entrances!)
         if (fIdx === 4 && w.esc.direction === 1) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y);
       }
+      // Hoistway floor cutout for `1ue-olive-lift` (x = -178.4, z = 14.5) across G..3F (fIdx 1..4)
+      if (fIdx >= 1 && fIdx <= 4) {
+        shape.holes.push(rectPath(-179.9, -176.9, 13.0, 16.0));
+      }
       const isDistrictK = fIdx === 2 || fIdx === 3;
       // Note: ceilMat is the UNDERSIDE of floor fIdx (= ceiling of floor fIdx - 1), so industrial plenum goes on 2F & 3F undersides (covering 1F & 2F District K)!
       const slabCeilMat = fIdx === 3 || fIdx === 4 ? districtKPlenumMat : ceilWoodMat;
@@ -649,6 +649,7 @@ export function buildMallArchitecture(scene, interactables) {
 
       if (isDistrictK) {
         // Authentic 1 Utama District K (1UE 1F & 2F): Suspended parallel multicolor acoustic baffle slats WITH visible steel suspension rods!
+        // Split into N/S flanking segments across the 1UE escalator well (x = -148.8..-134.0) so ZERO ceiling beams cross the escalator well!
         const dkBaffleMats = [
           new THREE.MeshStandardMaterial({ color: '#f3eee4', roughness: 0.46, metalness: 0.08 }),
           new THREE.MeshStandardMaterial({ color: '#dc2626', roughness: 0.42, metalness: 0.10 }),
@@ -657,17 +658,32 @@ export function buildMallArchitecture(scene, interactables) {
           new THREE.MeshStandardMaterial({ color: '#38bdf8', roughness: 0.42, metalness: 0.10 })
         ];
         const baffleGeo = new THREE.BoxGeometry(0.16, 0.40, 16.4);
+        const flankBaffleGeo = new THREE.BoxGeometry(0.16, 0.40, 5.0);
         const suspRodGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.46, 6);
         let bIdx = 0;
         for (let bx = -180.5; bx <= -133.5; bx += 1.45) {
-          const slat = new THREE.Mesh(baffleGeo, dkBaffleMats[bIdx % dkBaffleMats.length]);
-          slat.position.set(bx, y + 5.02, 0);
-          root.add(slat);
-          if (bIdx % 2 === 0) {
-            for (const rz of [-6.8, 6.8]) {
-              const rod = new THREE.Mesh(suspRodGeo, steelHandrailMat);
-              rod.position.set(bx, y + 5.34, rz);
-              root.add(rod);
+          const mat = dkBaffleMats[bIdx % dkBaffleMats.length];
+          if (bx >= -148.8 && bx <= -134.0) {
+            for (const fz of [-5.7, 5.7]) {
+              const flankSlat = new THREE.Mesh(flankBaffleGeo, mat);
+              flankSlat.position.set(bx, y + 5.02, fz);
+              root.add(flankSlat);
+              if (bIdx % 2 === 0) {
+                const rod = new THREE.Mesh(suspRodGeo, steelHandrailMat);
+                rod.position.set(bx, y + 5.34, fz);
+                root.add(rod);
+              }
+            }
+          } else {
+            const slat = new THREE.Mesh(baffleGeo, mat);
+            slat.position.set(bx, y + 5.02, 0);
+            root.add(slat);
+            if (bIdx % 2 === 0) {
+              for (const rz of [-6.8, 6.8]) {
+                const rod = new THREE.Mesh(suspRodGeo, steelHandrailMat);
+                rod.position.set(bx, y + 5.34, rz);
+                root.add(rod);
+              }
             }
           }
           bIdx++;
@@ -680,18 +696,18 @@ export function buildMallArchitecture(scene, interactables) {
           duct.position.set(-157.0, y + 5.18, dz);
           root.add(duct);
         }
-        // Iconic District K Plaza (BOTH 1F & 2F!): High-Segment Smooth Suspended HDR Glowing Circular LED Halo Rings WITH steel cables!
+        // Iconic District K Plaza (BOTH 1F & 2F!): High-Segment Smooth Suspended HDR Glowing Circular LED Halo Rings WITH steel cables (100% clear of 1UE escalator well x=-146.5..-136.0)!
         if (fIdx === 2 || fIdx === 3) {
           const dkHalos = fIdx === 2
             ? [
                 { x: -163.5, z: -4.2, r: 3.1, c: new THREE.Color(2.4, 1.35, 0.36) },
                 { x: -156.2, z: 3.4, r: 3.4, c: new THREE.Color(0.35, 1.85, 2.55) },
-                { x: -150.0, z: -2.2, r: 2.7, c: new THREE.Color(2.4, 0.42, 1.48) }
+                { x: -151.0, z: -2.2, r: 2.5, c: new THREE.Color(2.4, 0.42, 1.48) }
               ]
             : [
                 { x: -162.5, z: -1.8, r: 3.2, c: new THREE.Color(0.35, 1.95, 2.55) },
                 { x: -154.0, z: 4.0, r: 2.9, c: new THREE.Color(2.4, 1.15, 0.32) },
-                { x: -146.5, z: -3.2, r: 2.6, c: new THREE.Color(2.3, 0.48, 1.45) }
+                { x: -150.5, z: -3.2, r: 2.4, c: new THREE.Color(2.3, 0.48, 1.45) }
               ];
           for (const h of dkHalos) {
             const ring = new THREE.Mesh(
@@ -726,10 +742,14 @@ export function buildMallArchitecture(scene, interactables) {
       const ow = BOUNDS.oldWing;
       const shape = rectShape(ow.xMin, ow.xMax, ow.zMin, ow.zMax);
 
+      // Hoistway floor cutout for relocated `oldwing-lift` (x = -99.5, z = -7.2) across G..3F (fIdx 1..4)
+      if (fIdx >= 1 && fIdx <= 4) {
+        shape.holes.push(rectPath(-101.0, -98.0, -8.7, -5.7));
+      }
+
       if (fIdx >= 2) {
         const cc = BOUNDS.centreCourtVoid;
         shape.holes.push(rectPath(cc.xMin, cc.xMax, cc.zMin, cc.zMax));
-        shape.holes.push(rectPath(-101.7, -98.7, -1.5, 1.5));
         addRectVoidCollar(cc.xMin, cc.xMax, cc.zMin, cc.zMax, y, 0.24);
         addRectBalustrade(cc.xMin, cc.zMin, cc.xMax, cc.zMin, y);
         addRectBalustrade(cc.xMin, cc.zMax, cc.xMax, cc.zMax, y);
@@ -1023,13 +1043,14 @@ export function buildMallArchitecture(scene, interactables) {
         root.add(new THREE.Mesh(ringGeo, warmCoveLedMat));
       }
 
-      for (const w of wells.filter((item) => item.esc.wing === 'rainforest' || item.esc.wing === 'oval')) {
+      for (const w of wells.filter((item) => item.esc.wing === 'rainforest' || item.esc.wing === 'oval' || item.esc.wing === 'oval-rim')) {
         nwShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
         addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
         addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y, 1.08, !floor.isRooftop);
         addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y, 1.08, !floor.isRooftop);
-        const isTopEnd = (w.esc.wing === 'rainforest' && fIdx === 4) || (w.esc.wing === 'oval' && fIdx === 6);
+        const isTopEnd = ((w.esc.wing === 'rainforest' || w.esc.wing === 'oval-rim') && fIdx === 4) || (w.esc.wing === 'oval' && fIdx === 6);
         if (isTopEnd && w.esc.direction === 1) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y, 1.08, !floor.isRooftop);
+        if (w.esc.wing === 'oval-rim' && fIdx === 4 && w.esc.direction === -1) addRectBalustrade(w.xMax + 0.08, w.zMin, w.xMax + 0.08, w.zMax, y, 1.08, !floor.isRooftop);
       }
 
       addSlab(
@@ -7558,13 +7579,13 @@ export function buildMallArchitecture(scene, interactables) {
     // LG (Includes sculptural LG Oval perimeter concourse benches framing Ferrari & KyoChon cleanly!)
     { f: 0, x: -162.5, z: 9.5 }, { f: 0, x: -152.0, z: 3.5 }, { f: 0, x: -114, z: -7.5 }, { f: 0, x: -45, z: 15.8 }, { f: 0, x: -20, z: -4.8 }, { f: 0, x: 64, z: -3.0 }, { f: 0, x: 112, z: -5.0 }, { f: 0, x: 123.5, z: -14.2 }, { f: 0, x: 120.5, z: 15.8 },
     // G (Moved (-74, 15.5) -> (-64, 13.8) clear of Starbucks a2 & (-168, 7.5) -> (-161.5, 11.8) clear of MRT Skywalk!)
-    { f: 1, x: -161.5, z: 11.8 }, { f: 1, x: -146, z: 5.5 }, { f: 1, x: -146, z: -3.0 }, { f: 1, x: -74, z: -15.5 }, { f: 1, x: -64, z: 13.8 }, { f: 1, x: -10, z: 3.2 }, { f: 1, x: 74, z: -13.0 }, { f: 1, x: 96, z: 12.5 }, { f: 1, x: 114, z: -10.5 }, { f: 1, x: 119.5, z: -19.8 },
-    // 1F (Moved (-152, 6.5) -> (-146.5, 2.5) 100% clear of 1F-02 lens!)
-    { f: 2, x: -146.5, z: 2.5 }, { f: 2, x: -74, z: -15.5 }, { f: 2, x: -74, z: 15.5 }, { f: 2, x: 86, z: 13.5 }, { f: 2, x: 114, z: 10.5 }, { f: 2, x: 129, z: -18.8 },
+    { f: 1, x: -161.5, z: 11.8 }, { f: 1, x: -152.5, z: 5.8 }, { f: 1, x: -152.5, z: -5.8 }, { f: 1, x: -74, z: -15.5 }, { f: 1, x: -64, z: 13.8 }, { f: 1, x: -10, z: 3.2 }, { f: 1, x: 74, z: -13.0 }, { f: 1, x: 96, z: 12.5 }, { f: 1, x: 114, z: -10.5 }, { f: 1, x: 119.5, z: -19.8 },
+    // 1F (Kept 100% clear of 1UE escalators, 1F-02 lens & oval-rim escalator landing!)
+    { f: 2, x: -153.5, z: 5.5 }, { f: 2, x: -74, z: -15.5 }, { f: 2, x: -74, z: 15.5 }, { f: 2, x: 86, z: 13.5 }, { f: 2, x: 114, z: 10.5 }, { f: 2, x: 125.5, z: -16.8 },
     // 2F (Added Highstreet walkway bench at (85, -10.5) for 2F-08; cleared (129, -18.8) from 2F-10 Pop Mart sightline!)
-    { f: 3, x: -152, z: -1.5 }, { f: 3, x: -74, z: -15.5 }, { f: 3, x: -74, z: 15.5 }, { f: 3, x: -14, z: -4.2 }, { f: 3, x: 74, z: 14.5 }, { f: 3, x: 85, z: -10.5 }, { f: 3, x: 114, z: 10.5 }, { f: 3, x: 142, z: 16.2 },
+    { f: 3, x: -153.5, z: -5.5 }, { f: 3, x: -74, z: -15.5 }, { f: 3, x: -74, z: 15.5 }, { f: 3, x: -14, z: -4.2 }, { f: 3, x: 74, z: 14.5 }, { f: 3, x: 85, z: -10.5 }, { f: 3, x: 114, z: 10.5 }, { f: 3, x: 142, z: 16.2 },
     // 3F (Added 1UE mezzanine planter at (-157, 9.5) for 3F-01!)
-    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 38, z: -16.2 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 129, z: -18.8 }, { f: 4, x: 142, z: 16.2 },
+    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 38, z: -16.2 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 125.5, z: -16.8 }, { f: 4, x: 142, z: 16.2 },
     // 4F–5F Entertainment Zone & Oval
     { f: 5, x: 64, z: -1.5 }, { f: 5, x: 76, z: 10.5 }, { f: 5, x: 102, z: 0 }, { f: 5, x: 130, z: 16.8 }, { f: 5, x: 129, z: -18.8 }
   ];

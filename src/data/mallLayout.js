@@ -116,8 +116,8 @@ export const ESCALATOR_BANKS = [
   ]),
   // Old Wing West / Uniqlo / Harvey Norman / TGV IMAX Escalators (LG <-> G <-> 1F <-> 2F <-> 3F TGV — Verified #034–#035, #068, #429–#430)
   ...[0, 1, 2, 3].flatMap((f) => [
-    { id: `ow-west-up-${f}`, wing: 'old', theme: f === 3 ? 'tgv-imax' : 'standard', lowerFloor: f, upperFloor: f + 1, direction: 1, xStart: -114.5, xEnd: -103.5, z: -1.6, width: 1.5 },
-    { id: `ow-west-dn-${f}`, wing: 'old', theme: f === 3 ? 'tgv-imax' : 'standard', lowerFloor: f, upperFloor: f + 1, direction: -1, xStart: -114.5, xEnd: -103.5, z: 1.6, width: 1.5 }
+    { id: `ow-west-up-${f}`, wing: 'old', theme: f === 3 ? 'tgv-imax' : 'standard', lowerFloor: f, upperFloor: f + 1, direction: 1, xStart: -121.0, xEnd: -110.0, z: -1.6, width: 1.5 },
+    { id: `ow-west-dn-${f}`, wing: 'old', theme: f === 3 ? 'tgv-imax' : 'standard', lowerFloor: f, upperFloor: f + 1, direction: -1, xStart: -121.0, xEnd: -110.0, z: 1.6, width: 1.5 }
   ]),
   // Old Wing East / AEON Escalators (LG <-> G <-> 1F <-> 2F <-> 3F — Verified #048, #456)
   ...[0, 1, 2, 3].flatMap((f) => [
@@ -149,7 +149,7 @@ export const ESCALATOR_BANKS = [
     direction: f % 2 === 0 ? 1 : -1,
     xStart: f % 2 === 0 ? 132.4 : 143.6,
     xEnd: f % 2 === 0 ? 143.6 : 132.4,
-    z: -12.6,
+    z: -16.8,
     width: 1.5
   }))
 ];
@@ -194,8 +194,8 @@ export const ELEVATORS = [
   {
     id: 'oldwing-lift',
     name: 'Centre Court Glass Lift (LG – 3F TGV)',
-    x: -100.2,
-    z: 0.0,
+    x: -99.5,
+    z: -7.2,
     cabWidth: 2.8,
     cabDepth: 2.8,
     doorDir: -1,
@@ -218,7 +218,7 @@ export const ELEVATORS = [
 ];
 
 export function getEscalatorWellsForFloor(floorIdx) {
-  return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx && e.wing !== 'oval-rim').map((e) => ({
+  return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx).map((e) => ({
     esc: e,
     xMin: Math.min(e.xStart, e.xEnd) + 0.15,
     xMax: Math.max(e.xStart, e.xEnd) - 0.04,
@@ -1126,7 +1126,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('1F-07', '1F Rainforest Balcony Vista: Open-Air Parabolic-Arch Bridge & Waterfall (Photo 1!)', 19.6, 1.4, 42.5, 0.5, 0.22),
     aimShot('1F-08', '1F Highstreet Havaianas, Outpozt, Xixili, Swarovski & Pandora', 78.5, 10.5, 58.0, 18.0, 0.01),
     aimShot('1F-09', '1F Highstreet Yomaro, Pull&Bear, HLA & Owala Kiosk', 102.0, -10.5, 76.0, -16.0, 0.01),
-    aimShot('1F-10', '1F Oval F319 Decathlon Adjacent to F320 Parkson & Padini', 142.0, -17.2, 168.0, -16.5, 0.01)
+    aimShot('1F-10', '1F Oval F319 Decathlon Adjacent to F320 Parkson & Padini', 145.2, -17.2, 168.0, -16.5, 0.01)
   ],
   3: [ // 2F (10 unobstructed Real2Sim shots)
     aimShot('2F-01', '1UE S601 WINDLAB Indoor Skydiving & S611 PJPAC', -151.0, 10.5, -174.0, -9.5, 0.01),
@@ -1150,7 +1150,7 @@ export const LEVEL_VERIFICATION_SHOTS = {
     aimShot('3F-07', '3F Elevated Rainforest Bridge & Circular Forest-Green Truss Ring (Photo 2!)', 21.2, -7.2, 40.5, 2.5, -0.05, 0.58),
     aimShot('3F-08', '3F Highstreet The Ledge Art Gallery Exhibitions', 70.0, -13.5, 92.0, -20.5, 0.01),
     aimShot('3F-09', '3F Highstreet Concierge & Restrooms/Surau Service Corridor', 94.0, 11.5, 100.8, 23.2, -0.02),
-    aimShot('3F-10', '3F Oval OV301 XZQT Showroom & Purple Carpark Lobby', 138.0, -16.5, 168.0, 6.0, 0.01)
+    aimShot('3F-10', '3F Oval OV301 XZQT Showroom & Purple Carpark Lobby', 145.2, -16.5, 168.0, 6.0, 0.01)
   ],
   5: [ // 4F–5F Entertainment Zone (10 unobstructed Real2Sim shots)
     aimShot('4F-01', 'EZ501 Camp5 24m Climbing Gym & Crash Mats', 24.5, -18.8, 14.5, -15.2, 0.04),

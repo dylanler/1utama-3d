@@ -179,8 +179,8 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     upperTrussHead.position.set(bank.xEnd + dirSign * 0.48, y1 - 0.3125, bank.z);
     root.add(upperTrussHead);
 
-    // For well-cutout escalators (all except oval-rim), seal the side well-collar soffit gaps flush with the ceiling coffer!
-    if (bank.wing !== 'oval-rim') {
+    // Seal the side well-collar soffit gaps flush with the ceiling coffer on all escalator wells!
+    {
       const wellSoffitMat = new THREE.MeshStandardMaterial({ color: '#f0ece4', roughness: 0.42, metalness: 0.05 });
       const wellXMin = Math.min(bank.xStart, bank.xEnd) + 0.15;
       const wellXMax = Math.max(bank.xStart, bank.xEnd) - 0.04;
@@ -575,24 +575,24 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       ledReadout.position.y = 3.01;
       portalGroup.add(header, headerGlow, ledHousing, ledReadout);
 
-      for (const zSide of [-cfg.cabDepth * 0.46, cfg.cabDepth * 0.46]) {
-        const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.22, 3.08, 0.18), liftSteelMat);
+      for (const zSide of [-cfg.cabDepth * 0.37, cfg.cabDepth * 0.37]) {
+        const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.22, 3.08, cfg.cabDepth * 0.22), liftSteelMat);
         jamb.position.set(0, 1.54, zSide);
         portalGroup.add(jamb);
       }
 
       // Framed tempered-glass hoistway landing doors on floors where cab isn't currently docked (so shaft NEVER looks like an unfinished open hole!)
       if (f !== cfg.initialFloor) {
-        const doorPaneL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.74, cfg.cabDepth * 0.43), liftBubbleGlassMat);
-        doorPaneL.position.set(0, 1.40, -cfg.cabDepth * 0.22);
+        const doorPaneL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.74, cfg.cabDepth * 0.26), liftBubbleGlassMat);
+        doorPaneL.position.set(0, 1.40, -cfg.cabDepth * 0.13);
         const doorPaneR = doorPaneL.clone();
-        doorPaneR.position.z = cfg.cabDepth * 0.22;
+        doorPaneR.position.z = cfg.cabDepth * 0.13;
         const doorSeam = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.76, 0.04), liftSteelMat);
         doorSeam.position.set(0, 1.40, 0);
         const doorStileL = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.76, 0.06), liftSteelMat);
-        doorStileL.position.set(0, 1.40, -cfg.cabDepth * 0.42);
+        doorStileL.position.set(0, 1.40, -cfg.cabDepth * 0.26);
         const doorStileR = doorStileL.clone();
-        doorStileR.position.z = cfg.cabDepth * 0.42;
+        doorStileR.position.z = cfg.cabDepth * 0.26;
         portalGroup.add(doorPaneL, doorPaneR, doorSeam, doorStileL, doorStileR);
       }
 
@@ -897,23 +897,23 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     bubbleMesh.renderOrder = 1;
     cabGroup.add(bubbleMesh);
 
-    // Framed Brushed-Stainless & Crystal-Glass Center-Parting Automatic Sliding Cab Doors!
+    // Framed Brushed-Stainless & Crystal-Glass Center-Parting Automatic Sliding Cab Doors (tuck cleanly inside shaftRadius when open — zero protrusion outside shaft!)
     const makeSlidingDoor = (zInit) => {
       const dg = new THREE.Group();
       dg.position.set(-cfg.cabWidth * 0.48, 1.38, zInit);
-      const pane = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.66, cfg.cabDepth * 0.44), liftBubbleGlassMat);
+      const pane = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.66, cfg.cabDepth * 0.26), liftBubbleGlassMat);
       pane.renderOrder = 1;
-      const topRail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, cfg.cabDepth * 0.45), liftSteelMat);
+      const topRail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, cfg.cabDepth * 0.27), liftSteelMat);
       topRail.position.y = 1.30;
-      const botRail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, cfg.cabDepth * 0.45), liftSteelMat);
+      const botRail = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.09, cfg.cabDepth * 0.27), liftSteelMat);
       botRail.position.y = -1.30;
       const innerStile = new THREE.Mesh(new THREE.BoxGeometry(0.07, 2.68, 0.05), liftSteelMat);
-      innerStile.position.z = zInit < 0 ? cfg.cabDepth * 0.21 : -cfg.cabDepth * 0.21;
+      innerStile.position.z = zInit < 0 ? cfg.cabDepth * 0.125 : -cfg.cabDepth * 0.125;
       dg.add(pane, topRail, botRail, innerStile);
       return dg;
     };
-    const leftDoor = makeSlidingDoor(-cfg.cabDepth * 0.24);
-    const rightDoor = makeSlidingDoor(cfg.cabDepth * 0.24);
+    const leftDoor = makeSlidingDoor(-cfg.cabDepth * 0.13);
+    const rightDoor = makeSlidingDoor(cfg.cabDepth * 0.13);
     cabGroup.add(leftDoor, rightDoor);
 
     root.add(cabGroup);
@@ -1010,9 +1010,9 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     lift.counterweightGroup.position.y = computeCounterweightY(lift, lift.currentY);
     lift.state = 'open';
     lift.doorOpenAmount = 1.0;
-    const slide = lift.cabDepth * 0.36;
-    lift.leftDoor.position.z = -lift.cabDepth * 0.23 - slide;
-    lift.rightDoor.position.z = lift.cabDepth * 0.23 + slide;
+    const slide = lift.cabDepth * 0.245;
+    lift.leftDoor.position.z = -lift.cabDepth * 0.13 - slide;
+    lift.rightDoor.position.z = lift.cabDepth * 0.13 + slide;
     if (player) {
       player.floorIndex = clamped;
       player.footPos.set(lift.x + lift.doorDir * 0.45, lift.currentY, lift.z);
@@ -1076,9 +1076,9 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
 
       lift.cabGroup.position.y = lift.currentY;
       lift.counterweightGroup.position.y = computeCounterweightY(lift, lift.currentY);
-      const slide = lift.doorOpenAmount * (lift.cabDepth * 0.36);
-      lift.leftDoor.position.z = -lift.cabDepth * 0.23 - slide;
-      lift.rightDoor.position.z = lift.cabDepth * 0.23 + slide;
+      const slide = lift.doorOpenAmount * (lift.cabDepth * 0.245);
+      lift.leftDoor.position.z = -lift.cabDepth * 0.13 - slide;
+      lift.rightDoor.position.z = lift.cabDepth * 0.13 + slide;
     }
   }
 
