@@ -1,5 +1,9 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
+## Round-20 (In Progress — P0 Old Wing Lift/Escalator Separation & 1UE District K Escalator Ceiling Baffle Clearance)
+- **P0-A Old Wing Lift (`oldwing-lift`) vs West Escalator (`ow-west`) Separation (`src/data/mallLayout.js`, `src/world/mallArchitecture.js`)**: Shifting `ow-west-up/dn` escalators West to `xStart: -121.0, xEnd: -110.0, z: ±1.6` and relocating `oldwing-lift` off the `z = 0` escalator axis to `x: -99.5, z: -7.2, doorDir: -1` (NW Centre Court glass rim with >10.5m open concourse clearance and updated hoistway slab cutouts on `G..3F`).
+- **P0-B 1UE District K Escalator Well Ceiling Baffle & Halo Clearance (`src/world/mallArchitecture.js`, `src/world/traversalSystems.js`)**: Splitting the multicolor District K acoustic ceiling baffle beams (`x = -148.8..-134.0`) into North/South flanking segments (`z = ±5.7`, `5.0m` wide) and shifting the 2F circular LED halo ring to `x = -150.5` so the entire 1UE escalator well (`x = -146.5..-136.0, z = -3.2..+3.2`) is 100% open overhead with zero ceiling beams blocking players riding up/down.
+
 ## Round-19 (Completed — Swarm Full-Fidelity Final Pass: Wayfinding, WC Corridors, Proshop/Gym Interiors, Escalator & Bridge Polish)
 - **Promenade Escalator Well Cutouts, 1UE Split-Sign WC Header, Wing Wayfinding, Entertainment Interiors & Kiosk Polish (`src/world/mallArchitecture.js`, `#22`)**:
   - **P0 Promenade 1F & 2F Escalator Well Cutouts (`#17` item 1)**: Changed `else if (fIdx === 1)` to a separate `if (fIdx >= 1 && fIdx <= 3)` so Promenade escalator well holes, void collars, and N/S balustrades are punched on G (`1`), 1F (`2`), and 2F (`3`) alongside the West end cap balustrade on 2F (`fIdx === 3`).
