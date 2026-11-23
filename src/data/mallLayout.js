@@ -139,19 +139,11 @@ export const ESCALATOR_BANKS = [
     { id: `nw-up-${f}`, wing: 'oval', theme: 'oval-led', lowerFloor: f, upperFloor: f + 1, direction: 1, xStart: 103.5, xEnd: f === 5 ? 116.0 : 114.5, z: -17.4, width: 1.5 },
     { id: `nw-dn-${f}`, wing: 'oval', theme: 'oval-led', lowerFloor: f, upperFloor: f + 1, direction: -1, xStart: 103.5, xEnd: f === 5 ? 116.0 : 114.5, z: 17.4, width: 1.5 }
   ]),
-  // The Oval Inner-Rim Crisscrossing Atrium Escalators (LG <-> G <-> 1F <-> 2F <-> 3F — Verified #154, #164, #308, #373, #379!)
-  ...[0, 1, 2, 3].map((f) => ({
-    id: `oval-rim-${f}`,
-    wing: 'oval-rim',
-    theme: 'oval-led',
-    lowerFloor: f,
-    upperFloor: f + 1,
-    direction: f % 2 === 0 ? 1 : -1,
-    xStart: f % 2 === 0 ? 132.4 : 143.6,
-    xEnd: f % 2 === 0 ? 143.6 : 132.4,
-    z: -16.8,
-    width: 1.5
-  }))
+  // The Oval North Concourse Paired Atrium Escalators (LG <-> G <-> 1F <-> 2F <-> 3F — Verified #154, #164, #308, #373, #379!)
+  ...[0, 1, 2, 3].flatMap((f) => [
+    { id: `oval-rim-up-${f}`, wing: 'oval-rim', theme: 'oval-led', lowerFloor: f, upperFloor: f + 1, direction: 1, xStart: 132.4, xEnd: 143.6, z: -16.2, width: 1.5 },
+    { id: `oval-rim-dn-${f}`, wing: 'oval-rim', theme: 'oval-led', lowerFloor: f, upperFloor: f + 1, direction: -1, xStart: 132.4, xEnd: 143.6, z: -19.0, width: 1.5 }
+  ])
 ];
 
 export const ELEVATORS = [
@@ -220,10 +212,10 @@ export const ELEVATORS = [
 export function getEscalatorWellsForFloor(floorIdx) {
   return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx).map((e) => ({
     esc: e,
-    xMin: Math.min(e.xStart, e.xEnd) + 0.15,
+    xMin: Math.min(e.xStart, e.xEnd) + 0.35,
     xMax: Math.max(e.xStart, e.xEnd) - 0.04,
-    zMin: e.z - e.width * 0.74,
-    zMax: e.z + e.width * 0.74
+    zMin: e.z - 0.68,
+    zMax: e.z + 0.68
   }));
 }
 

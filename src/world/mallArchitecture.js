@@ -8,6 +8,7 @@ import {
   STORES,
   MALL_FACILITIES,
   KIOSKS,
+  ESCALATOR_BANKS,
   getEscalatorWellsForFloor
 } from '../data/mallLayout.js';
 import {
@@ -611,6 +612,29 @@ export function buildMallArchitecture(scene, interactables) {
     root.add(collar);
   }
 
+  function addEscalatorWellHoleAndRails(targetShape, w, fIdx, yFloor, includeLed = true) {
+    targetShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
+    addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, yFloor, 0.14);
+    addRectBalustrade(w.xMin, w.zMin - 0.06, w.xMax, w.zMin - 0.06, yFloor, 1.08, includeLed);
+    addRectBalustrade(w.xMin, w.zMax + 0.06, w.xMax, w.zMax + 0.06, yFloor, 1.08, includeLed);
+    // Check if a stacked escalator starts rising from this floor (fIdx -> fIdx + 1) at the same position:
+    // When hasUpperStack is true, NEVER place a transverse balustrade across xMin or xMax!
+    const hasUpperStack = ESCALATOR_BANKS.some(
+      (e) =>
+        e.lowerFloor === fIdx &&
+        Math.abs(e.z - w.esc.z) < 0.5 &&
+        Math.abs(Math.min(e.xStart, e.xEnd) - Math.min(w.esc.xStart, w.esc.xEnd)) < 2.0
+    );
+    if (!hasUpperStack) {
+      // Topmost terminus floor of this escalator stack: cap ONLY the non-landing end (near xStart), leaving the upper landing comb plate (near xEnd) 100% open!
+      if (w.esc.xStart <= w.esc.xEnd) {
+        addRectBalustrade(w.xMin - 0.06, w.zMin - 0.06, w.xMin - 0.06, w.zMax + 0.06, yFloor, 1.08, includeLed);
+      } else {
+        addRectBalustrade(w.xMax + 0.06, w.zMin - 0.06, w.xMax + 0.06, w.zMax + 0.06, yFloor, 1.08, includeLed);
+      }
+    }
+  }
+
   // ==========================================================================
   // 2. BUILD ALL 7 FLOOR SLABS + PLANAR MARBLE REFLECTORS + BALUSTRADES
   // ==========================================================================
@@ -624,12 +648,7 @@ export function buildMallArchitecture(scene, interactables) {
       const ue = BOUNDS.ueWing;
       const shape = rectShape(ue.xMin, ue.xMax, ue.zMin, ue.zMax);
       for (const w of wells.filter((item) => item.esc.wing === 'ue')) {
-        shape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
-        addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
-        addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y);
-        addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y);
-        // Only cap the back well edge on the VERY TOP terminus floor (NEVER block stacked escalator entrances!)
-        if (fIdx === 4 && w.esc.direction === 1) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y);
+        addEscalatorWellHoleAndRails(shape, w, fIdx, y, true);
       }
       // Hoistway floor cutout for `1ue-olive-lift` (x = -178.4, z = 14.5) across G..3F (fIdx 1..4)
       if (fIdx >= 1 && fIdx <= 4) {
@@ -766,11 +785,7 @@ export function buildMallArchitecture(scene, interactables) {
       }
 
       for (const w of wells.filter((item) => item.esc.wing === 'old')) {
-        shape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
-        addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
-        addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y);
-        addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y);
-        if (fIdx === 4 && w.esc.direction === 1) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y);
+        addEscalatorWellHoleAndRails(shape, w, fIdx, y, true);
       }
 
       addSlab(fIdx, shape, y, oldWingFloorMat, ceilWarmMat, '#e8dbc4');
@@ -791,11 +806,7 @@ export function buildMallArchitecture(scene, interactables) {
       }
       if (fIdx >= 1 && fIdx <= 3) {
         for (const w of wells.filter((item) => item.esc.wing === 'promenade')) {
-          prShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
-          addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
-          addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y);
-          addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y);
-          if (fIdx === 3) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y);
+          addEscalatorWellHoleAndRails(prShape, w, fIdx, y, true);
         }
       }
       addSlab(fIdx, prShape, y, newWingFloorMat, ceilWoodMat, '#d8e0eb');
@@ -1044,13 +1055,7 @@ export function buildMallArchitecture(scene, interactables) {
       }
 
       for (const w of wells.filter((item) => item.esc.wing === 'rainforest' || item.esc.wing === 'oval' || item.esc.wing === 'oval-rim')) {
-        nwShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
-        addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, y, 0.20);
-        addRectBalustrade(w.xMin, w.zMin - 0.08, w.xMax, w.zMin - 0.08, y, 1.08, !floor.isRooftop);
-        addRectBalustrade(w.xMin, w.zMax + 0.08, w.xMax, w.zMax + 0.08, y, 1.08, !floor.isRooftop);
-        const isTopEnd = ((w.esc.wing === 'rainforest' || w.esc.wing === 'oval-rim') && fIdx === 4) || (w.esc.wing === 'oval' && fIdx === 6);
-        if (isTopEnd && w.esc.direction === 1) addRectBalustrade(w.xMin - 0.08, w.zMin, w.xMin - 0.08, w.zMax, y, 1.08, !floor.isRooftop);
-        if (w.esc.wing === 'oval-rim' && fIdx === 4 && w.esc.direction === -1) addRectBalustrade(w.xMax + 0.08, w.zMin, w.xMax + 0.08, w.zMax, y, 1.08, !floor.isRooftop);
+        addEscalatorWellHoleAndRails(nwShape, w, fIdx, y, !floor.isRooftop);
       }
 
       addSlab(

@@ -179,19 +179,19 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     upperTrussHead.position.set(bank.xEnd + dirSign * 0.48, y1 - 0.3125, bank.z);
     root.add(upperTrussHead);
 
-    // Seal the side well-collar soffit gaps flush with the ceiling coffer on all escalator wells!
+    // Seal the side well-collar soffit seam flush with the 1.36m (z = ±0.68) ceiling well opening!
     {
       const wellSoffitMat = new THREE.MeshStandardMaterial({ color: '#f0ece4', roughness: 0.42, metalness: 0.05 });
-      const wellXMin = Math.min(bank.xStart, bank.xEnd) + 0.15;
+      const wellXMin = Math.min(bank.xStart, bank.xEnd) + 0.35;
       const wellXMax = Math.max(bank.xStart, bank.xEnd) - 0.04;
       const wellLen = wellXMax - wellXMin;
       const wellCenterX = (wellXMin + wellXMax) * 0.5;
       for (const zSign of [-1, 1]) {
         const sideClosure = new THREE.Mesh(
-          new THREE.BoxGeometry(wellLen, 0.585, bank.width * 0.30),
+          new THREE.BoxGeometry(wellLen, 0.585, 0.06),
           wellSoffitMat
         );
-        sideClosure.position.set(wellCenterX, y1 - 0.3125, bank.z + zSign * (bank.width * 0.60));
+        sideClosure.position.set(wellCenterX, y1 - 0.3125, bank.z + zSign * 0.66);
         root.add(sideClosure);
       }
     }
@@ -237,7 +237,7 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       { x: bank.xStart - dirSign * 0.56, y: y0, isEntry: bank.direction === 1, sign: -dirSign },
       { x: bank.xEnd + dirSign * 0.56, y: y1, isEntry: bank.direction === -1, sign: dirSign }
     ]) {
-      const plate = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.05, bank.width * 1.02), combPlateMat);
+      const plate = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.05, 1.36), combPlateMat);
       plate.position.set(endInfo.x, endInfo.y + 0.015, bank.z);
       const combYellow = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.058, bank.width * 0.84), stepYellowMat);
       combYellow.position.set(endInfo.x - endInfo.sign * 0.60, endInfo.y + 0.022, bank.z);
