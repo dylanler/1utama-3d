@@ -2754,7 +2754,11 @@ export const STORE_BRAND_STYLES = [
   { match: /BREO|SELECTIV/, brandKey: 'breo-selectiv', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '600', tracking: 10, title: 'breo  •  SELECTIV', subTag: 'SMART MASSAGE & FINE PERFUMERY', emblem: 'wave', interiorKey: 'int-beauty-cosmetics' },
   { match: /BEAUMEDICA|HONEYPOT/, brandKey: 'beaumedica', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#f0e9df', bg2: '#e2d8c8', fg: '#231b15', accent: '#c9a66b', isLight: true, font: 'classicSerif', weight: '700', tracking: 10, title: 'BEAUMEDICA  •  HONEYPOT', subTag: 'AESTHETIC & WELLNESS', emblem: 'leaf', interiorKey: 'int-beauty-cosmetics' },
   { match: /REHAT~REHAT|DR\. KYO/, brandKey: 'rehat-kyo', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e3a4c', bg2: '#132633', fg: '#f0f9ff', accent: '#38bdf8', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: 'REHAT~REHAT  •  DR. KYO', subTag: 'WELLNESS SPA & CLINIC', emblem: 'leaf', interiorKey: 'int-apothecary' },
-  { match: /GUARDIAN/, brandKey: 'guardian', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#ea580c', bg2: '#c2410c', fg: '#ffffff', accent: '#fde047', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'guardian', subTag: 'HEALTH • BEAUTY • PHARMACY', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /GUARDIAN/, brandKey: 'guardian', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'guardian-orange', bg: '#ea580c', bg2: '#c2410c', fg: '#ffffff', accent: '#fde047', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'guardian', subTag: 'HEALTH • BEAUTY • PHARMACY', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /WATSONS/, brandKey: 'watsons', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'watsons-teal', bg: '#009999', bg2: '#007777', fg: '#ffffff', accent: '#bef264', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'Watsons', subTag: 'LOOK GOOD • DO GOOD • FEEL GREAT', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /OWNDAYS|PARIS MIKI|FOCUS POINT|PUYI|A-LOOK|MOG\b/, brandKey: 'owndays', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'owndays-monochrome', bg: '#111318', bg2: '#08090c', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'OWNDAYS  •  OPTICAL', subTag: 'TOKYO • 20-MINUTE EYEWEAR', emblem: 'ring', interiorKey: 'int-tech' },
+  { match: /ROLEX|CORTINA WATCH|SWISS WATCH/, brandKey: 'rolex-cortina', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'rolex-emerald-gold', bg: '#0b3b24', bg2: '#062415', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 16, title: 'ROLEX  •  CORTINA WATCH', subTag: 'OFFICIAL GENEVA CHRONOMETER RETAILER', emblem: 'crown', interiorKey: 'int-jewellery' },
+  { match: /ORIENTAL KOPI/, brandKey: 'oriental-kopi', facadeType: 'cafe-patisserie', fasciaH: 1.34, materialStyle: 'emerald-gold-heritage', bg: '#0f3d2e', bg2: '#0b2d22', fg: '#f8e6ba', accent: '#d4af5e', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: 'ORIENTAL KOPI  华阳', subTag: 'NANYANG KOPI • POLO BUN • EGG TARTS', emblem: 'cup', interiorKey: 'int-teh-tarik' },
   { match: /CARING PHARMACY/, brandKey: 'caring', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#15803d', bg2: '#14532d', fg: '#ffffff', accent: '#86efac', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'CARiNG PHARMACY', subTag: 'PHARMACIST CARE & WELLNESS', emblem: 'cross', interiorKey: 'int-pharmacy' },
   { match: /IJN FIRST PHARMACY/, brandKey: 'ijn-pharmacy', facadeType: 'open-market', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#1e3a8a', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 6, title: 'IJN FIRST PHARMACY', subTag: 'CLINICAL HEART & HEALTH CARE', emblem: 'cross', interiorKey: 'int-pharmacy' },
   { match: /BMS ORGANICS/, brandKey: 'bms-organics', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#15803d', bg2: '#14532d', fg: '#dcfce7', accent: '#4ade80', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: 'BMS ORGANICS', subTag: 'ORGANIC WHOLEFOODS & CAFÉ', emblem: 'leaf', interiorKey: 'int-pharmacy' },
@@ -2789,8 +2793,8 @@ export const STORE_BRAND_STYLES = [
   { match: /MONTIGO/, brandKey: 'montigo', facadeType: 'minimalist-tech', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#090e1a', fg: '#fde68a', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'MONTIGO', subTag: 'INSULATED THERMAL DRINKWARE', emblem: 'cup', interiorKey: 'int-tech' },
 
   // --- JEWELLERY, WATCHES & PEWTER ---
-  { match: /SWAROVSKI/, brandKey: 'swarovski', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#110f30', fg: '#fdf2f8', accent: '#f9a8d4', isLight: false, font: 'didone', weight: '600', tracking: 18, title: 'SWAROVSKI', subTag: 'AUSTRIAN PRECISION CRYSTAL', emblem: 'diamond', interiorKey: 'int-jewellery' },
-  { match: /PANDORA/, brandKey: 'pandora', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#fdf2f6', bg2: '#f6e1ea', fg: '#1c1814', accent: '#f472b6', isLight: true, font: 'classicSerif', weight: '700', tracking: 18, title: 'PANDORA', subTag: 'HAND-FINISHED JEWELLERY', emblem: 'crown', interiorKey: 'int-jewellery' },
+  { match: /SWAROVSKI/, brandKey: 'swarovski', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'swarovski-midnight-crystal', bg: '#131633', bg2: '#0a0c1f', fg: '#fdf2f8', accent: '#f9a8d4', isLight: false, font: 'didone', weight: '600', tracking: 18, title: 'SWAROVSKI', subTag: 'AUSTRIAN PRECISION CRYSTAL', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /PANDORA/, brandKey: 'pandora', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'pandora-blush-white', bg: '#fbf6f8', bg2: '#f2e4ea', fg: '#1c1814', accent: '#e198b0', isLight: true, font: 'classicSerif', weight: '700', tracking: 18, title: 'PANDORA', subTag: 'HAND-FINISHED JEWELLERY • COPENHAGEN', emblem: 'crown', interiorKey: 'int-jewellery' },
   { match: /TAG HEUER/, brandKey: 'tag-heuer', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#111318', bg2: '#08090c', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'TAG Heuer', subTag: 'SWISS AVANT-GARDE SINCE 1860', emblem: 'shield', interiorKey: 'int-jewellery' },
   { match: /WATATIME|PATCHI/, brandKey: 'watatime', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#27201c', bg2: '#181411', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'WATATIME  •  PATCHI', subTag: 'SWISS WATCHES & ARTISAN CHOCOLATE', emblem: 'watch', interiorKey: 'int-jewellery' },
   { match: /TOMEI/, brandKey: 'tomei', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#713f12', bg2: '#451a03', fg: '#fef08a', accent: '#eab308', isLight: false, font: 'classicSerif', weight: '700', tracking: 14, title: 'TOMEI  •  OPULENCE', subTag: '916 FINE GOLD & DIAMONDS', emblem: 'diamond', interiorKey: 'int-jewellery' },
@@ -2830,7 +2834,7 @@ export const STORE_BRAND_STYLES = [
 
   // --- FURNITURE, HOME LIVING & KITCHENWARE ---
   { match: /KAISON/, brandKey: 'kaison', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#9c856b', bg2: '#826d56', fg: '#ffffff', accent: '#f5efe6', isLight: false, font: 'classicSerif', weight: '700', tracking: 16, title: 'KAISON', subTag: 'HOME DÉCOR & FLORALS', emblem: 'leaf', interiorKey: 'int-furniture' },
-  { match: /HOME['’]?S HARMONY/, brandKey: 'homes-harmony', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#ede6da', bg2: '#dfd5c5', fg: '#1c1814', accent: '#b4944e', isLight: true, font: 'classicSerif', weight: '700', tracking: 8, title: "HOME'S HARMONY", subTag: 'LUXURY BEDDING & LIVING', emblem: 'leaf', interiorKey: 'int-furniture' },
+  { match: /HOME['’]?S HARMONY/, brandKey: 'homes-harmony', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'homes-harmony-linen', bg: '#efe8dc', bg2: '#dfd4c2', fg: '#1c1814', accent: '#b4944e', isLight: true, font: 'classicSerif', weight: '700', tracking: 10, title: "HOME'S HARMONY", subTag: 'LUXURY BEDDING • DRAPERY & LIVING', emblem: 'leaf', interiorKey: 'int-furniture' },
   { match: /GETHÁ|SOTHYS/, brandKey: 'getha', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'GETHÁ  •  SOTHYS PARIS', subTag: 'NATURAL LATEX SLEEP KINGDOM', emblem: 'star', interiorKey: 'int-furniture' },
   { match: /\bSIGNATURE\b/, brandKey: 'signature-kitchen', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#292524', bg2: '#1c1917', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'SIGNATURE', subTag: 'BESPOKE CULINARY CABINETS', emblem: 'geo-bar', interiorKey: 'int-furniture' },
   { match: /GINTELL/, brandKey: 'gintell', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#110f30', fg: '#fde68a', accent: '#eab308', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'GINTELL', subTag: 'WELLNESS MASSAGE CHAIRS', emblem: 'star', interiorKey: 'int-furniture' },
@@ -2874,12 +2878,14 @@ export const STORE_BRAND_STYLES = [
   { match: /CÔNG CÀ PHÊ|GIGI/, brandKey: 'cong-caphe', facadeType: 'cafe-patisserie', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#164e36', bg2: '#0f3625', fg: '#fef08a', accent: '#4ade80', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: 'CỘNG CÀ PHÊ  •  GIGI', subTag: 'HANOI COCONUT COFFEE', emblem: 'star', interiorKey: 'int-cafe' },
   { match: /FAMOUS AMOS|LA BOHEME|BAKER['’]?S COTTAGE|YONG SHENG|JUNGLE HOUSE|BEE CHENG HIANG|TRAPO.*INSIDE SCOOP/, brandKey: 'heritage-bakery', facadeType: 'cafe-patisserie', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#6b2c12', bg2: '#451a0a', fg: '#fef3c7', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'FRESHLY BAKED & CONFECTIONS', emblem: 'cup', interiorKey: 'int-cafe' },
   { match: /RICH KOPITIAM|YAT YAT SENG|LITTLE CRAVINGS|WONG KOK|FOOD STREET|THE FISH BOWL|STUFF['’]?D/, brandKey: 'local-kopitiam', facadeType: 'cafe-patisserie', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#3f2210', bg2: '#261408', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'KOPITIAM & STREET EATS', emblem: 'bowl', interiorKey: 'int-teh-tarik' },
-  { match: /DIN TAI FUNG/, brandKey: 'dintaifung', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#7f1d1d', bg2: '#571212', fg: '#fef2f2', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: '鼎泰豐  DIN TAI FUNG', subTag: '18-FOLD XIAO LONG BAO', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /DIN TAI FUNG/, brandKey: 'dintaifung', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'dintaifung-crimson-wood', bg: '#7f1d1d', bg2: '#4d1010', fg: '#fef2f2', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: '鼎泰豐  DIN TAI FUNG', subTag: '18-FOLD XIAO LONG BAO • TAIWAN', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /TANYU/, brandKey: 'tanyu', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'tanyu-charcoal-orange', bg: '#181617', bg2: '#0c0b0c', fg: '#ffffff', accent: '#f97316', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: '探鱼  TANYU GRILLED FISH', subTag: 'CHONGQING CHARCOAL GRILLED FISH', emblem: 'flame', interiorKey: 'int-dintaifung' },
   { match: /PUTIEN/, brandKey: 'putien', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#132559', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: 'PUTIEN  莆田', subTag: 'MICHELIN-STARRED FUJIAN CUISINE', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
-  { match: /DRAGON-I|YUN NANS|TANYU|TAI ER|FEI FAN|GO UNIQUE|THE CHICKEN RICE SHOP|YGF MALATANG|WOK HEY/, brandKey: 'asian-dining', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#7c1a1a', bg2: '#4d0f0f', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 6, title: '', subTag: 'SIGNATURE ASIAN DINING', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /DRAGON-I|YUN NANS|TAI ER|FEI FAN|GO UNIQUE|THE CHICKEN RICE SHOP|YGF MALATANG|WOK HEY/, brandKey: 'asian-dining', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#7c1a1a', bg2: '#4d0f0f', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 6, title: '', subTag: 'SIGNATURE ASIAN DINING', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
   { match: /SHABU-YO|SUSHIYA|MENYA MUSASHI|HOKKAIDO SUSHI|ROCKU YAKINIKU|MAKII MAKII/, brandKey: 'japanese-dining', facadeType: 'japanese-machiya', fasciaH: 1.36, materialStyle: 'hinoki-oak', bg: '#261a12', bg2: '#17100b', fg: '#fde68a', accent: '#ef4444', isLight: false, font: 'cjkSerif', weight: '800', tracking: 6, title: '', subTag: 'AUTHENTIC JAPANESE DINING', emblem: 'kanji-seal', interiorKey: 'int-ippudo' },
   { match: /SHIN JJAJANG|HANSANG|WANG DONKAS/, brandKey: 'korean-dining', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#2c1816', bg2: '#1a0e0d', fg: '#fde68a', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 6, title: '', subTag: 'KOREAN KITCHEN & BBQ', emblem: 'bowl', interiorKey: 'int-food-district' },
-  { match: /EU YAN SANG|LO HONG KA/, brandKey: 'tcm-herbal', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#5c260a', bg2: '#3a1604', fg: '#fde047', accent: '#eab308', isLight: false, font: 'cjkSerif', weight: '700', tracking: 8, title: '', subTag: 'IMPERIAL WELLNESS & HERBALS', emblem: 'kanji-seal', interiorKey: 'int-apothecary' },
+  { match: /EU YAN SANG/, brandKey: 'eu-yan-sang', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'euyansang-imperial-crimson', bg: '#6b1414', bg2: '#420a0a', fg: '#fde047', accent: '#eab308', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: '余仁生  EU YAN SANG', subTag: 'TRADITIONAL CHINESE MEDICINE • EST. 1879', emblem: 'kanji-seal', interiorKey: 'int-apothecary' },
+  { match: /LO HONG KA/, brandKey: 'tcm-herbal', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#5c260a', bg2: '#3a1604', fg: '#fde047', accent: '#eab308', isLight: false, font: 'cjkSerif', weight: '700', tracking: 8, title: '老行家  LO HONG KA', subTag: 'IMPERIAL BIRD’S NEST & WELLNESS', emblem: 'kanji-seal', interiorKey: 'int-apothecary' },
   { match: /WONDERMAMA|CILI KAMPUNG|PHỞ VIETZ|ABSOLUTE THAI|JATUJAK|PASAR EATAI|NOODLE SHACK|FISH & CO|HOTPOT KITCHEN|RESTORAN JOHNNY|ASTONS|MARCO|ANTE|RICHEESE|TAI HO JIAK/, brandKey: 'signature-bistro', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#2b1e16', bg2: '#19110c', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'SPECIALTY RESTAURANT', emblem: 'flame', interiorKey: 'int-food-district' }
 ];
 
@@ -3076,7 +3082,7 @@ export function getStoreBrandProfile(store) {
     return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'maybank-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'Maybank  •  LAMY', brandKey: 'maybank', isLight: true };
   }
   if (uName.includes('LULULEMON')) {
-    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#881337', bg2: '#5c0c24', fg: '#ffffff', accent: '#fb7185', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 10, displayTitle: 'lululemon  •  PURAS', subTag: 'TECHNICAL YOGA & AROMATHERAPY', emblem: 'wave', brandKey: 'lululemon', isLight: false, interiorKey: 'int-apparel-dark' };
+    return { facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'lululemon-charcoal-omega', bg: '#1c1d22', bg2: '#101115', fg: '#ffffff', accent: '#e11d48', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 10, displayTitle: 'lululemon', subTag: 'TECHNICAL YOGA & ATHLETIC APPAREL', emblem: 'wave', brandKey: 'lululemon', isLight: false, interiorKey: 'int-apparel-dark' };
   }
   if (uName.includes('ZARA')) {
     return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'zara-champagne-taupe', fontFamily: FONTS.didone, weight: '700', italic: false, tracking: 6, displayTitle: 'ZARA', brandKey: 'zara', isLight: false };
@@ -4231,6 +4237,226 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       emissiveTextCol = '#fef08a';
       break;
     }
+    case 'homes-harmony-linen': {
+      // Photo-matched 2F S319A HOME'S HARMONY: Warm woven-linen cream-taupe backdrop with deep espresso-walnut architectural surround
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#f7f3eb');
+      bg.addColorStop(0.5, '#f0e8da');
+      bg.addColorStop(1, '#e3d6c3');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(122, 75, 42, 0.14)';
+      ctx.lineWidth = 1;
+      for (let gx = 0; gx < w; gx += 14) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke();
+      }
+      ctx.strokeStyle = '#7a4b2a';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(8, 8, w - 16, h - 16);
+      ctx.fillStyle = '#5c341a';
+      ctx.fillRect(0, h - 7, w, 7);
+      fgCol = '#3b2313';
+      drawEmissive = false;
+      break;
+    }
+    case 'tanyu-charcoal-orange': {
+      // Photo-matched LG311 TANYU GRILLED FISH 探鱼: Industrial dark charcoal-slate metal ribs with glowing neon-orange grilled-fish accent trim
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#18181b');
+      bg.addColorStop(0.5, '#121215');
+      bg.addColorStop(1, '#09090b');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+      for (let rx = 0; rx < w; rx += 26) {
+        ctx.fillRect(rx, 0, 4, h);
+      }
+      ctx.strokeStyle = '#ff5a00';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#ff5a00';
+      ctx.fillRect(0, h - 8, w, 8);
+      ctxE.fillStyle = '#ff5a00';
+      ctxE.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffedd5';
+      break;
+    }
+    case 'dintaifung-crimson-wood': {
+      // Photo-matched G316 DIN TAI FUNG 鼎泰豐: Warm Taiwanese slatted cedar wood backdrop with dark espresso center plaque & crimson seal trim
+      for (let x = 0; x < w; x += 20) {
+        const sh = 0.86 + hash2(x, 3.7) * 0.22;
+        ctx.fillStyle = `rgb(${Math.floor(168 * sh)},${Math.floor(118 * sh)},${Math.floor(72 * sh)})`;
+        ctx.fillRect(x, 0, 15, h);
+        ctx.fillStyle = '#241710';
+        ctx.fillRect(x + 15, 0, 5, h);
+      }
+      ctx.fillStyle = 'rgba(26, 17, 13, 0.92)';
+      ctx.fillRect(w * 0.14, 16, w * 0.72, h - 32);
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(w * 0.14, 16, w * 0.72, h - 32);
+      ctx.fillStyle = '#c8102e';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = '#c8102e';
+      ctxE.fillRect(0, h - 7, w, 7);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#fff6e5';
+      break;
+    }
+    case 'euyansang-imperial-crimson': {
+      // Photo-matched LG117 EU YAN SANG 余仁生: Imperial heritage crimson-burgundy lacquer with double antique-gold Chinese lattice frame
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#88131d');
+      bg.addColorStop(0.5, '#6e0e16');
+      bg.addColorStop(1, '#4c080e');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#e5b84b';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(18, 18, w - 36, h - 36);
+      ctx.fillStyle = '#e5b84b';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#fff8eb';
+      emissiveTextCol = '#fde68a';
+      break;
+    }
+    case 'watsons-teal': {
+      // Photo-matched LG210 & F220 WATSONS: Luminous signature Watsons aqua-teal (#009da5) lightbox fascia with neon-lime accent bar
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#00b0b9');
+      bg.addColorStop(0.5, '#009da5');
+      bg.addColorStop(1, '#007d84');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(0, 176, 185, 0.42)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#a3e635';
+      ctx.fillRect(0, h - 8, w, 8);
+      ctxE.fillStyle = '#a3e635';
+      ctxE.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'guardian-orange': {
+      // Photo-matched LG112 & F129 GUARDIAN: Vibrant Guardian health-pharmacy orange (#f36f21) backlit fascia with crisp white/navy trim
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#ff7c2e');
+      bg.addColorStop(0.5, '#f36f21');
+      bg.addColorStop(1, '#d9580f');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(243, 111, 33, 0.42)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'owndays-monochrome': {
+      // Photo-matched LG312B & G118 OWNDAYS: Architectural matte jet-black optical fascia with crisp double white hairline frame
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#141417');
+      bg.addColorStop(0.5, '#0c0c0e');
+      bg.addColorStop(1, '#050507');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.72)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(12, 12, w - 24, h - 24);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, h - 5, w, 5);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'pandora-blush-white': {
+      // Photo-matched G109 & F305 PANDORA: Soft blush-pink & alabaster satin lacquer fascia with rose-gold bottom reveal
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#fdf6f8');
+      bg.addColorStop(0.5, '#f8e8ee');
+      bg.addColorStop(1, '#f0d8e1');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#d49ba7';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#b87b87';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#141214';
+      drawEmissive = false;
+      break;
+    }
+    case 'swarovski-midnight-crystal': {
+      // Photo-matched G108 & G311 SWAROVSKI: Deep midnight crystal-blue & diamond-facet shimmer fascia with champagne-gold trim
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#101d38');
+      bg.addColorStop(0.5, '#0a1326');
+      bg.addColorStop(1, '#050a14');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1.5;
+      for (let fx = -h; fx < w + h; fx += 56) {
+        ctx.beginPath(); ctx.moveTo(fx, 0); ctx.lineTo(fx + h, h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(fx + h, 0); ctx.lineTo(fx, h); ctx.stroke();
+      }
+      ctx.strokeStyle = '#e2c792';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#e2c792';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#fff8eb';
+      break;
+    }
+    case 'rolex-emerald-gold': {
+      // Photo-matched G310 ROLEX • CORTINA WATCH: Iconic fluted emerald-green wave backdrop with 18k brushed-gold bezel frame
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#006039');
+      bg.addColorStop(0.5, '#004b2c');
+      bg.addColorStop(1, '#00331d');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      for (let gx = 0; gx < w; gx += 18) {
+        ctx.fillStyle = gx % 36 === 0 ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)';
+        ctx.fillRect(gx, 0, 9, h);
+      }
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = 'rgba(212, 175, 55, 0.45)';
+      ctxE.fillRect(0, h - 7, w, 7);
+      fgCol = '#f9e498';
+      emissiveTextCol = '#fef08a';
+      break;
+    }
+    case 'lululemon-charcoal-omega': {
+      // Photo-matched G313 LULULEMON: Sleek architectural dark charcoal vertical-batten facade with crimson-red & glowing white accents
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#1f2126');
+      bg.addColorStop(0.5, '#17191d');
+      bg.addColorStop(1, '#101114');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      for (let bx = 0; bx < w; bx += 22) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
+        ctx.fillRect(bx, 0, 3, h);
+      }
+      ctx.fillStyle = '#d31334';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = '#d31334';
+      ctxE.fillRect(0, h - 7, w, 7);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
     case 'custom-brand': {
       const bg1 = prof.bg || store.brandBg || '#18181b';
       const bg2 = prof.bg2 || bg1;
@@ -4733,15 +4959,25 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'haidilao': {
-        // Authentic 1 Utama HAIDILAO: Iconic crimson rounded-square Hi badge + 海底捞 HAIDILAO
-        const lx = -Math.min(maxW * 0.34, 240);
+        // Photo-matched G116 HAIDILAO HOT POT 海底捞: Iconic crimson rounded-square Hi badge w/ chili-flame dot + 海底捞火锅 HAIDILAO HOT POT!
+        const lx = -Math.min(maxW * 0.37, 275);
+        drawRoundRectPath(targetCtx, lx - 44, 48, 88, 88, 16);
         targetCtx.fillStyle = '#dc2626';
-        targetCtx.fillRect(lx - 40, 54, 80, 80);
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#fbbf24';
+        targetCtx.lineWidth = 3;
+        targetCtx.stroke();
         targetCtx.fillStyle = '#ffffff';
-        targetCtx.font = '800 44px "Jost", sans-serif';
-        targetCtx.fillText('Hi', lx, 110);
+        targetCtx.font = '900 46px "Jost", sans-serif';
+        targetCtx.fillText('Hi', lx, 108);
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.beginPath();
+        targetCtx.arc(lx + 16, 68, 5, 0, Math.PI * 2);
+        targetCtx.fill();
         targetCtx.fillStyle = isEmissive ? '#fff6e8' : '#ffffff';
-        fillAutoFitText(targetCtx, '海底捞  HAIDILAO', 36, 114, maxW * 0.72, 60, '700', '"Noto Serif JP", "Jost", sans-serif', 6);
+        fillAutoFitText(targetCtx, '海底捞火锅  HAIDILAO', 52, 102, maxW * 0.72, 58, '800', '"Noto Serif JP", "Jost", sans-serif', 5);
+        targetCtx.fillStyle = '#fbbf24';
+        fillAutoFitText(targetCtx, 'SICHUAN HOT POT  •  G116', 52, 146, maxW * 0.64, 20, '700', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -5167,13 +5403,24 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'popular': {
-        // Popular Bookstore white square ribbon emblem + bold POPULAR
+        // Photo-matched S219 POPULAR 大众书局: White square open-book ribbon P badge + bold POPULAR 大众书局!
+        const px = -265;
         targetCtx.fillStyle = '#ffffff';
-        targetCtx.fillRect(-235, 52, 84, 84);
+        targetCtx.fillRect(px - 44, 48, 88, 88);
         targetCtx.fillStyle = '#dc2626';
-        fillAutoFitText(targetCtx, 'P', -193, 116, 60, 64, '900', '"Playfair Display", serif', 0);
+        fillAutoFitText(targetCtx, 'P', px, 108, 60, 58, '900', '"Playfair Display", serif', 0);
+        // Open book pages vector base under the P
+        targetCtx.strokeStyle = '#dc2626';
+        targetCtx.lineWidth = 3.5;
+        targetCtx.beginPath();
+        targetCtx.moveTo(px - 28, 122);
+        targetCtx.quadraticCurveTo(px - 14, 115, px, 124);
+        targetCtx.quadraticCurveTo(px + 14, 115, px + 28, 122);
+        targetCtx.stroke();
         targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'POPULAR', 52, 118, 380, 74, '800', '"Jost", sans-serif', 12);
+        fillAutoFitText(targetCtx, 'POPULAR  大众书局', 58, 104, 480, 62, '800', '"Jost", "Noto Serif JP", sans-serif', 6);
+        targetCtx.fillStyle = '#fecaca';
+        fillAutoFitText(targetCtx, 'BOOKSTORE  •  STATIONERY  •  MULTIMEDIA', 58, 146, 460, 19, '700', '"Jost", sans-serif', 5);
         break;
       }
 
@@ -5246,16 +5493,26 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'madam-kwans': {
-        // Photo-matched LUXE G Madam Kwan's: Emerald-green script + yellow crescent moon & star!
+        // Photo-matched G337 MADAM KWAN'S: Heritage Nyonya red seal + emerald-green cursive Madam Kwan's + golden crescent moon & star!
+        targetCtx.fillStyle = '#b91c1c';
+        targetCtx.fillRect(-310, 56, 64, 68);
+        targetCtx.strokeStyle = '#eab308';
+        targetCtx.lineWidth = 2.5;
+        targetCtx.strokeRect(-305, 61, 54, 58);
+        targetCtx.fillStyle = '#fef08a';
+        targetCtx.font = '800 22px "Noto Serif JP", serif';
+        targetCtx.fillText('關氏', -278, 98);
         targetCtx.fillStyle = '#047857';
-        fillAutoFitText(targetCtx, "Madam Kwan's", -24, 118, 430, 74, '700', '"Playfair Display", serif', 2, true);
+        fillAutoFitText(targetCtx, "Madam Kwan's", 8, 106, 420, 70, '700', '"Playfair Display", serif', 2, true);
+        targetCtx.fillStyle = '#785c38';
+        fillAutoFitText(targetCtx, 'MALAYSIAN CUISINE  •  EST. 1977', 8, 146, 380, 19, '700', '"Jost", sans-serif', 6);
         targetCtx.fillStyle = '#eab308';
         targetCtx.beginPath();
-        targetCtx.arc(228, 84, 24, 0.3, Math.PI * 1.7);
+        targetCtx.arc(258, 84, 24, 0.3, Math.PI * 1.7);
         targetCtx.fill();
         targetCtx.fillStyle = '#f3ebdc';
         targetCtx.beginPath();
-        targetCtx.arc(236, 80, 18, 0, Math.PI * 2);
+        targetCtx.arc(266, 80, 18, 0, Math.PI * 2);
         targetCtx.fill();
         break;
       }
@@ -5553,6 +5810,295 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
         fillAutoFitText(targetCtx, 'MISSION - Q', 42, 102, 410, 68, '900', '"Oswald", sans-serif', 10);
         targetCtx.fillStyle = '#fb7185';
         fillAutoFitText(targetCtx, 'REAL-LIFE ESCAPE ROOM  •  F625', 42, 148, 410, 22, '800', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'homes-harmony': {
+        // Photo-matched 2F S319A HOME'S HARMONY: Warm espresso-terracotta pitched-roof Double-H home crest + classic serif HOME'S HARMONY!
+        const hx = -292;
+        const hy = 94;
+        targetCtx.fillStyle = '#7a4b2a';
+        targetCtx.fillRect(hx - 42, hy - 40, 84, 80);
+        targetCtx.strokeStyle = '#f0e8da';
+        targetCtx.lineWidth = 3.5;
+        targetCtx.beginPath();
+        targetCtx.moveTo(hx - 32, hy - 8);
+        targetCtx.lineTo(hx, hy - 30);
+        targetCtx.lineTo(hx + 32, hy - 8);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '800 30px "Cormorant Garamond", serif';
+        targetCtx.fillText('HH', hx, hy + 16);
+        targetCtx.fillStyle = '#3b2313';
+        fillAutoFitText(targetCtx, "HOME'S HARMONY", 48, 104, 480, 58, '700', '"Cormorant Garamond", serif', 8);
+        targetCtx.fillStyle = '#7a4b2a';
+        fillAutoFitText(targetCtx, 'SOFT FURNISHINGS  •  BEDDING & LIVING  •  S319A', 48, 146, 470, 19, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'tanyu': {
+        // Photo-matched LG311 TANYU GRILLED FISH 探鱼: Glowing neon-orange grilled fish crest + bold 探鱼 TANYU GRILLED FISH!
+        const fx = -288;
+        const fy = 94;
+        targetCtx.strokeStyle = '#ff5a00';
+        targetCtx.lineWidth = 4.5;
+        targetCtx.beginPath();
+        targetCtx.arc(fx, fy, 40, 0, Math.PI * 2);
+        targetCtx.stroke();
+        // Vector leaping grilled fish silhouette inside neon ring
+        targetCtx.fillStyle = '#ff5a00';
+        targetCtx.beginPath();
+        targetCtx.ellipse(fx - 4, fy, 22, 11, -0.15, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.beginPath();
+        targetCtx.moveTo(fx + 14, fy - 2);
+        targetCtx.lineTo(fx + 30, fy - 14);
+        targetCtx.lineTo(fx + 26, fy + 12);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = '#18181b';
+        targetCtx.beginPath();
+        targetCtx.arc(fx - 15, fy - 2, 3, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = isEmissive ? '#ffedd5' : '#ffffff';
+        fillAutoFitText(targetCtx, '探鱼  TANYU', 46, 102, 460, 68, '900', '"Oswald", "Noto Serif JP", sans-serif', 8);
+        targetCtx.fillStyle = '#ff5a00';
+        fillAutoFitText(targetCtx, 'CHONGQING GRILLED FISH  •  LG311', 46, 148, 460, 22, '800', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'dintaifung': {
+        // Photo-matched G316 DIN TAI FUNG 鼎泰豐: Traditional crimson oval 鼎泰豐 calligraphy seal + crisp white serif DIN TAI FUNG!
+        const dx = -286;
+        const dy = 94;
+        targetCtx.fillStyle = '#c8102e';
+        targetCtx.beginPath();
+        targetCtx.ellipse(dx, dy, 36, 46, 0, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#facc15';
+        targetCtx.lineWidth = 2.5;
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '800 22px "Noto Serif JP", serif';
+        targetCtx.fillText('鼎泰豐', dx, dy + 6);
+        targetCtx.fillStyle = isEmissive ? '#fff6e5' : '#ffffff';
+        fillAutoFitText(targetCtx, 'DIN TAI FUNG  鼎泰豐', 48, 102, 480, 56, '700', '"Cormorant Garamond", "Noto Serif JP", serif', 8);
+        targetCtx.fillStyle = '#f5d08a';
+        fillAutoFitText(targetCtx, 'XIAOLONGBAO  •  TAIWANESE DUMPLING HOUSE', 48, 146, 470, 19, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'oriental-kopi': {
+        // Photo-matched LG310 ORIENTAL KOPI 华阳: Octagonal golden-emerald Nanyang heritage seal + ORIENTAL KOPI 华阳!
+        const kx = -288;
+        const ky = 94;
+        targetCtx.fillStyle = '#d4af37';
+        targetCtx.beginPath();
+        targetCtx.arc(kx, ky, 40, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#0b2d22';
+        targetCtx.beginPath();
+        targetCtx.arc(kx, ky, 33, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#fde68a';
+        targetCtx.font = '900 26px "Noto Serif JP", serif';
+        targetCtx.fillText('华阳', kx, ky + 8);
+        targetCtx.fillStyle = isEmissive ? '#ffe8b0' : '#f8e6ba';
+        fillAutoFitText(targetCtx, 'ORIENTAL KOPI  华阳', 52, 102, 480, 56, '700', '"Cormorant Garamond", "Noto Serif JP", serif', 6);
+        targetCtx.fillStyle = '#d4af5e';
+        fillAutoFitText(targetCtx, 'NANYANG KOPITIAM  •  SIGNATURE EGG TARTS & POLO BUNS', 52, 146, 480, 18, '700', '"Jost", sans-serif', 4);
+        break;
+      }
+
+      case 'eu-yan-sang': {
+        // Photo-matched LG117 EU YAN SANG 余仁生: Imperial gold gourd/seal crest + EU YAN SANG 余仁生!
+        const ex = -286;
+        const ey = 94;
+        targetCtx.strokeStyle = '#e5b84b';
+        targetCtx.lineWidth = 4;
+        targetCtx.strokeRect(ex - 38, ey - 38, 76, 76);
+        targetCtx.fillStyle = '#e5b84b';
+        targetCtx.font = '900 24px "Noto Serif JP", serif';
+        targetCtx.fillText('余仁生', ex, ey + 8);
+        targetCtx.fillStyle = isEmissive ? '#fde68a' : '#fff8eb';
+        fillAutoFitText(targetCtx, 'EU YAN SANG  余仁生', 52, 102, 480, 56, '700', '"Cormorant Garamond", "Noto Serif JP", serif', 8);
+        targetCtx.fillStyle = '#e5b84b';
+        fillAutoFitText(targetCtx, 'TRADITIONAL CHINESE MEDICINE  •  EST. 1879', 52, 146, 470, 19, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'watsons': {
+        // Photo-matched LG210 & F220 WATSONS: Luminous lime-bordered white Watsons 'W' pill emblem + bold geometric Watsons!
+        const wx = -265;
+        const wy = 94;
+        drawRoundRectPath(targetCtx, wx - 44, wy - 40, 88, 80, 22);
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#a3e635';
+        targetCtx.lineWidth = 5;
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#009da5';
+        targetCtx.font = '900 50px "Jost", sans-serif';
+        targetCtx.fillText('W', wx, wy + 16);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'Watsons', 38, 106, 410, 78, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = '#d9f99d';
+        fillAutoFitText(targetCtx, 'LOOK GOOD  •  DO GOOD  •  FEEL GREAT', 38, 148, 430, 19, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'guardian': {
+        // Photo-matched LG112 & F129 GUARDIAN: White/cobalt health-cross pulse medallion + bold lowercase guardian!
+        const gx = -268;
+        const gy = 94;
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.beginPath();
+        targetCtx.arc(gx, gy, 40, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#1d4ed8';
+        targetCtx.fillRect(gx - 8, gy - 24, 16, 48);
+        targetCtx.fillRect(gx - 24, gy - 8, 48, 16);
+        targetCtx.fillStyle = '#f36f21';
+        targetCtx.beginPath();
+        targetCtx.arc(gx, gy, 7, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'guardian', 44, 106, 420, 76, '800', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = '#ffedd5';
+        fillAutoFitText(targetCtx, 'HEALTH AND BEAUTY  •  PHARMACY', 44, 148, 430, 19, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'owndays': {
+        // Photo-matched LG312B & G118 OWNDAYS: Minimalist vector eyeglasses frame icon + crisp monochrome OWNDAYS!
+        const ox = -272;
+        const oy = 94;
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 5;
+        targetCtx.strokeRect(ox - 42, oy - 16, 34, 28);
+        targetCtx.strokeRect(ox + 8, oy - 16, 34, 28);
+        targetCtx.beginPath();
+        targetCtx.moveTo(ox - 8, oy - 4);
+        targetCtx.lineTo(ox + 8, oy - 4);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'OWNDAYS', 42, 106, 430, 72, '700', '"Jost", sans-serif', 16);
+        targetCtx.fillStyle = '#a1a1aa';
+        fillAutoFitText(targetCtx, 'TOKYO  •  FAST PRECISION OPTICAL', 42, 148, 430, 19, '600', '"Jost", sans-serif', 8);
+        break;
+      }
+
+      case 'pandora': {
+        // Photo-matched G109 & F305 PANDORA: Iconic royal crown perched above the 'O' in PANDORA on blush-white satin!
+        targetCtx.fillStyle = '#141214';
+        fillAutoFitText(targetCtx, 'PANDORA', 0, 114, 430, 68, '600', '"Jost", sans-serif', 18);
+        // Signature Pandora Crown perched directly above the letter 'O' (x ≈ 52)
+        const cx = 54;
+        const cy = 48;
+        targetCtx.fillStyle = '#141214';
+        targetCtx.beginPath();
+        targetCtx.moveTo(cx - 14, cy + 8);
+        targetCtx.lineTo(cx - 17, cy - 6);
+        targetCtx.lineTo(cx - 7, cy + 1);
+        targetCtx.lineTo(cx, cy - 10);
+        targetCtx.lineTo(cx + 7, cy + 1);
+        targetCtx.lineTo(cx + 17, cy - 6);
+        targetCtx.lineTo(cx + 14, cy + 8);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = '#9d5b6b';
+        fillAutoFitText(targetCtx, 'COPENHAGEN  •  FINE JEWELLERY', 0, 150, 380, 18, '600', '"Jost", sans-serif', 8);
+        break;
+      }
+
+      case 'swarovski': {
+        // Photo-matched G108 & G311 SWAROVSKI: Graceful crystal Swan vector silhouette + classic high-tracking serif SWAROVSKI!
+        const sx = -268;
+        const sy = 96;
+        targetCtx.fillStyle = isEmissive ? '#fff8eb' : '#ffffff';
+        // Swan body & faceted wing Plumes
+        targetCtx.beginPath();
+        targetCtx.moveTo(sx - 24, sy + 18);
+        targetCtx.quadraticCurveTo(sx, sy + 24, sx + 26, sy + 12);
+        targetCtx.quadraticCurveTo(sx + 16, sy - 12, sx - 6, sy - 6);
+        targetCtx.closePath();
+        targetCtx.fill();
+        // Graceful S-curved swan neck & head
+        targetCtx.strokeStyle = isEmissive ? '#fff8eb' : '#ffffff';
+        targetCtx.lineWidth = 5.5;
+        targetCtx.lineCap = 'round';
+        targetCtx.beginPath();
+        targetCtx.moveTo(sx - 18, sy + 14);
+        targetCtx.bezierCurveTo(sx - 34, sy - 4, sx - 12, sy - 34, sx - 26, sy - 30);
+        targetCtx.stroke();
+        // Faceted crystal rays on swan back
+        targetCtx.strokeStyle = '#e2c792';
+        targetCtx.lineWidth = 3;
+        for (let r = 0; r < 3; r++) {
+          targetCtx.beginPath();
+          targetCtx.moveTo(sx - 4 + r * 9, sy);
+          targetCtx.lineTo(sx + 10 + r * 10, sy - 20 + r * 5);
+          targetCtx.stroke();
+        }
+        targetCtx.fillStyle = isEmissive ? '#fff8eb' : '#ffffff';
+        fillAutoFitText(targetCtx, 'SWAROVSKI', 46, 108, 450, 64, '600', '"Cormorant Garamond", serif', 18);
+        targetCtx.fillStyle = '#e2c792';
+        fillAutoFitText(targetCtx, 'AUSTRIAN CRYSTAL ATELIER  •  EST. 1895', 46, 148, 440, 18, '600', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'rolex-cortina': {
+        // Photo-matched G310 ROLEX • CORTINA WATCH: 5-point golden Rolex coronet crown + ROLEX & CORTINA WATCH!
+        const rx = -286;
+        const ry = 96;
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.strokeStyle = '#facc15';
+        targetCtx.lineWidth = 3.5;
+        // 5-Point Rolex Coronet Crown
+        const pts = [[-24, -18], [-12, -28], [0, -34], [12, -28], [24, -18]];
+        targetCtx.beginPath();
+        targetCtx.ellipse(rx, ry + 18, 18, 5, 0, 0, Math.PI * 2);
+        targetCtx.stroke();
+        for (let i = 0; i < pts.length; i++) {
+          const [px, py] = pts[i];
+          targetCtx.beginPath();
+          targetCtx.moveTo(rx + (i - 2) * 7, ry + 13);
+          targetCtx.lineTo(rx + px, ry + py);
+          targetCtx.stroke();
+          targetCtx.beginPath();
+          targetCtx.arc(rx + px, ry + py, 4.5, 0, Math.PI * 2);
+          targetCtx.fill();
+        }
+        targetCtx.fillStyle = isEmissive ? '#fef08a' : '#f9e498';
+        fillAutoFitText(targetCtx, 'ROLEX', -88, 104, 240, 64, '700', '"Cormorant Garamond", serif', 12);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, '•  CORTINA WATCH', 165, 104, 290, 44, '600', '"Cormorant Garamond", serif', 6);
+        targetCtx.fillStyle = '#d4af37';
+        fillAutoFitText(targetCtx, 'OFFICIAL ROLEX RETAILER  •  GENEVA SWISS HOROLOGY', 44, 148, 490, 18, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'lululemon': {
+        // Photo-matched G313 LULULEMON: Crimson circular medallion with glowing white stylized omega 'Ω' emblem + crisp lowercase lululemon!
+        const lx = -265;
+        const ly = 94;
+        targetCtx.fillStyle = '#d31334';
+        targetCtx.beginPath();
+        targetCtx.arc(lx, ly, 40, 0, Math.PI * 2);
+        targetCtx.fill();
+        // Stylized Lululemon Omega 'Ω' hair-wave vector path inside crimson circle
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 7.5;
+        targetCtx.lineCap = 'round';
+        targetCtx.beginPath();
+        targetCtx.moveTo(lx - 22, ly + 16);
+        targetCtx.bezierCurveTo(lx - 10, ly + 18, lx - 18, ly - 22, lx, ly - 22);
+        targetCtx.bezierCurveTo(lx + 18, ly - 22, lx + 10, ly + 18, lx + 22, ly + 16);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'lululemon', 44, 108, 430, 72, '700', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = '#fca5a5';
+        fillAutoFitText(targetCtx, 'TECHNICAL ATHLETIC APPAREL  •  VANCOUVER', 44, 148, 440, 18, '700', '"Jost", sans-serif', 6);
         break;
       }
 
