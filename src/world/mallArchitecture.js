@@ -2444,10 +2444,18 @@ export function buildMallArchitecture(scene, interactables) {
     const isBankAtm = /MAYBANK|CIMB|HONG LEONG|\bRHB\b|AL-TAMIJ|AEROLINE/.test(uName);
     const isLululemon = uName.includes('LULULEMON');
     const isSealantis = /SEALANTIS|FLOWRIDER|SCUBA/.test(uName);
-    const isBakeryDining = !isZusPastry && !isComeTrue && !isStarbucks && !isHeytea && /LAVENDER|LA BOHEME|BREADTALK|CHÂTERAISÉ|CHATERAISE|SECRET RECIPE|FAMOUS AMOS/.test(uName);
-    const isFullServiceDining = !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
-      (isBakeryDining || /TANYU|HAIDILAO|HAI DI LAO|DIN TAI FUNG|SUSHI ZANMAI|RAKUTEN|NANDO|CHILI|TGI FRIDAYS|ORIENTAL KOPI|MADAM KWAN|PUTIEN|DRAGON-I|YUN NANS|TAI ER|FEI FAN|GO UNIQUE|CHICKEN RICE SHOP|MALATANG|PAO XIANG|KYOCHON/.test(uName));
-    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && !isPharmacy && !isTcmHerbal && !isMassageChair && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|M·A·C|VICTORIA|BREO|SELECTIV|LANEIGE|SA SA|BEAUMEDICA|REHAT/.test(uName));
+    const isLego = /\bLEGO\b/.test(uName);
+    const isBabyKids = !isLego && !isPopMart && !isTopToy && !isToyCatcher && !isNextGen && /MOTHERCARE|CHICCO|BABYLAND|BABYSHOP|HAMLEYS|TOYS["“”']?R["“”']?US|WILFORD|HOBILITY|KEDAI PERMAINAN/.test(uName);
+    const isHomeAppliance = /DYSON|COWAY|CUCKOO|LE CREUSET|DREAME|\bSIGNATURE\b/.test(uName);
+    const isPetStore = /\bPLC\b|PET LOVERS|\bPET\b/.test(uName);
+    const isSalonSpa = /NUMBER 76|A-SALOON|PEEK-A-BOO|APT SALON|COCODRY|\bSTRIP\b|BROWHAUS|ASTERSPRING|GENTLEMEN['’]?S TONIC|\bSALON\b|NAIL SHOP|VICTORIA FACELIFT|BEAUMEDICA|HONEYPOT|REHAT~REHAT|DR\. KYO|MONSOON-ID/.test(uName);
+    const isTechTelco = !isHomeAppliance && !isMassageChair && !isSalonSpa && /MACHINES|\bSWITCH\b|SAMSUNG|XIAOMI|HUAWEI|\bHONOR\b|\bOPPO\b|\bVIVO\b|\bASUS\b|\bROG\b|\bSONY\b|\bBOSE\b|GARMIN|MAXIS|CELCOMDIGI|U MOBILE|YES 5G|FUJIFILM|FOTO SHANGHAI|BEST DENKI|ALL IT|ITONE|REMAX|HARVEY NORMAN|MONTIGO/.test(uName);
+    const isBubbleTeaQsr = !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
+      /CHAGEE|GONG CHA|TEALIVE|KOI TH|XING FU TANG|BOOST JUICE|LLAOLAO|GODIVA|ROYCE|BASKIN ROBBINS|INSIDE SCOOP|FAMOUS AMOS|AUNTIE ANNE|STUFF['’]?D|SUBWAY|\bKFC\b|TEXAS CHICKEN|PIZZA HUT|BURGER KING|A&W|MIXUE|\bCU\b|VARZO|NYONYA COLORS|WOK HEY|MALATANG/.test(uName);
+    const isBakeryDining = !isBubbleTeaQsr && !isZusPastry && !isComeTrue && !isStarbucks && !isHeytea && /LAVENDER|LA BOHEME|BREADTALK|CHÂTERAISÉ|CHATERAISE|SECRET RECIPE/.test(uName);
+    const isFullServiceDining = !isBubbleTeaQsr && !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
+      (isBakeryDining || /TANYU|HAIDILAO|HAI DI LAO|DIN TAI FUNG|SUSHI ZANMAI|RAKUTEN|NANDO|CHILI|TGI FRIDAYS|ORIENTAL KOPI|MADAM KWAN|PUTIEN|DRAGON-I|YUN NANS|TAI ER|FEI FAN|GO UNIQUE|CHICKEN RICE SHOP|PAO XIANG|KYOCHON/.test(uName));
+    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && !isPharmacy && !isTcmHerbal && !isMassageChair && !isSalonSpa && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|M·A·C|VICTORIA|BREO|SELECTIV|LANEIGE|SA SA/.test(uName));
     const isTrueHandbagLuxury = /BONIA|MICHAEL KORS|FURLA|BRAUN BÜFFEL|LONGCHAMP/.test(uName);
     const isMissionQ = uName.includes('MISSION Q');
     const isHarveyNorman = uName.includes('HARVEY NORMAN');
@@ -3399,6 +3407,478 @@ export function buildMallArchitecture(scene, interactables) {
         wLeg.scale.set(0.75, 0.62, 0.75);
         wLeg.position.set(wx, 0.22, 0.26);
         g.add(wSeat, wBack, wLeg);
+      }
+    } else if (isTechTelco) {
+      // ROUND-23 1. TECH, TELCO, COMPUTERS & AUDIO (MACHINES, SWITCH, SAMSUNG, XIAOMI, HUAWEI, HONOR, OPPO, VIVO, ASUS/ROG, SONY, BOSE, GARMIN, MAXIS, CELCOMDIGI, U MOBILE, YES 5G, FUJIFILM, FOTO SHANGHAI, BEST DENKI, ALL IT, ITONE, HARVEY NORMAN):
+      // Blonde-oak & brushed-aluminum experience tables with 3D angled laptops, tablets & smartphones on acrylic risers, glowing wall product lightboxes, headphone/smartwatch demo stands & telco customer-service pods!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.88 : 0.58;
+      const isTelco = /MAXIS|CELCOMDIGI|U MOBILE|YES 5G/.test(uName);
+      const techAccentMat = uName.includes('CELCOM') || uName.includes('SAMSUNG') || uName.includes('ALL IT') || uName.includes('BEST DENKI')
+        ? intWallNavyMat
+        : uName.includes('MAXIS') || uName.includes('OPPO')
+          ? emeraldTrimMat
+          : uName.includes('HUAWEI') || uName.includes('ITONE') || uName.includes('ROG')
+            ? uniqloRedBoxMat
+            : obsidianGlossMat;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (isTelco && b === Math.floor(numBays * 0.5)) {
+          // Telco Customer-Service Consultation Pod with Dual Monitors & Stools!
+          const podBack = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.34, eaveY - 0.44, 0.12), techAccentMat);
+          podBack.position.set(bx, (eaveY - 0.44) * 0.5 + 0.08, -intD + 0.24);
+          const podDesk = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.84, 0.56), satinWhiteMat);
+          podDesk.position.set(bx, 0.44, -intD + 0.56);
+          const podTop = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.05, 0.60), hinokiWoodMat);
+          podTop.position.set(bx, 0.88, -intD + 0.56);
+          g.add(podBack, podDesk, podTop);
+          for (const mxOff of [-0.36, 0.36]) {
+            const mon = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.04), obsidianGlossMat);
+            mon.position.set(bx + mxOff, 1.06, -intD + 0.54);
+            const st = new THREE.Mesh(stoolSeatGeo, techAccentMat);
+            st.position.set(bx + mxOff, 0.54, -intD + 0.98);
+            g.add(mon, st);
+          }
+        } else {
+          // Glowing Wall Product Lightbox + Headphone & Smartwatch Demo Shelf Tiers!
+          const lbSign = new THREE.Mesh(
+            new THREE.PlaneGeometry(bayStep - 0.42, 0.92),
+            new THREE.MeshBasicMaterial({ map: createSignBoardTexture((store.name || 'FLAGSHIP TECH').slice(0, 18), 'PRO EXPERIENCE • 5G • AI ECOSYSTEM', store.brandBg || '#0f172a', '#ffffff', '#38bdf8', 512, 256) })
+          );
+          lbSign.position.set(bx, eaveY - 0.88, -intD + 0.26);
+          const credenza = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.64, 0.46), satinWhiteMat);
+          credenza.position.set(bx, 0.34, -intD + 0.36);
+          const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 0.04, 0.36), hinokiWoodMat);
+          shelf.position.set(bx, 1.24, -intD + 0.36);
+          g.add(lbSign, credenza, shelf);
+          // Headphone & smartwatch demo stands on shelf
+          for (let hp = -1; hp <= 1; hp++) {
+            const hx = bx + hp * 0.52;
+            const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.04, 0.22, 8), brushedAlumMat);
+            stand.position.set(hx, 1.37, -intD + 0.36);
+            const headband = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.016, 6, 14, Math.PI), obsidianGlossMat);
+            headband.position.set(hx, 1.48, -intD + 0.36);
+            g.add(stand, headband);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Blonde-Oak & Brushed-Aluminum Experience Tables with 3D Angled Laptops, Tablets & Smartphones on Acrylic Risers!
+        for (const side of [-1, 1]) {
+          const tx = side * Math.min(innerW * 0.26, 2.55);
+          const expTable = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.80, fgD), prof.isLight ? hinokiWoodMat : brushedAlumMat);
+          expTable.position.set(tx, 0.42, fgZ);
+          const expTop = new THREE.Mesh(new THREE.BoxGeometry(1.98, 0.05, fgD + 0.06), hinokiWoodMat);
+          expTop.position.set(tx, 0.84, fgZ);
+          g.add(expTable, expTop);
+          addLocalContactShadow(g, tx, fgZ, 2.3, 1.2);
+          for (let dv = -1; dv <= 1; dv++) {
+            const dx = tx + dv * 0.56;
+            if (dv === 0) {
+              // 3D Angled Laptop (aluminum base deck + tilted glowing screen)
+              const lapBase = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.016, 0.24), brushedAlumMat);
+              lapBase.position.set(dx, 0.88, fgZ + 0.04);
+              const lapScreen = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.22, 0.014), obsidianGlossMat);
+              lapScreen.position.set(dx, 0.99, fgZ - 0.07);
+              lapScreen.rotation.x = -0.26;
+              const lapGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.31, 0.19), intLightCoolMat);
+              lapGlow.position.set(dx, 0.99, fgZ - 0.06);
+              lapGlow.rotation.x = -0.26;
+              g.add(lapBase, lapScreen, lapGlow);
+            } else {
+              // Smartphone / Tablet on Acrylic Riser
+              const riser = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 0.10), satinWhiteMat);
+              riser.position.set(dx, 0.90, fgZ);
+              const phone = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.22, 0.016), obsidianGlossMat);
+              phone.position.set(dx, 0.99, fgZ + 0.02);
+              phone.rotation.x = -0.35;
+              const phGlow = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.19), intLightCoolMat);
+              phGlow.position.set(dx, 0.995, fgZ + 0.03);
+              phGlow.rotation.x = -0.35;
+              g.add(riser, phone, phGlow);
+            }
+          }
+        }
+      }
+    } else if (isSalonSpa) {
+      // ROUND-23 2. HAIR SALONS, NAIL SPAS, AESTHETICS & GROOMING (NUMBER 76, A-SALOON, PEEK-A-BOO, APT SALON, COCODRY, STRIP, BROWHAUS, ASTERSPRING, GENTLEMEN'S TONIC, SALON, NAIL SHOP, VICTORIA FACELIFT, BEAUMEDICA):
+      // 3D hydraulic leather styling chairs in front of individual backlit oval salon vanity mirrors, rear ceramic hair-wash shampoo recliners & illuminated hair-care bottle walls!
+      const fgZ = intD > 2.2 ? -1.48 : -0.78;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b === 0 || b === numBays - 1) {
+          // Illuminated Hair-Care & Salon Treatment Bottle Wall
+          const cab = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.68, 0.44), hinokiWoodMat);
+          cab.position.set(bx, 0.36, -intD + 0.34);
+          g.add(cab);
+          for (let sh = 0; sh < 4; sh++) {
+            const sy = 0.92 + sh * 0.46;
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 0.038, 0.32), satinWhiteMat);
+            shelf.position.set(bx, sy, -intD + 0.32);
+            g.add(shelf);
+            for (let bt = -2; bt <= 2; bt++) {
+              const bot = new THREE.Mesh(bottleSmallGeo, (sh + bt) % 2 === 0 ? amberBacklitMat : intMerchMats[(bt + 3) % intMerchMats.length]);
+              bot.scale.set(0.76, 0.84, 0.76);
+              bot.position.set(bx + bt * 0.28, sy + 0.12, -intD + 0.33);
+              g.add(bot);
+            }
+          }
+        } else {
+          // Rear Ceramic Hair-Wash Shampoo Recliner Station (deep white porcelain tilt-sink basin + reclined black leather wash chair)!
+          const sinkPed = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.74, 12), obsidianGlossMat);
+          sinkPed.position.set(bx, 0.39, -intD + 0.44);
+          const ceramicBasin = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.18, 0.22, 16), satinWhiteMat);
+          ceramicBasin.position.set(bx, 0.82, -intD + 0.44);
+          ceramicBasin.rotation.x = 0.25;
+          const washSeat = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.24, 0.86), obsidianGlossMat);
+          washSeat.position.set(bx, 0.38, -intD + 0.96);
+          const washBack = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.54, 0.16), obsidianGlossMat);
+          washBack.position.set(bx, 0.62, -intD + 0.64);
+          washBack.rotation.x = -0.52;
+          g.add(sinkPed, ceramicBasin, washSeat, washBack);
+        }
+      }
+      if (intD > 1.35) {
+        // Individual Backlit Oval Salon Vanity Mirrors + 3D Hydraulic Leather Styling Chairs!
+        const stCount = Math.min(3, Math.max(2, Math.floor(innerW / 2.8)));
+        for (let s = 0; s < stCount; s++) {
+          const sx = -innerW * 0.30 + (s / Math.max(1, stCount - 1)) * (innerW * 0.60);
+          // Vanity console & backlit oval salon mirror
+          const vanityShelf = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.06, 0.34), hinokiWoodMat);
+          vanityShelf.position.set(sx, 0.82, fgZ - 0.18);
+          const vanityLeg = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.80, 0.26), hinokiWoodMat);
+          vanityLeg.position.set(sx, 0.41, fgZ - 0.18);
+          const ovalHalo = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.022, 8, 24), intLightWarmMat);
+          ovalHalo.scale.set(0.82, 1.28, 1);
+          ovalHalo.position.set(sx, 1.42, fgZ - 0.18);
+          const ovalMirror = new THREE.Mesh(new THREE.CircleGeometry(0.34, 24), intGlassPhysMat);
+          ovalMirror.scale.set(0.82, 1.28, 1);
+          ovalMirror.position.set(sx, 1.42, fgZ - 0.165);
+          // 3D Hydraulic Leather Styling Chair
+          const hydBase = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.28, 0.03, 16), brushedAlumMat);
+          hydBase.position.set(sx, 0.075, fgZ + 0.32);
+          const hydPump = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.42, 10), brushedAlumMat);
+          hydPump.position.set(sx, 0.28, fgZ + 0.32);
+          const chSeat = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.10, 0.52), smokedOakMat);
+          chSeat.position.set(sx, 0.50, fgZ + 0.32);
+          const chBack = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.44, 0.10), smokedOakMat);
+          chBack.position.set(sx, 0.74, fgZ + 0.54);
+          g.add(vanityShelf, vanityLeg, ovalHalo, ovalMirror, hydBase, hydPump, chSeat, chBack);
+          for (const armS of [-0.26, 0.26]) {
+            const arm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.18, 0.44), brushedAlumMat);
+            arm.position.set(sx + armS, 0.62, fgZ + 0.32);
+            g.add(arm);
+          }
+          addLocalContactShadow(g, sx, fgZ + 0.1, 1.3, 1.3);
+        }
+      }
+    } else if (isLego) {
+      // ROUND-23 3A. LEGO CERTIFIED STORE:
+      // Floor-to-ceiling Pick-A-Brick circular wall bins + bright yellow Lego building tables + red/yellow 3D brick sculpture pedestals!
+      const fgZ = intD > 2.2 ? -1.48 : -0.80;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        // Floor-to-Ceiling Pick-A-Brick Circular Wall Bins!
+        const wallPanel = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.28, eaveY - 0.36, 0.16), b % 2 === 0 ? canaryArchMat : uniqloRedBoxMat);
+        wallPanel.position.set(bx, (eaveY - 0.36) * 0.5 + 0.08, -intD + 0.24);
+        g.add(wallPanel);
+        for (let r = 0; r < 4; r++) {
+          for (let c = -2; c <= 2; c++) {
+            const binRim = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.18, 14), satinWhiteMat);
+            binRim.rotation.x = Math.PI / 2;
+            binRim.position.set(bx + c * 0.42, 0.68 + r * 0.54, -intD + 0.34);
+            const binFill = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.20, 14), rainbowBandMats[(b + r + c + 6) % rainbowBandMats.length]);
+            binFill.rotation.x = Math.PI / 2;
+            binFill.position.set(bx + c * 0.42, 0.68 + r * 0.54, -intD + 0.35);
+            g.add(binRim, binFill);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Central Red & Yellow 3D Brick Sculpture Pedestal (Oversized Stacked 3D Lego Bricks with Cylindrical Top Studs)!
+        const ped = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.42, 0.86), satinWhiteMat);
+        ped.position.set(0, 0.25, fgZ);
+        const brick1 = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.38, 0.54), uniqloRedBoxMat);
+        brick1.position.set(0, 0.65, fgZ);
+        const brick2 = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.36, 0.50), canaryArchMat);
+        brick2.position.set(0.08, 1.02, fgZ);
+        const brick3 = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.34, 0.46), owalaSkyMat);
+        brick3.position.set(-0.06, 1.37, fgZ);
+        g.add(ped, brick1, brick2, brick3);
+        for (const [sx, sz] of [[-0.14, -0.12], [0.14, -0.12], [-0.14, 0.12], [0.14, 0.12]]) {
+          const stud = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.08, 10), owalaSkyMat);
+          stud.position.set(-0.06 + sx, 1.58, fgZ + sz);
+          g.add(stud);
+        }
+        // Flanking Bright Yellow Lego Building Tables with Brick Pit & Kids Stools!
+        for (const side of [-1, 1]) {
+          const tx = side * Math.min(innerW * 0.28, 2.45);
+          const buildTbl = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.76, 0.12, 20), canaryArchMat);
+          buildTbl.position.set(tx, 0.62, fgZ);
+          const tblPed = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.32, 0.56, 14), uniqloRedBoxMat);
+          tblPed.position.set(tx, 0.30, fgZ);
+          const brickPit = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.14, 16), owalaSkyMat);
+          brickPit.position.set(tx, 0.64, fgZ);
+          g.add(buildTbl, tblPed, brickPit);
+          addLocalContactShadow(g, tx, fgZ, 1.7, 1.7);
+        }
+      }
+    } else if (isBabyKids) {
+      // ROUND-23 3B. BABY, NURSERY & TOYS (MOTHERCARE, CHICCO, BABYLAND, HAMLEYS, TOYS"R"US, WILFORD):
+      // 3D baby strollers/prams on window podiums, wooden nursery cribs & pastel babywear racks!
+      const fgZ = intD > 2.2 ? -1.48 : -0.80;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b % 2 === 0) {
+          // Pastel Babywear & Plush Nursery Rack
+          const rail = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.48, 0.04, 0.04), hinokiWoodMat);
+          rail.position.set(bx, 1.72, -intD + 0.42);
+          const topShelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 0.045, 0.38), satinWhiteMat);
+          topShelf.position.set(bx, 1.98, -intD + 0.36);
+          g.add(rail, topShelf);
+          for (let gIdx = -2; gIdx <= 2; gIdx++) {
+            const romper = new THREE.Mesh(hangingGarmentGeo, gIdx % 2 === 0 ? minisoPinkMat : owalaSkyMat);
+            romper.scale.set(0.85, 0.58, 0.85);
+            romper.position.set(bx + gIdx * 0.34, 1.38, -intD + 0.42);
+            g.add(romper);
+          }
+        } else {
+          // Wooden Nursery Crib with Vertical Slats & Soft Mattress
+          const cribBase = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.28, 0.76), hinokiWoodMat);
+          cribBase.position.set(bx, 0.26, -intD + 0.52);
+          const cribMatt = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.14, 0.68), satinWhiteMat);
+          cribMatt.position.set(bx, 0.46, -intD + 0.52);
+          const cribRailBack = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.64, 0.06), hinokiWoodMat);
+          cribRailBack.position.set(bx, 0.72, -intD + 0.16);
+          g.add(cribBase, cribMatt, cribRailBack);
+          for (let sl = -4; sl <= 4; sl++) {
+            const slat = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.58, 6), hinokiWoodMat);
+            slat.position.set(bx + sl * 0.14, 0.72, -intD + 0.88);
+            g.add(slat);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // 3D Baby Strollers / Prams on Window Podiums!
+        for (const side of [-1, 1]) {
+          const px = side * Math.min(innerW * 0.25, 2.25);
+          const pod = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.72, 0.16, 20), satinWhiteMat);
+          pod.position.set(px, 0.12, fgZ);
+          g.add(pod);
+          // Sculpted 3D Baby Stroller (4 wheels, angled aluminum handle frame, bassinet carrier & arched sun canopy hood)
+          for (const [wx, wz] of [[-0.22, -0.24], [0.22, -0.24], [-0.22, 0.24], [0.22, 0.24]]) {
+            const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.04, 12), obsidianGlossMat);
+            wh.rotation.z = Math.PI / 2;
+            wh.position.set(px + wx, 0.31, fgZ + wz);
+            g.add(wh);
+          }
+          const bassinet = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.26, 0.62), side < 0 ? intWallNavyMat : intMerchMats[2]);
+          bassinet.position.set(px, 0.64, fgZ);
+          const canopyHood = new THREE.Mesh(new THREE.SphereGeometry(0.30, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.5), side < 0 ? intWallNavyMat : intMerchMats[2]);
+          canopyHood.position.set(px, 0.76, fgZ - 0.12);
+          const pushHandle = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.04, 0.42), brushedAlumMat);
+          pushHandle.position.set(px, 0.86, fgZ + 0.34);
+          pushHandle.rotation.x = -0.58;
+          g.add(bassinet, canopyHood, pushHandle);
+          addLocalContactShadow(g, px, fgZ, 1.5, 1.5);
+        }
+      }
+    } else if (isHomeAppliance) {
+      // ROUND-23 3C. HOME APPLIANCES & WELLNESS TECH (DYSON, COWAY, CUCKOO, LE CREUSET, DREAME, SIGNATURE):
+      // Cord-free vacuum display towers, Supersonic hair-styling mirror bar & water-purifier counter pods!
+      const fgZ = intD > 2.2 ? -1.48 : -0.80;
+      const fgD = intD > 2.2 ? 0.84 : 0.56;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b % 2 === 0) {
+          // Cord-Free Vacuum Display Tower (matte-black dock + metallic wand tube + cyclone canister head + floor cleaner head)
+          const towerBack = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, eaveY - 0.48, 0.12), obsidianGlossMat);
+          towerBack.position.set(bx, (eaveY - 0.48) * 0.5 + 0.08, -intD + 0.24);
+          g.add(towerBack);
+          for (let vc = -1; vc <= 1; vc++) {
+            const vx = bx + vc * 0.52;
+            const wand = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 1.12, 8), vc === 0 ? intCopperMat : rwPinkNeonMat);
+            wand.position.set(vx, 0.86, -intD + 0.38);
+            const cyclone = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.26, 10), brushedAlumMat);
+            cyclone.position.set(vx, 1.48, -intD + 0.38);
+            cyclone.rotation.x = 0.35;
+            const cleanerHead = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.06, 0.12), obsidianGlossMat);
+            cleanerHead.position.set(vx, 0.28, -intD + 0.42);
+            g.add(wand, cyclone, cleanerHead);
+          }
+        } else {
+          // Supersonic Hair-Styling Mirror Bar
+          const vanityDesk = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.82, 0.44), obsidianGlossMat);
+          vanityDesk.position.set(bx, 0.43, -intD + 0.36);
+          const mirRing = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.022, 8, 24), intLightWarmMat);
+          mirRing.position.set(bx, 1.44, -intD + 0.32);
+          const mirDisc = new THREE.Mesh(new THREE.CircleGeometry(0.40, 24), intGlassPhysMat);
+          mirDisc.position.set(bx, 1.44, -intD + 0.33);
+          const dryerHead = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.12, 12), rwPinkNeonMat);
+          dryerHead.rotation.z = Math.PI / 2;
+          dryerHead.position.set(bx, 0.96, -intD + 0.42);
+          g.add(vanityDesk, mirRing, mirDisc, dryerHead);
+        }
+      }
+      if (intD > 1.35) {
+        // Water-Purifier Counter Pods & Smart Home Demonstration Island!
+        for (const side of [-1, 1]) {
+          const px = side * Math.min(innerW * 0.25, 2.35);
+          const podBase = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.84, fgD), prof.isLight ? satinWhiteMat : obsidianGlossMat);
+          podBase.position.set(px, 0.44, fgZ);
+          const podTop = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.05, fgD + 0.06), cafeMarbleMat);
+          podTop.position.set(px, 0.88, fgZ);
+          g.add(podBase, podTop);
+          addLocalContactShadow(g, px, fgZ, 2.1, 1.2);
+          for (const wxOff of [-0.44, 0.44]) {
+            // Countertop Water-Purifier Dispenser Pod with Glowing Status Ring
+            const purifier = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.42, 0.34), satinWhiteMat);
+            purifier.position.set(px + wxOff, 1.11, fgZ);
+            const statusLed = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.012, 6, 16), wxOff < 0 ? intLightCoolMat : rwPinkNeonMat);
+            statusLed.position.set(px + wxOff, 1.20, fgZ + 0.18);
+            g.add(purifier, statusLed);
+          }
+        }
+      }
+    } else if (isPetStore) {
+      // ROUND-23 3D. PLC PET LOVERS CENTRE:
+      // Tiered pet-food bags, multi-level cat-tree scratching post towers & pet carrier crates!
+      const fgZ = intD > 2.2 ? -1.48 : -0.80;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        for (let sh = 0; sh < 4; sh++) {
+          const sy = 0.48 + sh * 0.56;
+          const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.045, 0.40), satinWhiteMat);
+          shelf.position.set(bx, sy, -intD + 0.34);
+          g.add(shelf);
+          for (let pf = -2; pf <= 2; pf++) {
+            if (sh === 3) {
+              // Pet Carrier Travel Crates on Top Tier
+              const crate = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.32, 0.34), pf % 2 === 0 ? owalaSkyMat : mrDiyOrangeMat);
+              crate.position.set(bx + pf * 0.42, sy + 0.18, -intD + 0.34);
+              g.add(crate);
+            } else {
+              // Upright Pet-Food Kibble Bags
+              const bag = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.42, 0.16), rainbowBandMats[(b + sh + pf + 5) % rainbowBandMats.length]);
+              bag.position.set(bx + pf * 0.36, sy + 0.23, -intD + 0.34);
+              g.add(bag);
+            }
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Multi-Level Cat-Tree Scratching Post Towers!
+        for (const side of [-1, 1]) {
+          const tx = side * Math.min(innerW * 0.24, 2.15);
+          const catBase = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.08, 0.82), creamTileMat);
+          catBase.position.set(tx, 0.10, fgZ);
+          const catCondo = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.42, 0.46), hinokiWoodMat);
+          catCondo.position.set(tx - 0.16, 0.35, fgZ);
+          const post1 = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.15, 10), rattanWeaveMat);
+          post1.position.set(tx + 0.22, 0.72, fgZ);
+          const post2 = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.52, 10), rattanWeaveMat);
+          post2.position.set(tx - 0.16, 0.90, fgZ);
+          const perch1 = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.06, 14), creamTileMat);
+          perch1.position.set(tx + 0.22, 1.32, fgZ);
+          const perch2 = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.30, 0.06, 14), creamTileMat);
+          perch2.position.set(tx - 0.16, 1.68, fgZ);
+          g.add(catBase, catCondo, post1, post2, perch1, perch2);
+          addLocalContactShadow(g, tx, fgZ, 1.3, 1.2);
+        }
+      }
+    } else if (isBubbleTeaQsr) {
+      // ROUND-23 4. BUBBLE TEA, DESSERTS, BAKERIES & QUICK-SERVICE F&B (CHAGEE, GONG CHA, TEALIVE, KOI THÉ, XING FU TANG, BOOST JUICE, LLAOLAO, GODIVA, ROYCE', BASKIN ROBBINS, INSIDE SCOOP, FAMOUS AMOS, AUNTIE ANNE'S, STUFF'D, SUBWAY, KFC, TEXAS CHICKEN, PIZZA HUT, BURGER KING, A&W, MIXUE, CU):
+      // Front marble/oak order & pickup counter with 3D tea-brewer/espresso towers, dual POS screens, glowing overhead menu lightboxes, glass gelato/pastry display vitrine & bistro seating tables!
+      const fgZ = intD > 2.2 ? -1.38 : -0.78;
+      const isChagee = uName.includes('CHAGEE');
+      const qsrAccentMat = isChagee || uName.includes('KFC') || uName.includes('TEXAS') || uName.includes('MIXUE') || uName.includes('GONG CHA')
+        ? norenCrimsonMat
+        : uName.includes('TEALIVE') || uName.includes('CU')
+          ? intWallNavyMat
+          : uName.includes('LLAOLAO') || uName.includes('SUBWAY') || uName.includes('BOOST')
+            ? emeraldTrimMat
+            : smokedOakMat;
+
+      // 3 Glowing Overhead Menu Lightboxes across Rear Wall!
+      const menuCols = Math.min(3, Math.max(2, numBays));
+      for (let m = 0; m < menuCols; m++) {
+        const mx = (m - (menuCols - 1) * 0.5) * Math.min(2.15, (innerW - 1.0) / menuCols);
+        const menuBox = new THREE.Mesh(
+          new THREE.BoxGeometry(1.78, 0.88, 0.08),
+          new THREE.MeshBasicMaterial({
+            map: createSignBoardTexture(
+              m === 0 ? 'SIGNATURE SERIES' : m === 1 ? (store.name || 'FRESH MENU').slice(0, 18) : 'COMBOS & DESSERTS',
+              isChagee ? 'BOYA JASMINE GREEN MILK TEA • DA HONG PAO' : 'FRESH BREWED • TOPPINGS • ARTISAN TREATS',
+              store.brandBg || '#7f1d1d',
+              '#ffffff',
+              '#fde047',
+              512,
+              256
+            )
+          })
+        );
+        menuBox.position.set(mx, eaveY - 0.84, -intD + 0.24);
+        g.add(menuBox);
+      }
+
+      // Front Marble/Oak Order & Pickup Counter with 3D Tea-Brewer Towers, Dual POS Screens & Glass Gelato/Pastry Display Vitrine!
+      const counterW = Math.min(innerW * 0.62, 5.4);
+      const counterBase = new THREE.Mesh(new THREE.BoxGeometry(counterW, 0.98, 0.74), isChagee ? hinokiWoodMat : qsrAccentMat);
+      counterBase.position.set(0, 0.51, fgZ);
+      const counterTop = new THREE.Mesh(new THREE.BoxGeometry(counterW + 0.10, 0.06, 0.82), cafeMarbleMat);
+      counterTop.position.set(0, 1.02, fgZ);
+      g.add(counterBase, counterTop);
+      addLocalContactShadow(g, 0, fgZ, counterW + 0.5, 1.25);
+
+      // 3D Tea-Brewer / Espresso Extraction Towers (Left side of counter)
+      for (let tb = 0; tb < 3; tb++) {
+        const tx = -counterW * 0.34 + tb * 0.28;
+        const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.11, 0.48, 12), isChagee ? brassGoldMat : brushedAlumMat);
+        tower.position.set(tx, 1.28, fgZ - 0.06);
+        const tap = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.08, 0.10), obsidianGlossMat);
+        tap.position.set(tx, 1.18, fgZ + 0.06);
+        g.add(tower, tap);
+      }
+      // Dual Angled POS Touchscreens (Center of counter)
+      for (const pxOff of [-0.24, 0.24]) {
+        const pos = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.04), obsidianGlossMat);
+        pos.position.set(pxOff, 1.16, fgZ + 0.12);
+        pos.rotation.x = -0.34;
+        g.add(pos);
+      }
+      // Glass Gelato / Pastry Display Vitrine (Right side of counter)
+      const vitW = Math.min(1.45, counterW * 0.34);
+      const vitX = counterW * 0.28;
+      const vitGlass = new THREE.Mesh(new THREE.BoxGeometry(vitW, 0.46, 0.58), intGlassPhysMat);
+      vitGlass.position.set(vitX, 1.28, fgZ + 0.04);
+      const vitCap = new THREE.Mesh(new THREE.BoxGeometry(vitW + 0.04, 0.035, 0.60), brassGoldMat);
+      vitCap.position.set(vitX, 1.52, fgZ + 0.04);
+      g.add(vitGlass, vitCap);
+      for (let gt = -1; gt <= 1; gt++) {
+        const scoop = new THREE.Mesh(pastryDomeGeo, rainbowBandMats[(gt + 4) % rainbowBandMats.length]);
+        scoop.scale.set(0.76, 0.58, 0.76);
+        scoop.position.set(vitX + gt * 0.36, 1.10, fgZ + 0.04);
+        g.add(scoop);
+      }
+
+      // Flanking Bistro Seating Tables with Chairs!
+      if (innerW >= 7.5) {
+        for (const side of [-1, 1]) {
+          const bx = side * Math.min(innerW * 0.38, 3.6);
+          const bTop = new THREE.Mesh(bistroTopGeo, cafeMarbleMat);
+          bTop.position.set(bx, 0.74, fgZ + 0.36);
+          const bPole = new THREE.Mesh(bistroPoleGeo, matteSteelMat);
+          bPole.position.set(bx, 0.38, fgZ + 0.36);
+          g.add(bTop, bPole);
+          for (const cs of [-0.54, 0.54]) {
+            const ch = new THREE.Mesh(stoolSeatGeo, qsrAccentMat);
+            ch.position.set(bx + cs, 0.45, fgZ + 0.36);
+            const chLeg = new THREE.Mesh(stoolLegGeo, matteSteelMat);
+            chLeg.scale.set(1, 0.66, 1);
+            chLeg.position.set(bx + cs, 0.22, fgZ + 0.36);
+            g.add(ch, chLeg);
+          }
+        }
       }
     } else if (prof.facadeType === 'cafe-patisserie') {
       // COME TRUE CAFE / ORIENTAL KOPI / CHATERAISE / LAVENDER / HEYTEA / STARBUCKS:
@@ -5064,6 +5544,7 @@ export function buildMallArchitecture(scene, interactables) {
       isParkson || isAeon || isDecathlon || isGsc || isTgv || isWangsa || isToyCatcher ||
       isJayaGrocer || isGameOn || isModu || isMrt || isUniqlo || isNitori || isMelvitaHooga || isMuji ||
       isFullServiceDining || isPharmacy || isBookstore || isBankAtm || isHomesHarmony || isLululemon || isSealantis || isMassageChair || isTcmHerbal ||
+      isTechTelco || isSalonSpa || isLego || isBabyKids || isHomeAppliance || isPetStore || isBubbleTeaQsr ||
       isMrDiy || isPopMart || isTopToy || isZusPastry || isSephora ||
       isStarbucks || isHeytea || isMiniso || isIppudo || isBhc ||
       isComeTrue || isAdidas || isFoodDistrict || isRollerwa;
@@ -5289,8 +5770,8 @@ export function buildMallArchitecture(scene, interactables) {
           cove.position.set(0, eaveY - 0.07, 0.40);
           g.add(lintel, cove);
 
-          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide boutiques (category-authentic 3D merchandise — NEVER torso busts on luggage, footwear, jewellery, optical, or apothecary stores!)
-          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva && !isFullServiceDining && !isPharmacy && !isTcmHerbal && !isMassageChair) {
+          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide boutiques (category-authentic 3D merchandise — NEVER torso busts on luggage, footwear, jewellery, optical, salon, or apothecary stores!)
+          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva && !isFullServiceDining && !isPharmacy && !isTcmHerbal && !isMassageChair && !isSalonSpa && !isTechTelco && !isLego && !isBabyKids && !isHomeAppliance && !isPetStore && !isBubbleTeaQsr) {
             const mMat = prof.isLight ? mannequinLinenMat : mannequinLightMat;
             for (const side of [-1, 1]) {
               const mx = side * Math.min(halfW - 1.65, 3.35);
