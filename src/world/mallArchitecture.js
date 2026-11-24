@@ -2095,6 +2095,94 @@ export function buildMallArchitecture(scene, interactables) {
     parent.add(sg);
   };
 
+  const suitcaseWheelGeo = new THREE.CylinderGeometry(0.024, 0.024, 0.024, 8);
+  suitcaseWheelGeo.rotateZ(Math.PI / 2);
+  const suitcaseTubeGeo = new THREE.CylinderGeometry(0.008, 0.008, 0.24, 6);
+  const nitoriTealMat = new THREE.MeshStandardMaterial({ color: '#008375', emissive: '#003830', emissiveIntensity: 0.28, roughness: 0.34 });
+  const nealsCobaltMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', emissive: '#0c1e54', emissiveIntensity: 0.36, roughness: 0.24, metalness: 0.14 });
+  const melvitaHoneyMat = new THREE.MeshStandardMaterial({ color: '#eab308', emissive: '#713f12', emissiveIntensity: 0.30, roughness: 0.36 });
+  const rattanWeaveMat = new THREE.MeshStandardMaterial({ color: '#c89d66', emissive: '#4a3219', emissiveIntensity: 0.22, roughness: 0.72 });
+  const nitoriSofaSlateMat = new THREE.MeshStandardMaterial({ color: '#5b7083', emissive: '#1e293b', emissiveIntensity: 0.20, roughness: 0.68 });
+  const luggageShellMats = [brushedAlumMat, obsidianGlossMat, intWallNavyMat, norenCrimsonMat, brassGoldMat];
+
+  const addHardshellSuitcase = (parent, x, y, z, w = 0.36, h = 0.52, d = 0.22, shellMat = brushedAlumMat, rotY = 0) => {
+    const lg = new THREE.Group();
+    lg.position.set(x, y, z);
+    lg.rotation.y = rotY;
+    // 4 360-degree dual caster spinner wheels
+    for (const wx of [-w * 0.36, w * 0.36]) {
+      for (const wz of [-d * 0.34, d * 0.34]) {
+        const wh = new THREE.Mesh(suitcaseWheelGeo, obsidianGlossMat);
+        wh.position.set(wx, 0.024, wz);
+        lg.add(wh);
+      }
+    }
+    // Ribbed polycarbonate/aluminum hard-shell body + zipper seam + 3 horizontal rib grooves
+    const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), shellMat);
+    body.position.y = 0.048 + h * 0.5;
+    const zipBand = new THREE.Mesh(new THREE.BoxGeometry(w + 0.008, h + 0.006, 0.022), obsidianGlossMat);
+    zipBand.position.y = 0.048 + h * 0.5;
+    lg.add(body, zipBand);
+    for (const rFrac of [0.26, 0.50, 0.74]) {
+      const rib = new THREE.Mesh(new THREE.BoxGeometry(w + 0.014, 0.018, d + 0.012), shellMat);
+      rib.position.y = 0.048 + h * rFrac;
+      lg.add(rib);
+    }
+    // Top carry handle + telescoping dual-tube aluminum trolley handle with ergonomic grip bar
+    const topGrip = new THREE.Mesh(new THREE.BoxGeometry(w * 0.36, 0.022, 0.028), obsidianGlossMat);
+    topGrip.position.set(0, 0.048 + h + 0.016, 0.03);
+    for (const tx of [-0.065, 0.065]) {
+      const tube = new THREE.Mesh(suitcaseTubeGeo, brushedAlumMat);
+      tube.position.set(tx, 0.048 + h + 0.12, -d * 0.22);
+      lg.add(tube);
+    }
+    const trolleyBar = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.024, 0.028), obsidianGlossMat);
+    trolleyBar.position.set(0, 0.048 + h + 0.24, -d * 0.22);
+    lg.add(topGrip, trolleyBar);
+    parent.add(lg);
+  };
+
+  let cachedUniqloCubeMats = null;
+  const getUniqloCubeLogoMats = () => {
+    if (cachedUniqloCubeMats) return cachedUniqloCubeMats;
+    const makeFace = (isKana) => {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 256;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#d80c18';
+      ctx.fillRect(0, 0, 256, 256);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(14, 14, 228, 228);
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (isKana) {
+        ctx.font = '900 84px "Inter", "Segoe UI", sans-serif';
+        ctx.fillText('ユニ', 128, 86);
+        ctx.fillText('クロ', 128, 174);
+      } else {
+        ctx.font = '900 82px "Inter", "Segoe UI", sans-serif';
+        ctx.fillText('UNI', 128, 86);
+        ctx.fillText('QLO', 128, 174);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return new THREE.MeshStandardMaterial({
+        map: tex,
+        emissive: '#ffffff',
+        emissiveMap: tex,
+        emissiveIntensity: 0.72,
+        roughness: 0.24
+      });
+    };
+    const enMat = makeFace(false);
+    const jpMat = makeFace(true);
+    cachedUniqloCubeMats = [jpMat, jpMat, uniqloRedBoxMat, uniqloRedBoxMat, enMat, jpMat];
+    return cachedUniqloCubeMats;
+  };
+
   let cachedCamp5BackMat = null;
   const getCamp5ProshopBackwallMat = () => {
     if (cachedCamp5BackMat) return cachedCamp5BackMat;
@@ -2338,6 +2426,18 @@ export function buildMallArchitecture(scene, interactables) {
     const isWangsa = uName.includes('WANGSA BOWL');
     const isCellini = uName.includes('CELLINI');
     const isLoccitane = uName.includes('OCCITANE');
+    const isNitori = uName.includes('NITORI');
+    const isMuji = uName.includes('MUJI');
+    const isNealsYard = uName.includes('NEAL') && uName.includes('YARD');
+    const isMelvitaHooga = uName.includes('MELVITA') || uName.includes('HOOGA');
+    const isLuggage = /SAMSONITE|TOMAZ|TUMI|TOURISTER|TRAVELLER|LUGGAGE/.test(uName);
+    const hasTomaz = uName.includes('TOMAZ');
+    const isFootwear = !isLuggage && /ALDO|NAELOFAR|CHARLES & KEITH|PEDRO|CLARKS|ECCO|VINCCI|CHRISTY NG|STEVE MADDEN|GEOX|SKECHERS|CROCS|BIRKENSTOCK|BATA|VANS|TIMBERLAND|FIPPER/.test(uName);
+    const hasNaelofar = uName.includes('NAELOFAR') || uName.includes('BUTTONSCARVES');
+    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|WATSONS|GUARDIAN|M·A·C|VICTORIA|BREO|SELECTIV/.test(uName));
+    const isTrueHandbagLuxury = /BONIA|MICHAEL KORS|FURLA|BRAUN BÜFFEL|LONGCHAMP/.test(uName);
+    const isMissionQ = uName.includes('MISSION Q');
+    const isHarveyNorman = uName.includes('HARVEY NORMAN');
     const isMrt = store.id === 'g-mrt-portal' || uName.includes('MRT BANDAR UTAMA');
     const isNarrowCorridor = Math.abs(store.z) < 12.5;
     const isFlankWall = store.width <= 13.5 && (store.side === 'E' || store.side === 'W');
@@ -2361,7 +2461,9 @@ export function buildMallArchitecture(scene, interactables) {
 
     // Pick authentic architectural surround material per brand profile (NO uniform dark bronze box!)
     let surroundMat = ivoryStoneMat;
-    if (prof.facadeType === 'japanese-machiya') surroundMat = hinokiWoodMat;
+    if (isNealsYard) surroundMat = nealsCobaltMat;
+    else if (isNitori || isMuji || isMelvitaHooga) surroundMat = hinokiWoodMat;
+    else if (prof.facadeType === 'japanese-machiya') surroundMat = hinokiWoodMat;
     else if (prof.facadeType === 'korean-hanok') surroundMat = lightOakMat;
     else if (prof.facadeType === 'open-market') surroundMat = satinWhiteMat;
     else if (isSephora) surroundMat = obsidianGlossMat;
@@ -2428,24 +2530,26 @@ export function buildMallArchitecture(scene, interactables) {
           ? smokedOakMat
           : isSephora || isUniqlo || isChanel || isNextGen || prof.facadeType === 'open-market'
             ? intWallWhiteMat
-            : isTommy
+            : isTommy || isNealsYard
               ? intWallNavyMat
-              : isOutside || isOrientalKopi
-                ? intWallOliveMat
-                : isTehTarik
-                  ? intWallWoodMat
-                  : prof.facadeType === 'korean-hanok'
-                    ? intWallWarmMat
-                    : prof.facadeType === 'japanese-machiya' || prof.facadeType === 'modern-bistro'
-                      ? (prof.materialStyle === 'crimson-lacquer' ? intWallCrimsonMat : intWallWoodMat)
-                      : prof.facadeType === 'cafe-patisserie' || prof.isLight
-                        ? intWallWarmMat
-                        : intWallDarkMat;
+              : isNitori || isMuji || isMelvitaHooga
+                ? intWallWarmMat
+                : isOutside || isOrientalKopi
+                  ? intWallOliveMat
+                  : isTehTarik
+                    ? intWallWoodMat
+                    : prof.facadeType === 'korean-hanok'
+                      ? intWallWarmMat
+                      : prof.facadeType === 'japanese-machiya' || prof.facadeType === 'modern-bistro'
+                        ? (prof.materialStyle === 'crimson-lacquer' ? intWallCrimsonMat : intWallWoodMat)
+                        : prof.facadeType === 'cafe-patisserie' || prof.isLight
+                          ? intWallWarmMat
+                          : intWallDarkMat;
     const backAtlasTex = createStoreInteriorBackwallTexture(store);
     const backAtlasMat = getInteriorBackwallMat(store, prof);
     // Use GPU Raymarched 3D Parallax on hero flagship/atrium/District K storefronts & batched atlas on secondary bays -> LOCKED 60 FPS!
     const isHeroParallax =
-      /SEPHORA|PARKSON|JAYA GROCER|ZARA|CHANEL|YSL|COACH|MICHAEL KORS|LULULEMON|IPPUDO|FOOD DISTRICT|UNDER ARMOUR|PUMA|OUTSIDE|MINISO|ADIDAS|ORIENTAL KOPI|KYOCHON|PAO XIANG|COME TRUE|STARBUCKS|UNIQLO|DEGEM|BONIA|HEYTEA|DIN TAI FUNG|SPEEDO|BHC|MODU|NEXT GEN|NEXTGEN|GAME ON|ROLLERWA|PJPAC|WINDLAB|TEH TARIK|MADAM KWAN|CHILI|CELLINI|TAISHI|MR\. D\.I\.Y|MR\.D\.I\.Y|POP MART|TOP TOY|COFFEE MEETS PASTRY|NIKE/.test(uName);
+      /SEPHORA|PARKSON|JAYA GROCER|ZARA|CHANEL|YSL|COACH|MICHAEL KORS|LULULEMON|IPPUDO|FOOD DISTRICT|UNDER ARMOUR|PUMA|OUTSIDE|MINISO|ADIDAS|ORIENTAL KOPI|KYOCHON|PAO XIANG|COME TRUE|STARBUCKS|UNIQLO|NITORI|NEAL|MELVITA|HOOGA|SAMSONITE|ALDO|DEGEM|BONIA|HEYTEA|DIN TAI FUNG|SPEEDO|BHC|MODU|NEXT GEN|NEXTGEN|GAME ON|ROLLERWA|PJPAC|WINDLAB|TEH TARIK|MADAM KWAN|CHILI|CELLINI|TAISHI|MR\. D\.I\.Y|MR\.D\.I\.Y|POP MART|TOP TOY|COFFEE MEETS PASTRY|NIKE/.test(uName);
     const backWallMatFinal = isCamp5
       ? getCamp5ProshopBackwallMat()
       : isToyCatcher
@@ -2459,11 +2563,11 @@ export function buildMallArchitecture(scene, interactables) {
       ? gameOnCarpetMat
       : isChanel
         ? intFloorChanelGlossMat
-        : isAdidas || isModu || isOutside || prof.facadeType === 'korean-hanok'
+        : isAdidas || isModu || isOutside || isNitori || isMuji || isMelvitaHooga || prof.facadeType === 'korean-hanok'
           ? intFloorOakMat
-          : isSephora || isZara || isNextGen || isMiniso || isParkson || isHeytea
+          : isSephora || isZara || isNextGen || isMiniso || isParkson || isHeytea || isUniqlo
             ? intFloorLightMat
-            : isCoach || isStarbucks || isIppudo || isTehTarik || prof.facadeType === 'japanese-machiya' || prof.facadeType === 'cafe-patisserie' || prof.facadeType === 'modern-bistro'
+            : isCoach || isStarbucks || isIppudo || isTehTarik || isNealsYard || isLuggage || prof.facadeType === 'japanese-machiya' || prof.facadeType === 'cafe-patisserie' || prof.facadeType === 'modern-bistro'
               ? intFloorWoodMat
               : (prof.facadeType === 'sports-industrial' && !isAdidas) || prof.facadeType === 'entertainment-marquee'
                 ? intFloorDarkMat
@@ -3268,21 +3372,176 @@ export function buildMallArchitecture(scene, interactables) {
             g.add(garm);
           }
         } else if (isUniqlo) {
-          // UNIQLO: Anchored modular gallery-white cube shelves packed with colorful folded knitwear stacks!
-          for (const uOff of [-(bayStep - 0.36) * 0.5, (bayStep - 0.36) * 0.5]) {
-            const up = new THREE.Mesh(new THREE.BoxGeometry(0.055, eaveY - 0.42, 0.42), satinWhiteMat);
-            up.position.set(bx + uOff, (eaveY - 0.42) * 0.5, -intD + 0.34);
+          // UNIQLO (G329 / F102 Duplex): Floor-to-ceiling white grid cubby walls stacked with folded colorful LifeWear garments (T-shirts, oxford shirts, ultra-light down jackets) + bright white strip-LED ceiling grid + red-backed cash wrap counter!
+          for (const uOff of [-(bayStep - 0.32) * 0.5, -0.32, 0.32, (bayStep - 0.32) * 0.5]) {
+            const up = new THREE.Mesh(new THREE.BoxGeometry(0.048, eaveY - 0.38, 0.42), satinWhiteMat);
+            up.position.set(bx + uOff, (eaveY - 0.38) * 0.5, -intD + 0.34);
             g.add(up);
           }
+          const ceilStrip = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, 0.04, intD - 0.52), intLightCoolMat);
+          ceilStrip.position.set(bx, eaveY - 0.08, -intD * 0.5 + 0.10);
+          g.add(ceilStrip);
+          if (b === Math.floor(numBays * 0.5)) {
+            // Red-backed UNIQLO LifeWear cash-wrap counter at rear center bay
+            const redWall = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, eaveY - 0.44, 0.14), uniqloRedBoxMat);
+            redWall.position.set(bx, (eaveY - 0.44) * 0.5 + 0.08, -intD + 0.24);
+            const logoSign = new THREE.Mesh(
+              new THREE.PlaneGeometry(1.18, 0.56),
+              new THREE.MeshBasicMaterial({ map: createSignBoardTexture('UNIQLO • ユニクロ', 'LifeWear • CASHIER COUNTER', '#d80c18', '#ffffff', '#ffffff', 512, 192) })
+            );
+            logoSign.position.set(bx, 2.25, -intD + 0.33);
+            const cashDesk = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.48, 0.92, 0.58), hinokiWoodMat);
+            cashDesk.position.set(bx, 0.48, -intD + 0.56);
+            const cashTop = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.05, 0.62), satinWhiteMat);
+            cashTop.position.set(bx, 0.96, -intD + 0.56);
+            g.add(redWall, logoSign, cashDesk, cashTop);
+          } else {
+            for (let sh = 0; sh < 5; sh++) {
+              const sy = 0.52 + sh * 0.52;
+              const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.32, 0.045, 0.42), satinWhiteMat);
+              shelf.position.set(bx, sy, -intD + 0.34);
+              g.add(shelf);
+              for (let k = -1; k <= 1; k++) {
+                const stack = new THREE.Mesh(foldedStackGeo, intMerchMats[(b * 3 + sh + k + 12) % intMerchMats.length]);
+                stack.position.set(bx + k * 0.62, sy + 0.15, -intD + 0.36);
+                g.add(stack);
+              }
+            }
+          }
+        } else if (isLuggage) {
+          // LUGGAGE & TRAVEL SHOWROOM (SAMSONITE • TOMAZ, TUMI, AMERICAN TOURISTER, UNIVERSAL TRAVELLER):
+          // Tiered illuminated wall bays displaying 3D ribbed hard-shell spinner suitcases + dedicated Tomaz dress-shoe & tailored bay on right!
+          if (hasTomaz && b >= Math.ceil(numBays * 0.5)) {
+            // Dedicated TOMAZ right bay: Walnut & brass dress-shoe / leather-loafer wall + tailored menswear rack
+            const credenza = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.72, 0.52), smokedOakMat);
+            credenza.position.set(bx, 0.38, -intD + 0.36);
+            for (const uOff of [-(bayStep - 0.48) * 0.5, (bayStep - 0.48) * 0.5]) {
+              const up = new THREE.Mesh(new THREE.BoxGeometry(0.046, eaveY - 0.46, 0.34), brassGoldMat);
+              up.position.set(bx + uOff, (eaveY - 0.46) * 0.5, -intD + 0.34);
+              g.add(up);
+            }
+            g.add(credenza);
+            for (let sh = 0; sh < 3; sh++) {
+              const sy = 0.98 + sh * 0.56;
+              const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.48, 0.042, 0.34), smokedOakMat);
+              shelf.position.set(bx, sy, -intD + 0.34);
+              const led = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.52, 0.022, 0.04), intLightWarmMat);
+              led.position.set(bx, sy - 0.02, -intD + 0.49);
+              g.add(shelf, led);
+              for (let sp = -1; sp <= 1; sp++) {
+                addSneakerDisplay(g, bx + sp * 0.58, sy + 0.025, -intD + 0.36, (sh + sp) % 2 === 0 ? smokedOakMat : obsidianGlossMat, 0.24);
+              }
+            }
+          } else {
+            // Illuminated Samsonite / Tumi 3D hard-shell spinner suitcase wall bay
+            const basePlinth = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.22, 0.54), matteSteelMat);
+            basePlinth.position.set(bx, 0.13, -intD + 0.38);
+            const midShelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.055, 0.48), lightOakMat);
+            midShelf.position.set(bx, 1.16, -intD + 0.36);
+            const topShelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.05, 0.44), lightOakMat);
+            topShelf.position.set(bx, 2.08, -intD + 0.36);
+            const bayGlow = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.46, 0.045, 0.14), intLightCoolMat);
+            bayGlow.position.set(bx, eaveY - 0.48, -intD + 0.26);
+            for (const uOff of [-(bayStep - 0.44) * 0.5, (bayStep - 0.44) * 0.5]) {
+              const up = new THREE.Mesh(new THREE.BoxGeometry(0.048, eaveY - 0.44, 0.38), brushedAlumMat);
+              up.position.set(bx + uOff, (eaveY - 0.44) * 0.5, -intD + 0.34);
+              g.add(up);
+            }
+            g.add(basePlinth, midShelf, topShelf, bayGlow);
+            // Lower tier: 3 large/medium hard-shell spinner suitcases
+            for (let sc = -1; sc <= 1; sc++) {
+              const sMat = luggageShellMats[(b * 3 + sc + 5) % luggageShellMats.length];
+              addHardshellSuitcase(g, bx + sc * 0.62, 0.24, -intD + 0.38, 0.38, 0.56, 0.24, sMat, sc * 0.14);
+            }
+            // Mid tier: 3 cabin carry-on spinner suitcases
+            for (let sc = -1; sc <= 1; sc++) {
+              const sMat = luggageShellMats[(b * 2 + sc + 8) % luggageShellMats.length];
+              addHardshellSuitcase(g, bx + sc * 0.60, 1.19, -intD + 0.36, 0.33, 0.46, 0.21, sMat, -sc * 0.16);
+            }
+            // Upper tier: Leather business briefcases & travel backpacks
+            for (let bp = -1; bp <= 1; bp++) {
+              const pack = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.36, 0.18), bp === 0 ? smokedOakMat : obsidianGlossMat);
+              pack.position.set(bx + bp * 0.58, 2.29, -intD + 0.36);
+              g.add(pack);
+            }
+          }
+        } else if (isFootwear) {
+          // FOOTWEAR & SHOE BOUTIQUES (ALDO • NAELOFAR, CHARLES & KEITH, PEDRO, CLARKS, ECCO, VINCCI, CHRISTY NG, STEVE MADDEN, GEOX, SKECHERS, CROCS, BIRKENSTOCK, BATA, VANS, TIMBERLAND, FIPPER):
+          // Floating illuminated horizontal shoe shelves displaying individual 3D angled shoe pairs + pastel silk hijab wall on Naelofar right bay!
+          if (hasNaelofar && b >= Math.ceil(numBays * 0.5)) {
+            // Dedicated NAELOFAR right bay: Pastel silk hijab/scarf hanging display rails & gift drawer credenza
+            const credenza = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.64, 0.48), ivoryStoneMat);
+            credenza.position.set(bx, 0.34, -intD + 0.36);
+            for (const uOff of [-(bayStep - 0.48) * 0.5, (bayStep - 0.48) * 0.5]) {
+              const up = new THREE.Mesh(new THREE.BoxGeometry(0.042, eaveY - 0.48, 0.32), brassGoldMat);
+              up.position.set(bx + uOff, (eaveY - 0.48) * 0.5, -intD + 0.34);
+              g.add(up);
+            }
+            const scarfRail = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.52, 0.036, 0.036), brassGoldMat);
+            scarfRail.position.set(bx, 2.02, -intD + 0.40);
+            g.add(credenza, scarfRail);
+            const hijabPastels = [intMerchMats[5], intMerchMats[2], intMerchMats[3], intMerchMats[4], intMerchMats[0]];
+            for (let hj = -2; hj <= 2; hj++) {
+              const scarf = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.88, 0.32), hijabPastels[(hj + 5) % hijabPastels.length]);
+              scarf.position.set(bx + hj * 0.34, 1.54, -intD + 0.40);
+              g.add(scarf);
+            }
+          } else {
+            const lowPlinth = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.28, 0.48), prof.isLight ? ivoryStoneMat : obsidianGlossMat);
+            lowPlinth.position.set(bx, 0.16, -intD + 0.36);
+            for (const uOff of [-(bayStep - 0.44) * 0.5, (bayStep - 0.44) * 0.5]) {
+              const up = new THREE.Mesh(new THREE.BoxGeometry(0.042, eaveY - 0.44, 0.32), accentRackMat);
+              up.position.set(bx + uOff, (eaveY - 0.44) * 0.5, -intD + 0.34);
+              g.add(up);
+            }
+            g.add(lowPlinth);
+            for (let sh = 0; sh < 4; sh++) {
+              const sy = 0.68 + sh * 0.52;
+              const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.04, 0.34), prof.isLight ? satinWhiteMat : smokedOakMat);
+              shelf.position.set(bx, sy, -intD + 0.34);
+              const shLed = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.48, 0.018, 0.035), intLightWarmMat);
+              shLed.position.set(bx, sy - 0.018, -intD + 0.48);
+              g.add(shelf, shLed);
+              for (let sp = -1; sp <= 1; sp++) {
+                const shoeMat = intMerchMats[(storeHash + b + sh + sp + 9) % intMerchMats.length];
+                addSneakerDisplay(g, bx + sp * 0.56 - 0.08, sy + 0.022, -intD + 0.35, shoeMat, 0.32);
+                addSneakerDisplay(g, bx + sp * 0.56 + 0.08, sy + 0.022, -intD + 0.37, shoeMat, 0.18);
+              }
+            }
+          }
+        } else if (isApothecaryBeauty) {
+          // APOTHECARY & BOTANICAL SKINCARE (NEAL'S YARD REMEDIES, KIEHL'S, L'OCCITANE, AESOP, INNISFREE, THE BODY SHOP, BATH & BODY WORKS, KENS, CLARINS, LANCÔME, YSL, THE FACE SHOP, SHU UEMURA):
+          // Illuminated apothecary timber/brass shelving lined with rows of cobalt-blue (Neal's Yard) or amber/botanical glass tincture bottles with white pump caps!
+          const cabMat = isNealsYard ? nealsCobaltMat : isLoccitane ? hinokiWoodMat : prof.isLight ? lightOakMat : obsidianGlossMat;
+          const bottleMatPrimary = isNealsYard ? nealsCobaltMat : isLoccitane ? melvitaHoneyMat : amberBacklitMat;
+          const credenza = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.72, 0.48), cabMat);
+          credenza.position.set(bx, 0.38, -intD + 0.36);
+          for (const uOff of [-(bayStep - 0.42) * 0.5, (bayStep - 0.42) * 0.5]) {
+            const up = new THREE.Mesh(new THREE.BoxGeometry(0.052, eaveY - 0.44, 0.34), cabMat);
+            up.position.set(bx + uOff, (eaveY - 0.44) * 0.5, -intD + 0.34);
+            g.add(up);
+          }
+          const topHeader = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.06, 0.36), intLightWarmMat);
+          topHeader.position.set(bx, eaveY - 0.46, -intD + 0.34);
+          g.add(credenza, topHeader);
           for (let sh = 0; sh < 4; sh++) {
-            const sy = 0.68 + sh * 0.64;
-            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, 0.05, 0.42), satinWhiteMat);
+            const sy = 0.94 + sh * 0.46;
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.038, 0.32), isNealsYard ? lightOakMat : satinWhiteMat);
             shelf.position.set(bx, sy, -intD + 0.34);
             g.add(shelf);
-            for (let k = -1; k <= 1; k++) {
-              const stack = new THREE.Mesh(foldedStackGeo, intMerchMats[(b * 2 + sh + k + 12) % intMerchMats.length]);
-              stack.position.set(bx + k * 0.64, sy + 0.16, -intD + 0.36);
-              g.add(stack);
+            for (let bt = -3; bt <= 3; bt++) {
+              const bMat = isNealsYard
+                ? nealsCobaltMat
+                : (bt + sh) % 3 === 0
+                  ? satinWhiteMat
+                  : bottleMatPrimary;
+              const bot = new THREE.Mesh(bottleSmallGeo, bMat);
+              bot.scale.set(0.76, 0.78, 0.76);
+              bot.position.set(bx + bt * 0.24, sy + 0.11, -intD + 0.35);
+              const pump = new THREE.Mesh(flaconCapGeo, satinWhiteMat);
+              pump.scale.set(0.68, 0.85, 0.68);
+              pump.position.set(bx + bt * 0.24, sy + 0.21, -intD + 0.35);
+              g.add(bot, pump);
             }
           }
         } else if (isParkson) {
@@ -3313,30 +3572,9 @@ export function buildMallArchitecture(scene, interactables) {
               g.add(bag, handle);
             }
           }
-        } else if (isTommy || (storeHash + b) % 2 === 0) {
-          // TOMMY HILFIGER / TAILORED APPAREL: Floor-to-ceiling anchored brass/chrome garment rail with hung 3D garments!
-          const rail = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.60, 0.045, 0.045), accentRackMat);
-          rail.position.set(bx, 1.98, -intD + 0.46);
-          for (const uOff of [-(bayStep - 0.62) * 0.5, (bayStep - 0.62) * 0.5]) {
-            const st = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, eaveY - 0.20, 8), accentRackMat);
-            st.position.set(bx + uOff, (eaveY - 0.20) * 0.5, -intD + 0.46);
-            g.add(st);
-          }
-          const railBarTop = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.52, 0.05, 0.18), intLightWarmMat);
-          railBarTop.position.set(bx, eaveY - 0.50, -intD + 0.26);
-          g.add(rail, railBarTop);
-          if (isTommy) {
-            const redStripe = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.12, 0.10), uniqloRedBoxMat);
-            redStripe.position.set(bx, eaveY - 0.42, -intD + 0.20);
-            g.add(redStripe);
-          }
-          for (let h = -2; h <= 2; h++) {
-            const garm = new THREE.Mesh(hangingGarmentGeo, intMerchMats[(storeHash + b + h + 10) % intMerchMats.length]);
-            garm.position.set(bx + h * 0.34, 1.48, -intD + 0.46);
-            g.add(garm);
-          }
-        } else {
-          // BONIA / PARKSON / DIOR: Grounded luxury credenza & vertical-upright anchored brass handbag shelves!
+        } else if (isTrueHandbagLuxury) {
+          // TRUE LEATHER HANDBAG BOUTIQUES ONLY (BONIA, MICHAEL KORS, FURLA, BRAUN BÜFFEL, LONGCHAMP):
+          // Grounded luxury credenza & vertical-upright anchored brass handbag shelves!
           const credenza = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 0.78, 0.56), prof.isLight ? ivoryStoneMat : obsidianGlossMat);
           credenza.position.set(bx, 0.41, -intD + 0.38);
           const topGlow = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.52, 0.05, 0.16), intLightWarmMat);
@@ -3360,10 +3598,68 @@ export function buildMallArchitecture(scene, interactables) {
               g.add(bag, handle);
             }
           }
+        } else {
+          // CONTEMPORARY FASHION & APPAREL (iORA, GIORDANO, NICHII, CHEETAH, PADINI, BRANDS OUTLET, H&M, MANGO, PULL&BEAR, COTTON ON, HLA, G2000, BENJAMIN BARKER, LOVE BONITO, PLAYAZ, LACOSTE, CALVIN KLEIN, SACOOR BLUE, POLO RALPH LAUREN, BRITISHINDIA, MARKS & SPENCER, ELLE, OUTPOZT, SEMIR, DRUM, STYLE BY BEGA, XIXILI, LA SENZA, WACOAL, F.O.S, TOMMY HILFIGER):
+          // Perimeter brushed-steel/oak garment racks with 3D hanging shirts/jackets/trousers/dresses + folded knitwear cubbies + rear fitting-room mirror portal & branded cash wrap!
+          if (b === Math.floor(numBays * 0.5) && numBays >= 3) {
+            // Rear Fitting-Room Corridor Portal with Full-Length Illuminated Mirror Panels & Branded Cash-Wrap Checkout Counter!
+            const fitFrame = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, eaveY - 0.38, 0.16), prof.isLight ? lightOakMat : smokedOakMat);
+            fitFrame.position.set(bx, (eaveY - 0.38) * 0.5 + 0.08, -intD + 0.24);
+            const mirrorPanel = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 1.95), intGlassPhysMat);
+            mirrorPanel.position.set(bx - 0.44, 1.16, -intD + 0.34);
+            const mirrorHalo = new THREE.Mesh(new THREE.BoxGeometry(0.82, 2.02, 0.04), intLightWarmMat);
+            mirrorHalo.position.set(bx - 0.44, 1.16, -intD + 0.31);
+            const brandSign = new THREE.Mesh(
+              new THREE.PlaneGeometry(1.18, 0.42),
+              new THREE.MeshBasicMaterial({ map: createSignBoardTexture((store.name || 'FASHION').slice(0, 18), 'FITTING ROOMS • CASHIER', store.brandBg || '#1e293b', '#ffffff', '#fde68a', 512, 160) })
+            );
+            brandSign.position.set(bx + 0.36, 2.24, -intD + 0.34);
+            const cashWrap = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.88, 0.52), prof.isLight ? hinokiWoodMat : smokedOakMat);
+            cashWrap.position.set(bx + 0.36, 0.46, -intD + 0.54);
+            const cashTop = new THREE.Mesh(new THREE.BoxGeometry(1.24, 0.045, 0.56), cafeMarbleMat);
+            cashTop.position.set(bx + 0.36, 0.92, -intD + 0.54);
+            g.add(fitFrame, mirrorHalo, mirrorPanel, brandSign, cashWrap, cashTop);
+          } else {
+            const lowDrawer = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 0.46, 0.48), prof.isLight ? hinokiWoodMat : smokedOakMat);
+            lowDrawer.position.set(bx, 0.25, -intD + 0.36);
+            const topShelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.045, 0.42), prof.isLight ? hinokiWoodMat : lightOakMat);
+            topShelf.position.set(bx, 2.12, -intD + 0.36);
+            const rail = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.56, 0.042, 0.042), accentRackMat);
+            rail.position.set(bx, 1.88, -intD + 0.44);
+            for (const uOff of [-(bayStep - 0.58) * 0.5, (bayStep - 0.58) * 0.5]) {
+              const st = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, eaveY - 0.22, 8), accentRackMat);
+              st.position.set(bx + uOff, (eaveY - 0.22) * 0.5, -intD + 0.44);
+              g.add(st);
+            }
+            const railBarTop = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.50, 0.045, 0.16), intLightWarmMat);
+            railBarTop.position.set(bx, eaveY - 0.48, -intD + 0.26);
+            g.add(lowDrawer, topShelf, rail, railBarTop);
+            if (isTommy) {
+              const redStripe = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.12, 0.10), uniqloRedBoxMat);
+              redStripe.position.set(bx, eaveY - 0.42, -intD + 0.20);
+              g.add(redStripe);
+            }
+            // 3D hanging shirts, jackets, trousers & dresses on hangers
+            for (let h = -2; h <= 2; h++) {
+              const garm = new THREE.Mesh(hangingGarmentGeo, intMerchMats[(storeHash + b + h + 10) % intMerchMats.length]);
+              garm.position.set(bx + h * 0.33, 1.38, -intD + 0.44);
+              g.add(garm);
+            }
+            // Folded knitwear & denim stacks on lower credenza and upper shelf
+            for (let k = -1; k <= 1; k++) {
+              const lowStack = new THREE.Mesh(foldedStackGeo, intMerchMats[(storeHash + b + k + 4) % intMerchMats.length]);
+              lowStack.position.set(bx + k * 0.58, 0.61, -intD + 0.36);
+              const hiStack = new THREE.Mesh(foldedStackGeo, intMerchMats[(storeHash + b + k + 7) % intMerchMats.length]);
+              hiStack.position.set(bx + k * 0.58, 2.27, -intD + 0.36);
+              g.add(lowStack, hiStack);
+            }
+          }
         }
       }
-      // Interior Luxury Marble Display Islands & Dressed Window Mannequins INSIDE the Store!
-      if (intD > 2.2) {
+      // Interior Foreground Display Islands, Try-On Lounges, Apothecary Sinks, Luggage Podiums & Window Mannequins (supports both deep 3.45m rooms & 1.55m flank-wall rooms!):
+      if (intD > 1.35) {
+        const fgZ = intD > 2.2 ? -1.55 : -0.80;
+        const fgD = intD > 2.2 ? 0.90 : 0.58;
         if (isDiva) {
           // DIVA KARAOKE (EZ502): Tufted velvet neoclassical KTV lounge booths, marble cocktail tables, upright gold microphone stands & hanging crystal chandeliers (ZERO mannequins!)
           for (let b = 0; b < numBays; b++) {
@@ -3399,38 +3695,38 @@ export function buildMallArchitecture(scene, interactables) {
           }
         } else if (isChanel) {
           // Sleek central Chanel black-lacquer fragrance bar table with faceted square No. 5 perfume flacons
-          const chTable = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.88, 1.05), obsidianGlossMat);
-          chTable.position.set(0, 0.45, -1.65);
-          const chTop = new THREE.Mesh(new THREE.BoxGeometry(2.66, 0.04, 1.10), satinWhiteMat);
-          chTop.position.set(0, 0.91, -1.65);
+          const chTable = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.88, fgD), obsidianGlossMat);
+          chTable.position.set(0, 0.45, fgZ);
+          const chTop = new THREE.Mesh(new THREE.BoxGeometry(2.66, 0.04, fgD + 0.05), satinWhiteMat);
+          chTop.position.set(0, 0.91, fgZ);
           g.add(chTable, chTop);
-          addLocalContactShadow(g, 0, -1.65, 3.2, 1.6);
+          addLocalContactShadow(g, 0, fgZ, 3.2, 1.4);
           for (let fl = -2; fl <= 2; fl++) {
             const flacon = new THREE.Mesh(flaconSquareGeo, fl % 2 === 0 ? amberBacklitMat : satinWhiteMat);
             flacon.scale.set(1.25, 1.25, 1.25);
-            flacon.position.set(fl * 0.46, 1.05, -1.65);
+            flacon.position.set(fl * 0.46, 1.05, fgZ);
             const cap = new THREE.Mesh(flaconCapGeo, obsidianGlossMat);
             cap.scale.set(1.25, 1.25, 1.25);
-            cap.position.set(fl * 0.46, 1.19, -1.65);
+            cap.position.set(fl * 0.46, 1.19, fgZ);
             g.add(flacon, cap);
           }
         } else if (isCoach) {
           // Grounded Coach brushed-brass frame & espresso-walnut handbag display tables (cleanly spaced, ZERO overlapping boxes!)
           for (const side of [-1, 1]) {
             const cx = side * Math.min(innerW * 0.25, 2.55);
-            const cTable = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.82, 0.92), smokedOakMat);
-            cTable.position.set(cx, 0.43, -1.56);
-            const cRim = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.05, 0.98), brassGoldMat);
-            cRim.position.set(cx, 0.86, -1.56);
-            const cPlinth = new THREE.Mesh(new THREE.BoxGeometry(1.80, 0.06, 0.96), brassGoldMat);
-            cPlinth.position.set(cx, 0.06, -1.56);
+            const cTable = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.82, fgD), smokedOakMat);
+            cTable.position.set(cx, 0.43, fgZ);
+            const cRim = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.05, fgD + 0.06), brassGoldMat);
+            cRim.position.set(cx, 0.86, fgZ);
+            const cPlinth = new THREE.Mesh(new THREE.BoxGeometry(1.80, 0.06, fgD + 0.04), brassGoldMat);
+            cPlinth.position.set(cx, 0.06, fgZ);
             g.add(cTable, cRim, cPlinth);
-            addLocalContactShadow(g, cx, -1.56, 2.35, 1.45);
+            addLocalContactShadow(g, cx, fgZ, 2.35, 1.3);
             for (const hbOff of [-0.46, 0.46]) {
               const bag = new THREE.Mesh(handbagGeo, hbOff < 0 ? intMerchMats[2] : obsidianGlossMat);
-              bag.position.set(cx + hbOff, 1.02, -1.56);
+              bag.position.set(cx + hbOff, 1.02, fgZ);
               const handle = new THREE.Mesh(handbagHandleGeo, brassGoldMat);
-              handle.position.set(cx + hbOff, 1.15, -1.56);
+              handle.position.set(cx + hbOff, 1.15, fgZ);
               g.add(bag, handle);
             }
           }
@@ -3438,49 +3734,207 @@ export function buildMallArchitecture(scene, interactables) {
           // Minimalist Zara monolithic travertine showcase tables + 2 full sculpted travertine window mannequins!
           for (const side of [-1, 1]) {
             const zx = side * Math.min(innerW * 0.28, 3.6);
-            const zTable = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.72, 0.98), ivoryStoneMat);
-            zTable.position.set(zx, 0.38, -1.62);
+            const zTable = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.72, fgD), ivoryStoneMat);
+            zTable.position.set(zx, 0.38, fgZ);
             const st1 = new THREE.Mesh(foldedStackGeo, mannequinLinenMat);
-            st1.position.set(zx - 0.46, 0.86, -1.62);
+            st1.position.set(zx - 0.46, 0.86, fgZ);
             const st2 = new THREE.Mesh(foldedStackGeo, rawConcreteMat);
-            st2.position.set(zx + 0.46, 0.86, -1.62);
-            const mPlinth = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.22, 0.76), ivoryStoneMat);
-            mPlinth.position.set(zx - side * 1.65, 0.13, -1.32);
+            st2.position.set(zx + 0.46, 0.86, fgZ);
+            const mPlinth = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.22, 0.68), ivoryStoneMat);
+            mPlinth.position.set(zx - side * 1.65, 0.13, fgZ + 0.22);
             g.add(zTable, st1, st2, mPlinth);
-            addLocalContactShadow(g, zx, -1.62, 2.6, 1.45);
-            addSculptedMannequin(g, zx - side * 1.65, 0.24, -1.32, mannequinLightMat, -side * 0.26, side < 0 ? mannequinLinenMat : rawConcreteMat);
+            addLocalContactShadow(g, zx, fgZ, 2.6, 1.35);
+            addSculptedMannequin(g, zx - side * 1.65, 0.24, fgZ + 0.22, mannequinLightMat, -side * 0.26, side < 0 ? mannequinLinenMat : rawConcreteMat);
           }
-        } else {
+        } else if (isUniqlo) {
+          // UNIQLO: Central blonde-wood island tables stacked with folded denim & knitwear + 3 full-body casual-wear mannequins on a raised window platform!
+          for (const side of [-1, 1]) {
+            const tx = side * Math.min(innerW * 0.26, 2.85);
+            const uTable = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.78, fgD), hinokiWoodMat);
+            uTable.position.set(tx, 0.41, fgZ);
+            const uTop = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.045, fgD + 0.06), satinWhiteMat);
+            uTop.position.set(tx, 0.82, fgZ);
+            g.add(uTable, uTop);
+            addLocalContactShadow(g, tx, fgZ, 2.25, 1.25);
+            for (let ds = -1; ds <= 1; ds++) {
+              const denimStack = new THREE.Mesh(foldedStackGeo, ds === 0 ? intWallNavyMat : intMerchMats[(ds + 3) % intMerchMats.length]);
+              denimStack.position.set(tx + ds * 0.54, 0.96, fgZ);
+              g.add(denimStack);
+            }
+          }
+          // Raised gallery-white window platform with 3 full-body LifeWear mannequins
+          const platZ = intD > 2.2 ? -0.98 : -0.62;
+          const mPlat = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.16, 0.66), satinWhiteMat);
+          mPlat.position.set(0, 0.10, platZ);
+          g.add(mPlat);
+          const uOutfits = [uniqloRedBoxMat, intWallNavyMat, intMerchMats[2]];
+          for (let m = -1; m <= 1; m++) {
+            addSculptedMannequin(g, m * 0.72, 0.18, platZ, mannequinLightMat, -m * 0.22, uOutfits[m + 1]);
+          }
+        } else if (isLuggage) {
+          // LUGGAGE & TRAVEL SHOWROOM: Stepped island podiums with 3D ribbed hard-shell spinner suitcases + dedicated Tomaz dress-shoe counter on right!
+          const leftX = -Math.min(innerW * 0.25, 2.35);
+          const podL = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.34, fgD), matteSteelMat);
+          podL.position.set(leftX, 0.19, fgZ);
+          const podLTop = new THREE.Mesh(new THREE.BoxGeometry(1.98, 0.04, fgD + 0.04), lightOakMat);
+          podLTop.position.set(leftX, 0.38, fgZ);
+          const stepPod = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.18, fgD * 0.82), satinWhiteMat);
+          stepPod.position.set(leftX, 0.49, fgZ);
+          g.add(podL, podLTop, stepPod);
+          addLocalContactShadow(g, leftX, fgZ, 2.3, 1.2);
+          addHardshellSuitcase(g, leftX - 0.58, 0.40, fgZ, 0.36, 0.54, 0.22, brushedAlumMat, 0.28);
+          addHardshellSuitcase(g, leftX, 0.58, fgZ, 0.40, 0.60, 0.25, obsidianGlossMat, 0.0);
+          addHardshellSuitcase(g, leftX + 0.58, 0.40, fgZ, 0.33, 0.46, 0.20, norenCrimsonMat, -0.28);
+
+          const rightX = Math.min(innerW * 0.25, 2.35);
+          if (hasTomaz) {
+            // Dedicated TOMAZ right bay dress-shoe & leather-loafer display counter
+            const tDesk = new THREE.Mesh(new THREE.BoxGeometry(1.86, 0.82, fgD), smokedOakMat);
+            tDesk.position.set(rightX, 0.43, fgZ);
+            const tRim = new THREE.Mesh(new THREE.BoxGeometry(1.92, 0.045, fgD + 0.06), brassGoldMat);
+            tRim.position.set(rightX, 0.86, fgZ);
+            g.add(tDesk, tRim);
+            addLocalContactShadow(g, rightX, fgZ, 2.25, 1.2);
+            for (let sh = -1; sh <= 1; sh++) {
+              const riser = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.08, 0.24), brassGoldMat);
+              riser.position.set(rightX + sh * 0.54, 0.92, fgZ);
+              g.add(riser);
+              addSneakerDisplay(g, rightX + sh * 0.54, 0.96, fgZ, sh === 0 ? smokedOakMat : obsidianGlossMat, -0.24);
+            }
+          } else {
+            const podR = podL.clone();
+            podR.position.x = rightX;
+            const podRTop = podLTop.clone();
+            podRTop.position.x = rightX;
+            g.add(podR, podRTop);
+            addLocalContactShadow(g, rightX, fgZ, 2.3, 1.2);
+            addHardshellSuitcase(g, rightX - 0.52, 0.40, fgZ, 0.38, 0.56, 0.24, intWallNavyMat, 0.24);
+            addHardshellSuitcase(g, rightX + 0.52, 0.40, fgZ, 0.34, 0.48, 0.21, brassGoldMat, -0.24);
+          }
+        } else if (isFootwear) {
+          // FOOTWEAR TRY-ON LOUNGE: Central upholstered velvet/leather try-on benches, low angled foot-check mirrors & Naelofar silk hijab carousel!
+          const benchX = hasNaelofar ? -Math.min(innerW * 0.24, 2.25) : 0;
+          const benchFrame = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.14, 0.64), accentRackMat);
+          benchFrame.position.set(benchX, 0.16, fgZ);
+          const benchCushion = new THREE.Mesh(new THREE.BoxGeometry(1.80, 0.22, 0.60), prof.isLight ? norenCrimsonMat : smokedOakMat);
+          benchCushion.position.set(benchX, 0.34, fgZ);
+          g.add(benchFrame, benchCushion);
+          addLocalContactShadow(g, benchX, fgZ, 2.2, 1.05);
+          // Low angled foot-check mirrors flanking the try-on bench
+          for (const mSide of [-1, 1]) {
+            const mx = benchX + mSide * 1.28;
+            const mirFrame = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.58, 0.06), brassGoldMat);
+            mirFrame.position.set(mx, 0.32, fgZ);
+            mirFrame.rotation.x = -0.24;
+            const mirGlass = new THREE.Mesh(new THREE.PlaneGeometry(0.40, 0.52), intGlassPhysMat);
+            mirGlass.position.set(mx, 0.32, fgZ + 0.035);
+            mirGlass.rotation.x = -0.24;
+            g.add(mirFrame, mirGlass);
+          }
+          if (hasNaelofar) {
+            // Dedicated NAELOFAR Pastel Silk Hijab/Scarf Hanging Display Carousel on right bay
+            const carX = Math.min(innerW * 0.25, 2.35);
+            const carBase = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.42, 0.08, 16), brassGoldMat);
+            carBase.position.set(carX, 0.10, fgZ);
+            const carPole = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 1.52, 10), brassGoldMat);
+            carPole.position.set(carX, 0.86, fgZ);
+            const carRing = new THREE.Mesh(new THREE.TorusGeometry(0.46, 0.024, 8, 20), brassGoldMat);
+            carRing.rotation.x = Math.PI / 2;
+            carRing.position.set(carX, 1.58, fgZ);
+            g.add(carBase, carPole, carRing);
+            addLocalContactShadow(g, carX, fgZ, 1.25, 1.25);
+            const pastelMats = [intMerchMats[5], intMerchMats[2], intMerchMats[3], intMerchMats[4], intMerchMats[0], satinWhiteMat];
+            for (let sc = 0; sc < 8; sc++) {
+              const ang = (sc / 8) * Math.PI * 2;
+              const hijab = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.76, 0.24), pastelMats[sc % pastelMats.length]);
+              hijab.position.set(carX + Math.cos(ang) * 0.42, 1.18, fgZ + Math.sin(ang) * 0.42);
+              hijab.rotation.y = -ang;
+              g.add(hijab);
+            }
+          }
+        } else if (isApothecaryBeauty) {
+          // APOTHECARY CONSULTATION COUNTER WITH PORCELAIN TEST BASIN, BRASS FAUCET & COBALT/BOTANICAL HERB JARS!
+          const barW = Math.min(innerW * 0.56, 2.75);
+          const barMat = isNealsYard ? hinokiWoodMat : isLoccitane ? lightOakMat : prof.isLight ? ivoryStoneMat : smokedOakMat;
+          const barBody = new THREE.Mesh(new THREE.BoxGeometry(barW, 0.86, fgD), barMat);
+          barBody.position.set(0, 0.45, fgZ);
+          const barTop = new THREE.Mesh(new THREE.BoxGeometry(barW + 0.08, 0.05, fgD + 0.06), isNealsYard ? nealsCobaltMat : cafeMarbleMat);
+          barTop.position.set(0, 0.90, fgZ);
+          // Inset white porcelain test basin + brass swan-neck faucet tap
+          const sinkBasin = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.20, 0.14, 16), satinWhiteMat);
+          sinkBasin.position.set(-0.42, 0.94, fgZ);
+          const tapStem = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.018, 0.24, 8), brassGoldMat);
+          tapStem.position.set(-0.42, 1.06, fgZ - 0.18);
+          const tapSpout = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.022, 0.14), brassGoldMat);
+          tapSpout.position.set(-0.42, 1.17, fgZ - 0.11);
+          g.add(barBody, barTop, sinkBasin, tapStem, tapSpout);
+          addLocalContactShadow(g, 0, fgZ, barW + 0.45, fgD + 0.4);
+          // Cobalt-blue apothecary bottles & botanical herb jars lined across consultation counter
+          const bMat = isNealsYard ? nealsCobaltMat : isLoccitane ? melvitaHoneyMat : amberBacklitMat;
+          for (let jb = 0; jb < 4; jb++) {
+            const jx = 0.14 + jb * 0.26;
+            const jar = new THREE.Mesh(bottleSmallGeo, bMat);
+            jar.scale.set(0.88, 0.92, 0.88);
+            jar.position.set(jx, 1.04, fgZ);
+            const cap = new THREE.Mesh(flaconCapGeo, satinWhiteMat);
+            cap.scale.set(0.76, 0.90, 0.76);
+            cap.position.set(jx, 1.16, fgZ);
+            g.add(jar, cap);
+          }
+        } else if (isParkson || isTrueHandbagLuxury) {
           const islandCount = isParkson ? 4 : 2;
           for (let i = 0; i < islandCount; i++) {
             const ix = -innerW * 0.34 + (i / Math.max(1, islandCount - 1)) * (innerW * 0.68);
-            if (Math.abs(ix) < 1.85) continue; // Keep central entrance walk-in aisle open!
-            if (isParkson) {
-              // Beveled walnut & brass luxury cosmetics/handbag counter inside Parkson Elite!
-              const pCab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.88, 0.96), smokedOakMat);
-              pCab.position.set(ix, 0.46, -1.55);
-              const pTop = new THREE.Mesh(new THREE.BoxGeometry(2.28, 0.055, 1.04), cafeMarbleMat);
-              pTop.position.set(ix, 0.92, -1.55);
-              const pBrass = new THREE.Mesh(new THREE.BoxGeometry(2.26, 0.04, 1.02), brassGoldMat);
-              pBrass.position.set(ix, 0.06, -1.55);
-              g.add(pCab, pTop, pBrass);
-              addLocalContactShadow(g, ix, -1.55, 2.75, 1.50);
-              for (const bo of [-0.55, 0.55]) {
-                const bag = new THREE.Mesh(handbagGeo, intMerchMats[(storeHash + i + (bo > 0 ? 1 : 0)) % intMerchMats.length]);
-                bag.position.set(ix + bo, 1.08, -1.55);
-                const handle = new THREE.Mesh(handbagHandleGeo, brassGoldMat);
-                handle.position.set(ix + bo, 1.21, -1.55);
-                g.add(bag, handle);
-              }
-            } else {
-              const ped = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.42, 0.84), prof.isLight ? cafeMarbleMat : obsidianGlossMat);
-              ped.position.set(ix, 0.23, -1.48);
-              const pedTrim = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.04, 0.88), accentRackMat);
-              pedTrim.position.set(ix, 0.45, -1.48);
-              g.add(ped, pedTrim);
-              addLocalContactShadow(g, ix, -1.48, 1.65, 1.3);
-              addSculptedMannequin(g, ix, 0.47, -1.48, prof.isLight ? mannequinLightMat : obsidianGlossMat, i % 2 === 0 ? 0.30 : -0.30, intMerchMats[(storeHash + i) % intMerchMats.length]);
+            if (Math.abs(ix) < 1.85) continue;
+            const pCab = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.88, fgD), smokedOakMat);
+            pCab.position.set(ix, 0.46, fgZ);
+            const pTop = new THREE.Mesh(new THREE.BoxGeometry(2.18, 0.055, fgD + 0.06), cafeMarbleMat);
+            pTop.position.set(ix, 0.92, fgZ);
+            const pBrass = new THREE.Mesh(new THREE.BoxGeometry(2.16, 0.04, fgD + 0.04), brassGoldMat);
+            pBrass.position.set(ix, 0.06, fgZ);
+            g.add(pCab, pTop, pBrass);
+            addLocalContactShadow(g, ix, fgZ, 2.55, 1.35);
+            for (const bo of [-0.52, 0.52]) {
+              const bag = new THREE.Mesh(handbagGeo, intMerchMats[(storeHash + i + (bo > 0 ? 1 : 0)) % intMerchMats.length]);
+              bag.position.set(ix + bo, 1.08, fgZ);
+              const handle = new THREE.Mesh(handbagHandleGeo, brassGoldMat);
+              handle.position.set(ix + bo, 1.21, fgZ);
+              g.add(bag, handle);
             }
+          }
+        } else {
+          // CONTEMPORARY FASHION & APPAREL: Central tiered wooden tables with stacks of folded knitwear & denim + 3 full-body mannequins on a front window riser!
+          for (const side of [-1, 1]) {
+            const tx = side * Math.min(innerW * 0.27, 2.65);
+            const tblBase = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.68, fgD), lightOakMat);
+            tblBase.position.set(tx, 0.36, fgZ);
+            const tblTier = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.18, fgD * 0.76), hinokiWoodMat);
+            tblTier.position.set(tx, 0.79, fgZ);
+            g.add(tblBase, tblTier);
+            addLocalContactShadow(g, tx, fgZ, 2.1, 1.2);
+            for (const kx of [-0.36, 0.36]) {
+              const st = new THREE.Mesh(foldedStackGeo, intMerchMats[(storeHash + (side > 0 ? 2 : 0) + (kx > 0 ? 1 : 0)) % intMerchMats.length]);
+              st.position.set(tx + kx, 0.98, fgZ);
+              g.add(st);
+            }
+          }
+          // 3 full-body mannequins on a front window riser platform
+          const riserZ = intD > 2.2 ? -0.95 : -0.60;
+          const wRiser = new THREE.Mesh(new THREE.BoxGeometry(2.25, 0.16, 0.64), prof.isLight ? cafeMarbleMat : obsidianGlossMat);
+          wRiser.position.set(0, 0.10, riserZ);
+          const wTrim = new THREE.Mesh(new THREE.BoxGeometry(2.29, 0.035, 0.68), accentRackMat);
+          wTrim.position.set(0, 0.18, riserZ);
+          g.add(wRiser, wTrim);
+          for (let m = -1; m <= 1; m++) {
+            addSculptedMannequin(
+              g,
+              m * 0.68,
+              0.20,
+              riserZ,
+              prof.isLight ? mannequinLightMat : obsidianGlossMat,
+              -m * 0.24,
+              intMerchMats[(storeHash + m + 3) % intMerchMats.length]
+            );
           }
         }
       }
@@ -3638,20 +4092,252 @@ export function buildMallArchitecture(scene, interactables) {
         }
       }
     } else {
-      // MINIMALIST TECH / FURNITURE (Machines, Dyson, Samsung, Muji, Nitori, XZQT — EXCLUDING Cellini which builds its own L-shaped leather sectional vignettes!):
-      // Sleek oak/steel product demo tables framing the architectural feature backwall!
-      if (intD > 2.2 && !isCellini) {
-        const tblN = Math.max(2, Math.min(4, Math.floor(innerW / 4.8)));
-        for (let i = 0; i < tblN; i++) {
-          const tx = -innerW * 0.34 + (i / Math.max(1, tblN - 1)) * (innerW * 0.68);
-          if (Math.abs(tx) < 1.55) continue;
-          const tbl = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.86, 0.96), prof.isLight ? hinokiWoodMat : matteSteelMat);
-          tbl.position.set(tx, 0.45, -1.55);
-          const item1 = new THREE.Mesh(shoeBoxGeo, brushedAlumMat);
-          item1.position.set(tx - 0.52, 0.96, -1.55);
-          const item2 = new THREE.Mesh(shoeBoxGeo, brushedAlumMat);
-          item2.position.set(tx + 0.52, 0.96, -1.55);
-          g.add(tbl, item1, item2);
+      // MINIMALIST TECH / FURNITURE / JAPANESE & SCANDINAVIAN HOME (NITORI F101, MELVITA • HOOGA F140, MUJI G135/F128, Machines, Dyson, Samsung, XZQT):
+      const fgZ = intD > 2.2 ? -1.55 : -0.82;
+      const fgD = intD > 2.2 ? 0.88 : 0.60;
+      if (isNitori) {
+        // NITORI (ニトリ NITORI, F101 1F Old Wing):
+        // Signature teal-and-white (#008375) Nitori header accent + floor-to-ceiling shelving stocked with ceramic tableware, storage bins & rolled bedding cushions + 3D living-room vignette (left) & oak dining vignette (right)!
+        const tealAccent = new THREE.Mesh(new THREE.BoxGeometry(store.width - 0.12, 0.14, 0.78), nitoriTealMat);
+        tealAccent.position.set(0, eaveY - 0.05, 0.24);
+        g.add(tealAccent);
+        for (const side of [-1, 1]) {
+          const tealPil = new THREE.Mesh(new THREE.BoxGeometry(0.14, eaveY - 0.08, 0.82), nitoriTealMat);
+          tealPil.position.set(side * (halfW - 0.36), (eaveY - 0.08) * 0.5, 0.24);
+          g.add(tealPil);
+        }
+        // Floor-to-ceiling shelving units stocked with ceramic tableware, woven storage bins & rolled bedding cushions
+        for (let b = 0; b < numBays; b++) {
+          const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+          for (const uOff of [-(bayStep - 0.36) * 0.5, 0, (bayStep - 0.36) * 0.5]) {
+            const up = new THREE.Mesh(new THREE.BoxGeometry(0.048, eaveY - 0.38, 0.38), hinokiWoodMat);
+            up.position.set(bx + uOff, (eaveY - 0.38) * 0.5, -intD + 0.32);
+            g.add(up);
+          }
+          for (let sh = 0; sh < 4; sh++) {
+            const sy = 0.58 + sh * 0.58;
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.34, 0.042, 0.38), satinWhiteMat);
+            shelf.position.set(bx, sy, -intD + 0.32);
+            g.add(shelf);
+            for (let k = -1; k <= 1; k++) {
+              const kx = bx + k * 0.56;
+              if (sh === 0) {
+                // Woven storage bins
+                const bin = new THREE.Mesh(foldedStackGeo, k === 0 ? hinokiWoodMat : creamTileMat);
+                bin.position.set(kx, sy + 0.15, -intD + 0.33);
+                g.add(bin);
+              } else if (sh === 1 || sh === 2) {
+                // Ceramic tableware stacks (bowls & plates)
+                const plateStack = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.12, 12), k % 2 === 0 ? satinWhiteMat : nitoriTealMat);
+                plateStack.position.set(kx - 0.11, sy + 0.08, -intD + 0.33);
+                const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 0.10, 12), creamTileMat);
+                bowl.position.set(kx + 0.11, sy + 0.07, -intD + 0.33);
+                g.add(plateStack, bowl);
+              } else {
+                // Rolled N-Cool / N-Warm bedding cushions
+                const roll = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.095, 0.36, 12), k === 0 ? nitoriTealMat : owalaSkyMat);
+                roll.rotation.z = Math.PI / 2;
+                roll.position.set(kx, sy + 0.12, -intD + 0.33);
+                g.add(roll);
+              }
+            }
+          }
+        }
+        if (intD > 1.35) {
+          // Left bay: 3D Living-Room Furniture Vignette (upholstered fabric sofa, oak coffee table, glowing floor lamp & area rug)
+          const livX = -Math.min(innerW * 0.25, 2.55);
+          const rug = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.024, fgD + 0.35), creamTileMat);
+          rug.position.set(livX, 0.07, fgZ);
+          const sofaSeat = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.38, fgD * 0.85), nitoriSofaSlateMat);
+          sofaSeat.position.set(livX, 0.24, fgZ - 0.08);
+          const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.44, 0.18), nitoriSofaSlateMat);
+          sofaBack.position.set(livX, 0.58, fgZ - 0.08 - fgD * 0.34);
+          for (const armS of [-1, 1]) {
+            const arm = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.48, fgD * 0.85), nitoriSofaSlateMat);
+            arm.position.set(livX + armS * 0.86, 0.32, fgZ - 0.08);
+            const throwPillow = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.24, 0.12), armS < 0 ? nitoriTealMat : creamTileMat);
+            throwPillow.position.set(livX + armS * 0.52, 0.52, fgZ - 0.06);
+            throwPillow.rotation.z = armS * 0.18;
+            g.add(arm, throwPillow);
+          }
+          const coffeeTbl = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.34, 0.44), hinokiWoodMat);
+          coffeeTbl.position.set(livX, 0.21, fgZ + 0.36);
+          const lampPole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.026, 1.58, 8), hinokiWoodMat);
+          lampPole.position.set(livX - 1.08, 0.82, fgZ - 0.12);
+          const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.24, 0.28, 12), intLightWarmMat);
+          lampShade.position.set(livX - 1.08, 1.64, fgZ - 0.12);
+          g.add(rug, sofaSeat, sofaBack, coffeeTbl, lampPole, lampShade);
+          addLocalContactShadow(g, livX, fgZ, 2.45, 1.25);
+
+          // Right bay: 3D Dining Vignette (warm oak dining table + 4 oak chairs with fabric cushions + tableware)
+          const dinX = Math.min(innerW * 0.25, 2.55);
+          const dTop = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.06, fgD), hinokiWoodMat);
+          dTop.position.set(dinX, 0.74, fgZ);
+          g.add(dTop);
+          for (const [lx, lz] of [[-0.68, -fgD * 0.38], [0.68, -fgD * 0.38], [-0.68, fgD * 0.38], [0.68, fgD * 0.38]]) {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.055, 0.72, 0.055), hinokiWoodMat);
+            leg.position.set(dinX + lx, 0.37, fgZ + lz);
+            g.add(leg);
+          }
+          for (const cxOff of [-0.44, 0.44]) {
+            for (const czSide of [-1, 1]) {
+              const cz = fgZ + czSide * (fgD * 0.46);
+              const cSeat = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.06, 0.36), nitoriTealMat);
+              cSeat.position.set(dinX + cxOff, 0.45, cz);
+              const cBack = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.38, 0.05), hinokiWoodMat);
+              cBack.position.set(dinX + cxOff, 0.66, cz + czSide * 0.16);
+              g.add(cSeat, cBack);
+            }
+            const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.06, 0.07, 10), satinWhiteMat);
+            bowl.position.set(dinX + cxOff, 0.80, fgZ);
+            g.add(bowl);
+          }
+          addLocalContactShadow(g, dinX, fgZ, 2.1, 1.25);
+        }
+      } else if (isMelvitaHooga) {
+        // MELVITA • HOOGA (F140 1F Old Wing): Split dual-concept interior!
+        // Left bay (MELVITA): Warm golden honeycomb hexagonal wall shelving, organic floral water/oil bottles & birch display table!
+        // Right bay (HOOGA): Scandinavian hygge home-decor showroom with warm woven rattan pendant lamps hanging from ceiling, plush throw-pillow & blanket rack, ceramic reed-diffuser island table & cozy armchair vignette!
+        for (let b = 0; b < numBays; b++) {
+          const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+          if (bx < 0) {
+            // MELVITA Left Bay: Golden honeycomb hexagonal wall shelving + organic floral water/oil bottles
+            const honeyBack = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, eaveY - 0.44, 0.12), melvitaHoneyMat);
+            honeyBack.position.set(bx, (eaveY - 0.44) * 0.5 + 0.08, -intD + 0.24);
+            g.add(honeyBack);
+            for (let row = 0; row < 3; row++) {
+              for (let col = -1; col <= 1; col++) {
+                const hx = bx + col * 0.62 + (row % 2 === 1 ? 0.28 : 0);
+                const hy = 0.92 + row * 0.62;
+                const hexCell = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.32, 6), hinokiWoodMat);
+                hexCell.rotation.x = Math.PI / 2;
+                hexCell.position.set(hx, hy, -intD + 0.34);
+                const hexGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.10, 6), intLightWarmMat);
+                hexGlow.rotation.x = Math.PI / 2;
+                hexGlow.position.set(hx, hy, -intD + 0.28);
+                const oilBot = new THREE.Mesh(bottleSmallGeo, (row + col) % 2 === 0 ? melvitaHoneyMat : emeraldTrimMat);
+                oilBot.scale.set(0.74, 0.78, 0.74);
+                oilBot.position.set(hx, hy - 0.06, -intD + 0.38);
+                g.add(hexCell, hexGlow, oilBot);
+              }
+            }
+          } else {
+            // HOOGA Right Bay: Plush throw-pillow & blanket wall rack + hanging woven rattan pendant lamps
+            for (const uOff of [-(bayStep - 0.38) * 0.5, (bayStep - 0.38) * 0.5]) {
+              const up = new THREE.Mesh(new THREE.BoxGeometry(0.05, eaveY - 0.42, 0.38), lightOakMat);
+              up.position.set(bx + uOff, (eaveY - 0.42) * 0.5, -intD + 0.34);
+              g.add(up);
+            }
+            for (let sh = 0; sh < 4; sh++) {
+              const sy = 0.64 + sh * 0.56;
+              const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.045, 0.38), lightOakMat);
+              shelf.position.set(bx, sy, -intD + 0.34);
+              g.add(shelf);
+              for (let k = -1; k <= 1; k++) {
+                const pillow = new THREE.Mesh(foldedStackGeo, intMerchMats[(b + sh + k + 5) % intMerchMats.length]);
+                pillow.scale.set(0.92, 1.15, 0.88);
+                pillow.position.set(bx + k * 0.58, sy + 0.16, -intD + 0.36);
+                g.add(pillow);
+              }
+            }
+            // Warm woven rattan pendant lamp hanging from ceiling
+            const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.68, 6), smokedOakMat);
+            cord.position.set(bx, eaveY - 0.36, fgZ + 0.18);
+            const rattanShade = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.34, 0.36, 14, 1, true), rattanWeaveMat);
+            rattanShade.position.set(bx, eaveY - 0.76, fgZ + 0.18);
+            const rattanCap = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.24, 0.10, 14), rattanWeaveMat);
+            rattanCap.position.set(bx, eaveY - 0.54, fgZ + 0.18);
+            const bulb = new THREE.Mesh(sconceGlobeGeo, lanternGlowWarmMat);
+            bulb.scale.setScalar(0.92);
+            bulb.position.set(bx, eaveY - 0.78, fgZ + 0.18);
+            g.add(cord, rattanShade, rattanCap, bulb);
+          }
+        }
+        if (intD > 1.35) {
+          // Left foreground (MELVITA): Birch organic skincare & floral oil display table
+          const melX = -Math.min(innerW * 0.25, 2.55);
+          const birchTbl = new THREE.Mesh(new THREE.BoxGeometry(1.76, 0.84, fgD), hinokiWoodMat);
+          birchTbl.position.set(melX, 0.44, fgZ);
+          const honeyTop = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.045, fgD + 0.06), melvitaHoneyMat);
+          honeyTop.position.set(melX, 0.88, fgZ);
+          g.add(birchTbl, honeyTop);
+          addLocalContactShadow(g, melX, fgZ, 2.15, 1.25);
+          for (let bt = -2; bt <= 2; bt++) {
+            const bot = new THREE.Mesh(bottleSmallGeo, bt % 2 === 0 ? melvitaHoneyMat : emeraldTrimMat);
+            bot.scale.set(0.86, 0.92, 0.86);
+            bot.position.set(melX + bt * 0.32, 1.01, fgZ);
+            const cap = new THREE.Mesh(flaconCapGeo, satinWhiteMat);
+            cap.scale.set(0.75, 0.85, 0.75);
+            cap.position.set(melX + bt * 0.32, 1.13, fgZ);
+            g.add(bot, cap);
+          }
+
+          // Right foreground (HOOGA): Ceramic reed-diffuser island table + cozy Scandinavian armchair vignette
+          const hooX = Math.min(innerW * 0.20, 1.95);
+          const diffTbl = new THREE.Mesh(new THREE.BoxGeometry(1.52, 0.80, fgD), lightOakMat);
+          diffTbl.position.set(hooX, 0.42, fgZ);
+          const diffTop = new THREE.Mesh(new THREE.BoxGeometry(1.58, 0.04, fgD + 0.06), creamTileMat);
+          diffTop.position.set(hooX, 0.84, fgZ);
+          g.add(diffTbl, diffTop);
+          addLocalContactShadow(g, hooX, fgZ, 1.9, 1.2);
+          for (let df = -1; df <= 1; df++) {
+            const dx = hooX + df * 0.44;
+            const vessel = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.08, 0.18, 12), df === 0 ? smokedOakMat : satinWhiteMat);
+            vessel.position.set(dx, 0.95, fgZ);
+            g.add(vessel);
+            for (const rAng of [-0.22, 0, 0.22]) {
+              const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.28, 4), hinokiWoodMat);
+              reed.position.set(dx + rAng * 0.12, 1.10, fgZ);
+              reed.rotation.z = rAng;
+              g.add(reed);
+            }
+          }
+          // Cozy Scandinavian hygge armchair vignette at far right
+          const chairX = Math.min(innerW * 0.38, 3.75);
+          const cRug = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.68, 0.022, 18), creamTileMat);
+          cRug.position.set(chairX, 0.07, fgZ);
+          const cSeat = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.36, 0.72), intMerchMats[3]);
+          cSeat.position.set(chairX, 0.25, fgZ);
+          const cBack = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.48, 0.16), intMerchMats[3]);
+          cBack.position.set(chairX, 0.58, fgZ - 0.28);
+          const cPillow = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.28, 0.12), intMerchMats[2]);
+          cPillow.position.set(chairX, 0.52, fgZ - 0.16);
+          g.add(cRug, cSeat, cBack, cPillow);
+        }
+      } else if (!isCellini) {
+        // MUJI / MACHINES / DYSON / SAMSUNG / HARVEY NORMAN: Rear shelving + sleek oak/steel product demo tables!
+        for (let b = 0; b < numBays; b++) {
+          const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+          for (const uOff of [-(bayStep - 0.38) * 0.5, (bayStep - 0.38) * 0.5]) {
+            const up = new THREE.Mesh(new THREE.BoxGeometry(0.048, eaveY - 0.42, 0.38), isMuji ? hinokiWoodMat : matteSteelMat);
+            up.position.set(bx + uOff, (eaveY - 0.42) * 0.5, -intD + 0.34);
+            g.add(up);
+          }
+          for (let sh = 0; sh < 3; sh++) {
+            const sy = 0.76 + sh * 0.64;
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.042, 0.38), isMuji ? hinokiWoodMat : satinWhiteMat);
+            shelf.position.set(bx, sy, -intD + 0.34);
+            g.add(shelf);
+            for (let k = -1; k <= 1; k++) {
+              const item = new THREE.Mesh(isMuji ? foldedStackGeo : shoeBoxGeo, isMuji ? creamTileMat : brushedAlumMat);
+              item.position.set(bx + k * 0.56, sy + 0.14, -intD + 0.35);
+              g.add(item);
+            }
+          }
+        }
+        if (intD > 1.35) {
+          const tblN = Math.max(2, Math.min(4, Math.floor(innerW / 4.8)));
+          for (let i = 0; i < tblN; i++) {
+            const tx = -innerW * 0.34 + (i / Math.max(1, tblN - 1)) * (innerW * 0.68);
+            if (Math.abs(tx) < 1.55) continue;
+            const tbl = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.84, fgD), isMuji || prof.isLight ? hinokiWoodMat : matteSteelMat);
+            tbl.position.set(tx, 0.44, fgZ);
+            const item1 = new THREE.Mesh(isMuji ? foldedStackGeo : shoeBoxGeo, isMuji ? creamTileMat : brushedAlumMat);
+            item1.position.set(tx - 0.50, 0.96, fgZ);
+            const item2 = new THREE.Mesh(isMuji ? foldedStackGeo : shoeBoxGeo, isMuji ? hinokiWoodMat : obsidianGlossMat);
+            item2.position.set(tx + 0.50, 0.96, fgZ);
+            g.add(tbl, item1, item2);
+          }
         }
       }
     }
@@ -3661,7 +4347,7 @@ export function buildMallArchitecture(scene, interactables) {
     const glassBayW = halfW - 0.22 - doorHalfW;
     const isOpenGlassless =
       isParkson || isAeon || isDecathlon || isGsc || isTgv || isWangsa || isToyCatcher ||
-      isJayaGrocer || isGameOn || isModu || isMrt ||
+      isJayaGrocer || isGameOn || isModu || isMrt || isUniqlo || isNitori || isMelvitaHooga || isMuji ||
       isMrDiy || isPopMart || isTopToy || isZusPastry || isSephora ||
       isStarbucks || isHeytea || isMiniso || isIppudo || isBhc ||
       isComeTrue || isAdidas || isFoodDistrict || isRollerwa;
@@ -3842,22 +4528,25 @@ export function buildMallArchitecture(scene, interactables) {
           mkHeader.position.set(halfW - pierW - 2.1, eaveY - 0.45, -1.65);
           g.add(topTrim, ovalInlay, ledFrame, ledScreen, ledPoleL, ledPoleR, skHeader, mkHeader);
         } else if (isUniqlo) {
-          // Authentic Real 1 Utama UNIQLO: Bright Monolithic Architectural White Portal + Dual Physical 3D Glowing Crimson UNIQLO Cube Lightboxes!
+          // Authentic Real 1 Utama UNIQLO: Bright Monolithic Architectural White Portal + Dual Physical 3D Glowing Crimson UNIQLO / ユニクロ Square Cube Blades!
+          const uniqloCubeMats = getUniqloCubeLogoMats();
           for (const side of [-1, 1]) {
             const pil = new THREE.Mesh(new THREE.BoxGeometry(0.46, storeH, 0.82), satinWhiteMat);
             pil.position.set(side * (halfW - 0.23), storeH * 0.5, 0.22);
-            const cube = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.92, 0.44), uniqloRedBoxMat);
-            cube.position.set(side * Math.min(halfW - 1.5, 4.6), eaveY + fasciaH * 0.5, 0.62);
-            g.add(pil, cube);
+            const cube = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.92, 0.56), uniqloCubeMats);
+            cube.position.set(side * Math.min(halfW - 1.5, 4.6), eaveY + fasciaH * 0.5, 0.66);
+            const bladeCube = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.68, 0.68), uniqloCubeMats);
+            bladeCube.position.set(side * (halfW - 0.23), eaveY - 0.62, 0.82);
+            g.add(pil, cube, bladeCube);
           }
           const crispBeam = new THREE.Mesh(new THREE.BoxGeometry(store.width, 0.14, 0.74), satinWhiteMat);
           crispBeam.position.set(0, eaveY, 0.24);
           g.add(crispBeam);
         } else {
-          // Classical Luxury Boutique (Parkson Elite, Tommy Hilfiger, Bonia, Coach, Chanel, Dior, Zara):
+          // Classical Luxury Boutique & Specialty Flagships (Neal's Yard Cobalt Apothecary, Samsonite, Aldo, Parkson Elite, Tommy Hilfiger, Bonia, Coach, Chanel, Dior, Zara):
           // Strict width clamping so ZERO neighboring brass caps/flutes ever bleed into adjacent storefronts!
-          const pilMat = isChanel ? satinWhiteMat : prof.isLight ? ivoryStoneMat : obsidianGlossMat;
-          const trimMat = isChanel ? obsidianGlossMat : isZara ? ivoryStoneMat : brassGoldMat;
+          const pilMat = isNealsYard ? nealsCobaltMat : isChanel ? satinWhiteMat : prof.isLight ? ivoryStoneMat : obsidianGlossMat;
+          const trimMat = isNealsYard ? nealsCobaltMat : isChanel ? obsidianGlossMat : isZara ? ivoryStoneMat : brassGoldMat;
           for (const side of [-1, 1]) {
             const px = side * (halfW - 0.28);
             const pil = new THREE.Mesh(new THREE.BoxGeometry(0.46, storeH, 0.86), pilMat);
@@ -3866,11 +4555,11 @@ export function buildMallArchitecture(scene, interactables) {
               // Start vertical brass flutes cleanly ABOVE basePlinth (y = 0.38..eaveY - 0.14, z = 0.72 -> ZERO plinth/flute Z-fighting!)
               const fluteH = eaveY - 0.54;
               for (const fOff of [-0.14, 0, 0.14]) {
-                const flute = new THREE.Mesh(new THREE.BoxGeometry(0.048, fluteH, 0.045), brassGoldMat);
+                const flute = new THREE.Mesh(new THREE.BoxGeometry(0.048, fluteH, 0.045), isNealsYard ? satinWhiteMat : brassGoldMat);
                 flute.position.set(px + fOff, 0.38 + fluteH * 0.5, 0.72);
                 g.add(flute);
               }
-              const cap = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.16, 0.94), brassGoldMat);
+              const cap = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.16, 0.94), isNealsYard ? nealsCobaltMat : brassGoldMat);
               cap.position.set(px, eaveY - 0.04, 0.28);
               g.add(cap);
             }
@@ -3878,28 +4567,56 @@ export function buildMallArchitecture(scene, interactables) {
             basePlinth.position.set(px, 0.17, 0.27);
             g.add(pil, basePlinth);
           }
-          const lintel = new THREE.Mesh(new THREE.BoxGeometry(store.width - 0.04, isChanel ? 0.065 : 0.10, 0.78), trimMat);
+          const lintel = new THREE.Mesh(new THREE.BoxGeometry(store.width - 0.04, isChanel ? 0.065 : isNealsYard ? 0.16 : 0.10, 0.78), trimMat);
           lintel.position.set(0, eaveY, 0.24);
           const cove = new THREE.Mesh(new THREE.BoxGeometry(store.width - 0.8, 0.03, 0.07), isChanel ? sportLedBarMat : warmCoveLedMat);
           cove.position.set(0, eaveY - 0.07, 0.40);
           g.add(lintel, cove);
 
-          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide luxury boutiques (omitted on Chanel, Zara, Coach & Diva Karaoke!)
+          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide boutiques (category-authentic 3D merchandise — NEVER torso busts on luggage, footwear, or apothecary stores!)
           if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva) {
             const mMat = prof.isLight ? mannequinLinenMat : mannequinLightMat;
             for (const side of [-1, 1]) {
               const mx = side * Math.min(halfW - 1.65, 3.35);
               const plinth = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.78, 0.52), pilMat);
               plinth.position.set(mx, 0.39, 0.56);
-              const plinthTrim = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.04, 0.56), brassGoldMat);
+              const plinthTrim = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.04, 0.56), isNealsYard ? satinWhiteMat : brassGoldMat);
               plinthTrim.position.set(mx, 0.79, 0.56);
-              const standRod = new THREE.Mesh(bistroPoleGeo, brassGoldMat);
-              standRod.scale.set(0.75, 0.42, 0.75);
-              standRod.position.set(mx, 0.96, 0.56);
-              const bust = new THREE.Mesh(mannequinTorsoGeo, mMat);
-              bust.position.set(mx, 1.06, 0.56);
-              bust.rotation.y = -side * 0.28;
-              g.add(plinth, plinthTrim, standRod, bust);
+              g.add(plinth, plinthTrim);
+              if (isLuggage) {
+                if (hasTomaz && side > 0) {
+                  addSneakerDisplay(g, mx - 0.14, 0.82, 0.56, smokedOakMat, -0.28);
+                  addSneakerDisplay(g, mx + 0.14, 0.82, 0.56, obsidianGlossMat, -0.18);
+                } else {
+                  addHardshellSuitcase(g, mx, 0.81, 0.56, 0.36, 0.52, 0.22, side < 0 ? brushedAlumMat : obsidianGlossMat, -side * 0.28);
+                }
+              } else if (isFootwear) {
+                addSneakerDisplay(g, mx - 0.14, 0.82, 0.56, intMerchMats[(storeHash + (side > 0 ? 1 : 0)) % intMerchMats.length], -side * 0.28);
+                addSneakerDisplay(g, mx + 0.14, 0.82, 0.56, smokedOakMat, -side * 0.16);
+              } else if (isApothecaryBeauty) {
+                const bMat = isNealsYard ? nealsCobaltMat : isLoccitane ? melvitaHoneyMat : amberBacklitMat;
+                for (const bxOff of [-0.18, 0, 0.18]) {
+                  const bot = new THREE.Mesh(bottleSmallGeo, bMat);
+                  bot.position.set(mx + bxOff, 0.93, 0.56);
+                  const cap = new THREE.Mesh(flaconCapGeo, satinWhiteMat);
+                  cap.position.set(mx + bxOff, 1.07, 0.56);
+                  g.add(bot, cap);
+                }
+              } else if (isTrueHandbagLuxury) {
+                const bag = new THREE.Mesh(handbagGeo, intMerchMats[(storeHash + (side > 0 ? 2 : 0)) % intMerchMats.length]);
+                bag.position.set(mx, 0.94, 0.56);
+                const handle = new THREE.Mesh(handbagHandleGeo, brassGoldMat);
+                handle.position.set(mx, 1.07, 0.56);
+                g.add(bag, handle);
+              } else {
+                const standRod = new THREE.Mesh(bistroPoleGeo, brassGoldMat);
+                standRod.scale.set(0.75, 0.42, 0.75);
+                standRod.position.set(mx, 0.96, 0.56);
+                const bust = new THREE.Mesh(mannequinTorsoGeo, mMat);
+                bust.position.set(mx, 1.06, 0.56);
+                bust.rotation.y = -side * 0.28;
+                g.add(standRod, bust);
+              }
             }
           }
         }
