@@ -6799,7 +6799,8 @@ export function createStoreInteriorBackwallTexture(store) {
   else if (uName.includes('PARKSON')) key = 'int-parkson';
   else if (uName.includes('TOMMY')) key = 'int-tommy';
   else if (uName.includes('POPULAR')) key = 'int-bookstore';
-  else if (uName.includes('MAYBANK') || uName.includes('CIMB') || st === 'transit') key = 'int-bank';
+  else if (uName.includes('TGV') || uName.includes('GSC') || st === 'cinema') key = 'int-cinema';
+  else if ((!uName.includes('TGV') && uName.includes('MAYBANK')) || uName.includes('CIMB') || st === 'transit') key = 'int-bank';
   else if (uName.includes('H&M') || uName.includes('BRANDS OUTLET')) key = 'int-apparel-light';
   else if (uName.includes('CALVIN KLEIN') || uName.includes('LACOSTE') || uName.includes('MARKS & SPENCER') || uName.includes('LULULEMON')) key = 'int-apparel-dark';
   else if (uName.includes('OCCITANE') || uName.includes('LANCÔME') || uName.includes('YSL')) key = 'int-beauty-cosmetics';
@@ -6813,7 +6814,8 @@ export function createStoreInteriorBackwallTexture(store) {
   else if (prof.facadeType === 'cafe-patisserie') key = 'int-cafe';
   else if (st === 'cinema' || st === 'arcade') key = 'int-cinema';
 
-  if (interiorBackCache.has(key)) return interiorBackCache.get(key);
+  const cacheKey = `${key}::${prof.brandKey || prof.displayTitle || uName}`;
+  if (interiorBackCache.has(cacheKey)) return interiorBackCache.get(cacheKey);
 
   const W = 1024;
   const H = 512;
@@ -8365,7 +8367,10 @@ export function createStoreInteriorBackwallTexture(store) {
     }
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    fillAutoFitText(ctx, `${prof.displayTitle}  •  PADI 5★ DIVE POOL & PRO SHOP`, W * 0.5, 42, W - 80, 22, '800', '"Jost", sans-serif', 4);
+    const scubaHeader = uName.includes('FLOWRIDER')
+      ? 'FLOWRIDER® 1 UTAMA  •  SHEET-WAVE SURF ARENA & BOARD PRO SHOP'
+      : 'SEALANTIS DIVE CENTRE  •  PADI 5★ INDOOR SCUBA POOL & PRO SHOP';
+    fillAutoFitText(ctx, scubaHeader, W * 0.5, 42, W - 80, 22, '800', '"Jost", sans-serif', 4);
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(0, 404, W, 108);
   } else if (key === 'int-gallery') {
@@ -8455,7 +8460,7 @@ export function createStoreInteriorBackwallTexture(store) {
   const tex = finalizeTexture(c, { srgb: true });
   tex.wrapS = THREE.ClampToEdgeWrapping;
   tex.wrapT = THREE.ClampToEdgeWrapping;
-  interiorBackCache.set(key, tex);
+  interiorBackCache.set(cacheKey, tex);
   return tex;
 }
 

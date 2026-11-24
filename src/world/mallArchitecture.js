@@ -2440,26 +2440,27 @@ export function buildMallArchitecture(scene, interactables) {
     const isOptical = /OWNDAYS|PARIS MIKI|FOCUS POINT|PUYI|A-LOOK|\bSEEN\b|\bMOG\b|RAY-BAN|OAKLEY|OPTICAL/.test(uName);
     const isPharmacy = /WATSONS|GUARDIAN|CARING|BIG PHARMACY|IJN FIRST PHARMACY|\bGNC\b|\bLAC\b|BMS ORGANICS/.test(uName);
     const isTcmHerbal = /EU YAN SANG|LO HONG KA/.test(uName);
-    const isMassageChair = /OSIM|OGAWA|GINTELL|\bITSU\b/.test(uName);
-    const isBankAtm = /MAYBANK|CIMB|HONG LEONG|\bRHB\b|AL-TAMIJ|AEROLINE/.test(uName);
-    const isLululemon = uName.includes('LULULEMON');
-    const isSealantis = /SEALANTIS|FLOWRIDER|SCUBA/.test(uName);
-    const isLego = /\bLEGO\b/.test(uName);
-    const isBabyKids = !isLego && !isPopMart && !isTopToy && !isToyCatcher && !isNextGen && /MOTHERCARE|CHICCO|BABYLAND|BABYSHOP|HAMLEYS|TOYS["“”']?R["“”']?US|WILFORD|HOBILITY|KEDAI PERMAINAN/.test(uName);
-    const isHomeAppliance = /DYSON|COWAY|CUCKOO|LE CREUSET|DREAME|\bSIGNATURE\b/.test(uName);
-    const isPetStore = /\bPLC\b|PET LOVERS|\bPET\b/.test(uName);
-    const isSalonSpa = /NUMBER 76|A-SALOON|PEEK-A-BOO|APT SALON|COCODRY|\bSTRIP\b|BROWHAUS|ASTERSPRING|GENTLEMEN['’]?S TONIC|\bSALON\b|NAIL SHOP|VICTORIA FACELIFT|BEAUMEDICA|HONEYPOT|REHAT~REHAT|DR\. KYO|MONSOON-ID/.test(uName);
-    const isTechTelco = !isHomeAppliance && !isMassageChair && !isSalonSpa && /MACHINES|\bSWITCH\b|SAMSUNG|XIAOMI|HUAWEI|\bHONOR\b|\bOPPO\b|\bVIVO\b|\bASUS\b|\bROG\b|\bSONY\b|\bBOSE\b|GARMIN|MAXIS|CELCOMDIGI|U MOBILE|YES 5G|FUJIFILM|FOTO SHANGHAI|BEST DENKI|ALL IT|ITONE|REMAX|HARVEY NORMAN|MONTIGO/.test(uName);
-    const isBubbleTeaQsr = !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
+    const isMrt = store.id === 'g-mrt-portal' || uName.includes('MRT BANDAR UTAMA');
+    const isBespokeHeroAnchor = isTgv || isGsc || isParkson || isAeon || isDecathlon || isJayaGrocer || isMrDiy || isWangsa || isPjpac || isGameOn || isRollerwa || isWindlab || isNextGen || isCamp5 || isToyCatcher || isDiva || isCellini || isPopMart || isTopToy || isMrt;
+    const isMassageChair = !isBespokeHeroAnchor && /OSIM|OGAWA|GINTELL|\bITSU\b/.test(uName);
+    const isBankAtm = !isTgv && !isBespokeHeroAnchor && /MAYBANK|CIMB|HONG LEONG|\bRHB\b|AL-TAMIJ|AEROLINE/.test(uName);
+    const isLululemon = !isBespokeHeroAnchor && uName.includes('LULULEMON');
+    const isSealantis = !isBespokeHeroAnchor && /SEALANTIS|FLOWRIDER|SCUBA/.test(uName);
+    const isLego = !isBespokeHeroAnchor && /\bLEGO\b/.test(uName);
+    const isBabyKids = !isBespokeHeroAnchor && !isLego && /MOTHERCARE|CHICCO|BABYLAND|BABYSHOP|HAMLEYS|TOYS["“”']?R["“”']?US|WILFORD|HOBILITY|KEDAI PERMAINAN/.test(uName);
+    const isHomeAppliance = !isBespokeHeroAnchor && /DYSON|COWAY|CUCKOO|LE CREUSET|DREAME|\bSIGNATURE\b/.test(uName);
+    const isPetStore = !isBespokeHeroAnchor && /\bPLC\b|PET LOVERS|\bPET\b/.test(uName);
+    const isSalonSpa = !isBespokeHeroAnchor && /NUMBER 76|A-SALOON|PEEK-A-BOO|APT SALON|COCODRY|\bSTRIP\b|BROWHAUS|ASTERSPRING|GENTLEMEN['’]?S TONIC|\bSALON\b|NAIL SHOP|VICTORIA FACELIFT|BEAUMEDICA|HONEYPOT|REHAT~REHAT|DR\. KYO|MONSOON-ID/.test(uName);
+    const isTechTelco = !isBespokeHeroAnchor && !isHomeAppliance && !isMassageChair && !isSalonSpa && /MACHINES|\bSWITCH\b|SAMSUNG|XIAOMI|HUAWEI|\bHONOR\b|\bOPPO\b|\bVIVO\b|\bASUS\b|\bROG\b|\bSONY\b|\bBOSE\b|GARMIN|MAXIS|CELCOMDIGI|U MOBILE|YES 5G|FUJIFILM|FOTO SHANGHAI|BEST DENKI|ALL IT|ITONE|REMAX|HARVEY NORMAN|MONTIGO/.test(uName);
+    const isBubbleTeaQsr = !isBespokeHeroAnchor && !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
       /CHAGEE|GONG CHA|TEALIVE|KOI TH|XING FU TANG|BOOST JUICE|LLAOLAO|GODIVA|ROYCE|BASKIN ROBBINS|INSIDE SCOOP|FAMOUS AMOS|AUNTIE ANNE|STUFF['’]?D|SUBWAY|\bKFC\b|TEXAS CHICKEN|PIZZA HUT|BURGER KING|A&W|MIXUE|\bCU\b|VARZO|NYONYA COLORS|WOK HEY|MALATANG/.test(uName);
-    const isBakeryDining = !isBubbleTeaQsr && !isZusPastry && !isComeTrue && !isStarbucks && !isHeytea && /LAVENDER|LA BOHEME|BREADTALK|CHÂTERAISÉ|CHATERAISE|SECRET RECIPE/.test(uName);
-    const isFullServiceDining = !isBubbleTeaQsr && !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
+    const isBakeryDining = !isBespokeHeroAnchor && !isBubbleTeaQsr && !isZusPastry && !isComeTrue && !isStarbucks && !isHeytea && /LAVENDER|LA BOHEME|BREADTALK|CHÂTERAISÉ|CHATERAISE|SECRET RECIPE/.test(uName);
+    const isFullServiceDining = !isBespokeHeroAnchor && !isBubbleTeaQsr && !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
       (isBakeryDining || /TANYU|HAIDILAO|HAI DI LAO|DIN TAI FUNG|SUSHI ZANMAI|RAKUTEN|NANDO|CHILI|TGI FRIDAYS|ORIENTAL KOPI|MADAM KWAN|PUTIEN|DRAGON-I|YUN NANS|TAI ER|FEI FAN|GO UNIQUE|CHICKEN RICE SHOP|PAO XIANG|KYOCHON/.test(uName));
-    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && !isPharmacy && !isTcmHerbal && !isMassageChair && !isSalonSpa && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|M·A·C|VICTORIA|BREO|SELECTIV|LANEIGE|SA SA/.test(uName));
-    const isTrueHandbagLuxury = /BONIA|MICHAEL KORS|FURLA|BRAUN BÜFFEL|LONGCHAMP/.test(uName);
+    const isApothecaryBeauty = !isBespokeHeroAnchor && !isSephora && !isChanel && !isMelvitaHooga && !isPharmacy && !isTcmHerbal && !isMassageChair && !isSalonSpa && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|M·A·C|VICTORIA|BREO|SELECTIV|LANEIGE|SA SA/.test(uName));
+    const isTrueHandbagLuxury = !isBespokeHeroAnchor && /BONIA|MICHAEL KORS|FURLA|BRAUN BÜFFEL|LONGCHAMP/.test(uName);
     const isMissionQ = uName.includes('MISSION Q');
     const isHarveyNorman = uName.includes('HARVEY NORMAN');
-    const isMrt = store.id === 'g-mrt-portal' || uName.includes('MRT BANDAR UTAMA');
     const isNarrowCorridor = Math.abs(store.z) < 12.5;
     const isFlankWall = store.width <= 13.5 && (store.side === 'E' || store.side === 'W');
     const intD = isOutside ? 1.94 : isFlankWall ? 1.55 : 3.45;
