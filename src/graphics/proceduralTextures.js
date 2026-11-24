@@ -2701,23 +2701,197 @@ export function createWayfindingTexture(leftText, centerBadge, rightText, accent
 }
 
 /**
+ * 100% Real 1 Utama Shopping Centre Brand Style Registry (Round-21 Full Coverage)
+ * Guarantees every tenant across LG..5F gets an authentic fascia palette, typography, vector emblem, and interior panorama!
+ */
+const BRAND_FONTS = {
+  didone: '"Bodoni Moda", "Playfair Display", "Georgia", serif',
+  classicSerif: '"Cormorant Garamond", "Playfair Display", "Georgia", serif',
+  geometric: '"Jost", "Montserrat", "Century Gothic", sans-serif',
+  condensed: '"Oswald", "Arial Narrow", sans-serif',
+  cleanSans: '"Montserrat", "Plus Jakarta Sans", sans-serif',
+  cjkSerif: '"Noto Serif JP", "Yu Mincho", "Georgia", serif'
+};
+
+export const STORE_BRAND_STYLES = [
+  // --- ROUND-21 HERO BRANDS (1F Old Wing, G/1F Oval, 2F 1UE) ---
+  { match: /NITORI/, brandKey: 'nitori', facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'nitori-teal', bg: '#0d9488', bg2: '#0f766e', fg: '#ffffff', accent: '#5eead4', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'NITORI', subTag: 'ニトリ • JAPAN HOME FURNISHINGS', emblem: 'nitori-sq', interiorKey: 'int-nitori' },
+  { match: /^IORA\b|\bIORA\b/, brandKey: 'iora', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'iora-alabaster', bg: '#f5efe6', bg2: '#eae1d3', fg: '#181512', accent: '#9c7c52', isLight: true, font: 'didone', weight: '600', tracking: 20, title: 'iORA', subTag: 'CONTEMPORARY WOMEN', emblem: 'geo-bar', interiorKey: 'int-apparel-light' },
+  { match: /MELVITA.*HOOGA|HOOGA/, brandKey: 'melvita-hooga', facadeType: 'minimalist-tech', fasciaH: 1.32, materialStyle: 'melvita-hooga-split', bg: '#363432', bg2: '#292725', fg: '#f8f4ec', accent: '#eab308', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'MELVITA  •  HOOGA', subTag: 'ORGANIC BEAUTY  |  SCANDINAVIAN LIVING', emblem: 'honeycomb-house', interiorKey: 'int-melvita-hooga' },
+  { match: /NEAL['’]?S YARD/, brandKey: 'neals-yard', facadeType: 'luxury-fashion', fasciaH: 1.28, materialStyle: 'neals-cobalt', bg: '#163a70', bg2: '#0f2952', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: "NEAL'S YARD REMEDIES", subTag: 'COVENT GARDEN • ORGANIC APOTHECARY', emblem: 'cobalt-tree', interiorKey: 'int-apothecary' },
+  { match: /GIORDANO/, brandKey: 'giordano', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'giordano-slate', bg: '#1a2232', bg2: '#111722', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'GIORDANO', subTag: 'WORLD WITHOUT STRANGERS', emblem: 'red-box', interiorKey: 'int-apparel-dark' },
+  { match: /ALDO.*NAELOFAR|\bALDO\b/, brandKey: 'aldo-naelofar', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'aldo-naelofar-split', bg: '#f6f1ea', bg2: '#ede4d8', fg: '#181512', accent: '#c9a66b', isLight: true, font: 'geometric', weight: '800', tracking: 12, title: 'ALDO  •  NAELOFAR', subTag: 'FOOTWEAR  |  MODEST COUTURE', emblem: 'shoe-crescent', interiorKey: 'int-footwear' },
+  { match: /SAMSONITE.*TOMAZ|SAMSONITE/, brandKey: 'samsonite-tomaz', facadeType: 'luxury-fashion', fasciaH: 1.28, materialStyle: 'samsonite-tomaz-split', bg: '#0c1e3a', bg2: '#081428', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'Samsonite  •  TOMAZ', subTag: 'TRAVEL LUGGAGE  |  HERITAGE FOOTWEAR', emblem: 'swirl-crown', interiorKey: 'int-luggage' },
+  { match: /MISSION Q/, brandKey: 'mission-q', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'mission-q-neon', bg: '#100e26', bg2: '#080614', fg: '#fef08a', accent: '#f43f5e', isLight: false, font: 'condensed', weight: '800', tracking: 10, title: 'MISSION-Q', subTag: 'ESCAPE ROOM • MYSTERY VAULT', emblem: 'neon-key', interiorKey: 'int-mission-q' },
+
+  // --- FOOTWEAR & LEATHER BOUTIQUES ---
+  { match: /CHARLES & KEITH/, brandKey: 'charles-keith', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#f0ebe2', bg2: '#e2dacb', fg: '#141210', accent: '#9c7c52', isLight: true, font: 'geometric', weight: '600', tracking: 14, title: 'CHARLES & KEITH', subTag: 'SINGAPORE', emblem: 'geo-bar', interiorKey: 'int-footwear' },
+  { match: /\bCLARKS\b/, brandKey: 'clarks', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#282320', bg2: '#1a1715', fg: '#f8f5f0', accent: '#d4a359', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: 'Clarks', subTag: 'SINCE 1825 • SOMERSET', emblem: 'shoe', interiorKey: 'int-footwear' },
+  { match: /\bECCO\b/, brandKey: 'ecco', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#ede6da', bg2: '#dfd6c6', fg: '#1c1814', accent: '#8b6a44', isLight: true, font: 'geometric', weight: '700', tracking: 16, title: 'ecco', subTag: 'DANISH LEATHER FOOTWEAR', emblem: 'shoe', interiorKey: 'int-footwear' },
+  { match: /VINCCI/, brandKey: 'vincci', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#f6f1ea', bg2: '#e9e0d3', fg: '#1c1814', accent: '#b4944e', isLight: true, font: 'didone', weight: '700', tracking: 16, title: 'VINCCI', subTag: 'FOOTWEAR & ACCESSORIES', emblem: 'diamond', interiorKey: 'int-footwear' },
+  { match: /CHRISTY NG/, brandKey: 'christy-ng', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#f7f2eb', bg2: '#eae1d4', fg: '#231b15', accent: '#b4944e', isLight: true, font: 'didone', weight: '700', tracking: 12, title: 'CHRISTY NG  •  FELANCY', subTag: 'BESPOKE TOTES & SHOES', emblem: 'monogram-circ', interiorKey: 'int-footwear' },
+  { match: /BIRKENSTOCK/, brandKey: 'birkenstock', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#16356b', bg2: '#0e244c', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'BIRKENSTOCK', subTag: 'GERMAN CORK FOOTBEDS • EST. 1774', emblem: 'shoe', interiorKey: 'int-footwear' },
+  { match: /SKECHERS|FOOT LOCKER/, brandKey: 'skechers-fl', facadeType: 'sports-industrial', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#0c234b', bg2: '#071632', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'SKECHERS  •  FOOT LOCKER', subTag: 'PERFORMANCE FOOTWEAR', emblem: 'bolt', interiorKey: 'int-footwear' },
+  { match: /RES\|TOE\|RUN|SHINS/, brandKey: 'shins-rtr', facadeType: 'sports-industrial', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#881313', fg: '#ffffff', accent: '#fef08a', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'SHINS  •  RES|TOE|RUN', subTag: 'BEAUTY & FOOTWEAR', emblem: 'shoe', interiorKey: 'int-footwear' },
+  { match: /FIPPER/, brandKey: 'fipper', facadeType: 'sports-industrial', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#166534', bg2: '#14532d', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'FIPPER  •  ENERGIZED', subTag: 'NATURAL RUBBER FOOTWEAR', emblem: 'leaf', interiorKey: 'int-footwear' },
+
+  // --- LUGGAGE & TRAVEL ---
+  { match: /WINTER TIME/, brandKey: 'winter-time', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'WINTER TIME', subTag: 'CARLTON LUGGAGE & WINTER WEAR', emblem: 'suitcase', interiorKey: 'int-luggage' },
+  { match: /HYPERGEAR/, brandKey: 'hypergear', facadeType: 'sports-industrial', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#111827', bg2: '#090d16', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'HYPERGEAR  •  ITSU', subTag: 'WATERPROOF PACKS & WELLNESS', emblem: 'suitcase', interiorKey: 'int-luggage' },
+  { match: /TOMTOC/, brandKey: 'tomtoc', facadeType: 'sports-industrial', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#172e63', bg2: '#0f1f44', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'tomtoc  •  MVP SPORTS', subTag: 'TECH CARRY & GEAR', emblem: 'suitcase', interiorKey: 'int-luggage' },
+
+  // --- APOTHECARY, SKINCARE, COSMETICS & PHARMACY ---
+  { match: /BATH & BODY WORKS/, brandKey: 'bbw', facadeType: 'luxury-fashion', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#1d4ed8', bg2: '#1e3a8a', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: 'Bath & Body Works', subTag: '3-WICK CANDLES • FINE FRAGRANCE', emblem: 'leaf', interiorKey: 'int-apothecary' },
+  { match: /KENS APOTHECARY/, brandKey: 'kens-apothecary', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1c1917', bg2: '#110f0e', fg: '#f5efe6', accent: '#c9a66b', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'KENS APOTHECARY', subTag: 'DIPTYQUE • BYREDO • JO MALONE', emblem: 'cobalt-tree', interiorKey: 'int-apothecary' },
+  { match: /BRITISHINDIA|AESOP/, brandKey: 'britishindia-aesop', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#ede6da', bg2: '#dfd5c5', fg: '#1f1b16', accent: '#8c6a4a', isLight: true, font: 'classicSerif', weight: '700', tracking: 10, title: 'BRITISHINDIA  •  Aēsop', subTag: 'RESORT TAILORING & BOTANICAL SKINCARE', emblem: 'leaf', interiorKey: 'int-apothecary' },
+  { match: /CLARINS/, brandKey: 'clarins', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#881313', fg: '#ffffff', accent: '#fecaca', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'CLARINS', subTag: 'PARIS • PLANT-BASED SKINCARE', emblem: 'leaf', interiorKey: 'int-apothecary' },
+  { match: /VICTORIA['’]?S SECRET/, brandKey: 'victorias-secret', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#831843', bg2: '#500724', fg: '#fce7f3', accent: '#f472b6', isLight: false, font: 'didone', weight: '700', tracking: 12, title: "VICTORIA'S SECRET", subTag: 'FINE FRAGRANCES & LINGERIE', emblem: 'heart', interiorKey: 'int-beauty-cosmetics' },
+  { match: /SA SA/, brandKey: 'sasa', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#db2777', bg2: '#9d174d', fg: '#ffffff', accent: '#fbcfe8', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'Sa Sa', subTag: 'MAKING LIFE BEAUTIFUL', emblem: 'heart', interiorKey: 'int-beauty-cosmetics' },
+  { match: /M·A·C|MAC\b/, brandKey: 'mac-beauty', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#0c0c0f', bg2: '#050507', fg: '#ffffff', accent: '#f43f5e', isLight: false, font: 'geometric', weight: '700', tracking: 18, title: 'M·A·C  •  GUARDIAN', subTag: 'MAKEUP ARTISTRY', emblem: 'diamond', interiorKey: 'int-beauty-cosmetics' },
+  { match: /SHU UEMURA/, brandKey: 'shu-uemura', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#14171f', bg2: '#0b0d12', fg: '#ffffff', accent: '#f472b6', isLight: false, font: 'geometric', weight: '600', tracking: 12, title: 'shu uemura', subTag: 'TOKYO MAKEUP ATELIER', emblem: 'monogram-circ', interiorKey: 'int-beauty-cosmetics' },
+  { match: /LANEIGE/, brandKey: 'laneige', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#1e3a8a', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'geometric', weight: '600', tracking: 16, title: 'LANEIGE', subTag: 'SEOUL WATER SCIENCE SKINCARE', emblem: 'wave', interiorKey: 'int-beauty-cosmetics' },
+  { match: /THE FACE SHOP/, brandKey: 'the-face-shop', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'THE FACE SHOP', subTag: 'K-BEAUTY • BELIF', emblem: 'leaf', interiorKey: 'int-beauty-cosmetics' },
+  { match: /BREO|SELECTIV/, brandKey: 'breo-selectiv', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '600', tracking: 10, title: 'breo  •  SELECTIV', subTag: 'SMART MASSAGE & FINE PERFUMERY', emblem: 'wave', interiorKey: 'int-beauty-cosmetics' },
+  { match: /BEAUMEDICA|HONEYPOT/, brandKey: 'beaumedica', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#f0e9df', bg2: '#e2d8c8', fg: '#231b15', accent: '#c9a66b', isLight: true, font: 'classicSerif', weight: '700', tracking: 10, title: 'BEAUMEDICA  •  HONEYPOT', subTag: 'AESTHETIC & WELLNESS', emblem: 'leaf', interiorKey: 'int-beauty-cosmetics' },
+  { match: /REHAT~REHAT|DR\. KYO/, brandKey: 'rehat-kyo', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e3a4c', bg2: '#132633', fg: '#f0f9ff', accent: '#38bdf8', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: 'REHAT~REHAT  •  DR. KYO', subTag: 'WELLNESS SPA & CLINIC', emblem: 'leaf', interiorKey: 'int-apothecary' },
+  { match: /GUARDIAN/, brandKey: 'guardian', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#ea580c', bg2: '#c2410c', fg: '#ffffff', accent: '#fde047', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'guardian', subTag: 'HEALTH • BEAUTY • PHARMACY', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /CARING PHARMACY/, brandKey: 'caring', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#15803d', bg2: '#14532d', fg: '#ffffff', accent: '#86efac', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'CARiNG PHARMACY', subTag: 'PHARMACIST CARE & WELLNESS', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /IJN FIRST PHARMACY/, brandKey: 'ijn-pharmacy', facadeType: 'open-market', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#1e3a8a', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 6, title: 'IJN FIRST PHARMACY', subTag: 'CLINICAL HEART & HEALTH CARE', emblem: 'cross', interiorKey: 'int-pharmacy' },
+  { match: /BMS ORGANICS/, brandKey: 'bms-organics', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#15803d', bg2: '#14532d', fg: '#dcfce7', accent: '#4ade80', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: 'BMS ORGANICS', subTag: 'ORGANIC WHOLEFOODS & CAFÉ', emblem: 'leaf', interiorKey: 'int-pharmacy' },
+
+  // --- CONTEMPORARY FASHION & APPAREL (ZERO HANDBAG SHELVES!) ---
+  { match: /NICHII/, brandKey: 'nichii', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#f2ece2', bg2: '#e4dacb', fg: '#18181b', accent: '#b4944e', isLight: true, font: 'didone', weight: '700', tracking: 18, title: 'NICHII', subTag: 'CONTEMPORARY FASHION', emblem: 'geo-bar', interiorKey: 'int-apparel-light' },
+  { match: /PADINI|SOMETIME/, brandKey: 'padini', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#111216', bg2: '#08090c', fg: '#ffffff', accent: '#e4e4e7', isLight: false, font: 'geometric', weight: '700', tracking: 14, title: 'PADINI CONCEPT STORE', subTag: 'SEED • PADINI AUTHENTICS • SOMETIME', emblem: 'monogram-sq', interiorKey: 'int-apparel-dark' },
+  { match: /\bMANGO\b/, brandKey: 'mango', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#141418', bg2: '#09090b', fg: '#ffffff', accent: '#d4d4d8', isLight: false, font: 'geometric', weight: '600', tracking: 24, title: 'MANGO', subTag: 'BARCELONA', emblem: 'geo-bar', interiorKey: 'int-apparel-dark' },
+  { match: /PULL&BEAR/, brandKey: 'pull-bear', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 12, title: 'PULL&BEAR', subTag: 'URBAN STREETWEAR', emblem: 'geo-bar', interiorKey: 'int-apparel-dark' },
+  { match: /COTTON ON/, brandKey: 'cotton-on', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#222226', bg2: '#141418', fg: '#ffffff', accent: '#f4f4f5', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'COTTON:ON', subTag: 'AUSTRALIA • EVERYDAY DENIM', emblem: 'monogram-circ', interiorKey: 'int-apparel-dark' },
+  { match: /LEVI['’]?S/, brandKey: 'levis', facadeType: 'luxury-fashion', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#991b1b', fg: '#ffffff', accent: '#fecaca', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: "Levi's", subTag: '501 ORIGINAL DENIM • TAILOR SHOP', emblem: 'red-box', interiorKey: 'int-apparel-dark' },
+  { match: /URBAN REVIVO/, brandKey: 'urban-revivo', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#f4f4f6', bg2: '#e4e6eb', fg: '#111111', accent: '#52525b', isLight: true, font: 'geometric', weight: '700', tracking: 16, title: 'URBAN REVIVO', subTag: 'UR RUNWAY FLAGSHIP', emblem: 'monogram-sq', interiorKey: 'int-apparel-light' },
+  { match: /\bHLA\b/, brandKey: 'hla', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#111827', bg2: '#090d16', fg: '#ffffff', accent: '#94a3b8', isLight: false, font: 'geometric', weight: '800', tracking: 16, title: 'HLA CONCEPT STORE', subTag: 'MODERN MENSWEAR', emblem: 'monogram-sq', interiorKey: 'int-apparel-dark' },
+  { match: /G2000|BENJAMIN BARKER/, brandKey: 'g2000-bb', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#202228', bg2: '#121418', fg: '#ffffff', accent: '#d4af37', isLight: false, font: 'didone', weight: '700', tracking: 12, title: 'BENJAMIN BARKER  •  G2000', subTag: 'TAILORED MENSWEAR', emblem: 'crown', interiorKey: 'int-apparel-dark' },
+  { match: /CHEETAH/, brandKey: 'cheetah', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#14171f', bg2: '#090b10', fg: '#f8fafc', accent: '#f59e0b', isLight: false, font: 'condensed', weight: '800', tracking: 12, title: 'CHEETAH', subTag: 'CASUAL & ACTIVE LIFESTYLE', emblem: 'paw', interiorKey: 'int-apparel-dark' },
+  { match: /\bELLE\b/, brandKey: 'elle', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#0c0c0f', fg: '#ffffff', accent: '#f4f4f5', isLight: false, font: 'didone', weight: '700', tracking: 20, title: 'ELLE  •  DENNI & CO', subTag: 'PARIS', emblem: 'geo-bar', interiorKey: 'int-apparel-dark' },
+  { match: /\bDRUM\b/, brandKey: 'drum', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#141519', bg2: '#090a0d', fg: '#ffffff', accent: '#facc15', isLight: false, font: 'condensed', weight: '800', tracking: 14, title: 'DRUM', subTag: 'URBAN YOUTH STREETWEAR', emblem: 'monogram-sq', interiorKey: 'int-apparel-dark' },
+  { match: /GOOD2U/, brandKey: 'good2u', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#0e0e11', fg: '#ffffff', accent: '#facc15', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'GOOD2U', subTag: 'CONCEPT STORE', emblem: 'star', interiorKey: 'int-apparel-dark' },
+  { match: /F\.O\.S/, brandKey: 'fos', facadeType: 'luxury-fashion', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#991b1b', bg2: '#7f1d1d', fg: '#ffffff', accent: '#fca5a5', isLight: false, font: 'geometric', weight: '900', tracking: 12, title: 'F.O.S  •  BABYSHOP', subTag: 'FACTORY OUTLET STORE', emblem: 'red-box', interiorKey: 'int-apparel-dark' },
+  { match: /SACOOR/, brandKey: 'sacoor', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#163168', bg2: '#0d2047', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'classicSerif', weight: '700', tracking: 14, title: 'SACOOR BLUE', subTag: 'LISBON • TAILORED MENSWEAR', emblem: 'crown', interiorKey: 'int-apparel-dark' },
+  { match: /POLO RALPH LAUREN/, brandKey: 'polo-rl', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#0c2340', bg2: '#061426', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 14, title: 'POLO RALPH LAUREN', subTag: 'NEW YORK', emblem: 'crown', interiorKey: 'int-apparel-dark' },
+  { match: /MICHAEL KORS/, brandKey: 'michael-kors', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#efe8dc', bg2: '#e1d7c6', fg: '#181512', accent: '#b4944e', isLight: true, font: 'geometric', weight: '600', tracking: 18, title: 'MICHAEL KORS', subTag: 'JET SET LUXURY', emblem: 'monogram-circ', interiorKey: 'int-apparel-light' },
+  { match: /OUTPOZT/, brandKey: 'outpozt', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1b1d26', bg2: '#10121a', fg: '#ffffff', accent: '#f59e0b', isLight: false, font: 'condensed', weight: '800', tracking: 12, title: 'OUTPOZT', subTag: 'MULTI-BRAND CONCEPT STORE', emblem: 'star', interiorKey: 'int-apparel-dark' },
+  { match: /SEMIR/, brandKey: 'semir', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '700', tracking: 12, title: 'SEMIR  •  QUIKSILVER', subTag: 'YOUTH & SURF APPAREL', emblem: 'wave', interiorKey: 'int-apparel-dark' },
+  { match: /XIXILI/, brandKey: 'xixili', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#500724', bg2: '#380419', fg: '#fce7f3', accent: '#f472b6', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'XIXILI', subTag: 'DESIGNER LINGERIE', emblem: 'heart', interiorKey: 'int-apparel-dark' },
+  { match: /LA SENZA/, brandKey: 'la-senza', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#831843', bg2: '#4c0519', fg: '#ffffff', accent: '#fb7185', isLight: false, font: 'classicSerif', weight: '700', italic: true, tracking: 8, title: 'La Senza', subTag: 'LINGERIE & LOUNGEWEAR', emblem: 'heart', interiorKey: 'int-apparel-dark' },
+  { match: /WACOAL/, brandKey: 'wacoal', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#701a45', bg2: '#4c0f2e', fg: '#fce7f3', accent: '#f472b6', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'Wacoal  •  NYONYA COLORS', subTag: 'JAPANESE INTIMATES & KUIH', emblem: 'heart', interiorKey: 'int-apparel-dark' },
+  { match: /STYLE BY BEGA|SALON/, brandKey: 'bega', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#efe8dc', bg2: '#e2d8c7', fg: '#1c1814', accent: '#b4944e', isLight: true, font: 'didone', weight: '600', tracking: 12, title: 'SALON  •  STYLE BY BEGA', subTag: 'HAIR ATELIER & FASHION', emblem: 'diamond', interiorKey: 'int-apparel-light' },
+  { match: /U-TWO/, brandKey: 'utwo', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#0b0b0e', fg: '#ffffff', accent: '#d4af37', isLight: false, font: 'geometric', weight: '700', tracking: 12, title: 'U-TWO  •  DIRS', subTag: 'CONTEMPORARY STREETWEAR', emblem: 'monogram-sq', interiorKey: 'int-apparel-dark' },
+  { match: /SOXWORLD/, brandKey: 'soxworld', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#881337', bg2: '#5c0c24', fg: '#ffffff', accent: '#fb7185', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: 'SOXWORLD  •  THE NAIL SHOP', subTag: 'HOSIERY & NAIL ATELIER', emblem: 'heart', interiorKey: 'int-apparel-dark' },
+  { match: /KEDAI BLESS/, brandKey: 'kedai-bless', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#065f46', bg2: '#064e3b', fg: '#ecfdf5', accent: '#34d399', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: 'KEDAI BLESS', subTag: 'COMMUNITY THRIFT & PRELOVED', emblem: 'leaf', interiorKey: 'int-apparel-light' },
+  { match: /MONTIGO/, brandKey: 'montigo', facadeType: 'minimalist-tech', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#090e1a', fg: '#fde68a', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'MONTIGO', subTag: 'INSULATED THERMAL DRINKWARE', emblem: 'cup', interiorKey: 'int-tech' },
+
+  // --- JEWELLERY, WATCHES & PEWTER ---
+  { match: /SWAROVSKI/, brandKey: 'swarovski', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#110f30', fg: '#fdf2f8', accent: '#f9a8d4', isLight: false, font: 'didone', weight: '600', tracking: 18, title: 'SWAROVSKI', subTag: 'AUSTRIAN PRECISION CRYSTAL', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /PANDORA/, brandKey: 'pandora', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#fdf2f6', bg2: '#f6e1ea', fg: '#1c1814', accent: '#f472b6', isLight: true, font: 'classicSerif', weight: '700', tracking: 18, title: 'PANDORA', subTag: 'HAND-FINISHED JEWELLERY', emblem: 'crown', interiorKey: 'int-jewellery' },
+  { match: /TAG HEUER/, brandKey: 'tag-heuer', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#111318', bg2: '#08090c', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'TAG Heuer', subTag: 'SWISS AVANT-GARDE SINCE 1860', emblem: 'shield', interiorKey: 'int-jewellery' },
+  { match: /WATATIME|PATCHI/, brandKey: 'watatime', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#27201c', bg2: '#181411', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'WATATIME  •  PATCHI', subTag: 'SWISS WATCHES & ARTISAN CHOCOLATE', emblem: 'watch', interiorKey: 'int-jewellery' },
+  { match: /TOMEI/, brandKey: 'tomei', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#713f12', bg2: '#451a03', fg: '#fef08a', accent: '#eab308', isLight: false, font: 'classicSerif', weight: '700', tracking: 14, title: 'TOMEI  •  OPULENCE', subTag: '916 FINE GOLD & DIAMONDS', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /WAH CHAN/, brandKey: 'wah-chan', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#4a1d06', bg2: '#2d1103', fg: '#fde047', accent: '#eab308', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'WAH CHAN GOLDSMITH', subTag: '916 GOLD & DIAMONDS SINCE 1955', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /SK JEWELLERY/, brandKey: 'sk-jewellery', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#241b54', bg2: '#151036', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'didone', weight: '700', tracking: 14, title: 'SK JEWELLERY', subTag: '999 PURE GOLD & LAB DIAMONDS', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /TSL|GEOX/, brandKey: 'tsl-geox', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#27201c', bg2: '#171310', fg: '#fde68a', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'TSL 谢瑞麟  •  GEOX', subTag: 'ARTISANAL DIAMONDS & FOOTWEAR', emblem: 'diamond', interiorKey: 'int-jewellery' },
+  { match: /ROYAL SELANGOR/, brandKey: 'royal-selangor', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#cbd5e1', isLight: false, font: 'classicSerif', weight: '700', tracking: 14, title: 'ROYAL SELANGOR', subTag: 'MALAYSIAN PEWTER CRAFT • EST. 1885', emblem: 'crown', interiorKey: 'int-jewellery' },
+  { match: /ECESIS|TIMEKEEPER/, brandKey: 'ecesis', facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#94a3b8', isLight: false, font: 'geometric', weight: '700', tracking: 12, title: 'ECESIS  •  TIMEKEEPER', subTag: 'GARMIN & CONTEMPORARY WATCHES', emblem: 'watch', interiorKey: 'int-jewellery' },
+  { match: /DZI KINGDOM/, brandKey: 'dzi-kingdom', facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#451a03', bg2: '#290f02', fg: '#fde047', accent: '#eab308', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'DZI KINGDOM', subTag: 'TIBETAN DZI BEADS & JEWELLERY', emblem: 'ring', interiorKey: 'int-jewellery' },
+
+  // --- SPORTS, SWIM & OUTDOOR ---
+  { match: /FLOWRIDER/, brandKey: 'flowrider', facadeType: 'sports-industrial', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#0369a1', bg2: '#075985', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'FLOWRIDER® 1 UTAMA', subTag: 'SURF ARENA • SHEET-WAVE SIMULATOR', emblem: 'wave', interiorKey: 'int-scuba' },
+  { match: /SPORTSDIRECT/, brandKey: 'sportsdirect', facadeType: 'sports-industrial', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#131136', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'SPORTSDIRECT.COM', subTag: 'FOOTBALL • RUNNING • CYCLING', emblem: 'bolt', interiorKey: 'int-sports' },
+  { match: /JD SPORTS/, brandKey: 'jd-sports', facadeType: 'sports-industrial', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#09090b', bg2: '#141418', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'JD SPORTS', subTag: 'KING OF TRAINERS', emblem: 'monogram-circ', interiorKey: 'int-sports' },
+  { match: /\bASICS\b/, brandKey: 'asics', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'asics', subTag: 'SOUND MIND, SOUND BODY', emblem: 'swirl', interiorKey: 'int-sports' },
+  { match: /NEW BALANCE/, brandKey: 'new-balance', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#27272a', bg2: '#18181b', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '800', italic: true, tracking: 8, title: 'new balance', subTag: 'MADE IN USA 990 • RUNNING', emblem: 'stripe-bar', interiorKey: 'int-sports' },
+  { match: /SALOMON/, brandKey: 'salomon', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#09090b', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 12, title: 'SALOMON', subTag: 'ALPINE & TRAIL RUNNING', emblem: 'bolt', interiorKey: 'int-sports' },
+  { match: /ANTA/, brandKey: 'anta', facadeType: 'sports-industrial', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#111827', bg2: '#090d16', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '900', tracking: 12, title: 'ANTA SUPERSTORE', subTag: 'KEEP MOVING • BASKETBALL', emblem: 'bolt', interiorKey: 'int-sports' },
+  { match: /SPEEDO/, brandKey: 'speedo', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#090e1a', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '800', italic: true, tracking: 10, title: 'speedo', subTag: 'PERFORMANCE SWIMWEAR', emblem: 'wave', interiorKey: 'int-sports' },
+  { match: /RIP CURL|SUN PARADISE/, brandKey: 'rip-curl', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#0e7490', bg2: '#084c61', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 10, title: '', subTag: 'SURF • SWIM • AQUATICS', emblem: 'wave', interiorKey: 'int-sports' },
+  { match: /THE NORTH FACE|CONVERSE/, brandKey: 'north-face', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#0c0c0f', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'THE NORTH FACE  •  CONVERSE', subTag: 'NEVER STOP EXPLORING', emblem: 'stripe-bar', interiorKey: 'int-outside' },
+
+  // --- TECH, ELECTRONICS & HOME LIVING ---
+  { match: /HARVEY NORMAN/, brandKey: 'harvey-norman', facadeType: 'minimalist-tech', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#1c1917', bg2: '#0f0d0c', fg: '#ffffff', accent: '#dc2626', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'Harvey Norman', subTag: 'ELECTRICAL • COMPUTERS • FURNITURE', emblem: 'red-box', interiorKey: 'int-tech' },
+  { match: /BEST DENKI/, brandKey: 'best-denki', facadeType: 'minimalist-tech', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'BEST DENKI', subTag: 'JAPANESE HOME ELECTRONICS', emblem: 'bolt', interiorKey: 'int-tech' },
+  { match: /ALL IT/, brandKey: 'all-it', facadeType: 'minimalist-tech', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#172554', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'ALL IT HYPERMARKET', subTag: 'PC • GAMING • TECH SUPERSTORE', emblem: 'bolt', interiorKey: 'int-tech' },
+  { match: /HUAWEI/, brandKey: 'huawei', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#f4f4f5', bg2: '#e4e4e7', fg: '#111827', accent: '#dc2626', isLight: true, font: 'geometric', weight: '700', tracking: 12, title: 'HUAWEI', subTag: 'EXPERIENCE STORE', emblem: 'leaf', interiorKey: 'int-tech' },
+  { match: /\bOPPO\b/, brandKey: 'oppo', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#15803d', bg2: '#14532d', fg: '#ffffff', accent: '#86efac', isLight: false, font: 'geometric', weight: '700', tracking: 18, title: 'OPPO', subTag: 'FIND X FLAGSHIP', emblem: 'ring', interiorKey: 'int-tech' },
+  { match: /\bHONOR\b/, brandKey: 'honor', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#111827', bg2: '#080c14', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'geometric', weight: '700', tracking: 16, title: 'HONOR', subTag: 'MAGIC FLAGSHIP STORE', emblem: 'star', interiorKey: 'int-tech' },
+  { match: /CUCKOO/, brandKey: 'cuckoo', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#991b1b', bg2: '#7f1d1d', fg: '#ffffff', accent: '#fca5a5', isLight: false, font: 'geometric', weight: '800', tracking: 12, title: 'CUCKOO', subTag: 'BEYOND STANDARDS • HEALTHY HOME', emblem: 'wave', interiorKey: 'int-tech' },
+  { match: /ITONE/, brandKey: 'itone', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#dc2626', bg2: '#991b1b', fg: '#ffffff', accent: '#fef08a', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'ITone SUPERSTORE', subTag: 'ASUS • LENOVO • MSI GAMING', emblem: 'bolt', interiorKey: 'int-tech' },
+  { match: /CELCOMDIGI/, brandKey: 'celcomdigi', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#1d4ed8', fg: '#ffffff', accent: '#facc15', isLight: false, font: 'geometric', weight: '800', tracking: 6, title: 'CelcomDigi', subTag: '5G EXPRESS FLAGSHIP', emblem: 'bolt', interiorKey: 'int-tech' },
+  { match: /REMAX/, brandKey: 'remax', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'REMAX  •  VICTORIA FACELIFT', subTag: 'SMART GADGETS & BEAUTY', emblem: 'bolt', interiorKey: 'int-tech' },
+  { match: /YAMAHA/, brandKey: 'yamaha', facadeType: 'minimalist-tech', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#4c1d95', bg2: '#2e1065', fg: '#ffffff', accent: '#c084fc', isLight: false, font: 'geometric', weight: '800', tracking: 12, title: 'YAMAHA MUSIC', subTag: 'PIANOS • GUITARS • ACADEMY', emblem: 'music', interiorKey: 'int-music-dance' },
+  { match: /ON AIR 1|AFORADIO/, brandKey: 'on-air', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#070b14', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 10, title: 'ON AIR 1  •  AFORADIO', subTag: 'LIVE BROADCAST STUDIO', emblem: 'music', interiorKey: 'int-music-dance' },
+  { match: /TUTU TOE/, brandKey: 'tutu-toe', facadeType: 'luxury-fashion', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#fdf2f8', bg2: '#fce7f3', fg: '#831843', accent: '#ec4899', isLight: true, font: 'classicSerif', weight: '700', italic: true, tracking: 6, title: 'Tutu Toe Dance Academy', subTag: 'BALLET • CONTEMPORARY • K-POP', emblem: 'star', interiorKey: 'int-music-dance' },
+
+  // --- FURNITURE, HOME LIVING & KITCHENWARE ---
+  { match: /KAISON/, brandKey: 'kaison', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#9c856b', bg2: '#826d56', fg: '#ffffff', accent: '#f5efe6', isLight: false, font: 'classicSerif', weight: '700', tracking: 16, title: 'KAISON', subTag: 'HOME DÉCOR & FLORALS', emblem: 'leaf', interiorKey: 'int-furniture' },
+  { match: /HOME['’]?S HARMONY/, brandKey: 'homes-harmony', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#ede6da', bg2: '#dfd5c5', fg: '#1c1814', accent: '#b4944e', isLight: true, font: 'classicSerif', weight: '700', tracking: 8, title: "HOME'S HARMONY", subTag: 'LUXURY BEDDING & LIVING', emblem: 'leaf', interiorKey: 'int-furniture' },
+  { match: /GETHÁ|SOTHYS/, brandKey: 'getha', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#93c5fd', isLight: false, font: 'classicSerif', weight: '700', tracking: 12, title: 'GETHÁ  •  SOTHYS PARIS', subTag: 'NATURAL LATEX SLEEP KINGDOM', emblem: 'star', interiorKey: 'int-furniture' },
+  { match: /\bSIGNATURE\b/, brandKey: 'signature-kitchen', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#292524', bg2: '#1c1917', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'SIGNATURE', subTag: 'BESPOKE CULINARY CABINETS', emblem: 'geo-bar', interiorKey: 'int-furniture' },
+  { match: /GINTELL/, brandKey: 'gintell', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#110f30', fg: '#fde68a', accent: '#eab308', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'GINTELL', subTag: 'WELLNESS MASSAGE CHAIRS', emblem: 'star', interiorKey: 'int-furniture' },
+  { match: /LE CREUSET|DREAME/, brandKey: 'le-creuset', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'custom-brand', bg: '#c2410c', bg2: '#9a3412', fg: '#ffffff', accent: '#fdba74', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'LE CREUSET  •  dreame', subTag: 'FRENCH CAST IRON & SMART HOME', emblem: 'flame', interiorKey: 'int-furniture' },
+  { match: /\bXZQT\b/, brandKey: 'xzqt', facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#1c1917', bg2: '#0f0d0c', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'didone', weight: '700', tracking: 18, title: 'XZQT', subTag: 'ITALIAN DESIGNER LIVING • CALLIGARIS', emblem: 'diamond', interiorKey: 'int-cellini' },
+  { match: /STANZO/, brandKey: 'stanzo', facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#111827', bg2: '#090d16', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'STANZO COLLECTION', subTag: '5F OVAL • LUXURY INTERIORS', emblem: 'crown', interiorKey: 'int-cellini' },
+
+  // --- TOYS, KIDS, ARCADE & GALLERIES ---
+  { match: /LEGO/, brandKey: 'lego', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#dc2626', bg2: '#b91c1c', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 8, title: 'LEGO® CERTIFIED STORE', subTag: 'STAR WARS • TECHNIC • CREATOR', emblem: 'brick', interiorKey: 'int-toys-bright' },
+  { match: /TOYS["“”']?R["“”']?US/, brandKey: 'toysrus', facadeType: 'entertainment-marquee', fasciaH: 1.46, materialStyle: 'custom-brand', bg: '#1d4ed8', bg2: '#1e3a8a', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 6, title: 'TOYS“R”US', subTag: 'LEGO • NERF • BARBIE • GACHAPON', emblem: 'star', interiorKey: 'int-toys-bright' },
+  { match: /MOTHERCARE/, brandKey: 'mothercare', facadeType: 'entertainment-marquee', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#0e7490', bg2: '#084c61', fg: '#ffffff', accent: '#67e8f9', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'mothercare', subTag: 'STROLLERS • NURSERY • MATERNITY', emblem: 'heart', interiorKey: 'int-toys-bright' },
+  { match: /WILFORD/, brandKey: 'wilford', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#312e81', bg2: '#1e1b4b', fg: '#ffffff', accent: '#a78bfa', isLight: false, font: 'condensed', weight: '800', tracking: 10, title: 'WILFORD', subTag: 'KIDS ELECTRIC SUPERCARS', emblem: 'bolt', interiorKey: 'int-toys-bright' },
+  { match: /HOBILITY|TREEHOUSE/, brandKey: 'hobility', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#312e81', bg2: '#1e1b4b', fg: '#f5d0fe', accent: '#c084fc', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'HOBILITY  •  TREEHOUSE', subTag: 'JAPANESE FIGURES & COLLECTIBLES', emblem: 'star', interiorKey: 'int-toys-bright' },
+  { match: /KEDAI PERMAINAN/, brandKey: 'kedai-permainan', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'KEDAI PERMAINAN  •  CRYSTAL', subTag: 'CONSOLE GAMING • NINTENDO SWITCH', emblem: 'bolt', interiorKey: 'int-toys-bright' },
+  { match: /MONSOON-ID|PLAYTIME/, brandKey: 'monsoon-playtime', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#065f46', bg2: '#064e3b', fg: '#fef08a', accent: '#34d399', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'MONSOON-ID  •  PLAYTIME', subTag: 'HAIR SALON & KIDS PLAYGROUND', emblem: 'star', interiorKey: 'int-toys-bright' },
+  { match: /TAISHI PLANET/, brandKey: 'taishi-planet', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#581c87', bg2: '#3b0764', fg: '#fef08a', accent: '#ec4899', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'TAISHI PLANET', subTag: 'UFO CLAW MACHINES & ARCADE', emblem: 'star', interiorKey: 'int-taishi' },
+  { match: /VRFUN|INFINIT WAR/, brandKey: 'vrfun', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#3b0764', bg2: '#1e0436', fg: '#67e8f9', accent: '#ec4899', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'VRFUN  •  INFINIT WAR VR', subTag: 'NEON VR SHOOTING ARENA', emblem: 'bolt', interiorKey: 'int-mission-q' },
+  { match: /THE LEDGE ART/, brandKey: 'the-ledge', facadeType: 'luxury-fashion', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#070b14', fg: '#f8fafc', accent: '#38bdf8', isLight: false, font: 'didone', weight: '700', tracking: 14, title: 'THE LEDGE ART GALLERY', subTag: 'CONTEMPORARY MALAYSIAN VISUAL ARTS', emblem: 'geo-bar', interiorKey: 'int-gallery' },
+  { match: /KAKISENI|LITTLE PALETTE/, brandKey: 'kakiseni', facadeType: 'luxury-fashion', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#f8fafc', accent: '#f59e0b', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: '', subTag: 'PERFORMING ARTS & STUDIO', emblem: 'star', interiorKey: 'int-gallery' },
+  { match: /PANORAMIC MRT/, brandKey: 'mrt-overlook', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#0f172a', bg2: '#082f49', fg: '#e0f2fe', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: '1UE 3F PANORAMIC OVERLOOK', subTag: 'MRT KAJANG LINE VIEWING DECK', emblem: 'globe', interiorKey: 'int-gallery' },
+
+  // --- BANKS, CONVENIENCE, TRANSIT & SCUBA ---
+  { match: /CIMB BANK/, brandKey: 'cimb', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#881313', fg: '#ffffff', accent: '#fecaca', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'CIMB BANK', subTag: 'RETAIL BANKING & ATM', emblem: 'shield', interiorKey: 'int-bank' },
+  { match: /AL-TAMIJ/, brandKey: 'altamij', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#14532d', bg2: '#0c351c', fg: '#dcfce7', accent: '#eab308', isLight: false, font: 'geometric', weight: '700', tracking: 8, title: 'AL-TAMIJ CURRENCY', subTag: 'LICENSED MONEY CHANGER', emblem: 'globe', interiorKey: 'int-bank' },
+  { match: /AEROLINE/, brandKey: 'aeroline', facadeType: 'minimalist-tech', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#1e293b', bg2: '#0f172a', fg: '#67e8f9', accent: '#22d3ee', isLight: false, font: 'geometric', weight: '800', tracking: 12, title: 'AEROLINE LOUNGE', subTag: 'SINGAPORE • PENANG LUXURY COACH', emblem: 'globe', interiorKey: 'int-bank' },
+  { match: /\bCU\b.*VARZO/, brandKey: 'cu-mart', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#581c87', bg2: '#3b0764', fg: '#bef264', accent: '#a3e635', isLight: false, font: 'geometric', weight: '900', tracking: 8, title: 'CU  •  VARZO', subTag: 'KOREAN CONVENIENCE • K-CORN DOGS', emblem: 'monogram-circ', interiorKey: 'int-pharmacy' },
+  { match: /SEALANTIS/, brandKey: 'sealantis', facadeType: 'sports-industrial', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#0c4a6e', bg2: '#072f48', fg: '#e0f2fe', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 10, title: 'SEALANTIS DIVE CENTRE', subTag: 'PADI 5★ INDOOR SCUBA POOL', emblem: 'wave', interiorKey: 'int-scuba' },
+
+  // --- DINING, JAPANESE, KOREAN, CAFÉS & BAKERIES ---
+  { match: /NANDO['’]?S/, brandKey: 'nandos', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#1f1814', bg2: '#120d0a', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'classicSerif', weight: '800', tracking: 8, title: "Nando's", subTag: 'FLAME-GRILLED PERI-PERI CHICKEN', emblem: 'flame', interiorKey: 'int-food-district' },
+  { match: /\bKFC\b/, brandKey: 'kfc', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#dc2626', bg2: '#991b1b', fg: '#ffffff', accent: '#ffffff', isLight: false, font: 'condensed', weight: '900', italic: true, tracking: 8, title: 'KFC', subTag: 'ORIGINAL RECIPE & HOT & SPICY', emblem: 'stripe-bar', interiorKey: 'int-food-district' },
+  { match: /TEXAS CHICKEN/, brandKey: 'texas-chicken', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#991b1b', bg2: '#7f1d1d', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'TEXAS CHICKEN', subTag: 'CRUNCHY CHICKEN & HONEY BISCUITS', emblem: 'star', interiorKey: 'int-food-district' },
+  { match: /BURGER KING/, brandKey: 'burger-king', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#7f1d1d', fg: '#fde047', accent: '#f97316', isLight: false, font: 'condensed', weight: '900', tracking: 6, title: 'BURGER KING', subTag: 'FLAME-GRILLED WHOPPER', emblem: 'crown', interiorKey: 'int-food-district' },
+  { match: /TGI FRIDAYS/, brandKey: 'tgi-fridays', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#b91c1c', bg2: '#7f1d1d', fg: '#ffffff', accent: '#f87171', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'TGI FRIDAYS', subTag: 'AMERICAN RIBS • GRILL & BAR', emblem: 'stripe-bar', interiorKey: 'int-chilis' },
+  { match: /CHILI['’]?S/, brandKey: 'chilis', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#881313', bg2: '#5c0c0c', fg: '#fef3c7', accent: '#22c55e', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: "Chili's GRILL & BAR", subTag: 'SIZZLING FAJITAS & BABY BACK RIBS', emblem: 'flame', interiorKey: 'int-chilis' },
+  { match: /MIXUE/, brandKey: 'mixue', facadeType: 'cafe-patisserie', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#dc2626', bg2: '#b91c1c', fg: '#ffffff', accent: '#fef08a', isLight: false, font: 'geometric', weight: '900', tracking: 6, title: 'MIXUE 蜜雪冰城', subTag: 'FRESH ICE CREAM & LEMONADE', emblem: 'crown', interiorKey: 'int-cafe' },
+  { match: /SECRET RECIPE/, brandKey: 'secret-recipe', facadeType: 'cafe-patisserie', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#9f1239', bg2: '#700c27', fg: '#ffe4e6', accent: '#fb7185', isLight: false, font: 'classicSerif', weight: '700', italic: true, tracking: 4, title: 'Secret Recipe', subTag: 'CAKES & CAFÉ • SINCE 1997', emblem: 'cup', interiorKey: 'int-cafe' },
+  { match: /LAVENDER/, brandKey: 'lavender-bakery', facadeType: 'cafe-patisserie', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#581c87', bg2: '#3b0764', fg: '#fef3c7', accent: '#d8b4fe', isLight: false, font: 'classicSerif', weight: '700', italic: true, tracking: 6, title: 'Lavender Bakery', subTag: 'EUROPEAN ARTISAN PATISSERIE', emblem: 'leaf', interiorKey: 'int-cafe' },
+  { match: /SUN MOULIN/, brandKey: 'sun-moulin', facadeType: 'cafe-patisserie', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#3b281c', bg2: '#241810', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 8, title: 'SUN MOULIN', subTag: 'HOKKAIDO ARTISAN BAKERY', emblem: 'cup', interiorKey: 'int-cafe' },
+  { match: /MIL TOAST|PARK['’]?S BAGELS|VERRONA HILLS|CHEEVIT CHEEVA/, brandKey: 'artisan-cafe', facadeType: 'cafe-patisserie', fasciaH: 1.28, materialStyle: 'custom-brand', bg: '#f4ede0', bg2: '#e6dbc8', fg: '#322014', accent: '#c98836', isLight: true, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'ARTISAN BAKERY & CAFÉ', emblem: 'cup', interiorKey: 'int-cafe' },
+  { match: /CÔNG CÀ PHÊ|GIGI/, brandKey: 'cong-caphe', facadeType: 'cafe-patisserie', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#164e36', bg2: '#0f3625', fg: '#fef08a', accent: '#4ade80', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: 'CỘNG CÀ PHÊ  •  GIGI', subTag: 'HANOI COCONUT COFFEE', emblem: 'star', interiorKey: 'int-cafe' },
+  { match: /FAMOUS AMOS|LA BOHEME|BAKER['’]?S COTTAGE|YONG SHENG|JUNGLE HOUSE|BEE CHENG HIANG|TRAPO.*INSIDE SCOOP/, brandKey: 'heritage-bakery', facadeType: 'cafe-patisserie', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#6b2c12', bg2: '#451a0a', fg: '#fef3c7', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'FRESHLY BAKED & CONFECTIONS', emblem: 'cup', interiorKey: 'int-cafe' },
+  { match: /RICH KOPITIAM|YAT YAT SENG|LITTLE CRAVINGS|WONG KOK|FOOD STREET|THE FISH BOWL|STUFF['’]?D/, brandKey: 'local-kopitiam', facadeType: 'cafe-patisserie', fasciaH: 1.32, materialStyle: 'custom-brand', bg: '#3f2210', bg2: '#261408', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'KOPITIAM & STREET EATS', emblem: 'bowl', interiorKey: 'int-teh-tarik' },
+  { match: /DIN TAI FUNG/, brandKey: 'dintaifung', facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#7f1d1d', bg2: '#571212', fg: '#fef2f2', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: '鼎泰豐  DIN TAI FUNG', subTag: '18-FOLD XIAO LONG BAO', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /PUTIEN/, brandKey: 'putien', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#132559', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'cjkSerif', weight: '800', tracking: 8, title: 'PUTIEN  莆田', subTag: 'MICHELIN-STARRED FUJIAN CUISINE', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /DRAGON-I|YUN NANS|TANYU|TAI ER|FEI FAN|GO UNIQUE|THE CHICKEN RICE SHOP|YGF MALATANG|WOK HEY/, brandKey: 'asian-dining', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#7c1a1a', bg2: '#4d0f0f', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'cjkSerif', weight: '800', tracking: 6, title: '', subTag: 'SIGNATURE ASIAN DINING', emblem: 'kanji-seal', interiorKey: 'int-dintaifung' },
+  { match: /SHABU-YO|SUSHIYA|MENYA MUSASHI|HOKKAIDO SUSHI|ROCKU YAKINIKU|MAKII MAKII/, brandKey: 'japanese-dining', facadeType: 'japanese-machiya', fasciaH: 1.36, materialStyle: 'hinoki-oak', bg: '#261a12', bg2: '#17100b', fg: '#fde68a', accent: '#ef4444', isLight: false, font: 'cjkSerif', weight: '800', tracking: 6, title: '', subTag: 'AUTHENTIC JAPANESE DINING', emblem: 'kanji-seal', interiorKey: 'int-ippudo' },
+  { match: /SHIN JJAJANG|HANSANG|WANG DONKAS/, brandKey: 'korean-dining', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#2c1816', bg2: '#1a0e0d', fg: '#fde68a', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 6, title: '', subTag: 'KOREAN KITCHEN & BBQ', emblem: 'bowl', interiorKey: 'int-food-district' },
+  { match: /EU YAN SANG|LO HONG KA/, brandKey: 'tcm-herbal', facadeType: 'modern-bistro', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#5c260a', bg2: '#3a1604', fg: '#fde047', accent: '#eab308', isLight: false, font: 'cjkSerif', weight: '700', tracking: 8, title: '', subTag: 'IMPERIAL WELLNESS & HERBALS', emblem: 'kanji-seal', interiorKey: 'int-apothecary' },
+  { match: /WONDERMAMA|CILI KAMPUNG|PHỞ VIETZ|ABSOLUTE THAI|JATUJAK|PASAR EATAI|NOODLE SHACK|FISH & CO|HOTPOT KITCHEN|RESTORAN JOHNNY|ASTONS|MARCO|ANTE|RICHEESE|TAI HO JIAK/, brandKey: 'signature-bistro', facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#2b1e16', bg2: '#19110c', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'classicSerif', weight: '700', tracking: 6, title: '', subTag: 'SPECIALTY RESTAURANT', emblem: 'flame', interiorKey: 'int-food-district' }
+];
+
+/**
  * 100% Real 1 Utama Shopping Centre Brand Architectural Profile Classifier
- * Assigns each of the 168 real 1U tenants its genuine facade architecture, bespoke brand font family,
+ * Assigns each of the 282 real 1U tenants its genuine facade architecture, bespoke brand font family,
  * tracking, variable architectural fascia height, material finish, and vector emblem!
  */
 export function getStoreBrandProfile(store) {
   const uName = (store.name || '').toUpperCase();
   const st = store.style || 'fashion';
-
-  // Authentic real-world retail & luxury brand typography families (ZERO cheesy sci-fi or random hipster fonts!)
-  const FONTS = {
-    didone: '"Bodoni Moda", "Playfair Display", "Georgia", serif',
-    classicSerif: '"Cormorant Garamond", "Playfair Display", "Georgia", serif',
-    geometric: '"Jost", "Montserrat", "Century Gothic", sans-serif',
-    condensed: '"Oswald", "Arial Narrow", sans-serif',
-    cleanSans: '"Montserrat", "Plus Jakarta Sans", sans-serif',
-    cjkSerif: '"Noto Serif JP", "Yu Mincho", "Georgia", serif'
-  };
+  const FONTS = BRAND_FONTS;
 
   if (uName.includes('MR. D.I.Y') || uName.includes('MR.D.I.Y') || uName.includes('MR DIY')) {
     return { facadeType: 'open-market', fasciaH: 1.42, materialStyle: 'mrdiy-black-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 4, displayTitle: 'MR.D.I.Y.', brandKey: 'mr-diy', isLight: false };
@@ -2770,7 +2944,7 @@ export function getStoreBrandProfile(store) {
   if (uName.includes('FOOD DISTRICT')) {
     return { facadeType: 'modern-bistro', fasciaH: 1.46, materialStyle: 'food-district-subway', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 10, displayTitle: 'FOOD DISTRICT', brandKey: 'food-district', isLight: true };
   }
-  if (uName.includes('HAIDILAO')) {
+  if (uName.includes('HAIDILAO') || uName.includes('HAI DI LAO')) {
     return { facadeType: 'modern-bistro', fasciaH: 1.40, materialStyle: 'crimson-lacquer', fontFamily: FONTS.cjkSerif, weight: '800', italic: false, tracking: 6, displayTitle: '海底捞 HAIDILAO', brandKey: 'haidilao', isLight: false };
   }
   if (uName.includes('STARBUCKS')) {
@@ -2901,6 +3075,9 @@ export function getStoreBrandProfile(store) {
   if (uName.includes('MAYBANK')) {
     return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'maybank-yellow', fontFamily: FONTS.geometric, weight: '800', italic: false, tracking: 8, displayTitle: 'Maybank  •  LAMY', brandKey: 'maybank', isLight: true };
   }
+  if (uName.includes('LULULEMON')) {
+    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'custom-brand', bg: '#881337', bg2: '#5c0c24', fg: '#ffffff', accent: '#fb7185', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 10, displayTitle: 'lululemon  •  PURAS', subTag: 'TECHNICAL YOGA & AROMATHERAPY', emblem: 'wave', brandKey: 'lululemon', isLight: false, interiorKey: 'int-apparel-dark' };
+  }
   if (uName.includes('ZARA')) {
     return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'zara-champagne-taupe', fontFamily: FONTS.didone, weight: '700', italic: false, tracking: 6, displayTitle: 'ZARA', brandKey: 'zara', isLight: false };
   }
@@ -2938,70 +3115,52 @@ export function getStoreBrandProfile(store) {
   // Clean brand-name normalization for multi-tenant slots (strip ugly parenthetical directory tags!)
   const cleanTitle = (store.name || '').replace(/\s*\([^)]*\)/g, '').trim();
 
-  if (st === 'japanese' || uName.includes('SUSHI') || uName.includes('SHABU') || uName.includes('MENYA')) {
-    return { facadeType: 'japanese-machiya', fasciaH: 1.36, materialStyle: 'hinoki-oak', fontFamily: FONTS.cjkSerif, weight: '800', italic: false, tracking: 6, displayTitle: cleanTitle, brandKey: 'japanese', isLight: false };
+  // Match against 100%-coverage STORE_BRAND_STYLES registry (every real 1U tenant across LG..5F!)
+  for (const rule of STORE_BRAND_STYLES) {
+    if (rule.match.test(uName)) {
+      return {
+        facadeType: rule.facadeType,
+        fasciaH: rule.fasciaH || 1.26,
+        materialStyle: rule.materialStyle || 'custom-brand',
+        fontFamily: FONTS[rule.font] || FONTS.geometric,
+        weight: rule.weight || '700',
+        italic: Boolean(rule.italic),
+        tracking: rule.tracking ?? 8,
+        displayTitle: rule.title || cleanTitle,
+        subTag: rule.subTag || '',
+        brandKey: rule.brandKey,
+        emblem: rule.emblem || 'geo-bar',
+        bg: rule.bg || store.brandBg || '#18181b',
+        bg2: rule.bg2 || rule.bg || store.brandBg || '#0f1014',
+        fg: rule.fg || store.brandFg || '#ffffff',
+        accent: rule.accent || store.accent || '#d4af37',
+        isLight: Boolean(rule.isLight),
+        interiorKey: rule.interiorKey || ''
+      };
+    }
   }
-  if (uName.includes('DIN TAI FUNG') || uName.includes('PUTIEN') || uName.includes('FWF')) {
-    return { facadeType: 'modern-bistro', fasciaH: 1.38, materialStyle: 'crimson-lacquer', fontFamily: FONTS.cjkSerif, weight: '800', italic: false, tracking: 6, displayTitle: cleanTitle, brandKey: 'asian-fine', isLight: false };
-  }
-  if (uName.includes('MINISO')) {
-    return { facadeType: 'open-market', fasciaH: 1.24, materialStyle: 'pure-white-red', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 10, displayTitle: 'MINISO', brandKey: 'miniso', isLight: true };
-  }
-  if (uName.includes('ORIENTAL KOPI')) {
-    return { facadeType: 'cafe-patisserie', fasciaH: 1.32, materialStyle: 'emerald-gold-heritage', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 6, displayTitle: 'ORIENTAL KOPI  华阳', brandKey: 'oriental-kopi', isLight: false };
-  }
-  if (uName.includes('LULULEMON')) {
-    return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '500', italic: false, tracking: 8, displayTitle: 'lululemon', brandKey: 'lululemon', isLight: false };
-  }
-  if (uName === 'ZARA' || uName.startsWith('ZARA ')) {
-    return { facadeType: 'luxury-fashion', fasciaH: 1.22, materialStyle: 'ivory-limestone', fontFamily: FONTS.didone, weight: '700', italic: false, tracking: 4, displayTitle: 'ZARA', brandKey: 'zara', isLight: true };
-  }
-  if (
-    uName.includes('LAVENDER') ||
-    uName.includes('CHAGEE') ||
-    uName.includes('BEUTEA') ||
-    uName.includes('FAMOUS AMOS') ||
-    uName.includes('RICH KOPITIAM') ||
-    st === 'bakery' ||
-    st === 'kopitiam'
-  ) {
-    return { facadeType: 'cafe-patisserie', fasciaH: 1.28, materialStyle: 'warm-cream-plaster', fontFamily: FONTS.classicSerif, weight: '700', italic: false, tracking: 6, displayTitle: cleanTitle, brandKey: 'cafe', isLight: true };
-  }
-  if (
-    uName.includes('SALOMON') ||
-    uName.includes('PUMA') ||
-    uName.includes('SPORTS DIRECT') ||
-    uName.includes('DECATHLON') ||
-    st === 'sports'
-  ) {
-    return { facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'raw-concrete', fontFamily: FONTS.condensed, weight: '700', italic: false, tracking: 8, displayTitle: cleanTitle, brandKey: 'sports', isLight: false };
-  }
-  if (
-    uName.includes('BONIA') ||
-    uName.includes('COACH') ||
-    uName.includes('LANCÔME') ||
-    uName.includes('H&M') ||
-    uName.includes('PADINI') ||
-    st === 'luxury' ||
-    st === 'beauty'
-  ) {
-    const isDarkLux = uName.includes('PADINI') || uName.includes('COACH');
-    return { facadeType: 'luxury-fashion', fasciaH: 1.16, materialStyle: isDarkLux ? 'obsidian-stone' : 'ivory-limestone', fontFamily: isDarkLux ? FONTS.geometric : FONTS.didone, weight: '600', italic: false, tracking: 14, displayTitle: cleanTitle, brandKey: 'luxury', isLight: !isDarkLux };
-  }
-  if (st === 'cinema' || st === 'arcade' || st === 'rollerwa' || st === 'skydiving' || st === 'toys') {
-    return { facadeType: 'entertainment-marquee', fasciaH: 1.48, materialStyle: 'velvet-navy', fontFamily: FONTS.condensed, weight: '700', italic: false, tracking: 8, displayTitle: cleanTitle, brandKey: 'entertainment', isLight: false };
-  }
-  if (st === 'tech' || st === 'furniture' || st === 'kitchenware') {
-    const isLightTech = uName.includes('NITORI') || st === 'kitchenware';
-    return { facadeType: 'minimalist-tech', fasciaH: 1.18, materialStyle: isLightTech ? 'brushed-silver' : 'obsidian-stone', fontFamily: FONTS.geometric, weight: '600', italic: false, tracking: 10, displayTitle: cleanTitle, brandKey: 'tech', isLight: isLightTech };
-  }
-  if (st === 'supermarket') {
-    return { facadeType: 'open-market', fasciaH: 1.42, materialStyle: 'satin-white-emerald', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 6, displayTitle: cleanTitle, brandKey: 'market', isLight: true };
-  }
-  if (st === 'dining' || st === 'korean' || st === 'wok' || st === 'herbal') {
-    return { facadeType: 'modern-bistro', fasciaH: 1.36, materialStyle: 'walnut-terracotta', fontFamily: FONTS.geometric, weight: '600', italic: false, tracking: 7, displayTitle: cleanTitle, brandKey: 'bistro', isLight: false };
-  }
-  return { facadeType: 'luxury-fashion', fasciaH: 1.20, materialStyle: 'ivory-limestone', fontFamily: FONTS.didone, weight: '600', italic: false, tracking: 10, displayTitle: cleanTitle, brandKey: 'default', isLight: true };
+
+  // Dynamic fallback using store's own authentic brand palette (zero unthemed defaults!)
+  const isLightCustom = isHexLight(store.brandBg || '#18181b');
+  return {
+    facadeType: st === 'dining' || st === 'korean' ? 'modern-bistro' : st === 'tech' || st === 'furniture' ? 'minimalist-tech' : st === 'sports' ? 'sports-industrial' : 'luxury-fashion',
+    fasciaH: 1.26,
+    materialStyle: 'custom-brand',
+    fontFamily: isLightCustom ? FONTS.didone : FONTS.geometric,
+    weight: '700',
+    italic: false,
+    tracking: 10,
+    displayTitle: cleanTitle,
+    subTag: '',
+    brandKey: `custom-${(store.lot || '1u').toLowerCase()}`,
+    emblem: 'geo-bar',
+    bg: store.brandBg || '#18181b',
+    bg2: store.brandBg || '#111318',
+    fg: store.brandFg || (isLightCustom ? '#181512' : '#ffffff'),
+    accent: store.accent || '#d4af37',
+    isLight: isLightCustom,
+    interiorKey: st === 'fashion' ? (isLightCustom ? 'int-apparel-light' : 'int-apparel-dark') : ''
+  };
 }
 
 /**
@@ -3935,6 +4094,165 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       ctx.fillRect(0, h - 5, w, 5);
       fgCol = '#ffffff';
       emissiveTextCol = '#e6f4ff';
+      break;
+    }
+    case 'nitori-teal': {
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#0f9f90');
+      bg.addColorStop(0.5, '#0d9488');
+      bg.addColorStop(1, '#0b7a6f');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, h - 7, w, 7);
+      ctxE.fillStyle = 'rgba(13, 148, 136, 0.36)';
+      ctxE.fillRect(0, 0, w, h);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'iora-alabaster': {
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#f7f2ea');
+      bg.addColorStop(0.5, '#f2ebe0');
+      bg.addColorStop(1, '#e6dccd');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#8b6a44';
+      ctx.fillRect(0, h - 5, w, 5);
+      fgCol = '#181512';
+      drawEmissive = false;
+      break;
+    }
+    case 'melvita-hooga-split': {
+      // Split dual-concept fascia: Left Melvita warm Provence honey-cream (#f6eed8), Right Hooga Nordic warm charcoal (#32302e)
+      const gL = ctx.createLinearGradient(0, 0, 0, h);
+      gL.addColorStop(0, '#faf3e0');
+      gL.addColorStop(1, '#ede1c4');
+      ctx.fillStyle = gL;
+      ctx.fillRect(0, 0, w * 0.5, h);
+      const gR = ctx.createLinearGradient(0, 0, 0, h);
+      gR.addColorStop(0, '#3a3836');
+      gR.addColorStop(1, '#262423');
+      ctx.fillStyle = gR;
+      ctx.fillRect(w * 0.5, 0, w * 0.5, h);
+      ctx.fillStyle = '#b48a3e';
+      ctx.fillRect(w * 0.5 - 3, 14, 6, h - 28);
+      ctx.fillStyle = '#eab308';
+      ctx.fillRect(0, h - 6, w * 0.5, 6);
+      ctx.fillStyle = '#d6cfc2';
+      ctx.fillRect(w * 0.5, h - 6, w * 0.5, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#fef3c7';
+      break;
+    }
+    case 'neals-cobalt': {
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#1a4485');
+      bg.addColorStop(0.5, '#15376b');
+      bg.addColorStop(1, '#0e264d');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(147, 197, 253, 0.45)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#93c5fd';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#e0f2fe';
+      break;
+    }
+    case 'giordano-slate': {
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#20293a');
+      bg.addColorStop(0.5, '#18202e');
+      bg.addColorStop(1, '#101520');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(0, h - 6, w, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'aldo-naelofar-split': {
+      // Split dual-concept fascia: Left crisp alabaster-ivory ALDO, Right soft champagne-blush NAELOFAR
+      ctx.fillStyle = '#f6f2ec';
+      ctx.fillRect(0, 0, w * 0.5, h);
+      ctx.fillStyle = '#f5e6e8';
+      ctx.fillRect(w * 0.5, 0, w * 0.5, h);
+      ctx.fillStyle = '#b4944e';
+      ctx.fillRect(w * 0.5 - 2, 16, 4, h - 32);
+      ctx.fillStyle = '#18181b';
+      ctx.fillRect(0, h - 6, w * 0.5, 6);
+      ctx.fillStyle = '#c99383';
+      ctx.fillRect(w * 0.5, h - 6, w * 0.5, 6);
+      fgCol = '#181512';
+      drawEmissive = false;
+      break;
+    }
+    case 'samsonite-tomaz-split': {
+      // Split dual-concept fascia: Left deep Samsonite midnight navy (#0c1e3a), Right Tomaz royal espresso-black (#1a1612)
+      const gL = ctx.createLinearGradient(0, 0, 0, h);
+      gL.addColorStop(0, '#102a4e');
+      gL.addColorStop(1, '#091830');
+      ctx.fillStyle = gL;
+      ctx.fillRect(0, 0, w * 0.52, h);
+      const gR = ctx.createLinearGradient(0, 0, 0, h);
+      gR.addColorStop(0, '#211c17');
+      gR.addColorStop(1, '#13100d');
+      ctx.fillStyle = gR;
+      ctx.fillRect(w * 0.52, 0, w * 0.48, h);
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(w * 0.52 - 2, 14, 4, h - 28);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(0, h - 6, w * 0.52, 6);
+      ctx.fillStyle = '#d4af37';
+      ctx.fillRect(w * 0.52, h - 6, w * 0.48, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'mission-q-neon': {
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#161233');
+      bg.addColorStop(0.5, '#0e0b22');
+      bg.addColorStop(1, '#070512');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(8, 8, w - 16, h - 16);
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(0, h - 6, w, 6);
+      ctxE.fillStyle = '#f43f5e';
+      ctxE.fillRect(0, h - 6, w, 6);
+      fgCol = '#fef08a';
+      emissiveTextCol = '#fef08a';
+      break;
+    }
+    case 'custom-brand': {
+      const bg1 = prof.bg || store.brandBg || '#18181b';
+      const bg2 = prof.bg2 || bg1;
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, bg1);
+      bg.addColorStop(1, bg2);
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      // Subtle horizontal architectural reveal & glowing accent bottom lip
+      ctx.strokeStyle = prof.isLight ? 'rgba(24,20,16,0.12)' : 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(8, 8, w - 16, h - 16);
+      const acc = prof.accent || store.accent || '#d4af37';
+      ctx.fillStyle = acc;
+      ctx.fillRect(0, h - 6, w, 6);
+      if (!prof.isLight) {
+        ctxE.fillStyle = acc;
+        ctxE.fillRect(0, h - 6, w, 6);
+      }
+      fgCol = prof.fg || (prof.isLight ? '#181512' : '#ffffff');
+      emissiveTextCol = prof.isLight ? fgCol : '#ffffff';
+      drawEmissive = !prof.isLight;
       break;
     }
     default: {
@@ -5039,26 +5357,405 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
         break;
       }
 
+      case 'nitori': {
+        // Photo-matched 1F F101 NITORI: White square Japanese ニトリ emblem + bold white NITORI & HOME FURNISHINGS!
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fillRect(-310, 40, 108, 108);
+        targetCtx.fillStyle = isEmissive ? '#000000' : '#0d9488';
+        targetCtx.font = '900 32px "Noto Serif JP", "Jost", sans-serif';
+        targetCtx.fillText('ニトリ', -256, 88);
+        targetCtx.font = '800 22px "Jost", sans-serif';
+        targetCtx.fillText('NITORI', -256, 128);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'NITORI  ニトリ', 54, 102, 460, 68, '800', '"Jost", sans-serif', 8);
+        targetCtx.fillStyle = isEmissive ? '#99f6e4' : '#ccfbf1';
+        fillAutoFitText(targetCtx, 'JAPAN HOME FURNISHINGS  •  F101', 54, 148, 460, 22, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'iora': {
+        // Photo-matched 1F F139 iORA: Minimalist warm alabaster fascia with crisp matte-black serif iORA & bronze vertical accent!
+        targetCtx.fillStyle = '#8b6a44';
+        targetCtx.fillRect(-168, 52, 5, 88);
+        targetCtx.fillStyle = '#181512';
+        fillAutoFitText(targetCtx, 'iORA', 12, 118, 280, 82, '600', '"Bodoni Moda", "Playfair Display", serif', 18);
+        targetCtx.fillStyle = '#6b5335';
+        fillAutoFitText(targetCtx, 'SINGAPORE  •  TAILORED KNITS', 12, 154, 340, 18, '600', '"Jost", sans-serif', 8);
+        break;
+      }
+
+      case 'melvita-hooga': {
+        // Photo-matched 1F F140 MELVITA • HOOGA Split Dual-Concept Fascia!
+        if (!isEmissive) {
+          // Left: Golden hexagonal honeycomb cell cluster + organic green Melvita serif
+          const hx = -325;
+          const hy = 94;
+          targetCtx.strokeStyle = '#d97706';
+          targetCtx.fillStyle = '#fbbf24';
+          targetCtx.lineWidth = 3.5;
+          for (const [ox, oy] of [[0, -16], [-15, 10], [15, 10]]) {
+            targetCtx.beginPath();
+            for (let s = 0; s < 6; s++) {
+              const a = (s * Math.PI) / 3 + Math.PI / 6;
+              const px = hx + ox + Math.cos(a) * 14;
+              const py = hy + oy + Math.sin(a) * 14;
+              if (s === 0) targetCtx.moveTo(px, py);
+              else targetCtx.lineTo(px, py);
+            }
+            targetCtx.closePath();
+            targetCtx.fill();
+            targetCtx.stroke();
+          }
+          targetCtx.fillStyle = '#14532d';
+          fillAutoFitText(targetCtx, 'Melvita', -155, 108, 230, 62, '700', '"Cormorant Garamond", serif', 4, true);
+          targetCtx.fillStyle = '#92400e';
+          fillAutoFitText(targetCtx, 'ORGANIC BEAUTY • FRANCE', -155, 146, 230, 17, '700', '"Jost", sans-serif', 3);
+        }
+        // Right: Nordic gable-roof emblem + crisp warm-ivory HOOGA serif
+        targetCtx.strokeStyle = '#fde68a';
+        targetCtx.lineWidth = 4;
+        targetCtx.beginPath();
+        targetCtx.moveTo(64, 104);
+        targetCtx.lineTo(90, 68);
+        targetCtx.lineTo(116, 104);
+        targetCtx.closePath();
+        targetCtx.stroke();
+        targetCtx.fillStyle = isEmissive ? '#fef3c7' : '#ffffff';
+        fillAutoFitText(targetCtx, 'HOOGA', 252, 108, 240, 62, '700', '"Cormorant Garamond", serif', 14);
+        targetCtx.fillStyle = '#fde68a';
+        fillAutoFitText(targetCtx, 'SCANDINAVIAN HOME LIVING', 240, 146, 260, 17, '600', '"Jost", sans-serif', 4);
+        break;
+      }
+
+      case 'neals-yard': {
+        // Photo-matched 1F F142 NEAL'S YARD REMEDIES: Circular white Apothecary Tree-of-Life seal + classic serif logotype!
+        const tx = -310;
+        const ty = 96;
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 3.5;
+        targetCtx.beginPath();
+        targetCtx.arc(tx, ty, 38, 0, Math.PI * 2);
+        targetCtx.stroke();
+        // Tree crown & roots inside apothecary seal
+        targetCtx.fillStyle = '#93c5fd';
+        targetCtx.beginPath();
+        targetCtx.arc(tx, ty - 10, 18, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fillRect(tx - 3, ty - 4, 6, 28);
+        for (const [bx, by] of [[-12, -14], [12, -14], [0, -22], [-10, 18], [10, 18]]) {
+          targetCtx.beginPath();
+          targetCtx.arc(tx + bx, ty + by, 5, 0, Math.PI * 2);
+          targetCtx.fill();
+        }
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, "NEAL'S YARD REMEDIES", 48, 102, 510, 52, '700', '"Cormorant Garamond", serif', 8);
+        targetCtx.fillStyle = '#bfdbfe';
+        fillAutoFitText(targetCtx, 'COVENT GARDEN  •  ORGANIC APOTHECARY', 48, 146, 480, 20, '600', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'giordano': {
+        // Photo-matched 1F F107 GIORDANO: Red square G badge + bold geometric white GIORDANO!
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fillRect(-268, 52, 82, 82);
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '800 48px "Jost", sans-serif';
+        targetCtx.fillText('G', -227, 110);
+        fillAutoFitText(targetCtx, 'GIORDANO', 46, 114, 410, 70, '800', '"Jost", sans-serif', 14);
+        break;
+      }
+
+      case 'aldo-naelofar': {
+        // Photo-matched G340-G341 ALDO • NAELOFAR Split Dual-Concept Fascia!
+        targetCtx.fillStyle = '#111827';
+        targetCtx.fillRect(-338, 54, 72, 78);
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '900 42px "Jost", sans-serif';
+        targetCtx.fillText('A', -302, 108);
+        targetCtx.fillStyle = '#111827';
+        fillAutoFitText(targetCtx, 'ALDO', -142, 112, 220, 72, '800', '"Jost", sans-serif', 14);
+        targetCtx.fillStyle = '#785c38';
+        fillAutoFitText(targetCtx, 'MONTREAL • FOOTWEAR', -165, 148, 250, 17, '700', '"Jost", sans-serif', 4);
+        // Right: Naelofar rose-gold floral crescent + elegant serif NAELOFAR
+        targetCtx.strokeStyle = '#9d4e5a';
+        targetCtx.lineWidth = 4;
+        targetCtx.beginPath();
+        targetCtx.arc(72, 92, 26, 0.3, Math.PI * 1.65);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#5c232c';
+        fillAutoFitText(targetCtx, 'NAELOFAR', 238, 108, 250, 56, '700', '"Cormorant Garamond", serif', 10);
+        targetCtx.fillStyle = '#8c4a54';
+        fillAutoFitText(targetCtx, 'MODEST HIJAB COUTURE', 238, 148, 250, 17, '700', '"Jost", sans-serif', 4);
+        break;
+      }
+
+      case 'samsonite-tomaz': {
+        // Photo-matched 1F F333 SAMSONITE • TOMAZ Split Dual-Concept Fascia!
+        // Left: Samsonite 4-petal electric-blue swirl ring + crisp white Samsonite
+        const sx = -322;
+        const sy = 94;
+        targetCtx.fillStyle = '#38bdf8';
+        for (let k = 0; k < 4; k++) {
+          targetCtx.save();
+          targetCtx.translate(sx, sy);
+          targetCtx.rotate((k * Math.PI) / 2 + 0.35);
+          targetCtx.beginPath();
+          targetCtx.ellipse(16, 0, 14, 7, 0.4, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.restore();
+        }
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'Samsonite', -132, 108, 270, 56, '700', '"Jost", sans-serif', 4);
+        targetCtx.fillStyle = '#7dd3fc';
+        fillAutoFitText(targetCtx, 'LUXURY TRAVEL LUGGAGE', -142, 146, 270, 17, '700', '"Jost", sans-serif', 4);
+        // Right: Tomaz golden crown crest + serif TOMAZ
+        const cx = 78;
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.beginPath();
+        targetCtx.moveTo(cx - 22, 110);
+        targetCtx.lineTo(cx - 26, 76);
+        targetCtx.lineTo(cx - 10, 92);
+        targetCtx.lineTo(cx, 70);
+        targetCtx.lineTo(cx + 10, 92);
+        targetCtx.lineTo(cx + 26, 76);
+        targetCtx.lineTo(cx + 22, 110);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = isEmissive ? '#fde68a' : '#ffffff';
+        fillAutoFitText(targetCtx, 'TOMAZ', 238, 108, 230, 58, '700', '"Cormorant Garamond", serif', 12);
+        targetCtx.fillStyle = '#facc15';
+        fillAutoFitText(targetCtx, 'HERITAGE SHOES & SUITS', 232, 146, 240, 17, '700', '"Jost", sans-serif', 4);
+        break;
+      }
+
+      case 'mission-q': {
+        // Photo-matched 1F F625 MISSION Q: Glowing neon-gold escape-room keyhole crest + bold MISSION-Q!
+        const kx = -245;
+        const ky = 92;
+        targetCtx.strokeStyle = '#facc15';
+        targetCtx.lineWidth = 5;
+        targetCtx.beginPath();
+        targetCtx.arc(kx, ky, 34, 0, Math.PI * 2);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#f43f5e';
+        targetCtx.beginPath();
+        targetCtx.arc(kx, ky - 8, 11, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.beginPath();
+        targetCtx.moveTo(kx - 6, ky - 2);
+        targetCtx.lineTo(kx + 6, ky - 2);
+        targetCtx.lineTo(kx + 11, ky + 20);
+        targetCtx.lineTo(kx - 11, ky + 20);
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = '#fef08a';
+        fillAutoFitText(targetCtx, 'MISSION - Q', 42, 102, 410, 68, '900', '"Oswald", sans-serif', 10);
+        targetCtx.fillStyle = '#fb7185';
+        fillAutoFitText(targetCtx, 'REAL-LIFE ESCAPE ROOM  •  F625', 42, 148, 410, 22, '800', '"Jost", sans-serif', 6);
+        break;
+      }
+
       default: {
-        // Pure clean real-mall architectural signage — ONLY the crisp brand wordmark, ZERO fake subtitles!
+        // Universal Bespoke Brand Renderer: Draws each store's authentic vector emblem + custom brand typography + subtle subTag!
         if (!isEmissive && !prof.isLight) {
           targetCtx.shadowColor = 'rgba(0,0,0,0.55)';
           targetCtx.shadowBlur = 8;
           targetCtx.shadowOffsetY = 3;
         }
-        targetCtx.fillStyle = isEmissive ? emissiveTextCol : fgCol;
+        const emb = prof.emblem || 'geo-bar';
+        const accCol = isEmissive ? emissiveTextCol : (prof.accent || store.accent || fgCol);
+        const textCol = isEmissive ? emissiveTextCol : fgCol;
+        const hasSub = Boolean(prof.subTag);
+        const mainY = hasSub ? 98 : 114;
+
+        // Draw left-side bespoke vector brand emblem badge
+        const ex = -Math.min(maxW * 0.39, 285);
+        const ey = hasSub ? 88 : 96;
+        targetCtx.save();
+        targetCtx.translate(ex, ey);
+        targetCtx.fillStyle = accCol;
+        targetCtx.strokeStyle = accCol;
+        targetCtx.lineWidth = 4;
+
+        if (emb === 'crown') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(-24, 18);
+          targetCtx.lineTo(-28, -14);
+          targetCtx.lineTo(-10, 2);
+          targetCtx.lineTo(0, -20);
+          targetCtx.lineTo(10, 2);
+          targetCtx.lineTo(28, -14);
+          targetCtx.lineTo(24, 18);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'diamond') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(0, -28);
+          targetCtx.lineTo(26, 0);
+          targetCtx.lineTo(0, 28);
+          targetCtx.lineTo(-26, 0);
+          targetCtx.closePath();
+          targetCtx.stroke();
+          targetCtx.beginPath();
+          targetCtx.moveTo(0, -14);
+          targetCtx.lineTo(13, 0);
+          targetCtx.lineTo(0, 14);
+          targetCtx.lineTo(-13, 0);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'leaf' || emb === 'cobalt-tree') {
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, 26, 0, Math.PI * 2);
+          targetCtx.stroke();
+          targetCtx.beginPath();
+          targetCtx.ellipse(-5, -2, 13, 7, -0.5, 0, Math.PI * 2);
+          targetCtx.ellipse(6, 4, 12, 6, 0.5, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else if (emb === 'star') {
+          targetCtx.beginPath();
+          for (let i = 0; i < 10; i++) {
+            const r = i % 2 === 0 ? 26 : 11;
+            const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+            if (i === 0) targetCtx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+            else targetCtx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+          }
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'bolt') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(6, -26);
+          targetCtx.lineTo(-16, 4);
+          targetCtx.lineTo(-2, 4);
+          targetCtx.lineTo(-8, 26);
+          targetCtx.lineTo(16, -4);
+          targetCtx.lineTo(2, -4);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'shoe') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(-24, -12);
+          targetCtx.lineTo(-8, -12);
+          targetCtx.lineTo(6, 4);
+          targetCtx.lineTo(26, 6);
+          targetCtx.lineTo(26, 16);
+          targetCtx.lineTo(-24, 16);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'suitcase') {
+          targetCtx.strokeRect(-18, -14, 36, 32);
+          targetCtx.strokeRect(-8, -24, 16, 10);
+          targetCtx.fillRect(-10, -8, 4, 20);
+          targetCtx.fillRect(6, -8, 4, 20);
+        } else if (emb === 'flame') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(0, -28);
+          targetCtx.quadraticCurveTo(24, -4, 14, 22);
+          targetCtx.quadraticCurveTo(0, 30, -14, 22);
+          targetCtx.quadraticCurveTo(-24, -4, 0, -28);
+          targetCtx.fill();
+        } else if (emb === 'bowl' || emb === 'cup') {
+          targetCtx.beginPath();
+          targetCtx.arc(0, -2, 22, 0, Math.PI);
+          targetCtx.closePath();
+          targetCtx.fill();
+          targetCtx.fillRect(-24, -6, 48, 5);
+        } else if (emb === 'watch' || emb === 'ring' || emb === 'globe') {
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, 24, 0, Math.PI * 2);
+          targetCtx.stroke();
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, 10, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else if (emb === 'heart') {
+          targetCtx.beginPath();
+          targetCtx.arc(-9, -6, 11, Math.PI, 0);
+          targetCtx.arc(9, -6, 11, Math.PI, 0);
+          targetCtx.lineTo(0, 22);
+          targetCtx.closePath();
+          targetCtx.fill();
+        } else if (emb === 'wave' || emb === 'swirl') {
+          for (let r = -1; r <= 1; r++) {
+            targetCtx.beginPath();
+            targetCtx.moveTo(-24, r * 11);
+            targetCtx.quadraticCurveTo(-12, r * 11 - 10, 0, r * 11);
+            targetCtx.quadraticCurveTo(12, r * 11 + 10, 24, r * 11);
+            targetCtx.stroke();
+          }
+        } else if (emb === 'shield') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(-20, -22);
+          targetCtx.lineTo(20, -22);
+          targetCtx.lineTo(20, 2);
+          targetCtx.lineTo(0, 24);
+          targetCtx.lineTo(-20, 2);
+          targetCtx.closePath();
+          targetCtx.stroke();
+          targetCtx.fillRect(-8, -10, 16, 16);
+        } else if (emb === 'cross') {
+          targetCtx.fillRect(-7, -22, 14, 44);
+          targetCtx.fillRect(-22, -7, 44, 14);
+        } else if (emb === 'brick' || emb === 'red-box' || emb === 'monogram-sq') {
+          targetCtx.fillRect(-26, -26, 52, 52);
+          targetCtx.fillStyle = isEmissive ? '#000000' : (prof.bg || '#111827');
+          targetCtx.font = '900 28px "Jost", sans-serif';
+          targetCtx.fillText((prof.displayTitle || '1U').slice(0, 2).toUpperCase(), 0, 10);
+        } else if (emb === 'kanji-seal') {
+          targetCtx.fillStyle = '#dc2626';
+          targetCtx.fillRect(-26, -26, 52, 52);
+          targetCtx.strokeStyle = '#fde68a';
+          targetCtx.lineWidth = 2.5;
+          targetCtx.strokeRect(-21, -21, 42, 42);
+          targetCtx.fillStyle = '#fef08a';
+          targetCtx.font = '800 26px "Noto Serif JP", serif';
+          targetCtx.fillText('名店', 0, 9);
+        } else if (emb === 'music' || emb === 'paw') {
+          targetCtx.beginPath();
+          targetCtx.arc(0, 4, 14, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.beginPath();
+          targetCtx.arc(-14, -12, 6, 0, Math.PI * 2);
+          targetCtx.arc(0, -18, 6, 0, Math.PI * 2);
+          targetCtx.arc(14, -12, 6, 0, Math.PI * 2);
+          targetCtx.fill();
+        } else {
+          // 'geo-bar' / 'monogram-circ' / 'stripe-bar'
+          targetCtx.beginPath();
+          targetCtx.arc(0, 0, 25, 0, Math.PI * 2);
+          targetCtx.stroke();
+          targetCtx.font = '800 24px "Jost", sans-serif';
+          targetCtx.fillText((prof.displayTitle || '1U')[0], 0, 8);
+        }
+        targetCtx.restore();
+
+        targetCtx.fillStyle = textCol;
         fillAutoFitText(
           targetCtx,
           prof.displayTitle,
-          0,
-          116,
-          maxW * 0.86,
-          prof.facadeType === 'luxury-fashion' ? 60 : 66,
+          34,
+          mainY,
+          maxW * 0.74,
+          prof.facadeType === 'luxury-fashion' ? 56 : 62,
           prof.weight,
           prof.fontFamily,
           prof.tracking,
           prof.italic
         );
+        if (hasSub) {
+          targetCtx.fillStyle = accCol;
+          fillAutoFitText(
+            targetCtx,
+            prof.subTag,
+            34,
+            146,
+            maxW * 0.72,
+            20,
+            '700',
+            '"Jost", sans-serif',
+            5,
+            false
+          );
+        }
         targetCtx.shadowBlur = 0;
         targetCtx.shadowOffsetY = 0;
         break;
@@ -5077,6 +5774,7 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
   fasciaCache.set(store.id, out);
   return out;
 }
+export const createStorefrontSignTexture = createStorefrontFasciaTexture;
 
 /**
  * Photorealistic Architectural Real 1 Utama Store Interior Panorama Texture (1024x512)
@@ -5124,6 +5822,14 @@ export function createStoreInteriorBackwallTexture(store) {
   else if (uName.includes('UNIQLO')) key = 'int-uniqlo';
   else if (uName.includes('PARKSON')) key = 'int-parkson';
   else if (uName.includes('TOMMY')) key = 'int-tommy';
+  else if (uName.includes('POPULAR')) key = 'int-bookstore';
+  else if (uName.includes('MAYBANK') || uName.includes('CIMB') || st === 'transit') key = 'int-bank';
+  else if (uName.includes('H&M') || uName.includes('BRANDS OUTLET')) key = 'int-apparel-light';
+  else if (uName.includes('CALVIN KLEIN') || uName.includes('LACOSTE') || uName.includes('MARKS & SPENCER') || uName.includes('LULULEMON')) key = 'int-apparel-dark';
+  else if (uName.includes('OCCITANE') || uName.includes('LANCÔME') || uName.includes('YSL')) key = 'int-beauty-cosmetics';
+  else if (uName.includes('DEGEM')) key = 'int-jewellery';
+  else if (uName.includes('STEVE MADDEN')) key = 'int-footwear';
+  else if (prof.interiorKey) key = prof.interiorKey;
   else if (uName.includes('NIKE') || st === 'sports') key = 'int-sports';
   else if (st === 'tech') key = 'int-tech';
   else if (st === 'furniture') key = 'int-furniture';
@@ -6221,6 +6927,533 @@ export function createStoreInteriorBackwallTexture(store) {
       ctx.fillRect(ax + 8, 264, 90, 4);
     }
     ctx.fillStyle = '#bfa98e';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-nitori') {
+    // AUTHENTIC 1 UTAMA F101 NITORI JAPANESE HOME FURNISHINGS SHOWROOM:
+    // Signature Nitori teal header band + warm birch living-room vignette, ceramic tableware wall & rolled bedding cubbies!
+    fillWall('#f6f3ec', '#e5dec9');
+    ctx.fillStyle = '#0d9488';
+    ctx.fillRect(0, 0, W, 62);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'ニトリ  NITORI  •  SOFA & LIVING  •  KITCHENWARE  •  N-COOL BEDDING', W * 0.5, 42, W - 80, 20, '800', '"Jost", sans-serif', 4);
+    const nitPal = ['#0d9488', '#f5f0e6', '#94a3b8', '#d6c5b3', '#cbd5e1', '#5eead4'];
+    drawLitNiche(24, 78, 300, 308, '#faf8f2', '#c8b28e', nitPal, 5);
+    // Center Scandinavian/Japanese living-room wall vignette (oak slats, framed botanical print & linen sofa)
+    ctx.fillStyle = '#e8dec8';
+    ctx.fillRect(348, 78, 328, 308);
+    for (let sx = 354; sx < 672; sx += 16) {
+      ctx.fillStyle = 'rgba(168, 128, 82, 0.28)';
+      ctx.fillRect(sx, 78, 8, 308);
+    }
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(442, 102, 140, 118);
+    ctx.strokeStyle = '#0d9488';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(442, 102, 140, 118);
+    ctx.fillStyle = '#0d9488';
+    ctx.beginPath();
+    ctx.arc(512, 161, 34, 0, Math.PI * 2);
+    ctx.fill();
+    // Cozy Nitori oatmeal-linen 3-seater sofa & oak coffee table in center bay
+    ctx.fillStyle = '#d4c9b8';
+    ctx.fillRect(382, 268, 260, 88);
+    ctx.fillStyle = '#0d9488';
+    ctx.fillRect(402, 276, 52, 38);
+    ctx.fillRect(570, 276, 52, 38);
+    drawLitNiche(700, 78, 300, 308, '#faf8f2', '#c8b28e', nitPal, 5);
+    ctx.fillStyle = '#d4bc94';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-apothecary') {
+    // AUTHENTIC 1 UTAMA NEAL'S YARD REMEDIES / KENS APOTHECARY / CLARINS / BATH & BODY WORKS:
+    // Deep cobalt & warm oak apothecary cabinetry packed with rows of glowing cobalt-blue & amber glass tincture bottles!
+    const isNeals = uName.includes('NEAL');
+    fillWall(isNeals ? '#142e5c' : '#241e1a', isNeals ? '#0b1b38' : '#14110e');
+    ctx.fillStyle = isNeals ? '#1d4ed8' : '#3a2a1d';
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(
+      ctx,
+      isNeals
+        ? "NEAL'S YARD REMEDIES  •  ORGANIC ESSENTIAL OILS  •  HERBAL TINCTURES"
+        : 'BOTANICAL APOTHECARY  •  ESSENTIAL OILS  •  SKINCARE ELIXIRS',
+      W * 0.5,
+      39,
+      W - 80,
+      19,
+      '700',
+      '"Cormorant Garamond", serif',
+      4
+    );
+    const bottlePal = isNeals
+      ? ['#1d4ed8', '#2563eb', '#1e40af', '#f8fafc', '#93c5fd', '#3b82f6']
+      : ['#b45309', '#78350f', '#f5efe6', '#15803d', '#d97706', '#e2e8f0'];
+    for (let b = 0; b < 4; b++) {
+      drawLitNiche(22 + b * 250, 74, 224, 312, isNeals ? '#e0ecf8' : '#efe7da', isNeals ? '#1e3a8a' : '#785230', bottlePal, 5);
+    }
+    ctx.fillStyle = isNeals ? '#1e3a8a' : '#5c3d24';
+    ctx.fillRect(0, 402, W, 110);
+    ctx.fillStyle = '#d4af37';
+    ctx.fillRect(0, 398, W, 5);
+  } else if (key === 'int-melvita-hooga') {
+    // AUTHENTIC 1 UTAMA F140 SPLIT DUAL-CONCEPT INTERIOR:
+    // Left half: MELVITA golden hexagonal honeycomb organic oil shelves; Right half: HOOGA Scandinavian rattan pendants & cozy hygge throws!
+    // Left Melvita cream-honey wall
+    ctx.fillStyle = '#f7efe0';
+    ctx.fillRect(0, 0, W * 0.5, H);
+    ctx.fillStyle = '#15803d';
+    ctx.fillRect(0, 0, W * 0.5, 56);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'Melvita  •  ORGANIC ARGAN & FLORAL WATERS', W * 0.25, 38, 460, 18, '700', '"Cormorant Garamond", serif', 3);
+    drawLitNiche(24, 72, 214, 312, '#fff9eb', '#d97706', ['#f59e0b', '#16a34a', '#fbbf24', '#fef08a', '#b45309'], 5);
+    // Golden honeycomb hexagon feature wall in center-left bay
+    ctx.fillStyle = '#fdf6e2';
+    ctx.fillRect(256, 72, 232, 312);
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 4;
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 3; col++) {
+        const hx = 302 + col * 64 + (row % 2) * 28;
+        const hy = 118 + row * 64;
+        ctx.fillStyle = (row + col) % 2 === 0 ? 'rgba(251, 191, 36, 0.36)' : 'rgba(245, 158, 11, 0.18)';
+        ctx.beginPath();
+        for (let s = 0; s < 6; s++) {
+          const a = (s * Math.PI) / 3 + Math.PI / 6;
+          if (s === 0) ctx.moveTo(hx + Math.cos(a) * 26, hy + Math.sin(a) * 26);
+          else ctx.lineTo(hx + Math.cos(a) * 26, hy + Math.sin(a) * 26);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+    // Right Hooga Scandinavian warm greige-charcoal hygge living zone
+    ctx.fillStyle = '#dfd9ce';
+    ctx.fillRect(W * 0.5, 0, W * 0.5, H);
+    ctx.fillStyle = '#363432';
+    ctx.fillRect(W * 0.5, 0, W * 0.5, 56);
+    ctx.fillStyle = '#fef3c7';
+    fillAutoFitText(ctx, 'HOOGA  •  DANISH HYGGE HOME  •  DIFFUSERS & LINENS', W * 0.75, 38, 460, 18, '700', '"Cormorant Garamond", serif', 3);
+    drawLitNiche(534, 72, 220, 312, '#eee8dd', '#786b5e', ['#f5f0e6', '#9ca3af', '#d6c7b2', '#6b7280', '#bfa888'], 4);
+    drawLitNiche(774, 72, 224, 312, '#eee8dd', '#786b5e', ['#e5dec9', '#374151', '#d4a359', '#94a3b8', '#f8fafc'], 4);
+    // Hanging woven rattan pendant lamps on Hooga side
+    for (const px of [644, 886]) {
+      ctx.strokeStyle = '#363432';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(px, 56);
+      ctx.lineTo(px, 112);
+      ctx.stroke();
+      ctx.fillStyle = '#c89d66';
+      ctx.beginPath();
+      ctx.arc(px, 126, 24, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(px, 128, 10, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = '#bfa882';
+    ctx.fillRect(0, 402, W, 110);
+  } else if (key === 'int-luggage') {
+    // AUTHENTIC 1 UTAMA SAMSONITE • TOMAZ / WINTER TIME / HYPERGEAR:
+    // Illuminated tiered hard-shell ribbed spinner suitcase gallery (carry-on, medium & trunk spinners with caster wheels & telescoping handles)!
+    fillWall('#141c2e', '#0a0f1a');
+    ctx.fillStyle = '#0c1e3a';
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillRect(0, 56, W, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'HARD-SHELL SPINNER LUGGAGE  •  POLYCARBONATE  •  BUSINESS CARRY  •  HERITAGE LEATHER', W * 0.5, 38, W - 80, 18, '700', '"Jost", sans-serif', 4);
+    const caseCols = ['#cbd5e1', '#1e293b', '#991b1b', '#1d4ed8', '#b4944e', '#334155'];
+    for (let b = 0; b < 4; b++) {
+      const bx = 24 + b * 248;
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(bx, 74, 224, 314);
+      ctx.strokeStyle = b === 3 ? '#d4af37' : '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(bx, 74, 224, 314);
+      for (let tier = 0; tier < 2; tier++) {
+        const sy = 216 + tier * 150;
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(bx + 12, sy, 200, 6);
+        for (let c = 0; c < 3; c++) {
+          const cx = bx + 26 + c * 62;
+          const cw = 46;
+          const ch = 76 + (tier * 12);
+          const cy = sy - ch - 6;
+          // Telescoping dual-tube suitcase handle
+          ctx.strokeStyle = '#cbd5e1';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(cx + 14, cy - 18, 18, 18);
+          // Ribbed polycarbonate hard-shell spinner suitcase body
+          ctx.fillStyle = caseCols[(b * 2 + tier + c) % caseCols.length];
+          ctx.fillRect(cx, cy, cw, ch);
+          ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+          ctx.lineWidth = 2;
+          for (let r = 8; r < cw - 6; r += 9) {
+            ctx.beginPath();
+            ctx.moveTo(cx + r, cy + 6);
+            ctx.lineTo(cx + r, cy + ch - 6);
+            ctx.stroke();
+          }
+          // 4 Spinner caster wheels
+          ctx.fillStyle = '#09090b';
+          ctx.fillRect(cx + 4, sy - 6, 6, 6);
+          ctx.fillRect(cx + cw - 10, sy - 6, 6, 6);
+        }
+      }
+    }
+    ctx.fillStyle = '#1e2533';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-footwear') {
+    // AUTHENTIC 1 UTAMA ALDO • NAELOFAR / CHARLES & KEITH / CLARKS / ECCO / VINCCI / BIRKENSTOCK:
+    // Floating illuminated horizontal shoe-wall shelves with angled 3D footwear pairs + central full-height try-on mirror & pastel scarf bay!
+    const isDarkShoe = !prof.isLight;
+    fillWall(isDarkShoe ? '#1c202b' : '#f4EFE6', isDarkShoe ? '#10131a' : '#dfd5c6');
+    ctx.fillStyle = isDarkShoe ? '#0f172a' : '#231b15';
+    ctx.fillRect(0, 0, W, 56);
+    ctx.fillStyle = '#f5ebe0';
+    ctx.textAlign = 'center';
+    fillAutoFitText(
+      ctx,
+      uName.includes('NAELOFAR')
+        ? 'ALDO FOOTWEAR COLLECTION  •  TRY-ON SALON  •  NAELOFAR SILK HIJAB ATELIER'
+        : 'DESIGNER FOOTWEAR WALL  •  LEATHER LOAFERS  •  HEELS  •  SNEAKERS',
+      W * 0.5,
+      37,
+      W - 80,
+      18,
+      '700',
+      '"Jost", sans-serif',
+      4
+    );
+    const shoeCols = ['#18181b', '#8b4e24', '#d6c5b3', '#991b1b', '#1e3a8a', '#b4944e', '#f472b6'];
+    for (let b = 0; b < 4; b++) {
+      const bx = 24 + b * 248;
+      ctx.fillStyle = isDarkShoe ? '#262c3a' : '#fcf9f4';
+      ctx.fillRect(bx, 72, 224, 316);
+      ctx.strokeStyle = '#c9a66b';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(bx, 72, 224, 316);
+      for (let r = 1; r <= 5; r++) {
+        const sy = 72 + r * 56;
+        // Warm under-shelf LED strip
+        const lg = ctx.createLinearGradient(bx, sy, bx, sy + 16);
+        lg.addColorStop(0, 'rgba(255, 232, 185, 0.55)');
+        lg.addColorStop(1, 'rgba(255, 232, 185, 0.0)');
+        ctx.fillStyle = lg;
+        ctx.fillRect(bx + 8, sy + 4, 208, 14);
+        ctx.fillStyle = '#b4944e';
+        ctx.fillRect(bx + 8, sy, 208, 4);
+        // 4 Distinct side-profile shoe silhouettes on each illuminated floating shelf (ZERO tall handbag blocks!)
+        for (let s = 0; s < 4; s++) {
+          const sx = bx + 18 + s * 50;
+          ctx.fillStyle = shoeCols[(b + r + s) % shoeCols.length];
+          // Heel/upper back + sloped vamp + toe box + crisp white/tan sole
+          ctx.beginPath();
+          ctx.moveTo(sx, sy - 20);
+          ctx.lineTo(sx + 14, sy - 20);
+          ctx.lineTo(sx + 26, sy - 10);
+          ctx.lineTo(sx + 38, sy - 8);
+          ctx.lineTo(sx + 38, sy - 3);
+          ctx.lineTo(sx, sy - 3);
+          ctx.closePath();
+          ctx.fill();
+          ctx.fillStyle = '#f8fafc';
+          ctx.fillRect(sx, sy - 3, 38, 3);
+        }
+      }
+    }
+    ctx.fillStyle = isDarkShoe ? '#141820' : '#cabca6';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-apparel-light' || key === 'int-apparel-dark') {
+    // AUTHENTIC CONTEMPORARY APPAREL STORE MERCHANDISING (iORA, Giordano, Nichii, Padini, Brands Outlet, Mango, Pull&Bear, Cotton On, Levi's, HLA, G2000):
+    // Brushed-steel perimeter garment rails with hanging shirts/blazers/dresses on hangers, central folded denim cubbies & backlit fitting-room portal!
+    const isL = key === 'int-apparel-light';
+    fillWall(isL ? '#f3eee6' : '#1e222b', isL ? '#ded5c6' : '#12151b');
+    ctx.fillStyle = prof.bg || (isL ? '#262320' : '#111827');
+    ctx.fillRect(0, 0, W, 56);
+    ctx.fillStyle = prof.accent || '#d4af37';
+    ctx.fillRect(0, 54, W, 4);
+    ctx.fillStyle = prof.fg || '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  NEW SEASON COLLECTION  •  TAILORED APPAREL  •  FITTING ROOMS`, W * 0.5, 37, W - 80, 18, '700', '"Jost", sans-serif', 4);
+
+    const garmPal = isL
+      ? ['#d6c7b2', '#8c6d53', '#2b3a4a', '#b85d43', '#526150', '#f5f0e6', '#3f3a36']
+      : ['#1e3a5f', '#991b1b', '#d97706', '#e2e8f0', '#334155', '#475569', '#f8fafc'];
+
+    for (let b = 0; b < 4; b++) {
+      const bx = 22 + b * 250;
+      ctx.fillStyle = isL ? '#faf6f0' : '#282d38';
+      ctx.fillRect(bx, 72, 226, 316);
+      ctx.strokeStyle = isL ? '#b8a992' : '#475569';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(bx, 72, 226, 316);
+
+      // Upper Tier: Brushed chrome horizontal garment rail with 9 hanging shirts/jackets on hangers!
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(bx + 12, 108, 202, 5);
+      for (let g = 0; g < 9; g++) {
+        const gx = bx + 18 + g * 21;
+        // Coat hanger hook
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(gx + 7, 108);
+        ctx.lineTo(gx + 7, 118);
+        ctx.stroke();
+        // Hanging tailored shirt / jacket / dress silhouette
+        ctx.fillStyle = garmPal[(b * 3 + g) % garmPal.length];
+        ctx.fillRect(gx, 118, 15, 92 + (g % 2) * 14);
+        ctx.fillStyle = 'rgba(255,255,255,0.18)';
+        ctx.fillRect(gx + 2, 118, 3, 90);
+      }
+
+      // Lower Tier: 2 Backlit oak shelves with neatly folded denim & knitwear stacks!
+      for (let sh = 0; sh < 2; sh++) {
+        const sy = 278 + sh * 68;
+        ctx.fillStyle = '#a88458';
+        ctx.fillRect(bx + 12, sy, 202, 6);
+        for (let stIdx = 0; stIdx < 4; stIdx++) {
+          const sx = bx + 20 + stIdx * 48;
+          for (let fold = 0; fold < 4; fold++) {
+            ctx.fillStyle = garmPal[(b + sh + stIdx + fold) % garmPal.length];
+            ctx.fillRect(sx, sy - 10 - fold * 9, 38, 7);
+          }
+        }
+      }
+    }
+    ctx.fillStyle = isL ? '#c8baa6' : '#151820';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-mission-q') {
+    // AUTHENTIC 1 UTAMA 1F F625 MISSION Q ESCAPE ROOM & VRFUN ARENA:
+    // Cyberpunk steel puzzle-vault door, glowing gold keyhole timer, neon laser grid & mystery cipher chambers!
+    fillWall('#0d0b20', '#060510');
+    ctx.fillStyle = '#1e1b4b';
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = '#f43f5e';
+    ctx.fillRect(0, 56, W, 4);
+    ctx.fillStyle = '#fef08a';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'MISSION-Q ESCAPE ROOM  •  VAULT 01: CYBER HEIST  •  VAULT 02: PHARAOH TOMB  •  60:00', W * 0.5, 38, W - 80, 18, '800', '"Oswald", sans-serif', 4);
+    for (let b = 0; b < 3; b++) {
+      const bx = 34 + b * 328;
+      ctx.fillStyle = '#15132e';
+      ctx.fillRect(bx, 76, 296, 308);
+      ctx.strokeStyle = b === 1 ? '#facc15' : '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(bx, 76, 296, 308);
+      // Circular bank-vault gear wheel & glowing neon keyhole in center of each escape chamber door
+      const cx = bx + 148;
+      const cy = 224;
+      ctx.strokeStyle = b === 1 ? '#f43f5e' : '#22d3ee';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 78, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 52, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = '#fef08a';
+      fillAutoFitText(ctx, b === 0 ? 'CHAMBER I • ENIGMA' : b === 1 ? 'LOCKED • 59:42' : 'CHAMBER II • MATRIX', cx, 114, 250, 18, '800', '"Oswald", sans-serif', 3);
+    }
+    ctx.fillStyle = '#110e24';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-jewellery') {
+    // AUTHENTIC LUXURY JEWELLERY & SWISS TIMEPIECE SALON (Swarovski, Pandora, TAG Heuer, DeGem, Tomei, Wah Chan, SK, TSL, Royal Selangor):
+    const isLightJ = prof.isLight;
+    fillWall(isLightJ ? '#faf5f0' : '#171422', isLightJ ? '#e8dfd5' : '#0c0a12');
+    ctx.fillStyle = prof.bg || '#1e1b4b';
+    ctx.fillRect(0, 0, W, 56);
+    ctx.fillStyle = '#d4af37';
+    ctx.fillRect(0, 54, W, 4);
+    ctx.fillStyle = prof.fg || '#fde68a';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  FINE DIAMONDS  •  916 GOLD  •  HAUTE HORLOGERIE`, W * 0.5, 37, W - 80, 18, '700', '"Cormorant Garamond", serif', 5);
+    for (let b = 0; b < 4; b++) {
+      const bx = 24 + b * 248;
+      // Backlit champagne-velvet museum jewellery vitrine with glowing ring/watch bust stands
+      ctx.fillStyle = '#26201b';
+      ctx.fillRect(bx, 74, 224, 312);
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(bx, 74, 224, 312);
+      const vg = ctx.createRadialGradient(bx + 112, 195, 12, bx + 112, 195, 118);
+      vg.addColorStop(0, 'rgba(255, 240, 192, 0.75)');
+      vg.addColorStop(1, 'rgba(38, 32, 27, 0.0)');
+      ctx.fillStyle = vg;
+      ctx.fillRect(bx + 8, 82, 208, 220);
+      for (let p = 0; p < 3; p++) {
+        const px = bx + 42 + p * 68;
+        ctx.fillStyle = '#f5efe6';
+        ctx.fillRect(px - 16, 228, 32, 48);
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(px, 210, 14, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+    ctx.fillStyle = '#2d241c';
+    ctx.fillRect(0, 400, W, 112);
+  } else if (key === 'int-pharmacy') {
+    // AUTHENTIC GUARDIAN / CARING / IJN FIRST PHARMACY / BMS ORGANICS CLINICAL WELLNESS INTERIOR:
+    fillWall('#f8fafc', '#e2e8f0');
+    ctx.fillStyle = prof.bg || '#15803d';
+    ctx.fillRect(0, 0, W, 60);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  DISPENSARY  •  VITAMINS  •  DERMA SKINCARE  •  PHARMACIST CONSULTATION`, W * 0.5, 40, W - 80, 18, '800', '"Jost", sans-serif', 3);
+    const pharmPal = ['#16a34a', '#ea580c', '#0284c7', '#ffffff', '#facc15', '#38bdf8'];
+    for (let b = 0; b < 4; b++) {
+      drawLitNiche(22 + b * 250, 76, 224, 314, '#ffffff', '#94a3b8', pharmPal, 5);
+    }
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(0, 406, W, 106);
+  } else if (key === 'int-bookstore') {
+    // AUTHENTIC 1 UTAMA 2F S116 POPULAR BOOKSTORE:
+    // Iconic crimson-red department headers & warm oak floor-to-ceiling multi-tier bookcases packed with colorful book spines!
+    fillWall('#f6f2ea', '#e4dccd');
+    ctx.fillStyle = '#dc2626';
+    ctx.fillRect(0, 0, W, 60);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, 'POPULAR BOOKSTORE  •  ENGLISH & CHINESE FICTION  •  MANGA  •  STATIONERY & GADGETS', W * 0.5, 40, W - 80, 19, '800', '"Jost", sans-serif', 4);
+    const bookPal = ['#dc2626', '#1d4ed8', '#f59e0b', '#15803d', '#f8fafc', '#7c3aed', '#1e293b', '#ea580c'];
+    for (let b = 0; b < 4; b++) {
+      const bx = 22 + b * 250;
+      ctx.fillStyle = '#5c3d24';
+      ctx.fillRect(bx, 74, 224, 318);
+      for (let r = 0; r < 5; r++) {
+        const sy = 128 + r * 58;
+        ctx.fillStyle = '#fff8eb';
+        ctx.fillRect(bx + 8, sy - 46, 208, 46);
+        for (let bk = 0; bk < 18; bk++) {
+          ctx.fillStyle = bookPal[(b * 3 + r * 5 + bk) % bookPal.length];
+          ctx.fillRect(bx + 12 + bk * 11, sy - 40 + (bk % 3) * 3, 9, 40 - (bk % 3) * 3);
+        }
+        ctx.fillStyle = '#8c623e';
+        ctx.fillRect(bx + 6, sy, 212, 6);
+      }
+    }
+    ctx.fillStyle = '#b4946c';
+    ctx.fillRect(0, 406, W, 106);
+  } else if (key === 'int-bank') {
+    // AUTHENTIC MAYBANK / CIMB / AL-TAMIJ / AEROLINE BANKING & PREMIER CONCIERGE HALL:
+    fillWall('#f1f5f9', '#cbd5e1');
+    ctx.fillStyle = prof.bg || '#ca8a04';
+    ctx.fillRect(0, 0, W, 64);
+    ctx.fillStyle = prof.fg || '#111827';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  PREMIER BANKING  •  24-HOUR ATM LOBBY  •  FOREIGN EXCHANGE`, W * 0.5, 42, W - 80, 20, '800', '"Jost", sans-serif', 4);
+    for (let b = 0; b < 4; b++) {
+      const bx = 28 + b * 246;
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(bx, 88, 212, 286);
+      ctx.strokeStyle = prof.accent || '#facc15';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(bx, 88, 212, 286);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(bx + 28, 128, 156, 108);
+      ctx.fillStyle = '#ffffff';
+      fillAutoFitText(ctx, b < 2 ? 'EXPRESS ATM • CASH' : 'TELLER COUNTER', bx + 106, 284, 176, 16, '700', '"Jost", sans-serif', 2);
+    }
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-scuba') {
+    // AUTHENTIC SEALANTIS PADI 5★ INDOOR SCUBA DIVE POOL & FLOWRIDER SURF ARENA AQUATIC WINDOW:
+    fillWall('#083344', '#041e2b');
+    const poolG = ctx.createLinearGradient(0, 64, 0, 396);
+    poolG.addColorStop(0, '#22d3ee');
+    poolG.addColorStop(0.5, '#0284c7');
+    poolG.addColorStop(1, '#0c4a6e');
+    ctx.fillStyle = poolG;
+    ctx.fillRect(28, 68, W - 56, 322);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(28, 68, W - 56, 322);
+    ctx.strokeStyle = 'rgba(224, 242, 254, 0.45)';
+    ctx.lineWidth = 4;
+    for (let w = 0; w < 6; w++) {
+      ctx.beginPath();
+      ctx.moveTo(48, 118 + w * 46);
+      ctx.quadraticCurveTo(W * 0.5, 92 + w * 46, W - 48, 118 + w * 46);
+      ctx.stroke();
+    }
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  PADI 5★ DIVE POOL & PRO SHOP`, W * 0.5, 42, W - 80, 22, '800', '"Jost", sans-serif', 4);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-gallery') {
+    // AUTHENTIC 3F THE LEDGE ART GALLERY / KAKISENI JUNIOR / LITTLE PALETTE EXHIBITION HALL:
+    fillWall('#fafaf9', '#e7e5e4');
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, W, 56);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  CONTEMPORARY MALAYSIAN ART EXHIBITION`, W * 0.5, 37, W - 80, 19, '700', '"Jost", sans-serif', 5);
+    const canvasPals = [
+      ['#0284c7', '#fbbf24', '#f8fafc'],
+      ['#be123c', '#f43f5e', '#fde047'],
+      ['#065f46', '#34d399', '#fef3c7'],
+      ['#4c1d95', '#38bdf8', '#f472b6']
+    ];
+    for (let b = 0; b < 4; b++) {
+      const bx = 34 + b * 246;
+      const pal = canvasPals[b];
+      ctx.fillStyle = '#18181b';
+      ctx.fillRect(bx, 86, 200, 256);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(bx + 10, 96, 180, 236);
+      ctx.fillStyle = pal[0];
+      ctx.fillRect(bx + 24, 110, 152, 208);
+      ctx.fillStyle = pal[1];
+      ctx.beginPath();
+      ctx.arc(bx + 100, 204, 48, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = pal[2];
+      ctx.fillRect(bx + 42, 246, 116, 44);
+    }
+    ctx.fillStyle = '#d6d3d1';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-beauty-cosmetics') {
+    // AUTHENTIC LUXURY COSMETICS & FRAGRANCE ATELIER (L'Occitane, Lancôme, YSL, M·A·C, Sa Sa, Victoria's Secret, Shu Uemura, Laneige, The Face Shop):
+    const isLightB = prof.isLight;
+    fillWall(isLightB ? '#fdf8f0' : '#18141c', isLightB ? '#eadfce' : '#0d0b10');
+    ctx.fillStyle = prof.bg || '#111111';
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = prof.accent || '#f472b6';
+    ctx.fillRect(0, 55, W, 4);
+    ctx.fillStyle = prof.fg || '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  SKINCARE  •  HAUTE PARFUMS  •  MAKEUP STUDIO`, W * 0.5, 38, W - 80, 19, '700', '"Cormorant Garamond", serif', 5);
+    const cosPal = ['#f472b6', '#fbbf24', '#f8fafc', '#e11d48', '#fcd34d', '#f9a8d4', '#18181b'];
+    for (let b = 0; b < 4; b++) {
+      drawLitNiche(24 + b * 248, 76, 222, 310, isLightB ? '#fffdf9' : '#fdf2f8', prof.accent || '#d4af37', cosPal, 5);
+    }
+    ctx.fillStyle = isLightB ? '#d8c8b0' : '#1f1924';
+    ctx.fillRect(0, 404, W, 108);
+  } else if (key === 'int-music-dance') {
+    // AUTHENTIC YAMAHA MUSIC SCHOOL / TUTU TOE DANCE ACADEMY / ON AIR 1 STUDIO:
+    fillWall('#241838', '#140d22');
+    ctx.fillStyle = prof.bg || '#3b0764';
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    fillAutoFitText(ctx, `${prof.displayTitle}  •  ACOUSTIC STUDIO  •  RECITAL HALL  •  ACADEMY`, W * 0.5, 38, W - 80, 19, '800', '"Jost", sans-serif', 4);
+    const musPal = ['#f59e0b', '#f8fafc', '#38bdf8', '#ec4899', '#a855f7'];
+    for (let b = 0; b < 4; b++) {
+      drawLitNiche(24 + b * 248, 76, 222, 310, '#f8fafc', '#a855f7', musPal, 3);
+    }
+    ctx.fillStyle = '#8b6848';
     ctx.fillRect(0, 404, W, 108);
   } else {
     // PHOTOREALISTIC LUXURY FASHION / DEPARTMENT STORE: 3 balanced illuminated architectural display niches (ZERO robotic trapezoid silhouettes!)
