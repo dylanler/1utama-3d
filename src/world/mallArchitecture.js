@@ -2430,11 +2430,24 @@ export function buildMallArchitecture(scene, interactables) {
     const isMuji = uName.includes('MUJI');
     const isNealsYard = uName.includes('NEAL') && uName.includes('YARD');
     const isMelvitaHooga = uName.includes('MELVITA') || uName.includes('HOOGA');
-    const isLuggage = /SAMSONITE|TOMAZ|TUMI|TOURISTER|TRAVELLER|LUGGAGE/.test(uName);
+    const isLuggage = /SAMSONITE|TOMAZ|TUMI|TOURISTER|TRAVELLER|LUGGAGE|WINTER TIME|HYPERGEAR|TOMTOC/.test(uName);
     const hasTomaz = uName.includes('TOMAZ');
-    const isFootwear = !isLuggage && /ALDO|NAELOFAR|CHARLES & KEITH|PEDRO|CLARKS|ECCO|VINCCI|CHRISTY NG|STEVE MADDEN|GEOX|SKECHERS|CROCS|BIRKENSTOCK|BATA|VANS|TIMBERLAND|FIPPER/.test(uName);
+    const isFootwear = !isLuggage && /ALDO|NAELOFAR|CHARLES & KEITH|PEDRO|CLARKS|ECCO|VINCCI|CHRISTY NG|STEVE MADDEN|GEOX|SKECHERS|CROCS|BIRKENSTOCK|BATA|VANS|TIMBERLAND|FIPPER|RES\|TOE\|RUN/.test(uName);
     const hasNaelofar = uName.includes('NAELOFAR') || uName.includes('BUTTONSCARVES');
-    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|WATSONS|GUARDIAN|M·A·C|VICTORIA|BREO|SELECTIV/.test(uName));
+    const isJewelleryWatch = !isFootwear && /ROLEX|CORTINA|SWISS WATCH|TSL|POH KONG|HABIB|TOMEI|PANDORA|SWAROVSKI|CHOW TAI FOOK|SK JEWELLERY|LOVE & CO|TISSOT|RADO|SEIKO|G-SHOCK|DEGEM|TAG HEUER|WATATIME|WAH CHAN|ROYAL SELANGOR|DZI KINGDOM|TIMEKEEPER|JEWEL/.test(uName);
+    const isBookstore = /POPULAR|MPH|TYPO|SMIGGLE|ART FRIEND|BOOK/.test(uName);
+    const isHomesHarmony = /HOME['’]?S HARMONY|HOMES HARMONY|KAISON|GETHÁ|GETHA|YUBISO|DAISO/.test(uName);
+    const isOptical = /OWNDAYS|PARIS MIKI|FOCUS POINT|PUYI|A-LOOK|\bSEEN\b|\bMOG\b|RAY-BAN|OAKLEY|OPTICAL/.test(uName);
+    const isPharmacy = /WATSONS|GUARDIAN|CARING|BIG PHARMACY|IJN FIRST PHARMACY|\bGNC\b|\bLAC\b|BMS ORGANICS/.test(uName);
+    const isTcmHerbal = /EU YAN SANG|LO HONG KA/.test(uName);
+    const isMassageChair = /OSIM|OGAWA|GINTELL|\bITSU\b/.test(uName);
+    const isBankAtm = /MAYBANK|CIMB|HONG LEONG|\bRHB\b|AL-TAMIJ|AEROLINE/.test(uName);
+    const isLululemon = uName.includes('LULULEMON');
+    const isSealantis = /SEALANTIS|FLOWRIDER|SCUBA/.test(uName);
+    const isBakeryDining = !isZusPastry && !isComeTrue && !isStarbucks && !isHeytea && /LAVENDER|LA BOHEME|BREADTALK|CHÂTERAISÉ|CHATERAISE|SECRET RECIPE|FAMOUS AMOS/.test(uName);
+    const isFullServiceDining = !isFoodDistrict && !isBhc && !isStarbucks && !isHeytea && !isComeTrue && !isZusPastry && !isIppudo && !isModu && !isTehTarik &&
+      (isBakeryDining || /TANYU|HAIDILAO|HAI DI LAO|DIN TAI FUNG|SUSHI ZANMAI|RAKUTEN|NANDO|CHILI|TGI FRIDAYS|ORIENTAL KOPI|MADAM KWAN|PUTIEN|DRAGON-I|YUN NANS|TAI ER|FEI FAN|GO UNIQUE|CHICKEN RICE SHOP|MALATANG|PAO XIANG|KYOCHON/.test(uName));
+    const isApothecaryBeauty = !isSephora && !isChanel && !isMelvitaHooga && !isPharmacy && !isTcmHerbal && !isMassageChair && (isNealsYard || isLoccitane || store.style === 'beauty' || /APOTHECARY|CLARINS|LANCÔME|LANCOME|YSL|AESOP|FACE SHOP|SHU UEMURA|BATH & BODY|KIEHL|INNISFREE|BODY SHOP|M·A·C|VICTORIA|BREO|SELECTIV|LANEIGE|SA SA|BEAUMEDICA|REHAT/.test(uName));
     const isTrueHandbagLuxury = /BONIA|MICHAEL KORS|FURLA|BRAUN BÜFFEL|LONGCHAMP/.test(uName);
     const isMissionQ = uName.includes('MISSION Q');
     const isHarveyNorman = uName.includes('HARVEY NORMAN');
@@ -2684,6 +2697,708 @@ export function buildMallArchitecture(scene, interactables) {
             }
           }
         }
+      }
+    } else if (isJewelleryWatch) {
+      // 1. FINE JEWELLERY, WATCHES & TIMEPIECES (ROLEX, CORTINA WATCH, SWISS WATCH GALLERY, TSL, POH KONG, HABIB, TOMEI, PANDORA, SWAROVSKI, CHOW TAI FOOK, SK JEWELLERY, LOVE & CO, TISSOT, RADO, SEIKO, G-SHOCK, DEGEM, TAG HEUER, WATATIME, WAH CHAN, ROYAL SELANGOR):
+      // Illuminated chronograph watch medallions on the rear feature wall + 3D glass-top museum vitrine pedestals with warm gold LED under-halos & velvet ring/necklace busts + seated VIP consultation desks with upholstered chairs & brass table lamps!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.78 : 0.54;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b === Math.floor(numBays * 0.5)) {
+          // Central Illuminated Chronograph Watch Medallion on Rear Feature Wall!
+          const medBack = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, eaveY - 0.44, 0.12), smokedOakMat);
+          medBack.position.set(bx, (eaveY - 0.44) * 0.5 + 0.08, -intD + 0.22);
+          const bezelRing = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.055, 10, 28), brassGoldMat);
+          bezelRing.position.set(bx, 2.02, -intD + 0.32);
+          const dialFace = new THREE.Mesh(new THREE.CircleGeometry(0.58, 24), uName.includes('ROLEX') ? emeraldTrimMat : uName.includes('SWAROVSKI') ? intWallNavyMat : obsidianGlossMat);
+          dialFace.position.set(bx, 2.02, -intD + 0.30);
+          const dialHalo = new THREE.Mesh(new THREE.TorusGeometry(0.66, 0.024, 8, 28), intLightWarmMat);
+          dialHalo.position.set(bx, 2.02, -intD + 0.28);
+          const hourHand = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.30, 0.02), brassGoldMat);
+          hourHand.position.set(bx - 0.08, 2.12, -intD + 0.33);
+          hourHand.rotation.z = 0.55;
+          const minHand = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.42, 0.02), brassGoldMat);
+          minHand.position.set(bx + 0.12, 2.14, -intD + 0.34);
+          minHand.rotation.z = -0.62;
+          g.add(medBack, bezelRing, dialFace, dialHalo, hourHand, minHand);
+        } else {
+          // Recessed Gold-Framed Velvet Jewellery Wall Showcase Niches
+          const wallCab = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.88, 0.46), smokedOakMat);
+          wallCab.position.set(bx, 0.46, -intD + 0.34);
+          const goldFrame = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.42, 1.32, 0.36), brassGoldMat);
+          goldFrame.position.set(bx, 1.62, -intD + 0.30);
+          const velvetInsert = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.54, 1.18, 0.38), norenCrimsonMat);
+          velvetInsert.position.set(bx, 1.62, -intD + 0.32);
+          g.add(wallCab, goldFrame, velvetInsert);
+          for (let nb = -1; nb <= 1; nb++) {
+            const bustCone = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.24, 12), satinWhiteMat);
+            bustCone.position.set(bx + nb * 0.48, 1.38, -intD + 0.42);
+            const goldChain = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.012, 6, 14), brassGoldMat);
+            goldChain.rotation.x = 0.42;
+            goldChain.position.set(bx + nb * 0.48, 1.42, -intD + 0.46);
+            g.add(bustCone, goldChain);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // 2 Flanking 3D Glass-Top Museum Vitrine Pedestals with Warm Gold LED Under-Halos & Velvet Necklace/Ring Busts!
+        for (const side of [-1, 1]) {
+          const vx = side * Math.min(innerW * 0.30, 2.85);
+          const vitBase = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.96, 0.68), prof.isLight ? ivoryStoneMat : obsidianGlossMat);
+          vitBase.position.set(vx, 0.50, fgZ);
+          const goldHalo = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.045, 0.74), intLightWarmMat);
+          goldHalo.position.set(vx, 0.99, fgZ);
+          const goldRim = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.04, 0.72), brassGoldMat);
+          goldRim.position.set(vx, 1.50, fgZ);
+          const glassCase = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.48, 0.66), intGlassPhysMat);
+          glassCase.position.set(vx, 1.25, fgZ);
+          const velvetBust = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.26, 14), norenCrimsonMat);
+          velvetBust.position.set(vx, 1.15, fgZ);
+          const diamondNecklace = new THREE.Mesh(new THREE.TorusGeometry(0.088, 0.014, 8, 18), brassGoldMat);
+          diamondNecklace.rotation.x = 0.45;
+          diamondNecklace.position.set(vx, 1.20, fgZ + 0.03);
+          g.add(vitBase, goldHalo, goldRim, glassCase, velvetBust, diamondNecklace);
+          addLocalContactShadow(g, vx, fgZ, 1.1, 1.1);
+        }
+        // Central Seated VIP Consultation Desk with Upholstered Chairs & Brass Table Lamp!
+        const deskW = Math.min(innerW * 0.36, 1.95);
+        const vipDesk = new THREE.Mesh(new THREE.BoxGeometry(deskW, 0.76, fgD), smokedOakMat);
+        vipDesk.position.set(0, 0.40, fgZ);
+        const vipTop = new THREE.Mesh(new THREE.BoxGeometry(deskW + 0.08, 0.045, fgD + 0.06), cafeMarbleMat);
+        vipTop.position.set(0, 0.80, fgZ);
+        const velvetPad = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.025, 0.36), norenCrimsonMat);
+        velvetPad.position.set(-0.22, 0.84, fgZ);
+        const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.035, 0.34, 10), brassGoldMat);
+        lampStem.position.set(deskW * 0.32, 0.98, fgZ);
+        const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.16, 12), intLightWarmMat);
+        lampShade.position.set(deskW * 0.32, 1.16, fgZ);
+        g.add(vipDesk, vipTop, velvetPad, lampStem, lampShade);
+        addLocalContactShadow(g, 0, fgZ, deskW + 0.4, fgD + 0.4);
+        for (const cxOff of [-0.46, 0.46]) {
+          const chSeat = new THREE.Mesh(chairSeatGeo, norenCrimsonMat);
+          chSeat.position.set(cxOff, 0.46, fgZ + fgD * 0.56);
+          const chBack = new THREE.Mesh(chairBackGeo, brassGoldMat);
+          chBack.position.set(cxOff, 0.66, fgZ + fgD * 0.56 + 0.16);
+          const chLeg = new THREE.Mesh(bistroPoleGeo, brassGoldMat);
+          chLeg.scale.set(0.75, 0.62, 0.75);
+          chLeg.position.set(cxOff, 0.23, fgZ + fgD * 0.56);
+          g.add(chSeat, chBack, chLeg);
+        }
+      }
+    } else if (isBookstore) {
+      // 2A. BOOKSTORES & STATIONERY (POPULAR, MPH, TYPO, SMIGGLE, ART FRIEND):
+      // Perimeter floor-to-ceiling bookshelves + tiered oak book-display island tables stacked with colorful 3D hardcover book piles + rotating stationery carousels!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.88 : 0.58;
+      const secLabels = ['BESTSELLERS • FICTION', 'MANGA & COMICS', 'STATIONERY & ART', 'CHILDREN & ASSESSMENT', 'LIFESTYLE & NON-FICTION', 'GADGETS & GIFTS'];
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        const secPlaque = new THREE.Mesh(
+          new THREE.PlaneGeometry(bayStep - 0.40, 0.32),
+          new THREE.MeshBasicMaterial({ map: createSignBoardTexture(secLabels[b % secLabels.length], 'POPULAR •MPH', '#991b1b', '#ffffff', '#fde047', 512, 96) })
+        );
+        secPlaque.position.set(bx, eaveY - 0.44, -intD + 0.34);
+        g.add(secPlaque);
+        for (const uOff of [-(bayStep - 0.36) * 0.5, (bayStep - 0.36) * 0.5]) {
+          const up = new THREE.Mesh(new THREE.BoxGeometry(0.05, eaveY - 0.38, 0.38), lightOakMat);
+          up.position.set(bx + uOff, (eaveY - 0.38) * 0.5, -intD + 0.32);
+          g.add(up);
+        }
+        for (let sh = 0; sh < 5; sh++) {
+          const sy = 0.48 + sh * 0.48;
+          const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, 0.042, 0.36), lightOakMat);
+          shelf.position.set(bx, sy, -intD + 0.32);
+          g.add(shelf);
+          for (let bk = -3; bk <= 3; bk++) {
+            const bookRow = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.32, 0.24), intMerchMats[(b * 3 + sh + bk + 9) % intMerchMats.length]);
+            bookRow.position.set(bx + bk * 0.24, sy + 0.18, -intD + 0.33);
+            g.add(bookRow);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Tiered Oak Book-Display Island Tables Stacked with Colorful 3D Hardcover Book Piles!
+        const tblX = -Math.min(innerW * 0.22, 2.25);
+        const tier1 = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.56, fgD), lightOakMat);
+        tier1.position.set(tblX, 0.30, fgZ);
+        const tier2 = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.24, fgD * 0.74), hinokiWoodMat);
+        tier2.position.set(tblX, 0.70, fgZ);
+        const tier3 = new THREE.Mesh(new THREE.BoxGeometry(1.08, 0.20, fgD * 0.50), lightOakMat);
+        tier3.position.set(tblX, 0.92, fgZ);
+        g.add(tier1, tier2, tier3);
+        addLocalContactShadow(g, tblX, fgZ, 2.4, 1.25);
+        for (let bp = -2; bp <= 2; bp++) {
+          const pile1 = new THREE.Mesh(shoeBoxGeo, intMerchMats[(bp + 5) % intMerchMats.length]);
+          pile1.position.set(tblX + bp * 0.38, 0.65, fgZ + fgD * 0.32);
+          const pile2 = new THREE.Mesh(shoeBoxGeo, intMerchMats[(bp + 3) % intMerchMats.length]);
+          pile2.position.set(tblX + bp * 0.30, 1.09, fgZ);
+          g.add(pile1, pile2);
+        }
+        // Rotating 3-Tier Stationery Carousel on Right Bay!
+        const carX = Math.min(innerW * 0.28, 2.65);
+        const carBase = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.46, 0.10, 16), matteSteelMat);
+        carBase.position.set(carX, 0.11, fgZ);
+        const carPost = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.65, 10), brushedAlumMat);
+        carPost.position.set(carX, 0.94, fgZ);
+        g.add(carBase, carPost);
+        addLocalContactShadow(g, carX, fgZ, 1.2, 1.2);
+        for (let ct = 0; ct < 3; ct++) {
+          const cy = 0.62 + ct * 0.44;
+          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.04, 16), satinWhiteMat);
+          wheel.position.set(carX, cy, fgZ);
+          g.add(wheel);
+          for (let sp = 0; sp < 6; sp++) {
+            const ang = (sp / 6) * Math.PI * 2;
+            const pack = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.26, 0.08), rainbowBandMats[(ct + sp) % rainbowBandMats.length]);
+            pack.position.set(carX + Math.cos(ang) * 0.34, cy + 0.16, fgZ + Math.sin(ang) * 0.34);
+            pack.rotation.y = -ang;
+            g.add(pack);
+          }
+        }
+      }
+    } else if (isHomesHarmony) {
+      // 2B. HOME'S HARMONY (S319A 2F New Wing East) & KAISON / GETHÁ:
+      // Vertical curtain/drapery swatch wall + 3D dressed bed display with quilted headboard, pillows & duvet throw + artificial floral arrangement island!
+      const fgZ = intD > 2.2 ? -1.52 : -0.82;
+      const fgD = intD > 2.2 ? 1.15 : 0.72;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        // Brushed-brass curtain rod + 5 full-height pleated vertical curtain/drapery fabric swatches!
+        const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, bayStep - 0.32, 8), brassGoldMat);
+        rod.rotation.z = Math.PI / 2;
+        rod.position.set(bx, eaveY - 0.48, -intD + 0.36);
+        g.add(rod);
+        for (let dr = -2; dr <= 2; dr++) {
+          const drape = new THREE.Mesh(new THREE.BoxGeometry(0.28, eaveY - 0.62, 0.12), intMerchMats[(b + dr + 6) % intMerchMats.length]);
+          drape.position.set(bx + dr * 0.36, (eaveY - 0.62) * 0.5 + 0.08, -intD + 0.34);
+          g.add(drape);
+        }
+      }
+      if (intD > 1.35) {
+        // Left/Center Showcase: 3D Dressed Bed Display with Quilted Headboard, 4 Pillows & Contrasted Duvet Throw!
+        const bedX = -Math.min(innerW * 0.22, 2.15);
+        const headboard = new THREE.Mesh(new THREE.BoxGeometry(1.78, 1.32, 0.16), smokedOakMat);
+        headboard.position.set(bedX, 0.72, fgZ - fgD * 0.46);
+        const quiltPanel = new THREE.Mesh(new THREE.BoxGeometry(1.64, 1.12, 0.18), creamTileMat);
+        quiltPanel.position.set(bedX, 0.74, fgZ - fgD * 0.44);
+        const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.28, fgD), hinokiWoodMat);
+        bedFrame.position.set(bedX, 0.20, fgZ);
+        const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.66, 0.26, fgD - 0.06), satinWhiteMat);
+        mattress.position.set(bedX, 0.44, fgZ + 0.02);
+        const duvetThrow = new THREE.Mesh(new THREE.BoxGeometry(1.70, 0.28, fgD * 0.46), intMerchMats[1]);
+        duvetThrow.position.set(bedX, 0.45, fgZ + fgD * 0.24);
+        g.add(headboard, quiltPanel, bedFrame, mattress, duvetThrow);
+        for (const pxOff of [-0.42, 0.42]) {
+          const pillowBack = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.18, 0.28), satinWhiteMat);
+          pillowBack.position.set(bedX + pxOff, 0.64, fgZ - fgD * 0.24);
+          pillowBack.rotation.x = 0.24;
+          const pillowAccent = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.16, 0.22), intMerchMats[2]);
+          pillowAccent.position.set(bedX + pxOff, 0.64, fgZ - fgD * 0.08);
+          pillowAccent.rotation.x = 0.30;
+          g.add(pillowBack, pillowAccent);
+        }
+        addLocalContactShadow(g, bedX, fgZ, 2.2, fgD + 0.4);
+
+        // Right Showcase: Artificial Floral Arrangement Island with Ceramic Vases & Botanical Bouquets!
+        const floX = Math.min(innerW * 0.26, 2.45);
+        const floTbl = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.78, fgD * 0.74), ivoryStoneMat);
+        floTbl.position.set(floX, 0.41, fgZ);
+        const floTop = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.05, fgD * 0.78), brassGoldMat);
+        floTop.position.set(floX, 0.82, fgZ);
+        g.add(floTbl, floTop);
+        addLocalContactShadow(g, floX, fgZ, 2.0, 1.15);
+        const floralMats = [minisoPinkMat, canaryArchMat, emeraldTrimMat, uniqloRedBoxMat];
+        for (let fl = -1; fl <= 1; fl++) {
+          const vase = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.08, 0.26, 12), satinWhiteMat);
+          vase.position.set(floX + fl * 0.48, 0.96, fgZ);
+          const bloom = new THREE.Mesh(herbShrubGeo, floralMats[(fl + 2) % floralMats.length]);
+          bloom.scale.set(0.95, 1.05, 0.95);
+          bloom.position.set(floX + fl * 0.48, 1.22, fgZ);
+          g.add(vase, bloom);
+        }
+      }
+    } else if (isOptical) {
+      // 3. OPTICAL & EYEWEAR (OWNDAYS, PARIS MIKI, FOCUS POINT, PUYI OPTICAL, A-LOOK, SEEN, MOG, RAY-BAN, OAKLEY):
+      // Bright backlit white acrylic eyewear walls with rows of 3D eyeglass frames + vertical illuminated try-on mirrors + central optometry exam counter with 3D refraction phoropter instrument & dual swivel stools!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.78 : 0.54;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        const backlitPanel = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.52, eaveY - 0.58, 0.10), intBacklitBayMat);
+        backlitPanel.position.set(bx, (eaveY - 0.58) * 0.5 + 0.12, -intD + 0.24);
+        const baseDrawer = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.56, 0.44), hinokiWoodMat);
+        baseDrawer.position.set(bx, 0.30, -intD + 0.34);
+        // Vertical illuminated try-on mirror pillar between eyewear bays
+        const mirStrip = new THREE.Mesh(new THREE.BoxGeometry(0.32, 1.75, 0.16), intLightCoolMat);
+        mirStrip.position.set(bx + (bayStep - 0.24) * 0.5, 1.48, -intD + 0.28);
+        const mirFace = new THREE.Mesh(new THREE.PlaneGeometry(0.26, 1.68), intGlassPhysMat);
+        mirFace.position.set(bx + (bayStep - 0.24) * 0.5, 1.48, -intD + 0.37);
+        g.add(backlitPanel, baseDrawer, mirStrip, mirFace);
+        for (let sh = 0; sh < 5; sh++) {
+          const sy = 0.86 + sh * 0.38;
+          const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.56, 0.025, 0.22), satinWhiteMat);
+          shelf.position.set(bx, sy, -intD + 0.32);
+          g.add(shelf);
+          for (let fr = -2; fr <= 2; fr++) {
+            const frameMat = (sh + fr) % 2 === 0 ? obsidianGlossMat : brassGoldMat;
+            const eyeglass = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.048, 0.06), frameMat);
+            eyeglass.position.set(bx + fr * 0.32, sy + 0.04, -intD + 0.34);
+            g.add(eyeglass);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Central Optometry Exam Counter with 3D Refraction Phoropter Instrument & Dual Swivel Stools!
+        const examDesk = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.78, fgD), satinWhiteMat);
+        examDesk.position.set(0, 0.41, fgZ);
+        const examTop = new THREE.Mesh(new THREE.BoxGeometry(2.22, 0.045, fgD + 0.06), hinokiWoodMat);
+        examTop.position.set(0, 0.82, fgZ);
+        // 3D Refraction Phoropter Instrument (column pole + overhead arm + twin binocular lens drums + chin rest)
+        const phorPole = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.035, 0.76, 10), brushedAlumMat);
+        phorPole.position.set(-0.28, 1.22, fgZ);
+        const phorArm = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.04, 0.04), brushedAlumMat);
+        phorArm.position.set(-0.10, 1.56, fgZ);
+        const phorHead = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.20, 0.08), obsidianGlossMat);
+        phorHead.position.set(0.06, 1.44, fgZ);
+        for (const lxOff of [-0.07, 0.07]) {
+          const lensDrum = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.10, 12), brushedAlumMat);
+          lensDrum.rotation.x = Math.PI / 2;
+          lensDrum.position.set(0.06 + lxOff, 1.42, fgZ);
+          g.add(lensDrum);
+        }
+        const autorefractor = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.34, 0.24), satinWhiteMat);
+        autorefractor.position.set(0.56, 1.01, fgZ);
+        g.add(examDesk, examTop, phorPole, phorArm, phorHead, autorefractor);
+        addLocalContactShadow(g, 0, fgZ, 2.5, 1.2);
+        // Dual swivel stools for optometrist and customer
+        for (const sx of [-0.62, 0.62]) {
+          const sSeat = new THREE.Mesh(stoolSeatGeo, obsidianGlossMat);
+          sSeat.position.set(sx, 0.56, fgZ + fgD * 0.58);
+          const sLeg = new THREE.Mesh(stoolLegGeo, brushedAlumMat);
+          sLeg.scale.set(1, 0.82, 1);
+          sLeg.position.set(sx, 0.28, fgZ + fgD * 0.58);
+          g.add(sSeat, sLeg);
+        }
+      }
+    } else if (isPharmacy) {
+      // 4A. PHARMACIES (WATSONS, GUARDIAN, CARING, BIG PHARMACY, IJN FIRST PHARMACY, GNC, LAC, BMS ORGANICS):
+      // Rear prescription dispensary counter with glowing green pharmacy cross (+) + double-sided pharmacy gondola aisles stocked with colorful health/beauty boxes!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.86 : 0.56;
+      const pharmBrandMat = uName.includes('GUARDIAN') ? mrDiyOrangeMat : uName.includes('WATSONS') ? nitoriTealMat : emeraldTrimMat;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b === Math.floor(numBays * 0.5)) {
+          // Rear Prescription Dispensary Counter with Glowing Green Pharmacy Cross (+)!
+          const dispBack = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.32, eaveY - 0.42, 0.14), satinWhiteMat);
+          dispBack.position.set(bx, (eaveY - 0.42) * 0.5 + 0.08, -intD + 0.24);
+          const dispSign = new THREE.Mesh(
+            new THREE.PlaneGeometry(bayStep - 0.46, 0.36),
+            new THREE.MeshBasicMaterial({ map: createSignBoardTexture('PHARMACY DISPENSARY', 'REGISTERED PHARMACIST ON DUTY', '#15803d', '#ffffff', '#86efac', 512, 96) })
+          );
+          dispSign.position.set(bx, eaveY - 0.58, -intD + 0.33);
+          const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.54, 0.08), emeraldTrimMat);
+          crossV.position.set(bx, 1.98, -intD + 0.34);
+          const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.16, 0.08), emeraldTrimMat);
+          crossH.position.set(bx, 1.98, -intD + 0.34);
+          const dispCounter = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.40, 0.96, 0.54), satinWhiteMat);
+          dispCounter.position.set(bx, 0.50, -intD + 0.54);
+          const dispBand = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, 0.12, 0.58), pharmBrandMat);
+          dispBand.position.set(bx, 0.94, -intD + 0.54);
+          g.add(dispBack, dispSign, crossV, crossH, dispCounter, dispBand);
+        } else {
+          for (const uOff of [-(bayStep - 0.36) * 0.5, (bayStep - 0.36) * 0.5]) {
+            const up = new THREE.Mesh(new THREE.BoxGeometry(0.05, eaveY - 0.40, 0.36), satinWhiteMat);
+            up.position.set(bx + uOff, (eaveY - 0.40) * 0.5, -intD + 0.32);
+            g.add(up);
+          }
+          for (let sh = 0; sh < 5; sh++) {
+            const sy = 0.54 + sh * 0.48;
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, 0.04, 0.36), satinWhiteMat);
+            shelf.position.set(bx, sy, -intD + 0.32);
+            g.add(shelf);
+            for (let pk = -2; pk <= 2; pk++) {
+              const medBox = new THREE.Mesh(shoeBoxGeo, rainbowBandMats[(b + sh + pk + 6) % rainbowBandMats.length]);
+              medBox.scale.set(0.68, 0.95, 0.75);
+              medBox.position.set(bx + pk * 0.38, sy + 0.10, -intD + 0.33);
+              g.add(medBox);
+            }
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Double-Sided Pharmacy Gondola Aisles Stocked with Health & Beauty Boxes!
+        for (const side of [-1, 1]) {
+          const gx = side * Math.min(innerW * 0.27, 2.55);
+          const gondSpine = new THREE.Mesh(new THREE.BoxGeometry(1.85, 1.38, 0.12), satinWhiteMat);
+          gondSpine.position.set(gx, 0.72, fgZ);
+          const gondCap = new THREE.Mesh(new THREE.BoxGeometry(1.90, 0.14, fgD), pharmBrandMat);
+          gondCap.position.set(gx, 1.44, fgZ);
+          g.add(gondSpine, gondCap);
+          addLocalContactShadow(g, gx, fgZ, 2.15, 1.15);
+          for (let sh = 0; sh < 3; sh++) {
+            const sy = 0.34 + sh * 0.38;
+            const gShelf = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.036, fgD), satinWhiteMat);
+            gShelf.position.set(gx, sy, fgZ);
+            g.add(gShelf);
+            for (let bxIdx = -2; bxIdx <= 2; bxIdx++) {
+              const prod = new THREE.Mesh(shoeBoxGeo, rainbowBandMats[(sh + bxIdx + (side > 0 ? 4 : 2)) % rainbowBandMats.length]);
+              prod.scale.set(0.62, 0.88, 0.72);
+              prod.position.set(gx + bxIdx * 0.34, sy + 0.09, fgZ + 0.16);
+              g.add(prod);
+            }
+          }
+        }
+      }
+    } else if (isTcmHerbal) {
+      // 4B. TRADITIONAL CHINESE MEDICINE & HERBAL APOTHECARY (EU YAN SANG, LO HONG KA):
+      // Traditional dark-rosewood hundred-drawer apothecary herb cabinet (百子柜), red-and-gold bird's-nest gift hampers & porcelain herb jars!
+      const fgZ = intD > 2.2 ? -1.52 : -0.80;
+      const fgD = intD > 2.2 ? 0.84 : 0.56;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        // Dark-rosewood Hundred-Drawer Apothecary Herb Cabinet (百子柜) with brass drawer pulls
+        const cabinet = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.34, eaveY - 0.54, 0.42), smokedOakMat);
+        cabinet.position.set(bx, (eaveY - 0.54) * 0.5 + 0.08, -intD + 0.34);
+        const goldCornice = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.28, 0.12, 0.48), brassGoldMat);
+        goldCornice.position.set(bx, eaveY - 0.44, -intD + 0.36);
+        g.add(cabinet, goldCornice);
+        for (let r = 0; r < 5; r++) {
+          for (let c = -2; c <= 2; c++) {
+            const drawerFace = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.28, 0.04), norenCrimsonMat);
+            drawerFace.position.set(bx + c * 0.38, 0.54 + r * 0.38, -intD + 0.56);
+            const brassPull = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.03, 0.06), brassGoldMat);
+            brassPull.position.set(bx + c * 0.38, 0.54 + r * 0.38, -intD + 0.58);
+            g.add(drawerFace, brassPull);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Rosewood TCM Counter with Red-and-Gold Bird's-Nest Gift Hampers & Porcelain Herb Jars!
+        const tcmDesk = new THREE.Mesh(new THREE.BoxGeometry(Math.min(innerW * 0.64, 3.4), 0.88, fgD), smokedOakMat);
+        tcmDesk.position.set(0, 0.46, fgZ);
+        const tcmTop = new THREE.Mesh(new THREE.BoxGeometry(Math.min(innerW * 0.64, 3.4) + 0.10, 0.055, fgD + 0.08), brassGoldMat);
+        tcmTop.position.set(0, 0.92, fgZ);
+        g.add(tcmDesk, tcmTop);
+        addLocalContactShadow(g, 0, fgZ, 3.6, 1.25);
+        for (let hm = -2; hm <= 2; hm++) {
+          const hx = hm * 0.62;
+          if (hm % 2 === 0) {
+            // Red-and-gold Bird's-Nest Pyramid Gift Hamper wrapped with gold ribbon
+            const hamperBase = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.24, 0.28), uniqloRedBoxMat);
+            hamperBase.position.set(hx, 1.07, fgZ);
+            const hamperTop = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.32, 4), brassGoldMat);
+            hamperTop.rotation.y = Math.PI * 0.25;
+            hamperTop.position.set(hx, 1.34, fgZ);
+            g.add(hamperBase, hamperTop);
+          } else {
+            // Traditional Blue-and-White Porcelain Apothecary Herb Jar
+            const jar = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.11, 0.28, 12), satinWhiteMat);
+            jar.position.set(hx, 1.09, fgZ);
+            const lid = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), nealsCobaltMat);
+            lid.position.set(hx, 1.23, fgZ);
+            g.add(jar, lid);
+          }
+        }
+      }
+    } else if (isMassageChair) {
+      // 4C. MASSAGE CHAIR SHOWROOMS (OSIM, OGAWA, GINTELL, ITSU):
+      // 4 Sculpted 3D Zero-Gravity Leather Massage Chair Pods Reclined on Glowing Circular Wooden Plinths!
+      const fgZ = intD > 2.2 ? -1.48 : -0.78;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        const slatWall = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.36, eaveY - 0.42, 0.10), hinokiWoodMat);
+        slatWall.position.set(bx, (eaveY - 0.42) * 0.5 + 0.08, -intD + 0.22);
+        g.add(slatWall);
+      }
+      const chairCount = Math.min(4, Math.max(2, Math.floor(innerW / 2.6)));
+      for (let c = 0; c < chairCount; c++) {
+        const cx = -innerW * 0.34 + (c / Math.max(1, chairCount - 1)) * (innerW * 0.68);
+        const podMat = c % 2 === 0 ? smokedOakMat : intMerchMats[2];
+        // Glowing Circular Wooden Plinth
+        const plinth = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.70, 0.10, 20), lightOakMat);
+        plinth.position.set(cx, 0.11, fgZ);
+        const halo = new THREE.Mesh(new THREE.TorusGeometry(0.68, 0.022, 8, 24), intLightWarmMat);
+        halo.rotation.x = Math.PI / 2;
+        halo.position.set(cx, 0.08, fgZ);
+        // Reclined 3D Zero-Gravity Massage Chair Pod (curved outer capsule shell + reclined backrest + calf-massage ottoman)
+        const shellPod = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.62, 0.86), satinWhiteMat);
+        shellPod.position.set(cx, 0.44, fgZ - 0.06);
+        const seatPad = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.16, 0.62), podMat);
+        seatPad.position.set(cx, 0.46, fgZ);
+        const backrest = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.78, 0.18), podMat);
+        backrest.position.set(cx, 0.82, fgZ - 0.28);
+        backrest.rotation.x = -0.34;
+        const legOttoman = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.38, 0.22), obsidianGlossMat);
+        legOttoman.position.set(cx, 0.34, fgZ + 0.38);
+        legOttoman.rotation.x = 0.42;
+        g.add(plinth, halo, shellPod, seatPad, backrest, legOttoman);
+        addLocalContactShadow(g, cx, fgZ, 1.5, 1.5);
+      }
+    } else if (isBankAtm) {
+      // 4D. BANKS & CURRENCY EXCHANGE (MAYBANK, CIMB, HONG LEONG, RHB, AL-TAMIJ, AEROLINE):
+      // Recessed 3D ATM cash-machine bays with glowing LCD screens, keypad cowls & privacy fins + glass teller counter & queue stanchions!
+      const fgZ = intD > 2.2 ? -1.48 : -0.78;
+      const bankAccentMat = uName.includes('MAYBANK') ? mrDiyYellowMat : uName.includes('CIMB') ? jayaRedPortalMat : uName.includes('AL-TAMIJ') ? emeraldTrimMat : intWallNavyMat;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        // Recessed 3D ATM Cash-Machine Bay with Glowing LCD Screen, Keypad Cowl & Privacy Fins!
+        const atmBody = new THREE.Mesh(new THREE.BoxGeometry(0.86, 1.88, 0.54), matteSteelMat);
+        atmBody.position.set(bx, 0.98, -intD + 0.38);
+        const atmHeader = new THREE.Mesh(new THREE.BoxGeometry(0.90, 0.28, 0.58), bankAccentMat);
+        atmHeader.position.set(bx, 2.04, -intD + 0.38);
+        const lcdScreen = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.36, 0.06), intLightCoolMat);
+        lcdScreen.position.set(bx - 0.08, 1.38, -intD + 0.66);
+        lcdScreen.rotation.x = -0.18;
+        const keypadCowl = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.14, 0.24), brushedAlumMat);
+        keypadCowl.position.set(bx - 0.08, 1.04, -intD + 0.72);
+        g.add(atmBody, atmHeader, lcdScreen, keypadCowl);
+        for (const fSide of [-0.46, 0.46]) {
+          const privFin = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.56, 0.74), bankAccentMat);
+          privFin.position.set(bx + fSide, 1.12, -intD + 0.48);
+          g.add(privFin);
+        }
+      }
+      if (intD > 1.35) {
+        // Glass Teller Counter & Queue Stanchions
+        const tellerBase = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.98, 0.62), bankAccentMat);
+        tellerBase.position.set(0, 0.51, fgZ);
+        const tellerTop = new THREE.Mesh(new THREE.BoxGeometry(2.42, 0.05, 0.68), cafeMarbleMat);
+        tellerTop.position.set(0, 1.02, fgZ);
+        const tellerGlass = new THREE.Mesh(new THREE.BoxGeometry(2.30, 0.74, 0.06), intGlassPhysMat);
+        tellerGlass.position.set(0, 1.41, fgZ + 0.24);
+        g.add(tellerBase, tellerTop, tellerGlass);
+        addLocalContactShadow(g, 0, fgZ, 2.7, 1.1);
+        for (const sx of [-1.25, 1.25]) {
+          const st = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.032, 0.88, 8), brushedAlumMat);
+          st.position.set(sx, 0.46, fgZ + 0.72);
+          g.add(st);
+        }
+        const belt = new THREE.Mesh(new THREE.BoxGeometry(2.50, 0.055, 0.02), jayaRedPortalMat);
+        belt.position.set(0, 0.82, fgZ + 0.72);
+        g.add(belt);
+      }
+    } else if (isLululemon) {
+      // 5A. LULULEMON (F328 1F Oval):
+      // Warm slatted oak walls + rolled colourful yoga-mat wall cubbies + circular stretching plinth with athletic mannequins!
+      const fgZ = intD > 2.2 ? -1.48 : -0.80;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        // Warm slatted oak backdrop
+        for (let sl = -3; sl <= 3; sl++) {
+          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.10, eaveY - 0.36, 0.14), vertOakMat);
+          slat.position.set(bx + sl * 0.32, (eaveY - 0.36) * 0.5 + 0.08, -intD + 0.22);
+          g.add(slat);
+        }
+        // Rolled Colourful Yoga-Mat Wall Cubby Grid!
+        for (const uOff of [-(bayStep - 0.44) * 0.5, 0, (bayStep - 0.44) * 0.5]) {
+          const up = new THREE.Mesh(new THREE.BoxGeometry(0.045, eaveY - 0.52, 0.38), satinWhiteMat);
+          up.position.set(bx + uOff, (eaveY - 0.52) * 0.5, -intD + 0.36);
+          g.add(up);
+        }
+        for (let sh = 0; sh < 4; sh++) {
+          const sy = 0.64 + sh * 0.56;
+          const shelf = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.042, 0.38), satinWhiteMat);
+          shelf.position.set(bx, sy, -intD + 0.36);
+          g.add(shelf);
+          for (let ym = -2; ym <= 2; ym++) {
+            const yogaMatRoll = new THREE.Mesh(new THREE.CylinderGeometry(0.072, 0.072, 0.36, 10), intMerchMats[(b * 2 + sh + ym + 7) % intMerchMats.length]);
+            yogaMatRoll.rotation.x = Math.PI / 2;
+            yogaMatRoll.position.set(bx + ym * 0.34, sy + 0.11, -intD + 0.38);
+            g.add(yogaMatRoll);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Circular Stretching Plinth with Sculpted Athletic Yoga Mannequins!
+        const yogaPlinth = new THREE.Mesh(new THREE.CylinderGeometry(1.38, 1.44, 0.16, 24), hinokiWoodMat);
+        yogaPlinth.position.set(0, 0.10, fgZ);
+        const yogaHalo = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.025, 8, 28), intLightWarmMat);
+        yogaHalo.rotation.x = Math.PI / 2;
+        yogaHalo.position.set(0, 0.08, fgZ);
+        g.add(yogaPlinth, yogaHalo);
+        addLocalContactShadow(g, 0, fgZ, 3.0, 2.2);
+        for (const mSide of [-0.62, 0.62]) {
+          const matPad = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.022, 1.15), mSide < 0 ? intMerchMats[5] : intMerchMats[4]);
+          matPad.position.set(mSide, 0.19, fgZ);
+          g.add(matPad);
+          addSculptedMannequin(g, mSide, 0.20, fgZ, mannequinLightMat, mSide < 0 ? 0.28 : -0.28, mSide < 0 ? norenCrimsonMat : intMerchMats[4]);
+        }
+      }
+    } else if (isSealantis) {
+      // 5B. SEALANTIS SCUBA DIVE CENTRE (5F):
+      // 3D yellow & brushed-aluminum scuba diving air cylinders in racks, hanging neoprene wetsuits, diving fins/masks counter & dive-computer display!
+      const fgZ = intD > 2.2 ? -1.50 : -0.80;
+      const fgD = intD > 2.2 ? 0.84 : 0.56;
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (b % 2 === 0) {
+          // 2-Tier Steel Rack Loaded with 3D Yellow & Brushed-Aluminum Scuba Diving Air Cylinders!
+          for (const tierY of [0.16, 1.28]) {
+            const rackBar = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.08, 0.42), matteSteelMat);
+            rackBar.position.set(bx, tierY, -intD + 0.36);
+            const strapBar = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.38, 0.05, 0.44), matteSteelMat);
+            strapBar.position.set(bx, tierY + 0.48, -intD + 0.36);
+            g.add(rackBar, strapBar);
+            for (let tk = -2; tk <= 2; tk++) {
+              const tx = bx + tk * 0.36;
+              const tankMat = (tk + b) % 2 === 0 ? canaryArchMat : brushedAlumMat;
+              const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.105, 0.105, 0.72, 12), tankMat);
+              cyl.position.set(tx, tierY + 0.40, -intD + 0.36);
+              const tankDome = new THREE.Mesh(new THREE.SphereGeometry(0.105, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.5), obsidianGlossMat);
+              tankDome.position.set(tx, tierY + 0.76, -intD + 0.36);
+              const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12, 8), brassGoldMat);
+              valve.position.set(tx, tierY + 0.88, -intD + 0.36);
+              g.add(cyl, tankDome, valve);
+            }
+          }
+        } else {
+          // Hanging Neoprene Wetsuits Rack (Full-Length Black & Cyan-Striped 3D Wetsuits)!
+          const suitRail = new THREE.Mesh(new THREE.BoxGeometry(bayStep - 0.44, 0.045, 0.045), matteSteelMat);
+          suitRail.position.set(bx, 2.16, -intD + 0.42);
+          g.add(suitRail);
+          for (let ws = -2; ws <= 2; ws++) {
+            const wetsuit = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.38, 0.44), obsidianGlossMat);
+            wetsuit.position.set(bx + ws * 0.36, 1.42, -intD + 0.42);
+            const cyanStripe = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.42, 0.45), owalaSkyMat);
+            cyanStripe.position.set(bx + ws * 0.36, 1.56, -intD + 0.42);
+            g.add(wetsuit, cyanStripe);
+          }
+        }
+      }
+      if (intD > 1.35) {
+        // Diving Fins, Tempered-Glass Masks & Dive-Computer Display Counter!
+        const diveDesk = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.86, fgD), intWallNavyMat);
+        diveDesk.position.set(0, 0.45, fgZ);
+        const diveTop = new THREE.Mesh(new THREE.BoxGeometry(2.42, 0.05, fgD + 0.06), brushedAlumMat);
+        diveTop.position.set(0, 0.90, fgZ);
+        g.add(diveDesk, diveTop);
+        addLocalContactShadow(g, 0, fgZ, 2.7, 1.2);
+        for (let fn = -2; fn <= 2; fn++) {
+          const fx = fn * 0.44;
+          const finBlade = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.03, 0.46), fn % 2 === 0 ? canaryArchMat : owalaSkyMat);
+          finBlade.position.set(fx, 0.96, fgZ);
+          finBlade.rotation.x = -0.22;
+          const diveComp = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.08, 12), obsidianGlossMat);
+          diveComp.position.set(fx, 0.98, fgZ + 0.20);
+          g.add(finBlade, diveComp);
+        }
+      }
+    } else if (isFullServiceDining) {
+      // 6. FULL-SERVICE F&B RESTAURANTS, HOTPOT, GRILLED FISH & BAKERIES (TANYU GRILLED FISH, HAIDILAO, DIN TAI FUNG, SUSHI ZANMAI, RAKUTEN, NANDO'S, CHILI'S, ORIENTAL KOPI, MADAM KWAN'S, PUTIEN, DRAGON-I, LAVENDER, LA BOHEME, BREADTALK):
+      // Open-front dining rooms with upholstered dining booths, set tables with 3D tableware/hotpot burners & warm pendant lanterns above each table, glass pastry/steamer counter at front window & entrance host podium with open menu book & waiting chairs!
+      const fgZ = intD > 2.2 ? -1.48 : -0.82;
+      const isHotpotOrGrill = /TANYU|HAIDILAO|HAI DI LAO|FEI FAN|TAI ER|MALATANG/.test(uName);
+      const isSteamerDimSum = /DIN TAI FUNG|DRAGON-I|PUTIEN|PAO XIANG|YUN NANS/.test(uName);
+      const boothColorMat = isHotpotOrGrill ? norenCrimsonMat : isBakeryDining ? smokedOakMat : uName.includes('ORIENTAL') ? emeraldTrimMat : intMerchMats[0];
+
+      // Rear Glass Kitchen / Steamer / Pastry Showcase Pass Counter!
+      const passW = Math.min(innerW * 0.68, 6.8);
+      const passBase = new THREE.Mesh(new THREE.BoxGeometry(passW, 0.96, 0.62), isBakeryDining ? creamTileMat : smokedOakMat);
+      passBase.position.set(0, 0.50, -intD + 0.52);
+      const passTop = new THREE.Mesh(new THREE.BoxGeometry(passW + 0.10, 0.06, 0.70), cafeMarbleMat);
+      passTop.position.set(0, 1.00, -intD + 0.52);
+      const passGlass = new THREE.Mesh(new THREE.BoxGeometry(passW - 0.12, 0.68, 0.56), intGlassPhysMat);
+      passGlass.position.set(0, 1.36, -intD + 0.52);
+      g.add(passBase, passTop, passGlass);
+      for (let st = -2; st <= 2; st++) {
+        const sx = st * (passW * 0.18);
+        if (isBakeryDining) {
+          const pastry = new THREE.Mesh(pastryDomeGeo, intMerchMats[2]);
+          pastry.position.set(sx, 1.12, -intD + 0.52);
+          g.add(pastry);
+        } else {
+          // Stacked Bamboo Xiao Long Bao / Dim Sum Steamer Baskets!
+          for (let tier = 0; tier < 3; tier++) {
+            const steamer = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.09, 12), hinokiWoodMat);
+            steamer.position.set(sx, 1.08 + tier * 0.095, -intD + 0.52);
+            g.add(steamer);
+          }
+        }
+      }
+
+      // Open-Front Dining Room: Upholstered Dining Booths, Set Tables with 3D Tableware/Hotpot Burners & Warm Pendant Lanterns!
+      for (let b = 0; b < numBays; b++) {
+        const bx = -innerW * 0.5 + 0.6 + (b + 0.5) * bayStep;
+        if (Math.abs(bx) < 1.35) continue;
+        const tblTop = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.055, 0.78), isHotpotOrGrill ? obsidianGlossMat : hinokiWoodMat);
+        tblTop.position.set(bx, 0.74, fgZ);
+        const tblLeg = new THREE.Mesh(bistroPoleGeo, matteSteelMat);
+        tblLeg.position.set(bx, 0.38, fgZ);
+        g.add(tblTop, tblLeg);
+        addLocalContactShadow(g, bx, fgZ, 1.9, 1.25);
+
+        // Centerpiece on each dining table: Sizzling Grilled-Fish Tray (Tanyu), Dual-Broth Hotpot Cauldron (Haidilao), Bamboo Steamer (Din Tai Fung), or Porcelain Platters!
+        if (uName.includes('TANYU') || uName.includes('TAI ER')) {
+          const grillTray = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.08, 0.30), obsidianGlossMat);
+          grillTray.position.set(bx, 0.81, fgZ);
+          const emberGlow = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.03, 0.24), mrDiyOrangeMat);
+          emberGlow.position.set(bx, 0.775, fgZ);
+          g.add(grillTray, emberGlow);
+        } else if (isHotpotOrGrill) {
+          const hotpot = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.18, 0.12, 16), intCopperMat);
+          hotpot.position.set(bx, 0.82, fgZ);
+          const broth = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.20, 0.03, 16), uniqloRedBoxMat);
+          broth.position.set(bx, 0.87, fgZ);
+          g.add(hotpot, broth);
+        } else if (isSteamerDimSum) {
+          const basket1 = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.09, 12), hinokiWoodMat);
+          basket1.position.set(bx, 0.81, fgZ);
+          const basket2 = basket1.clone();
+          basket2.position.y = 0.90;
+          g.add(basket1, basket2);
+        } else {
+          const platter = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.05, 12), satinWhiteMat);
+          platter.position.set(bx, 0.79, fgZ);
+          g.add(platter);
+        }
+        for (const pxOff of [-0.34, 0.34]) {
+          const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.06, 0.06, 10), satinWhiteMat);
+          bowl.position.set(bx + pxOff, 0.79, fgZ + 0.22);
+          g.add(bowl);
+        }
+
+        // Flanking Upholstered Dining Booths!
+        for (const bSide of [-0.62, 0.62]) {
+          const boothSeat = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.44, 0.78), smokedOakMat);
+          boothSeat.position.set(bx + bSide, 0.24, fgZ);
+          const boothBack = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.56, 0.78), boothColorMat);
+          boothBack.position.set(bx + bSide + Math.sign(bSide) * 0.15, 0.68, fgZ);
+          g.add(boothSeat, boothBack);
+        }
+
+        // Warm Pendant Lantern Suspended Directly Above Each Dining Table!
+        const lCord = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.76, 6), matteSteelMat);
+        lCord.position.set(bx, eaveY - 0.42, fgZ);
+        const lBody = new THREE.Mesh(lanternBodyGeo, isHotpotOrGrill ? lanternGlowRedMat : lanternGlowWarmMat);
+        lBody.scale.set(0.76, 1.15, 0.76);
+        lBody.position.set(bx, eaveY - 0.96, fgZ);
+        const lCap = new THREE.Mesh(lanternCapGeo, brassGoldMat);
+        lCap.position.set(bx, eaveY - 0.72, fgZ);
+        g.add(lCord, lBody, lCap);
+      }
+
+      // Entrance Host Podium with Open Menu Book & Waiting Chairs at Front Threshold!
+      const hostX = Math.min(halfW - 1.35, 2.35);
+      const hostLectern = new THREE.Mesh(new THREE.BoxGeometry(0.56, 1.06, 0.46), smokedOakMat);
+      hostLectern.position.set(hostX, 0.55, 0.24);
+      const hostTrim = new THREE.Mesh(new THREE.BoxGeometry(0.60, 0.04, 0.50), brassGoldMat);
+      hostTrim.position.set(hostX, 1.09, 0.24);
+      const menuBook = new THREE.Mesh(new THREE.PlaneGeometry(0.46, 0.34), new THREE.MeshBasicMaterial({ map: createMenuStandTexture(store) }));
+      menuBook.position.set(hostX, 1.14, 0.26);
+      menuBook.rotation.x = -0.42;
+      g.add(hostLectern, hostTrim, menuBook);
+      for (let wc = 0; wc < 2; wc++) {
+        const wx = -Math.min(halfW - 1.35, 2.35) + wc * 0.64;
+        const wSeat = new THREE.Mesh(chairSeatGeo, boothColorMat);
+        wSeat.position.set(wx, 0.44, 0.26);
+        const wBack = new THREE.Mesh(chairBackGeo, smokedOakMat);
+        wBack.position.set(wx, 0.62, 0.08);
+        const wLeg = new THREE.Mesh(bistroPoleGeo, matteSteelMat);
+        wLeg.scale.set(0.75, 0.62, 0.75);
+        wLeg.position.set(wx, 0.22, 0.26);
+        g.add(wSeat, wBack, wLeg);
       }
     } else if (prof.facadeType === 'cafe-patisserie') {
       // COME TRUE CAFE / ORIENTAL KOPI / CHATERAISE / LAVENDER / HEYTEA / STARBUCKS:
@@ -4348,6 +5063,7 @@ export function buildMallArchitecture(scene, interactables) {
     const isOpenGlassless =
       isParkson || isAeon || isDecathlon || isGsc || isTgv || isWangsa || isToyCatcher ||
       isJayaGrocer || isGameOn || isModu || isMrt || isUniqlo || isNitori || isMelvitaHooga || isMuji ||
+      isFullServiceDining || isPharmacy || isBookstore || isBankAtm || isHomesHarmony || isLululemon || isSealantis || isMassageChair || isTcmHerbal ||
       isMrDiy || isPopMart || isTopToy || isZusPastry || isSephora ||
       isStarbucks || isHeytea || isMiniso || isIppudo || isBhc ||
       isComeTrue || isAdidas || isFoodDistrict || isRollerwa;
@@ -4573,8 +5289,8 @@ export function buildMallArchitecture(scene, interactables) {
           cove.position.set(0, eaveY - 0.07, 0.40);
           g.add(lintel, cove);
 
-          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide boutiques (category-authentic 3D merchandise — NEVER torso busts on luggage, footwear, or apothecary stores!)
-          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva) {
+          // 2 Physical 3D Illuminated Showcase Display Plinths flanking wide boutiques (category-authentic 3D merchandise — NEVER torso busts on luggage, footwear, jewellery, optical, or apothecary stores!)
+          if (store.width >= 10.0 && !isChanel && !isZara && !isCoach && !isDiva && !isFullServiceDining && !isPharmacy && !isTcmHerbal && !isMassageChair) {
             const mMat = prof.isLight ? mannequinLinenMat : mannequinLightMat;
             for (const side of [-1, 1]) {
               const mx = side * Math.min(halfW - 1.65, 3.35);
@@ -4583,7 +5299,41 @@ export function buildMallArchitecture(scene, interactables) {
               const plinthTrim = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.04, 0.56), isNealsYard ? satinWhiteMat : brassGoldMat);
               plinthTrim.position.set(mx, 0.79, 0.56);
               g.add(plinth, plinthTrim);
-              if (isLuggage) {
+              if (isJewelleryWatch) {
+                const vitHalo = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.035, 0.46), intLightWarmMat);
+                vitHalo.position.set(mx, 0.82, 0.56);
+                const vitGlass = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.44, 0.44), intGlassPhysMat);
+                vitGlass.position.set(mx, 1.05, 0.56);
+                const vitCap = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.03, 0.46), brassGoldMat);
+                vitCap.position.set(mx, 1.28, 0.56);
+                const bustCone = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.24, 12), norenCrimsonMat);
+                bustCone.position.set(mx, 0.96, 0.56);
+                const ringChain = new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.012, 8, 16), brassGoldMat);
+                ringChain.rotation.x = 0.42;
+                ringChain.position.set(mx, 1.00, 0.58);
+                g.add(vitHalo, vitGlass, vitCap, bustCone, ringChain);
+              } else if (isOptical) {
+                const standPole = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.024, 0.42, 8), brushedAlumMat);
+                standPole.position.set(mx, 1.02, 0.56);
+                g.add(standPole);
+                for (let et = 0; et < 3; et++) {
+                  const frameBar = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.045, 0.06), et % 2 === 0 ? obsidianGlossMat : brassGoldMat);
+                  frameBar.position.set(mx, 0.90 + et * 0.12, 0.58);
+                  g.add(frameBar);
+                }
+              } else if (isBookstore) {
+                for (let bk = -1; bk <= 1; bk++) {
+                  const pile = new THREE.Mesh(shoeBoxGeo, intMerchMats[(bk + 3) % intMerchMats.length]);
+                  pile.position.set(mx + bk * 0.18, 0.88, 0.56);
+                  g.add(pile);
+                }
+              } else if (isLululemon) {
+                for (let ym = -1; ym <= 1; ym++) {
+                  const roll = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 0.38, 10), intMerchMats[(ym + 4) % intMerchMats.length]);
+                  roll.position.set(mx + ym * 0.16, 1.00, 0.56);
+                  g.add(roll);
+                }
+              } else if (isLuggage) {
                 if (hasTomaz && side > 0) {
                   addSneakerDisplay(g, mx - 0.14, 0.82, 0.56, smokedOakMat, -0.28);
                   addSneakerDisplay(g, mx + 0.14, 0.82, 0.56, obsidianGlossMat, -0.18);
