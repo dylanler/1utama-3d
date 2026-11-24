@@ -615,18 +615,31 @@ export function buildMallArchitecture(scene, interactables) {
   function addEscalatorWellHoleAndRails(targetShape, w, fIdx, yFloor, includeLed = true) {
     targetShape.holes.push(rectPath(w.xMin, w.xMax, w.zMin, w.zMax));
     addRectVoidCollar(w.xMin, w.xMax, w.zMin, w.zMax, yFloor, 0.14);
-    addRectBalustrade(w.xMin, w.zMin - 0.06, w.xMax, w.zMin - 0.06, yFloor, 1.08, includeLed);
-    addRectBalustrade(w.xMin, w.zMax + 0.06, w.xMax, w.zMax + 0.06, yFloor, 1.08, includeLed);
     // Check if a stacked escalator starts rising from this floor (fIdx -> fIdx + 1) at the same position:
-    // When hasUpperStack is true, NEVER place a transverse balustrade across xMin or xMax!
-    const hasUpperStack = ESCALATOR_BANKS.some(
-      (e) =>
-        e.lowerFloor === fIdx &&
-        Math.abs(e.z - w.esc.z) < 0.5 &&
-        Math.abs(Math.min(e.xStart, e.xEnd) - Math.min(w.esc.xStart, w.esc.xEnd)) < 2.0
-    );
-    if (!hasUpperStack) {
-      // Topmost terminus floor of this escalator stack: cap ONLY the non-landing end (near xStart), leaving the upper landing comb plate (near xEnd) 100% open!
+    const hasUpperStack =
+      w.hasUpperStack ??
+      ESCALATOR_BANKS.some(
+        (e) =>
+          e.lowerFloor === fIdx &&
+          Math.abs(e.z - w.esc.z) < 0.5 &&
+          Math.abs(Math.min(e.xStart, e.xEnd) - Math.min(w.esc.xStart, w.esc.xEnd)) < 2.0
+      );
+    if (hasUpperStack) {
+      // Start horizontal side glass balustrades at rXMin (x0 + 3.65, where the upper escalator's white truss clears yFloor + 1.05 -> ZERO railing-to-truss intersection!)
+      const rXMin = w.railXMin ?? (w.xMin + 1.80);
+      addRectBalustrade(rXMin, w.zMin - 0.06, w.xMax, w.zMin - 0.06, yFloor, 1.08, includeLed);
+      addRectBalustrade(rXMin, w.zMax + 0.06, w.xMax, w.zMax + 0.06, yFloor, 1.08, includeLed);
+      const curbLen = Math.max(0.2, rXMin - w.xMin);
+      const curbCx = (w.xMin + rXMin) * 0.5;
+      for (const zCurb of [w.zMin - 0.04, w.zMax + 0.04]) {
+        const curb = new THREE.Mesh(new THREE.BoxGeometry(curbLen, 0.12, 0.08), balconyWhiteFasciaMat);
+        curb.position.set(curbCx, yFloor + 0.06, zCurb);
+        root.add(curb);
+      }
+    } else {
+      // Topmost terminus floor of this escalator stack: full longitudinal side balustrades + transverse end-cap at non-landing end!
+      addRectBalustrade(w.xMin, w.zMin - 0.06, w.xMax, w.zMin - 0.06, yFloor, 1.08, includeLed);
+      addRectBalustrade(w.xMin, w.zMax + 0.06, w.xMax, w.zMax + 0.06, yFloor, 1.08, includeLed);
       if (w.esc.xStart <= w.esc.xEnd) {
         addRectBalustrade(w.xMin - 0.06, w.zMin - 0.06, w.xMin - 0.06, w.zMax + 0.06, yFloor, 1.08, includeLed);
       } else {
@@ -7552,9 +7565,9 @@ export function buildMallArchitecture(scene, interactables) {
     });
   }
 
-  // 3D Luxury Furniture Showroom Feature Vignettes (3F XZQT OV301, 4F Cellini OV401, 4F Stanzo OV501!)
+  // 3D Luxury Furniture Showroom Feature Vignettes (3F XZQT OV301, 4F Cellini OV401, 4F Stanzo OV501 — 100% clear of oval-rim escalators!)
   const furnDisplays = [
-    { f: 4, x: 148, z: -21.2, rotY: 0, sofaCol: '#d6d3d1', accent: '#f59e0b' },
+    { f: 4, x: 152.5, z: -20.5, rotY: 0, sofaCol: '#d6d3d1', accent: '#f59e0b' },
     { f: 5, x: 146, z: -21.2, rotY: 0, sofaCol: '#9a3412', accent: '#38bdf8' },
     { f: 5, x: 170.5, z: -4.5, rotY: -Math.PI / 2, sofaCol: '#334155', accent: '#eab308' }
   ];
@@ -7584,13 +7597,13 @@ export function buildMallArchitecture(scene, interactables) {
     // LG (Includes sculptural LG Oval perimeter concourse benches framing Ferrari & KyoChon cleanly!)
     { f: 0, x: -162.5, z: 9.5 }, { f: 0, x: -152.0, z: 3.5 }, { f: 0, x: -114, z: -7.5 }, { f: 0, x: -45, z: 15.8 }, { f: 0, x: -20, z: -4.8 }, { f: 0, x: 64, z: -3.0 }, { f: 0, x: 112, z: -5.0 }, { f: 0, x: 123.5, z: -14.2 }, { f: 0, x: 120.5, z: 15.8 },
     // G (Moved (-74, 15.5) -> (-64, 13.8) clear of Starbucks a2 & (-168, 7.5) -> (-161.5, 11.8) clear of MRT Skywalk!)
-    { f: 1, x: -161.5, z: 11.8 }, { f: 1, x: -152.5, z: 5.8 }, { f: 1, x: -152.5, z: -5.8 }, { f: 1, x: -74, z: -15.5 }, { f: 1, x: -64, z: 13.8 }, { f: 1, x: -10, z: 3.2 }, { f: 1, x: 74, z: -13.0 }, { f: 1, x: 96, z: 12.5 }, { f: 1, x: 114, z: -10.5 }, { f: 1, x: 119.5, z: -19.8 },
+    { f: 1, x: -161.5, z: 11.8 }, { f: 1, x: -152.5, z: 5.8 }, { f: 1, x: -152.5, z: -5.8 }, { f: 1, x: -74, z: -15.5 }, { f: 1, x: -64, z: 13.8 }, { f: 1, x: -21.5, z: 5.2 }, { f: 1, x: 74, z: -13.0 }, { f: 1, x: 96, z: 12.5 }, { f: 1, x: 114, z: -10.5 }, { f: 1, x: 119.5, z: 16.5 },
     // 1F (Kept 100% clear of 1UE escalators, 1F-02 lens & oval-rim escalator landing!)
-    { f: 2, x: -153.5, z: 5.5 }, { f: 2, x: -74, z: -15.5 }, { f: 2, x: -74, z: 15.5 }, { f: 2, x: 86, z: 13.5 }, { f: 2, x: 114, z: 10.5 }, { f: 2, x: 125.5, z: -16.8 },
+    { f: 2, x: -153.5, z: 5.5 }, { f: 2, x: -74, z: -15.5 }, { f: 2, x: -74, z: 15.5 }, { f: 2, x: 86, z: 13.5 }, { f: 2, x: 114, z: 10.5 }, { f: 2, x: 125.5, z: 16.5 },
     // 2F (Added Highstreet walkway bench at (85, -10.5) for 2F-08; cleared (129, -18.8) from 2F-10 Pop Mart sightline!)
-    { f: 3, x: -153.5, z: -5.5 }, { f: 3, x: -74, z: -15.5 }, { f: 3, x: -74, z: 15.5 }, { f: 3, x: -14, z: -4.2 }, { f: 3, x: 74, z: 14.5 }, { f: 3, x: 85, z: -10.5 }, { f: 3, x: 114, z: 10.5 }, { f: 3, x: 142, z: 16.2 },
+    { f: 3, x: -153.5, z: -5.5 }, { f: 3, x: -74, z: -15.5 }, { f: 3, x: -74, z: 15.5 }, { f: 3, x: -21.5, z: -5.2 }, { f: 3, x: 74, z: 14.5 }, { f: 3, x: 85, z: -10.5 }, { f: 3, x: 114, z: 10.5 }, { f: 3, x: 142, z: 16.2 },
     // 3F (Added 1UE mezzanine planter at (-157, 9.5) for 3F-01!)
-    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 38, z: -16.2 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 125.5, z: -16.8 }, { f: 4, x: 142, z: 16.2 },
+    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 38, z: -16.2 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 125.5, z: 16.5 }, { f: 4, x: 142, z: 16.2 },
     // 4F–5F Entertainment Zone & Oval
     { f: 5, x: 64, z: -1.5 }, { f: 5, x: 76, z: 10.5 }, { f: 5, x: 102, z: 0 }, { f: 5, x: 130, z: 16.8 }, { f: 5, x: 129, z: -18.8 }
   ];

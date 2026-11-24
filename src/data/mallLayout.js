@@ -210,13 +210,25 @@ export const ELEVATORS = [
 ];
 
 export function getEscalatorWellsForFloor(floorIdx) {
-  return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx).map((e) => ({
-    esc: e,
-    xMin: Math.min(e.xStart, e.xEnd) + 0.35,
-    xMax: Math.max(e.xStart, e.xEnd) - 0.04,
-    zMin: e.z - 0.68,
-    zMax: e.z + 0.68
-  }));
+  return ESCALATOR_BANKS.filter((e) => e.upperFloor === floorIdx).map((e) => {
+    const x0 = Math.min(e.xStart, e.xEnd);
+    const x1 = Math.max(e.xStart, e.xEnd);
+    const hasUpperStack = ESCALATOR_BANKS.some(
+      (u) =>
+        u.lowerFloor === floorIdx &&
+        Math.abs(u.z - e.z) < 0.5 &&
+        Math.abs(Math.min(u.xStart, u.xEnd) - x0) < 2.0
+    );
+    return {
+      esc: e,
+      hasUpperStack,
+      xMin: x0 + (hasUpperStack ? 1.85 : 0.35),
+      railXMin: x0 + (hasUpperStack ? 3.65 : 0.35),
+      xMax: x1 - 0.04,
+      zMin: e.z - 0.68,
+      zMax: e.z + 0.68
+    };
+  });
 }
 
 export function isAtriumVoid(floorIdx, x, z) {

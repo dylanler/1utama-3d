@@ -157,19 +157,28 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
       ? rfGreenEnamelMat
       : escGlassMat;
 
-    // Recessed dark step-chain underbed tucked strictly BELOW all 34 steps
-    const underBed = new THREE.Mesh(new THREE.BoxGeometry(length - 0.50, 0.14, bank.width * 0.78), skirtDarkMat);
-    setInclinedPos(underBed, -0.34, 0, 0.12);
+    // Recessed dark step-chain underbed & architectural under-truss trimmed at the lower end (xStart..xStart+1.85)
+    // so ZERO part of an upper escalator's truss or underbed ever pokes below y0 - 0.01 into the well of the floor below!
+    const dLUnder = (0.34 + 0.07 * cosA - 0.01) / Math.max(0.25, sinA);
+    const underBed = new THREE.Mesh(new THREE.BoxGeometry(length - dLUnder, 0.14, bank.width * 0.78), skirtDarkMat);
+    setInclinedPos(underBed, -0.34, 0, dLUnder * 0.5);
     incline.add(underBed);
 
-    // Architectural Under-Truss aligned so upper end joins flush into the upper ceiling soffit return (ZERO floating flange!)
-    // and lower end stays tucked inside the lower floor slab.
+    const dLTruss = (0.48 + 0.19 * cosA - 0.01) / Math.max(0.25, sinA);
     const truss = new THREE.Mesh(
-      new THREE.BoxGeometry(length - 0.36, 0.38, bank.width * 0.90),
+      new THREE.BoxGeometry(length - dLTruss, 0.38, bank.width * 0.90),
       activeTrussMat
     );
-    setInclinedPos(truss, -0.48, 0, 0.18);
+    setInclinedPos(truss, -0.48, 0, dLTruss * 0.5);
     incline.add(truss);
+
+    // Horizontal floor-mounted lower truss foot resting cleanly on solid floor y0 (x = xStart..xStart+1.70, strictly >= y0)!
+    const lowerTrussFoot = new THREE.Mesh(
+      new THREE.BoxGeometry(1.52, 0.28, bank.width * 0.90),
+      activeTrussMat
+    );
+    lowerTrussFoot.position.set(bank.xStart + dirSign * 0.88, y0 + 0.14, bank.z);
+    root.add(lowerTrussFoot);
 
     // Upper horizontal machine-head truss soffit return seated 100% flush with ceiling coffer (y = y1 - 0.605..y1 - 0.02)!
     const upperTrussHead = new THREE.Mesh(
@@ -179,10 +188,16 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     upperTrussHead.position.set(bank.xEnd + dirSign * 0.48, y1 - 0.3125, bank.z);
     root.add(upperTrussHead);
 
-    // Seal the side well-collar soffit seam flush with the 1.36m (z = ±0.68) ceiling well opening!
+    // Seal the side well-collar soffit seam flush with the 1.36m (z = ±0.68) ceiling well opening, respecting hasUpperStack!
     {
+      const hasUpperStack = ESCALATOR_BANKS.some(
+        (u) =>
+          u.lowerFloor === bank.upperFloor &&
+          Math.abs(u.z - bank.z) < 0.5 &&
+          Math.abs(Math.min(u.xStart, u.xEnd) - Math.min(bank.xStart, bank.xEnd)) < 2.0
+      );
       const wellSoffitMat = new THREE.MeshStandardMaterial({ color: '#f0ece4', roughness: 0.42, metalness: 0.05 });
-      const wellXMin = Math.min(bank.xStart, bank.xEnd) + 0.35;
+      const wellXMin = Math.min(bank.xStart, bank.xEnd) + (hasUpperStack ? 1.85 : 0.35);
       const wellXMax = Math.max(bank.xStart, bank.xEnd) - 0.04;
       const wellLen = wellXMax - wellXMin;
       const wellCenterX = (wellXMin + wellXMax) * 0.5;
@@ -199,12 +214,13 @@ export function buildTraversalSystems(scene, interactables, onLiftArrived) {
     // Glass/Themed side balustrades + skirt guards + warm 3000K skirt LEDs + black moving rubber handrails
     // All aligned to identical span (length + 0.04) and vertical-height-compensated localX so rail NEVER protrudes past glass!
     const balSpan = length + 0.04;
+    const dLSkirt = (0.06 + 0.15 * cosA) / Math.max(0.25, sinA);
     for (const zSide of [-bank.width * 0.44, bank.width * 0.44]) {
       const skirt = new THREE.Mesh(
-        new THREE.BoxGeometry(balSpan, 0.30, 0.08),
+        new THREE.BoxGeometry(balSpan - dLSkirt, 0.30, 0.08),
         bank.theme === 'rainforest-green' ? activeTrussMat : skirtDarkMat
       );
-      setInclinedPos(skirt, -0.06, zSide * 0.92);
+      setInclinedPos(skirt, -0.06, zSide * 0.92, dLSkirt * 0.5);
       incline.add(skirt);
 
       const glass = new THREE.Mesh(new THREE.BoxGeometry(balSpan, 0.84 * cosA, 0.032), activeBalMat);
