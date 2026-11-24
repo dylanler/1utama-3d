@@ -3144,6 +3144,226 @@ export function buildIconicAttractions(scene, interactables) {
       spG.add(spHeader);
       root.add(spG);
     }
+
+    // ========================================================================
+    // ROUND-22 3D STOREFRONT HERO SHOWCASES (#74 & #75):
+    // 1) 2F HOME'S HARMONY (S319A, x=169.01, y=18.08, z=-24.45)
+    // 2) G/1F LULULEMON • PURAS (G311-G312 Oval Atrium South view, x=126.86, y=6.08, z=24.45)
+    // 3) 1F/2F TANYU GRILLED FISH 探鱼 (F337-F338 Oval Atrium South view, x=143.52, y=12.08, z=24.45)
+    // 4) LG & 5F SEALANTIS SCUBA PRO SHOP & ENTERTAINMENT ZONE SHOWCASES
+    // 5) 1F YAMAHA MUSIC SCHOOL CONCERT GRAND PIANO (F618) & 2F MACHINES (S309-S310)
+    // ========================================================================
+
+    // R22-1. 2F HOME'S HARMONY (S319A, x=169.01, y=18.08, z=-24.50, side='N', rotY=0)
+    //        Luxury Dressed King Bed with Quilted Champagne Headboard, Pillows, Duvet Throw, Drapery Swatch Wall & Floral Island!
+    {
+      const hh = new THREE.Group();
+      hh.position.set(169.01, 18.08, -24.50);
+      const linenCreamMat = new THREE.MeshStandardMaterial({ color: '#f5efe6', roughness: 0.46 });
+      const duvetGoldMat = new THREE.MeshStandardMaterial({ color: '#c8a97e', roughness: 0.42, metalness: 0.08 });
+      const walnutBedMat = new THREE.MeshStandardMaterial({ color: '#5c4028', roughness: 0.38 });
+      const velvetTaupeMat = new THREE.MeshStandardMaterial({ color: '#8c7a6b', roughness: 0.52 });
+
+      // King Bed Frame + Tufted Headboard + Mattress + Layered Pillows & Folded Duvet Runner
+      const bedFrame = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.34, 2.15), walnutBedMat);
+      bedFrame.position.set(-0.85, 0.17, 0.05);
+      const headboard = new THREE.Mesh(new THREE.BoxGeometry(2.42, 1.48, 0.18), velvetTaupeMat);
+      headboard.position.set(-0.85, 0.78, -0.98);
+      const mattress = new THREE.Mesh(new THREE.BoxGeometry(2.18, 0.28, 1.98), linenCreamMat);
+      mattress.position.set(-0.85, 0.46, 0.08);
+      const duvetRunner = new THREE.Mesh(new THREE.BoxGeometry(2.22, 0.31, 0.78), duvetGoldMat);
+      duvetRunner.position.set(-0.85, 0.47, 0.62);
+      hh.add(bedFrame, headboard, mattress, duvetRunner);
+      for (const px of [-1.38, -0.32]) {
+        const pillow = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.16, 0.44), linenCreamMat);
+        pillow.rotation.x = 0.26;
+        pillow.position.set(px, 0.68, -0.62);
+        const cushion = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.22, 0.24), duvetGoldMat);
+        cushion.position.set(px, 0.68, -0.32);
+        hh.add(pillow, cushion);
+      }
+      // Vertical Silk & Linen Curtain/Drapery Swatch Cascade + Floral Vase Table on Right Bay
+      for (let d = 0; d < 6; d++) {
+        const drape = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.11, 0.13, 2.45, 10),
+          d % 2 === 0 ? duvetGoldMat : d % 3 === 1 ? linenCreamMat : velvetTaupeMat
+        );
+        drape.position.set(0.95 + d * 0.28, 1.38, -0.78);
+        hh.add(drape);
+      }
+      const floralTable = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.74, 16), walnutBedMat);
+      floralTable.position.set(1.55, 0.37, 0.35);
+      const vase = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.10, 0.34, 12), r21WhiteMat);
+      vase.position.set(1.55, 0.91, 0.35);
+      const bouquet = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), r21RainbowMats[6]);
+      bouquet.position.set(1.55, 1.18, 0.35);
+      hh.add(floralTable, vase, bouquet);
+      root.add(hh);
+    }
+
+    // R22-2. G & 1F LULULEMON • PURAS (G311-G312 Oval Atrium South view, x=126.86, y=6.08, z=24.55, side='S', rotY=Math.PI)
+    //        Rolled Colourful Yoga-Mat Wall Cubbies, Slatted Warm Oak Studio Backdrop, Circular Stretching Plinth & Glowing Omega Medallion!
+    {
+      const lulu = new THREE.Group();
+      lulu.position.set(126.86, 6.08, 24.55);
+      lulu.rotation.y = Math.PI;
+      const luluRedMat = new THREE.MeshStandardMaterial({ color: '#b91c1c', roughness: 0.32 });
+      const luluOakMat = new THREE.MeshStandardMaterial({ color: '#b88b5a', roughness: 0.46 });
+
+      // Glowing White Circular Lululemon Omega Feature Disc on Crimson/Oak Backdrop
+      const oakBack = new THREE.Mesh(new THREE.BoxGeometry(8.8, 3.25, 0.18), luluOakMat);
+      oakBack.position.set(0, 1.65, -0.78);
+      const redCenterPanel = new THREE.Mesh(new THREE.BoxGeometry(2.6, 3.28, 0.22), luluRedMat);
+      redCenterPanel.position.set(0, 1.65, -0.74);
+      const omegaHalo = new THREE.Mesh(new THREE.TorusGeometry(0.68, 0.055, 8, 28), r21WhiteMat);
+      omegaHalo.position.set(0, 2.22, -0.60);
+      lulu.add(oakBack, redCenterPanel, omegaHalo);
+
+      // 24 Rolled Colorful Yoga Mats Stacked in Left & Right Wall Cubbies
+      for (const sideS of [-1, 1]) {
+        const cubby = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.35, 0.48), luluOakMat);
+        cubby.position.set(sideS * 2.85, 1.24, -0.52);
+        lulu.add(cubby);
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 4; c++) {
+            const matRoll = new THREE.Mesh(
+              new THREE.CylinderGeometry(0.085, 0.085, 0.62, 10),
+              r21RainbowMats[(r * 3 + c + (sideS > 0 ? 2 : 0)) % 7]
+            );
+            matRoll.rotation.x = Math.PI / 2;
+            matRoll.position.set(sideS * 2.85 - 0.66 + c * 0.44, 0.58 + r * 0.64, -0.35);
+            lulu.add(matRoll);
+          }
+        }
+      }
+      // Circular Oak Yoga & Stretching Window Podium
+      const yogaPlinth = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.45, 0.18, 24), luluOakMat);
+      yogaPlinth.position.set(0, 0.09, 0.28);
+      const unrolledMat = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.03, 0.64), r21RainbowMats[6]);
+      unrolledMat.position.set(0, 0.195, 0.28);
+      lulu.add(yogaPlinth, unrolledMat);
+      root.add(lulu);
+    }
+
+    // R22-3. 1F TANYU GRILLED FISH 探鱼 (F337-F338 Oval Atrium South view, x=143.52, y=12.08, z=24.55, side='S', rotY=Math.PI)
+    //        Glowing Neon-Orange Grilled Fish Emblem Wall, Red Chinese Paper Lanterns, Industrial Brick-and-Wood Dining Booths & Sizzling Fish Pans!
+    {
+      const ty = new THREE.Group();
+      ty.position.set(143.52, 12.08, 24.55);
+      ty.rotation.y = Math.PI;
+      const tyBrickMat = new THREE.MeshStandardMaterial({ color: '#3b1d1a', roughness: 0.72 });
+      const tyWoodMat = new THREE.MeshStandardMaterial({ color: '#6b3e26', roughness: 0.48 });
+      const tyRedLantern = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.45, 0.38, 0.16), toneMapped: false });
+      const tyOrangeNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.55, 0.88, 0.18), toneMapped: false });
+
+      const tyBack = new THREE.Mesh(new THREE.BoxGeometry(10.6, 3.3, 0.20), tyBrickMat);
+      tyBack.position.set(0, 1.65, -0.78);
+      const tyNeonSign = new THREE.Mesh(
+        new THREE.PlaneGeometry(5.2, 0.92),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture('TANYU 探鱼 • CHONGQING GRILLED FISH', 'CHARCOAL GRILLED FISH • SPICY GREEN PEPPER', '#1a0c0a', '#fb923c', '#ef4444', 768, 144)
+        })
+      );
+      tyNeonSign.position.set(0, 2.58, -0.65);
+      ty.add(tyBack, tyNeonSign);
+
+      // 3 Front-Window Dining Booths with Sizzling Rectangular Stainless Grilled-Fish Pans & Glowing Red Hanging Lanterns!
+      for (const bx of [-3.4, 0, 3.4]) {
+        const table = new THREE.Mesh(new THREE.BoxGeometry(1.45, 0.74, 0.88), tyWoodMat);
+        table.position.set(bx, 0.37, 0.15);
+        const fishPan = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.12, 0.46), r21DarkMat);
+        fishPan.position.set(bx, 0.79, 0.15);
+        const burnerGlow = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.05, 0.36), tyOrangeNeon);
+        burnerGlow.position.set(bx, 0.74, 0.15);
+        for (const sz of [-0.62, 0.62]) {
+          const bench = new THREE.Mesh(new THREE.BoxGeometry(1.45, 0.88, 0.32), tyBrickMat);
+          bench.position.set(bx, 0.44, 0.15 + sz);
+          ty.add(bench);
+        }
+        const lantern = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.42, 12), tyRedLantern);
+        lantern.position.set(bx, 2.38, 0.15);
+        ty.add(table, fishPan, burnerGlow, lantern);
+      }
+      root.add(ty);
+    }
+
+    // R22-4. SEALANTIS SCUBA PRO SHOP & 5F ENTERTAINMENT ZONE DIVE / ARCADE SHOWCASE (LG Promenade P289 x=-1.18, y=0.08, z=11.55)
+    {
+      const scPro = new THREE.Group();
+      scPro.position.set(-1.18, 0.08, 11.55);
+      scPro.rotation.y = Math.PI;
+      const tankYellowMat = new THREE.MeshStandardMaterial({ color: '#facc15', roughness: 0.24, metalness: 0.35 });
+      const tankAlumMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', roughness: 0.22, metalness: 0.85 });
+      const wetsuitCyanMat = new THREE.MeshStandardMaterial({ color: '#0284c7', roughness: 0.45 });
+
+      // 10 Twin Yellow & Aluminum NITROX Scuba Air Cylinders in Pro-Shop Rack + 6 Hanging Neoprene Wetsuits
+      const rackFrame = new THREE.Mesh(new THREE.BoxGeometry(5.6, 2.4, 0.38), r21DarkMat);
+      rackFrame.position.set(-4.2, 1.2, -0.45);
+      scPro.add(rackFrame);
+      for (let t = 0; t < 10; t++) {
+        const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.095, 0.82, 10), t % 2 === 0 ? tankYellowMat : tankAlumMat);
+        cyl.position.set(-6.45 + t * 0.50, 0.62, -0.22);
+        const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.14, 8), tankAlumMat);
+        valve.position.set(-6.45 + t * 0.50, 1.08, -0.22);
+        scPro.add(cyl, valve);
+      }
+      for (let w = 0; w < 6; w++) {
+        const suit = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.96, 4, 8), w % 2 === 0 ? wetsuitCyanMat : r21DarkMat);
+        suit.position.set(2.2 + w * 0.82, 1.52, -0.35);
+        const fin = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.58, 0.06), tankYellowMat);
+        fin.position.set(2.2 + w * 0.82, 0.45, 0.15);
+        scPro.add(suit, fin);
+      }
+      root.add(scPro);
+    }
+
+    // R22-5. 1F YAMAHA MUSIC SCHOOL CONCERT GRAND PIANO (F618, x=-163.48, y=12.08, z=21.55) & 2F MACHINES APPLE SHOWCASE (S309-S310, x=81.80, y=18.08, z=-24.55)
+    {
+      const ym = new THREE.Group();
+      ym.position.set(-163.48, 12.08, 21.55);
+      ym.rotation.y = Math.PI;
+      const pianoBlackMat = new THREE.MeshPhysicalMaterial({ color: '#09090b', roughness: 0.08, metalness: 0.22, clearcoat: 1.0 });
+      // Sculpted 3D Ebony Concert Grand Piano with Raised Lid, Brass Harp & Keyboard on Recital Podium
+      const podium = new THREE.Mesh(new THREE.CylinderGeometry(1.85, 1.98, 0.16, 24), new THREE.MeshStandardMaterial({ color: '#4c1d95', roughness: 0.45 }));
+      podium.position.set(-1.6, 0.08, 0.15);
+      const pianoBody = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.36, 1.95), pianoBlackMat);
+      pianoBody.position.set(-1.6, 0.88, 0.15);
+      const pianoHarp = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.06, 1.78), brassMat);
+      pianoHarp.position.set(-1.6, 1.07, 0.15);
+      const pianoLid = new THREE.Mesh(new THREE.BoxGeometry(1.54, 0.04, 1.88), pianoBlackMat);
+      pianoLid.rotation.z = 0.46;
+      pianoLid.position.set(-1.25, 1.44, 0.15);
+      const keys = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.06, 0.22), r21WhiteMat);
+      keys.position.set(-1.6, 0.84, 1.18);
+      for (const [lx, lz] of [[-2.25, 0.95], [-0.95, 0.95], [-1.6, -0.68]]) {
+        const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.04, 0.72, 8), pianoBlackMat);
+        leg.position.set(lx, 0.48, lz);
+        ym.add(leg);
+      }
+      ym.add(podium, pianoBody, pianoHarp, pianoLid, keys);
+      root.add(ym);
+
+      // 2F MACHINES Apple Premium Partner Blonde-Oak Tables & MacBook/iPad Array (x=81.80, y=18.08, z=-24.55)
+      const macG = new THREE.Group();
+      macG.position.set(81.80, 18.08, -24.55);
+      const blondOakMat = new THREE.MeshStandardMaterial({ color: '#d6b485', roughness: 0.38 });
+      const alumSilverMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.18, metalness: 0.88 });
+      for (const tx of [-3.4, 3.4]) {
+        const tbl = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.84, 1.15), blondOakMat);
+        tbl.position.set(tx, 0.42, 0.20);
+        macG.add(tbl);
+        for (let d = 0; d < 5; d++) {
+          const dx = tx - 1.5 + d * 0.75;
+          const base = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.02, 0.26), alumSilverMat);
+          base.position.set(dx, 0.85, 0.20);
+          const scr = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.24, 0.018), r21CyanNeon);
+          scr.rotation.x = -0.25;
+          scr.position.set(dx, 0.97, 0.08);
+          macG.add(base, scr);
+        }
+      }
+      root.add(macG);
+    }
   }
 
   // ==========================================================================
