@@ -2808,7 +2808,7 @@ export const STORE_BRAND_STYLES = [
   // --- SPORTS, SWIM & OUTDOOR ---
   { match: /FLOWRIDER/, brandKey: 'flowrider', facadeType: 'sports-industrial', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#0369a1', bg2: '#075985', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'FLOWRIDER® 1 UTAMA', subTag: 'SURF ARENA • SHEET-WAVE SIMULATOR', emblem: 'wave', interiorKey: 'int-scuba' },
   { match: /SPORTSDIRECT/, brandKey: 'sportsdirect', facadeType: 'sports-industrial', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#1e1b4b', bg2: '#131136', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'SPORTSDIRECT.COM', subTag: 'FOOTBALL • RUNNING • CYCLING', emblem: 'bolt', interiorKey: 'int-sports' },
-  { match: /JD SPORTS/, brandKey: 'jd-sports', facadeType: 'sports-industrial', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#09090b', bg2: '#141418', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'JD SPORTS', subTag: 'KING OF TRAINERS', emblem: 'monogram-circ', interiorKey: 'int-sports' },
+  { match: /JD SPORTS/, brandKey: 'jd-sports', facadeType: 'sports-industrial', fasciaH: 1.34, materialStyle: 'jdsports-black-yellow', bg: '#09090b', bg2: '#141418', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'condensed', weight: '900', tracking: 10, title: 'JD SPORTS', subTag: 'KING OF TRAINERS', emblem: 'monogram-circ', interiorKey: 'int-sports' },
   { match: /\bASICS\b/, brandKey: 'asics', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'geometric', weight: '800', tracking: 14, title: 'asics', subTag: 'SOUND MIND, SOUND BODY', emblem: 'swirl', interiorKey: 'int-sports' },
   { match: /NEW BALANCE/, brandKey: 'new-balance', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#27272a', bg2: '#18181b', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'condensed', weight: '800', italic: true, tracking: 8, title: 'new balance', subTag: 'MADE IN USA 990 • RUNNING', emblem: 'stripe-bar', interiorKey: 'int-sports' },
   { match: /SALOMON/, brandKey: 'salomon', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#09090b', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'condensed', weight: '800', tracking: 12, title: 'SALOMON', subTag: 'ALPINE & TRAIL RUNNING', emblem: 'bolt', interiorKey: 'int-sports' },
@@ -2818,7 +2818,10 @@ export const STORE_BRAND_STYLES = [
   { match: /THE NORTH FACE|CONVERSE/, brandKey: 'north-face', facadeType: 'sports-industrial', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#18181b', bg2: '#0c0c0f', fg: '#ffffff', accent: '#ef4444', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'THE NORTH FACE  •  CONVERSE', subTag: 'NEVER STOP EXPLORING', emblem: 'stripe-bar', interiorKey: 'int-outside' },
 
   // --- TECH, ELECTRONICS & HOME LIVING ---
-  { match: /HARVEY NORMAN/, brandKey: 'harvey-norman', facadeType: 'minimalist-tech', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#1c1917', bg2: '#0f0d0c', fg: '#ffffff', accent: '#dc2626', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'Harvey Norman', subTag: 'ELECTRICAL • COMPUTERS • FURNITURE', emblem: 'red-box', interiorKey: 'int-tech' },
+  { match: /HARVEY NORMAN/, brandKey: 'harvey-norman', facadeType: 'minimalist-tech', fasciaH: 1.34, materialStyle: 'harvey-norman-red-blue', bg: '#1c1917', bg2: '#0f0d0c', fg: '#ffffff', accent: '#dc2626', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'Harvey Norman', subTag: 'ELECTRICAL • COMPUTERS • FURNITURE', emblem: 'red-box', interiorKey: 'int-tech' },
+  { match: /SAMSUNG/, brandKey: 'samsung', facadeType: 'minimalist-tech', fasciaH: 1.26, materialStyle: 'samsung-obsidian-cobalt', bg: '#0b1021', bg2: '#060913', fg: '#ffffff', accent: '#1428a0', isLight: false, font: 'geometric', weight: '800', tracking: 12, title: 'SAMSUNG', subTag: 'EXPERIENCE STORE • GALAXY AI', emblem: 'ring', interiorKey: 'int-tech' },
+  { match: /DAISO/, brandKey: 'daiso', facadeType: 'open-market', fasciaH: 1.32, materialStyle: 'daiso-magenta', bg: '#d6006e', bg2: '#a80055', fg: '#ffffff', accent: '#fbcfe8', isLight: false, font: 'geometric', weight: '900', tracking: 10, title: 'DAISO JAPAN', subTag: '100-YEN LIFESTYLE VARIETY STORE', emblem: 'stripe-bar', interiorKey: 'int-nitori' },
+  { match: /CHAGEE|霸王茶姬/, brandKey: 'chagee', facadeType: 'cafe-patisserie', fasciaH: 1.34, materialStyle: 'chagee-oriental-crimson', bg: '#8c181d', bg2: '#5e0e12', fg: '#f8efe0', accent: '#d4af37', isLight: false, font: 'classicSerif', weight: '700', tracking: 10, title: 'CHAGEE  霸王茶姬', subTag: 'ORIENTAL TEAHOUSE', emblem: 'cup', interiorKey: 'int-cafe' },
   { match: /BEST DENKI/, brandKey: 'best-denki', facadeType: 'minimalist-tech', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e3a8a', bg2: '#172554', fg: '#ffffff', accent: '#38bdf8', isLight: false, font: 'geometric', weight: '800', tracking: 8, title: 'BEST DENKI', subTag: 'JAPANESE HOME ELECTRONICS', emblem: 'bolt', interiorKey: 'int-tech' },
   { match: /ALL IT/, brandKey: 'all-it', facadeType: 'minimalist-tech', fasciaH: 1.30, materialStyle: 'custom-brand', bg: '#1e40af', bg2: '#172554', fg: '#ffffff', accent: '#60a5fa', isLight: false, font: 'condensed', weight: '900', tracking: 8, title: 'ALL IT HYPERMARKET', subTag: 'PC • GAMING • TECH SUPERSTORE', emblem: 'bolt', interiorKey: 'int-tech' },
   { match: /HUAWEI/, brandKey: 'huawei', facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'custom-brand', bg: '#f4f4f5', bg2: '#e4e4e7', fg: '#111827', accent: '#dc2626', isLight: true, font: 'geometric', weight: '700', tracking: 12, title: 'HUAWEI', subTag: 'EXPERIENCE STORE', emblem: 'leaf', interiorKey: 'int-tech' },
@@ -2843,8 +2846,8 @@ export const STORE_BRAND_STYLES = [
   { match: /STANZO/, brandKey: 'stanzo', facadeType: 'minimalist-tech', fasciaH: 1.38, materialStyle: 'custom-brand', bg: '#111827', bg2: '#090d16', fg: '#fde68a', accent: '#f59e0b', isLight: false, font: 'didone', weight: '700', tracking: 16, title: 'STANZO COLLECTION', subTag: '5F OVAL • LUXURY INTERIORS', emblem: 'crown', interiorKey: 'int-cellini' },
 
   // --- TOYS, KIDS, ARCADE & GALLERIES ---
-  { match: /LEGO/, brandKey: 'lego', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'custom-brand', bg: '#dc2626', bg2: '#b91c1c', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 8, title: 'LEGO® CERTIFIED STORE', subTag: 'STAR WARS • TECHNIC • CREATOR', emblem: 'brick', interiorKey: 'int-toys-bright' },
-  { match: /TOYS["“”']?R["“”']?US/, brandKey: 'toysrus', facadeType: 'entertainment-marquee', fasciaH: 1.46, materialStyle: 'custom-brand', bg: '#1d4ed8', bg2: '#1e3a8a', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 6, title: 'TOYS“R”US', subTag: 'LEGO • NERF • BARBIE • GACHAPON', emblem: 'star', interiorKey: 'int-toys-bright' },
+  { match: /LEGO/, brandKey: 'lego', facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'lego-yellow-red', bg: '#dc2626', bg2: '#b91c1c', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 8, title: 'LEGO® CERTIFIED STORE', subTag: 'STAR WARS • TECHNIC • CREATOR', emblem: 'brick', interiorKey: 'int-toys-bright' },
+  { match: /TOYS\s*["“”']?R["“”']?\s*US/, brandKey: 'toysrus', facadeType: 'entertainment-marquee', fasciaH: 1.46, materialStyle: 'toysrus-rainbow-blue', bg: '#1d4ed8', bg2: '#1e3a8a', fg: '#fef08a', accent: '#facc15', isLight: false, font: 'geometric', weight: '900', tracking: 6, title: 'TOYS“R”US', subTag: 'LEGO • NERF • BARBIE • GACHAPON', emblem: 'star', interiorKey: 'int-toys-bright' },
   { match: /MOTHERCARE/, brandKey: 'mothercare', facadeType: 'entertainment-marquee', fasciaH: 1.34, materialStyle: 'custom-brand', bg: '#0e7490', bg2: '#084c61', fg: '#ffffff', accent: '#67e8f9', isLight: false, font: 'geometric', weight: '700', tracking: 10, title: 'mothercare', subTag: 'STROLLERS • NURSERY • MATERNITY', emblem: 'heart', interiorKey: 'int-toys-bright' },
   { match: /WILFORD/, brandKey: 'wilford', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#312e81', bg2: '#1e1b4b', fg: '#ffffff', accent: '#a78bfa', isLight: false, font: 'condensed', weight: '800', tracking: 10, title: 'WILFORD', subTag: 'KIDS ELECTRIC SUPERCARS', emblem: 'bolt', interiorKey: 'int-toys-bright' },
   { match: /HOBILITY|TREEHOUSE/, brandKey: 'hobility', facadeType: 'entertainment-marquee', fasciaH: 1.36, materialStyle: 'custom-brand', bg: '#312e81', bg2: '#1e1b4b', fg: '#f5d0fe', accent: '#c084fc', isLight: false, font: 'condensed', weight: '800', tracking: 8, title: 'HOBILITY  •  TREEHOUSE', subTag: 'JAPANESE FIGURES & COLLECTIBLES', emblem: 'star', interiorKey: 'int-toys-bright' },
@@ -3097,7 +3100,7 @@ export function getStoreBrandProfile(store) {
     return { facadeType: 'luxury-fashion', fasciaH: 1.16, materialStyle: 'ivory-limestone', fontFamily: FONTS.didone, weight: '600', italic: false, tracking: 14, displayTitle: 'DIOR', brandKey: 'dior', isLight: true };
   }
   if (uName.includes('MUJI')) {
-    return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'warm-cream-plaster', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 8, displayTitle: 'MUJI 無印良品', brandKey: 'muji', isLight: true };
+    return { facadeType: 'minimalist-tech', fasciaH: 1.24, materialStyle: 'muji-burgundy', fontFamily: FONTS.geometric, weight: '700', italic: false, tracking: 8, displayTitle: 'MUJI 無印良品', brandKey: 'muji', isLight: false };
   }
   if (uName.includes('GSC')) {
     return { facadeType: 'entertainment-marquee', fasciaH: 1.54, materialStyle: 'gsc-honey-oak', fontFamily: FONTS.geometric, weight: '900', italic: false, tracking: 8, displayTitle: 'GSC', brandKey: 'gsc', isLight: true };
@@ -3109,10 +3112,10 @@ export function getStoreBrandProfile(store) {
     return { facadeType: 'entertainment-marquee', fasciaH: 1.44, materialStyle: 'popmart-lime-crown', fontFamily: FONTS.condensed, weight: '800', italic: false, tracking: 6, displayTitle: 'POP MART', brandKey: 'pop-mart', isLight: true };
   }
   if (uName.includes('MACHINES')) {
-    return { facadeType: 'minimalist-tech', fasciaH: 1.16, materialStyle: 'brushed-silver', fontFamily: FONTS.geometric, weight: '500', italic: false, tracking: 4, displayTitle: 'machines', brandKey: 'machines', isLight: true };
+    return { facadeType: 'minimalist-tech', fasciaH: 1.22, materialStyle: 'machines-apple-black', fontFamily: FONTS.geometric, weight: '500', italic: false, tracking: 4, displayTitle: 'machines', brandKey: 'machines', isLight: false };
   }
   if (uName.includes('DYSON')) {
-    return { facadeType: 'minimalist-tech', fasciaH: 1.16, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '600', italic: false, tracking: 6, displayTitle: 'dyson', brandKey: 'dyson', isLight: false };
+    return { facadeType: 'minimalist-tech', fasciaH: 1.22, materialStyle: 'obsidian-stone', fontFamily: FONTS.geometric, weight: '600', italic: false, tracking: 6, displayTitle: 'dyson', brandKey: 'dyson', isLight: false };
   }
   if (uName.includes('CHÂTERAISÉ') || uName.includes('CHATERAISE')) {
     return { facadeType: 'cafe-patisserie', fasciaH: 1.26, materialStyle: 'warm-cream-plaster', fontFamily: FONTS.classicSerif, weight: '600', italic: true, tracking: 4, displayTitle: 'Châteraisé', brandKey: 'chateraise', isLight: true };
@@ -3465,15 +3468,23 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       break;
     }
     case 'mrdiy-black-yellow': {
-      // Photo-matched 1 Utama S319 MR. D.I.Y.: Crisp matte jet-black fascia w/ subtle panel seam & bright yellow bottom hairline
-      ctx.fillStyle = '#14161a';
+      // Photo-matched 1 Utama S319 MR. D.I.Y.: Signature vibrant yellow fascia (#facc15) framed in charcoal-black & crimson-red trim!
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#fde047');
+      bg.addColorStop(0.5, '#facc15');
+      bg.addColorStop(1, '#eab308');
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
-      ctx.fillStyle = '#facc15';
+      ctxE.fillStyle = 'rgba(250, 204, 21, 0.44)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#18181b';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(4, 4, w - 8, h - 8);
+      ctx.fillStyle = '#dc2626';
       ctx.fillRect(0, h - 8, w, 8);
-      ctxE.fillStyle = '#eab308';
-      ctxE.fillRect(0, h - 8, w, 8);
-      fgCol = '#facc15';
-      emissiveTextCol = '#fde047';
+      fgCol = '#dc2626';
+      emissiveTextCol = '#ef4444';
+      drawEmissive = false;
       break;
     }
     case 'popmart-lime-crown': {
@@ -4457,6 +4468,177 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       emissiveTextCol = '#ffffff';
       break;
     }
+    case 'chagee-oriental-crimson': {
+      // Photo-matched CHAGEE 霸王茶姬: Oriental crimson lacquer & warm ivory border with antique gold trim
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#961b20');
+      bg.addColorStop(0.5, '#7c1318');
+      bg.addColorStop(1, '#580b0f');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#f5ebd6';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(18, 18, w - 36, h - 36);
+      ctx.fillStyle = '#f5ebd6';
+      ctx.fillRect(0, h - 7, w, 7);
+      fgCol = '#f8efe0';
+      emissiveTextCol = '#fff6e6';
+      break;
+    }
+    case 'lego-yellow-red': {
+      // Photo-matched 2F LEGO Certified Store: Bright LEGO yellow stud-embossed fascia with crimson bottom band
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#ffe01b');
+      bg.addColorStop(0.5, '#ffd500');
+      bg.addColorStop(1, '#f2c200');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(255, 213, 0, 0.45)';
+      ctxE.fillRect(0, 0, w, h);
+      // Subtle 3D Lego stud pattern across background
+      ctx.strokeStyle = 'rgba(180, 120, 0, 0.18)';
+      ctx.lineWidth = 2;
+      for (let sx = 28; sx < w; sx += 44) {
+        for (let sy = 26; sy < h - 18; sy += 40) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, 11, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+      ctx.fillStyle = '#e3000b';
+      ctx.fillRect(0, h - 10, w, 10);
+      ctxE.fillStyle = '#e3000b';
+      ctxE.fillRect(0, h - 10, w, 10);
+      fgCol = '#111827';
+      drawEmissive = false;
+      break;
+    }
+    case 'muji-burgundy': {
+      // Photo-matched G135 MUJI 無印良品: Signature Muji burgundy (#7f0019) matte fascia with warm hinoki-oak bottom reveal
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#8a001c');
+      bg.addColorStop(0.5, '#7f0019');
+      bg.addColorStop(1, '#5e0012');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#c89d66';
+      ctx.fillRect(0, h - 7, w, 7);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'daiso-magenta': {
+      // Photo-matched DAISO JAPAN: Vibrant Daiso magenta-pink (#d6006e) backlit fascia with crisp white trim
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#e60077');
+      bg.addColorStop(0.5, '#d6006e');
+      bg.addColorStop(1, '#ad0059');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctxE.fillStyle = 'rgba(214, 0, 110, 0.42)';
+      ctxE.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, h - 7, w, 7);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'samsung-obsidian-cobalt': {
+      // Photo-matched SAMSUNG EXPERIENCE STORE: Sleek obsidian-black brushed aluminum fascia with glowing Galaxy cobalt-blue LED edge
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#121726');
+      bg.addColorStop(0.5, '#0b0e18');
+      bg.addColorStop(1, '#05070c');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.32)';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#1428a0';
+      ctx.fillRect(0, h - 8, w, 8);
+      ctxE.fillStyle = '#2563eb';
+      ctxE.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'machines-apple-black': {
+      // Photo-matched 2F S309-S310 MACHINES: Monolithic Apple-Partner matte obsidian-black fascia with satin silver reveal
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#141416');
+      bg.addColorStop(0.5, '#0b0b0d');
+      bg.addColorStop(1, '#050506');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#e4e4e7';
+      ctx.fillRect(0, h - 5, w, 5);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'harvey-norman-red-blue': {
+      // Photo-matched 1F/2F HARVEY NORMAN Flagship: Deep charcoal-navy architectural fascia with signature crimson & cobalt bottom bands
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#161e2e');
+      bg.addColorStop(0.5, '#0f1623');
+      bg.addColorStop(1, '#090d16');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = '#1d4ed8';
+      ctx.fillRect(0, h - 12, w, 6);
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(0, h - 6, w, 6);
+      ctxE.fillStyle = '#dc2626';
+      ctxE.fillRect(0, h - 6, w, 6);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'toysrus-rainbow-blue': {
+      // Photo-matched 2F TOYS "R" US: Royal Toy-Box blue fascia with bright rainbow segmented bottom marquee bar
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#0055a5');
+      bg.addColorStop(0.5, '#004488');
+      bg.addColorStop(1, '#003266');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      const rb = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#ec4899'];
+      const segW = w / rb.length;
+      rb.forEach((c, idx) => {
+        ctx.fillStyle = c;
+        ctx.fillRect(idx * segW, h - 9, segW + 2, 9);
+        ctxE.fillStyle = c;
+        ctxE.fillRect(idx * segW, h - 9, segW + 2, 9);
+      });
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
+    case 'jdsports-black-yellow': {
+      // Photo-matched JD SPORTS King of Trainers: Gloss pitch-black fascia with electric sports-yellow framing & bottom LED bar
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#141417');
+      bg.addColorStop(0.5, '#0b0b0d');
+      bg.addColorStop(1, '#040405');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(10, 10, w - 20, h - 20);
+      ctx.fillStyle = '#facc15';
+      ctx.fillRect(0, h - 8, w, 8);
+      ctxE.fillStyle = '#facc15';
+      ctxE.fillRect(0, h - 8, w, 8);
+      fgCol = '#ffffff';
+      emissiveTextCol = '#ffffff';
+      break;
+    }
     case 'custom-brand': {
       const bg1 = prof.bg || store.brandBg || '#18181b';
       const bg2 = prof.bg2 || bg1;
@@ -4537,14 +4719,35 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
 
     switch (prof.brandKey) {
       case 'mr-diy': {
-        // Photo-matched 1 Utama S319 MR. D.I.Y.: Bold red MR.D.I.Y. with crisp bright-yellow outline on jet-black fascia!
+        // Photo-matched 1 Utama S319 MR. D.I.Y.: Signature yellow fascia with red hammer crest + MR.D.I.Y. • ALWAYS LOW PRICES!
+        const hx = -296;
+        const hy = 92;
+        // Red & charcoal tool-hammer crest medallion on left
+        targetCtx.fillStyle = '#18181b';
+        targetCtx.beginPath();
+        targetCtx.arc(hx, hy, 40, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#dc2626';
+        targetCtx.lineWidth = 4;
+        targetCtx.stroke();
+        // Vector red claw-hammer silhouette inside crest
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.fillRect(hx - 4, hy - 8, 8, 34);
+        targetCtx.fillStyle = '#ef4444';
+        targetCtx.fillRect(hx - 22, hy - 22, 44, 15);
         targetCtx.lineJoin = 'round';
-        targetCtx.font = '900 84px "Montserrat", "Jost", sans-serif';
-        targetCtx.strokeStyle = '#facc15';
-        targetCtx.lineWidth = 14;
-        targetCtx.strokeText('MR.D.I.Y.', 0, 122);
-        targetCtx.fillStyle = isEmissive ? '#ef4444' : '#dc2626';
-        targetCtx.fillText('MR.D.I.Y.', 0, 122);
+        targetCtx.font = '900 72px "Montserrat", "Jost", sans-serif';
+        targetCtx.strokeStyle = '#18181b';
+        targetCtx.lineWidth = 10;
+        targetCtx.strokeText('MR.D.I.Y.', 48, 102);
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fillText('MR.D.I.Y.', 48, 102);
+        // Crimson bottom pill banner for ALWAYS LOW PRICES
+        drawRoundRectPath(targetCtx, -180, 120, 456, 32, 16);
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fill();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'ALWAYS LOW PRICES  •  S319', 48, 143, 420, 19, '800', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -4593,39 +4796,6 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
         break;
       }
 
-      case 'oriental-kopi': {
-        // Authentic ORIENTAL KOPI 华阳: Gold medallion crest + refined heritage serif & Chinese calligraphy!
-        const lx = -Math.min(maxW * 0.36, 265);
-        targetCtx.strokeStyle = '#d4af5e';
-        targetCtx.lineWidth = 4;
-        targetCtx.beginPath();
-        targetCtx.arc(lx, 96, 34, 0, Math.PI * 2);
-        targetCtx.stroke();
-        targetCtx.fillStyle = '#f8e6ba';
-        targetCtx.font = '800 32px "Noto Serif JP", serif';
-        targetCtx.fillText('阳', lx, 108);
-        targetCtx.fillStyle = isEmissive ? '#ffe8b0' : '#f8e6ba';
-        fillAutoFitText(targetCtx, 'ORIENTAL KOPI  华阳', 36, 114, maxW * 0.72, 54, '700', '"Playfair Display", "Noto Serif JP", serif', 5);
-        break;
-      }
-
-      case 'lululemon': {
-        // Authentic lululemon: Crimson circular omega emblem + crisp lowercase white wordmark!
-        const lx = -Math.min(maxW * 0.32, 210);
-        targetCtx.fillStyle = '#c8102e';
-        targetCtx.beginPath();
-        targetCtx.arc(lx, 96, 30, 0, Math.PI * 2);
-        targetCtx.fill();
-        targetCtx.strokeStyle = '#ffffff';
-        targetCtx.lineWidth = 5;
-        targetCtx.beginPath();
-        targetCtx.arc(lx, 92, 14, Math.PI * 0.85, Math.PI * 2.15);
-        targetCtx.stroke();
-        targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'lululemon', 42, 114, maxW * 0.64, 60, '500', '"Jost", sans-serif', 6);
-        break;
-      }
-
       case 'zara': {
         // Photo-matched LUXE G ZARA: Glowing crisp white editorial Playfair ZARA on champagne-taupe travertine!
         targetCtx.fillStyle = '#ffffff';
@@ -4657,28 +4827,37 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'parkson': {
-        // Photo-matched 1 Utama PARKSON Elite 百盛: Repeated crisp glowing white PARKSON Elite 百盛 across BOTH left & right anchor bays!
+        // Photo-matched 1 Utama PARKSON Elite 百盛: Golden triple-petal P medallion + glowing white PARKSON Elite 百盛 across anchor bays!
         const bays = maxW > 1100 ? [-430, 430] : [0];
         for (const bx of bays) {
+          // Golden Parkson P-leaf crest on left of each bay
+          const cx = bx - 315;
+          targetCtx.fillStyle = '#d4af37';
+          targetCtx.beginPath();
+          targetCtx.arc(cx, 96, 32, 0, Math.PI * 2);
+          targetCtx.fill();
+          targetCtx.fillStyle = '#0f172a';
+          targetCtx.font = '900 36px "Playfair Display", serif';
           targetCtx.textAlign = 'center';
           targetCtx.textBaseline = 'middle';
+          targetCtx.fillText('P', cx, 98);
           if (!isEmissive) {
             targetCtx.strokeStyle = '#0f172a';
             targetCtx.lineWidth = 6;
-            targetCtx.font = '700 62px "Jost", sans-serif';
-            targetCtx.strokeText('PARKSON', bx - 125, 100);
-            targetCtx.font = 'italic 600 54px "Playfair Display", "Cormorant Garamond", serif';
-            targetCtx.strokeText('Elite', bx + 110, 100);
-            targetCtx.font = '700 56px "Noto Serif JP", serif';
-            targetCtx.strokeText('百盛', bx + 236, 100);
+            targetCtx.font = '700 60px "Jost", sans-serif';
+            targetCtx.strokeText('PARKSON', bx - 105, 96);
+            targetCtx.font = 'italic 600 52px "Playfair Display", "Cormorant Garamond", serif';
+            targetCtx.strokeText('Elite', bx + 120, 96);
+            targetCtx.font = '700 54px "Noto Serif JP", serif';
+            targetCtx.strokeText('百盛', bx + 242, 96);
           }
           targetCtx.fillStyle = '#ffffff';
-          targetCtx.font = '700 62px "Jost", sans-serif';
-          targetCtx.fillText('PARKSON', bx - 125, 100);
-          targetCtx.font = 'italic 600 54px "Playfair Display", "Cormorant Garamond", serif';
-          targetCtx.fillText('Elite', bx + 110, 100);
-          targetCtx.font = '700 56px "Noto Serif JP", serif';
-          targetCtx.fillText('百盛', bx + 236, 100);
+          targetCtx.font = '700 60px "Jost", sans-serif';
+          targetCtx.fillText('PARKSON', bx - 105, 96);
+          targetCtx.font = 'italic 600 52px "Playfair Display", "Cormorant Garamond", serif';
+          targetCtx.fillText('Elite', bx + 120, 96);
+          targetCtx.font = '700 54px "Noto Serif JP", serif';
+          targetCtx.fillText('百盛', bx + 242, 96);
         }
         break;
       }
@@ -4718,27 +4897,35 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
 
       case 'jaya-grocer': {
         // Authentic 1 Utama Jaya Grocer (LG309): Bright red italic Jaya + fresh green uppercase GROCER + shopping trolley produce icon!
-        const lx = -Math.min(maxW * 0.34, 240);
-        // Stylized red shopping basket/trolley icon with green leaf sprouts
-        targetCtx.strokeStyle = '#ef4444';
+        const lx = -Math.min(maxW * 0.35, 250);
+        // Stylized red shopping basket/trolley icon with twin wheels & green leaf sprouts
+        targetCtx.strokeStyle = '#dc2626';
         targetCtx.lineWidth = 5;
         targetCtx.beginPath();
-        targetCtx.moveTo(lx - 32, 68);
-        targetCtx.lineTo(lx - 20, 112);
-        targetCtx.lineTo(lx + 24, 112);
-        targetCtx.lineTo(lx + 34, 78);
+        targetCtx.moveTo(lx - 32, 66);
+        targetCtx.lineTo(lx - 20, 106);
+        targetCtx.lineTo(lx + 24, 106);
+        targetCtx.lineTo(lx + 34, 74);
         targetCtx.closePath();
         targetCtx.stroke();
-        targetCtx.fillStyle = '#22c55e';
+        targetCtx.fillStyle = '#dc2626';
         targetCtx.beginPath();
-        targetCtx.ellipse(lx - 4, 70, 16, 8, -0.5, 0, Math.PI * 2);
+        targetCtx.arc(lx - 14, 116, 5, 0, Math.PI * 2);
+        targetCtx.arc(lx + 18, 116, 5, 0, Math.PI * 2);
         targetCtx.fill();
-        targetCtx.fillStyle = '#ef4444';
+        targetCtx.fillStyle = '#16a34a';
+        targetCtx.beginPath();
+        targetCtx.ellipse(lx - 4, 66, 16, 8, -0.5, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#dc2626';
         targetCtx.textAlign = 'right';
-        fillAutoFitText(targetCtx, 'Jaya', -14, 118, maxW * 0.36, 76, '700', '"Cormorant Garamond", "Georgia", serif', 1, true);
-        targetCtx.fillStyle = '#22c55e';
+        fillAutoFitText(targetCtx, 'Jaya', -14, 110, maxW * 0.36, 74, '700', '"Cormorant Garamond", "Georgia", serif', 1, true);
+        targetCtx.fillStyle = '#15803d';
         targetCtx.textAlign = 'left';
-        fillAutoFitText(targetCtx, 'GROCER', 2, 118, maxW * 0.44, 62, '800', '"Jost", sans-serif', 5);
+        fillAutoFitText(targetCtx, 'GROCER', 2, 110, maxW * 0.44, 60, '800', '"Jost", sans-serif', 5);
+        targetCtx.textAlign = 'center';
+        targetCtx.fillStyle = '#334155';
+        fillAutoFitText(targetCtx, 'FRESH MARKET & ARTISAN GROCERIES  •  LG309', 32, 144, 460, 17, '800', '"Jost", sans-serif', 5);
         break;
       }
 
@@ -5426,26 +5613,36 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
 
       case 'decathlon': {
         // Photo-matched 1F F319 Decathlon: Glowing white 2025 Decathlon Orbit emblem + bold DECATHLON!
-        const ox = -248;
+        const ox = -265;
         targetCtx.strokeStyle = '#ffffff';
         targetCtx.lineWidth = 10;
         targetCtx.beginPath();
-        targetCtx.arc(ox, 96, 28, 0.35, Math.PI * 1.82);
+        targetCtx.arc(ox, 92, 30, 0.35, Math.PI * 1.82);
         targetCtx.stroke();
         targetCtx.beginPath();
-        targetCtx.moveTo(ox + 18, 72);
-        targetCtx.lineTo(ox + 34, 96);
-        targetCtx.lineTo(ox + 16, 120);
+        targetCtx.moveTo(ox + 18, 68);
+        targetCtx.lineTo(ox + 36, 92);
+        targetCtx.lineTo(ox + 16, 116);
         targetCtx.stroke();
         targetCtx.fillStyle = '#ffffff';
-        fillAutoFitText(targetCtx, 'DECATHLON', 46, 118, 460, 76, '800', '"Jost", sans-serif', 12);
+        fillAutoFitText(targetCtx, 'DECATHLON', 52, 106, 460, 74, '800', '"Jost", sans-serif', 12);
+        targetCtx.fillStyle = '#93c5fd';
+        fillAutoFitText(targetCtx, 'SPORTS MEGACENTRE  •  QUECHUA • KIPSTA • TRIBORD  •  F319', 52, 148, 480, 18, '700', '"Jost", sans-serif', 5);
         break;
       }
 
       case 'aeon': {
-        // Photo-matched Malaysian AEON: Glowing hot-magenta (#d6006e) ÆON channel letters on pure white!
+        // Photo-matched Malaysian AEON: Glowing hot-magenta (#d6006e) ÆON eternity ring + channel letters on pure white!
+        const ax = -255;
+        targetCtx.strokeStyle = '#d6006e';
+        targetCtx.lineWidth = 5;
+        targetCtx.beginPath();
+        targetCtx.ellipse(ax, 92, 38, 22, -0.25, 0, Math.PI * 2);
+        targetCtx.stroke();
         targetCtx.fillStyle = '#d6006e';
-        fillAutoFitText(targetCtx, 'ÆON', 0, 122, maxW * 0.56, 88, '800', '"Jost", sans-serif', 22);
+        fillAutoFitText(targetCtx, 'ÆON', 38, 110, 380, 82, '800', '"Jost", sans-serif', 20);
+        targetCtx.fillStyle = '#9d174d';
+        fillAutoFitText(targetCtx, 'SUPERMARKET & DEPARTMENT STORE  •  1 UTAMA', 38, 150, 440, 18, '700', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -5548,15 +5745,20 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
       }
 
       case 'muji': {
-        // Authentic MUJI burgundy square + 無印良品
-        const lx = -175;
-        targetCtx.fillStyle = '#7f1d1d';
-        targetCtx.fillRect(lx - 42, 54, 84, 84);
+        // Photo-matched G135 MUJI 無印良品: Signature Muji burgundy (#7f0019) fascia with crisp white square badge & MUJI 無印良品!
+        const lx = -245;
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 4;
+        targetCtx.strokeRect(lx - 42, 50, 84, 84);
         targetCtx.fillStyle = '#ffffff';
-        targetCtx.font = '700 26px "Jost", sans-serif';
-        targetCtx.fillText('MUJI', lx, 105);
-        targetCtx.fillStyle = '#7f1d1d';
-        fillAutoFitText(targetCtx, '無印良品', 48, 114, 340, 56, '600', '"Noto Serif JP", serif', 10);
+        targetCtx.font = '800 28px "Jost", sans-serif';
+        targetCtx.fillText('MUJI', lx, 86);
+        targetCtx.font = '700 20px "Noto Serif JP", serif';
+        targetCtx.fillText('無印良品', lx, 116);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'MUJI  無印良品', 48, 106, 440, 68, '800', '"Jost", "Noto Serif JP", sans-serif', 10);
+        targetCtx.fillStyle = '#f5d0c5';
+        fillAutoFitText(targetCtx, 'NO-BRAND QUALITY GOODS  •  G135', 48, 148, 420, 19, '700', '"Jost", sans-serif', 6);
         break;
       }
 
@@ -6099,6 +6301,234 @@ export function createStorefrontFasciaTexture(store, fasciaHeight = 1.48) {
         fillAutoFitText(targetCtx, 'lululemon', 44, 108, 430, 72, '700', '"Jost", sans-serif', 6);
         targetCtx.fillStyle = '#fca5a5';
         fillAutoFitText(targetCtx, 'TECHNICAL ATHLETIC APPAREL  •  VANCOUVER', 44, 148, 440, 18, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'chagee': {
+        // Photo-matched CHAGEE 霸王茶姬: Oriental crimson & warm ivory with classical teacup/opera crest + CHAGEE 霸王茶姬 • ORIENTAL TEAHOUSE!
+        const cx = -286;
+        const cy = 94;
+        targetCtx.fillStyle = '#f5ebd6';
+        targetCtx.beginPath();
+        targetCtx.arc(cx, cy, 40, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#d4af37';
+        targetCtx.lineWidth = 3.5;
+        targetCtx.stroke();
+        // Classical oriental porcelain teacup + rising tea-leaf steam crest inside ivory medallion
+        targetCtx.fillStyle = '#8c181d';
+        targetCtx.beginPath();
+        targetCtx.arc(cx, cy + 4, 18, 0, Math.PI);
+        targetCtx.fill();
+        targetCtx.fillRect(cx - 20, cy + 1, 40, 4);
+        targetCtx.fillRect(cx - 12, cy + 21, 24, 4);
+        targetCtx.strokeStyle = '#8c181d';
+        targetCtx.lineWidth = 3;
+        targetCtx.beginPath();
+        targetCtx.moveTo(cx - 6, cy - 4);
+        targetCtx.quadraticCurveTo(cx - 12, cy - 14, cx - 4, cy - 22);
+        targetCtx.moveTo(cx + 6, cy - 4);
+        targetCtx.quadraticCurveTo(cx + 12, cy - 14, cx + 4, cy - 22);
+        targetCtx.stroke();
+        targetCtx.fillStyle = isEmissive ? '#fff6e6' : '#f8efe0';
+        fillAutoFitText(targetCtx, 'CHAGEE  霸王茶姬', 52, 102, 480, 58, '700', '"Cormorant Garamond", "Noto Serif JP", serif', 8);
+        targetCtx.fillStyle = '#fde68a';
+        fillAutoFitText(targetCtx, 'ORIENTAL TEAHOUSE  •  FRESH MILK TEA', 52, 146, 460, 19, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'lego': {
+        // Photo-matched 2F LEGO Certified Store: Iconic red square Lego badge with white/black/yellow outline logotype!
+        const lx = -275;
+        const ly = 94;
+        targetCtx.fillStyle = '#e3000b';
+        targetCtx.fillRect(lx - 46, ly - 44, 92, 88);
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 3;
+        targetCtx.strokeRect(lx - 46, ly - 44, 92, 88);
+        targetCtx.font = '900 32px "Montserrat", "Jost", sans-serif';
+        targetCtx.lineJoin = 'round';
+        targetCtx.strokeStyle = '#facc15';
+        targetCtx.lineWidth = 7;
+        targetCtx.strokeText('LEGO', lx, ly + 10);
+        targetCtx.strokeStyle = '#111827';
+        targetCtx.lineWidth = 4;
+        targetCtx.strokeText('LEGO', lx, ly + 10);
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fillText('LEGO', lx, ly + 10);
+        targetCtx.fillStyle = '#111827';
+        fillAutoFitText(targetCtx, 'LEGO® CERTIFIED STORE', 54, 104, 480, 56, '900', '"Montserrat", "Jost", sans-serif', 4);
+        targetCtx.fillStyle = '#b91c1c';
+        fillAutoFitText(targetCtx, 'PICK A BRICK  •  STAR WARS  •  TECHNIC  •  ICONS', 54, 146, 470, 19, '800', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'daiso': {
+        // Photo-matched DAISO JAPAN: Magenta-pink 3-chevron arrow badge + bold white DAISO JAPAN!
+        const dx = -276;
+        const dy = 94;
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.fillRect(dx - 44, dy - 40, 88, 80);
+        // 3 magenta right-pointing chevron arrows inside white square
+        targetCtx.strokeStyle = '#d6006e';
+        targetCtx.lineWidth = 6;
+        targetCtx.lineCap = 'round';
+        for (let c = -1; c <= 1; c++) {
+          const ox = dx + c * 18 - 4;
+          targetCtx.beginPath();
+          targetCtx.moveTo(ox - 8, dy - 18);
+          targetCtx.lineTo(ox + 8, dy);
+          targetCtx.lineTo(ox - 8, dy + 18);
+          targetCtx.stroke();
+        }
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'DAISO JAPAN', 48, 104, 450, 68, '900', '"Jost", sans-serif', 8);
+        targetCtx.fillStyle = '#fbcfe8';
+        fillAutoFitText(targetCtx, 'JAPANESE LIFESTYLE VARIETY STORE  •  大創産業', 48, 148, 460, 19, '700', '"Jost", "Noto Serif JP", sans-serif', 5);
+        break;
+      }
+
+      case 'dyson': {
+        // Photo-matched 1 Utama DYSON Demo Store: Matte obsidian with cyclonic ring emblem & geometric lowercase dyson logotype!
+        const dx = -235;
+        const dy = 94;
+        targetCtx.strokeStyle = '#d946ef';
+        targetCtx.lineWidth = 5;
+        targetCtx.beginPath();
+        targetCtx.arc(dx, dy, 32, 0, Math.PI * 2);
+        targetCtx.stroke();
+        targetCtx.strokeStyle = '#38bdf8';
+        targetCtx.lineWidth = 3;
+        targetCtx.beginPath();
+        targetCtx.arc(dx, dy, 18, 0, Math.PI * 2);
+        targetCtx.stroke();
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'dyson', 34, 106, 360, 78, '600', '"Jost", "Montserrat", sans-serif', 6);
+        targetCtx.fillStyle = '#e879f9';
+        fillAutoFitText(targetCtx, 'DYSON DEMO  •  AIRWRAP  •  SUPERSONIC  •  V15 DETECT', 34, 148, 470, 18, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'samsung': {
+        // Photo-matched SAMSUNG EXPERIENCE STORE: Deep cobalt tilted oval badge + SAMSUNG EXPERIENCE STORE!
+        const sx = -268;
+        const sy = 94;
+        targetCtx.save();
+        targetCtx.translate(sx, sy);
+        targetCtx.rotate(-0.16);
+        targetCtx.fillStyle = '#1428a0';
+        targetCtx.beginPath();
+        targetCtx.ellipse(0, 0, 56, 26, 0, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.strokeStyle = '#60a5fa';
+        targetCtx.lineWidth = 2.5;
+        targetCtx.stroke();
+        targetCtx.restore();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '800 18px "Jost", sans-serif';
+        targetCtx.fillText('SAMSUNG', sx, sy + 6);
+        fillAutoFitText(targetCtx, 'SAMSUNG', 48, 104, 440, 70, '800', '"Jost", sans-serif', 12);
+        targetCtx.fillStyle = '#60a5fa';
+        fillAutoFitText(targetCtx, 'EXPERIENCE STORE  •  GALAXY AI', 48, 148, 440, 20, '700', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'machines': {
+        // Photo-matched 2F S309-S310 MACHINES: Minimalist black with Apple logo silhouette + machines • APPLE PREMIUM PARTNER!
+        const ax = -255;
+        const ay = 96;
+        targetCtx.fillStyle = '#ffffff';
+        // Sculpted vector Apple logo silhouette with right-side bite & top tilted leaf
+        targetCtx.beginPath();
+        targetCtx.arc(ax - 10, ay + 2, 18, 0, Math.PI * 2);
+        targetCtx.arc(ax + 10, ay + 2, 18, 0, Math.PI * 2);
+        targetCtx.fill();
+        // Bite cutout on right side of apple
+        targetCtx.fillStyle = isEmissive ? '#000000' : '#0b0b0d';
+        targetCtx.beginPath();
+        targetCtx.arc(ax + 28, ay, 10, 0, Math.PI * 2);
+        targetCtx.fill();
+        // Apple leaf at top
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.beginPath();
+        targetCtx.ellipse(ax + 4, ay - 22, 10, 5, -0.65, 0, Math.PI * 2);
+        targetCtx.fill();
+        fillAutoFitText(targetCtx, 'machines', 42, 106, 420, 74, '500', '"Jost", sans-serif', 6);
+        targetCtx.fillStyle = '#a1a1aa';
+        fillAutoFitText(targetCtx, 'APPLE PREMIUM PARTNER  •  S309–S310', 42, 148, 440, 19, '600', '"Jost", sans-serif', 7);
+        break;
+      }
+
+      case 'harvey-norman': {
+        // Photo-matched 1F/2F HARVEY NORMAN Flagship: Crimson & cobalt HN globe square + bold Harvey Norman!
+        const hx = -288;
+        const hy = 94;
+        targetCtx.fillStyle = '#dc2626';
+        targetCtx.fillRect(hx - 44, hy - 40, 88, 80);
+        targetCtx.strokeStyle = '#ffffff';
+        targetCtx.lineWidth = 3;
+        targetCtx.strokeRect(hx - 44, hy - 40, 88, 80);
+        targetCtx.fillStyle = '#1d4ed8';
+        targetCtx.beginPath();
+        targetCtx.arc(hx, hy, 28, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '900 30px "Jost", sans-serif';
+        targetCtx.fillText('HN', hx, hy + 10);
+        fillAutoFitText(targetCtx, 'Harvey Norman', 48, 104, 470, 66, '800', '"Jost", sans-serif', 4);
+        targetCtx.fillStyle = '#93c5fd';
+        fillAutoFitText(targetCtx, 'ELECTRICAL  •  COMPUTERS  •  FURNITURE  •  BEDDING', 48, 148, 480, 19, '700', '"Jost", sans-serif', 5);
+        break;
+      }
+
+      case 'toysrus': {
+        // Photo-matched 2F TOYS "R" US: Multi-colored TOYS "Я" US with reversed Я inside glowing blue/yellow star badge!
+        const sx = 28;
+        const sy = 90;
+        targetCtx.fillStyle = '#ef4444';
+        fillAutoFitText(targetCtx, 'T', -220, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#f97316';
+        fillAutoFitText(targetCtx, 'O', -155, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#eab308';
+        fillAutoFitText(targetCtx, 'Y', -90, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#22c55e';
+        fillAutoFitText(targetCtx, 'S', -28, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        // Star badge holding reversed 'Я'
+        targetCtx.fillStyle = '#38bdf8';
+        targetCtx.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const r = i % 2 === 0 ? 40 : 18;
+          const a = -Math.PI * 0.5 + (i * Math.PI) / 5;
+          if (i === 0) targetCtx.moveTo(sx + Math.cos(a) * r, sy + Math.sin(a) * r);
+          else targetCtx.lineTo(sx + Math.cos(a) * r, sy + Math.sin(a) * r);
+        }
+        targetCtx.closePath();
+        targetCtx.fill();
+        targetCtx.fillStyle = '#ffffff';
+        targetCtx.font = '900 44px "Montserrat", "Jost", sans-serif';
+        targetCtx.fillText('Я', sx, sy + 14);
+        targetCtx.fillStyle = '#facc15';
+        fillAutoFitText(targetCtx, 'U', 105, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#ec4899';
+        fillAutoFitText(targetCtx, 'S', 168, 108, 65, 76, '900', '"Montserrat", "Jost", sans-serif', 0);
+        targetCtx.fillStyle = '#fef08a';
+        fillAutoFitText(targetCtx, 'TOYS  •  GAMES  •  COLLECTIBLES  •  BABY', 0, 148, 450, 19, '800', '"Jost", sans-serif', 6);
+        break;
+      }
+
+      case 'jd-sports': {
+        // Photo-matched JD SPORTS: Iconic yellow-and-black JD roundel badge + JD SPORTS • UNDISPUTED KING OF TRAINERS!
+        const jx = -265;
+        const jy = 94;
+        targetCtx.fillStyle = '#facc15';
+        targetCtx.fillRect(jx - 44, jy - 40, 88, 80);
+        targetCtx.fillStyle = '#09090b';
+        targetCtx.font = '900 46px "Oswald", "Jost", sans-serif';
+        targetCtx.fillText('JD', jx, jy + 16);
+        targetCtx.fillStyle = '#ffffff';
+        fillAutoFitText(targetCtx, 'JD SPORTS', 44, 104, 420, 74, '900', '"Oswald", "Jost", sans-serif', 10);
+        targetCtx.fillStyle = '#facc15';
+        fillAutoFitText(targetCtx, 'UNDISPUTED KING OF TRAINERS', 44, 148, 430, 20, '800', '"Jost", sans-serif', 7);
         break;
       }
 
