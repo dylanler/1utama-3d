@@ -2848,6 +2848,305 @@ export function buildIconicAttractions(scene, interactables) {
   }
 
   // ==========================================================================
+  // ROUND-21 3D SUB-ANCHOR & ATTRACTION STOREFRONT SHOWCASE INTERIORS
+  // (NEXT GEN 1F/2F Rainbow Play Tubes & Ball Pits, WINDLAB Flight Briefing Pods,
+  //  MISSION Q Cyber-Vault Escape Room, HARVEY NORMAN 8K OLED & Gaming PC Lab,
+  //  TOYS"R"US Geoffrey Giraffe & Gachapon Wonderland, JD SPORTS / NIKE Sneaker Portals)
+  // ==========================================================================
+  {
+    const r21RainbowCols = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#a855f7', '#ec4899'];
+    const r21RainbowMats = r21RainbowCols.map(
+      (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.24, metalness: 0.12 })
+    );
+    const r21NeonMats = r21RainbowCols.map(
+      (c) => new THREE.MeshBasicMaterial({ color: c })
+    );
+    const r21DarkMat = new THREE.MeshStandardMaterial({ color: '#111827', roughness: 0.32, metalness: 0.55 });
+    const r21WhiteMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.28, metalness: 0.08 });
+    const r21GoldNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.2, 1.75, 0.35), toneMapped: false });
+    const r21CyanNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.2, 2.0, 2.55), toneMapped: false });
+    const r21PinkNeon = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 0.35, 1.45), toneMapped: false });
+
+    // 1. NEXT GEN [FAMILY EDUTAINMENT PARK] (2F North S603-S610, 2F South S606 Ninja Arena & 1F North F602-F603)
+    const nextGenShowcases = [
+      { x: -152.68, y: 18.08, z: -21.65, rotY: 0, span: 13.6 },
+      { x: -171.60, y: 18.08, z: 21.65, rotY: Math.PI, span: 18.0 },
+      { x: -157.28, y: 12.08, z: -21.65, rotY: 0, span: 13.2 }
+    ];
+    for (const ngCfg of nextGenShowcases) {
+      const ng = new THREE.Group();
+      ng.position.set(ngCfg.x, ngCfg.y, ngCfg.z);
+      ng.rotation.y = ngCfg.rotY;
+
+      // Soft pastel padded play-zone floor mat & glowing rainbow portal arch
+      const playMat = new THREE.Mesh(
+        new THREE.BoxGeometry(ngCfg.span * 0.88, 0.06, 2.35),
+        new THREE.MeshStandardMaterial({ color: '#1e1b4b', roughness: 0.45 })
+      );
+      playMat.position.y = 0.03;
+      ng.add(playMat);
+
+      // 2-tier multi-tower climbing gym frames with colorful padded platforms & safety netting
+      for (let tIdx = 0; tIdx < 3; tIdx++) {
+        const tx = (tIdx - 1) * (ngCfg.span * 0.27);
+        const towerPod = new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.95, 1.65), r21RainbowMats[(tIdx * 2) % 7]);
+        towerPod.position.set(tx, 1.52, -0.25);
+        const podWindow = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.72, 16), r21NeonMats[(tIdx * 2 + 3) % 7]);
+        podWindow.rotation.x = Math.PI / 2;
+        podWindow.position.set(tx, 2.05, -0.25);
+        ng.add(towerPod, podWindow);
+      }
+
+      // Iconic elevated rainbow tube bridge & helical spiral tube slide pouring into a colorful ball-pit pool!
+      for (let r = 0; r < 7; r++) {
+        const ringTube = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.58, 0.58, 0.52, 18),
+          r21RainbowMats[r]
+        );
+        ringTube.rotation.z = Math.PI / 2;
+        ringTube.position.set(-1.65 + r * 0.55, 2.28, 0.15);
+        ng.add(ringTube);
+      }
+      const spiralPts = [];
+      for (let k = 0; k <= 16; k++) {
+        const u = k / 16;
+        spiralPts.push(
+          new THREE.Vector3(
+            2.2 + Math.cos(u * Math.PI * 1.85) * 0.85,
+            2.55 - u * 2.15,
+            0.10 + Math.sin(u * Math.PI * 1.85) * 0.65
+          )
+        );
+      }
+      const spiralSlide = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(spiralPts), 28, 0.38, 12, false),
+        r21RainbowMats[2]
+      );
+      // Ball-pit corral filled with colorful spheres + Ninja warrior stepping pods
+      const pitRim = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.42, 1.35), r21RainbowMats[4]);
+      pitRim.position.set(-2.2, 0.24, 0.35);
+      ng.add(spiralSlide, pitRim);
+      for (let b = 0; b < 18; b++) {
+        const ball = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), r21RainbowMats[b % 7]);
+        ball.position.set(-3.5 + (b % 6) * 0.52, 0.46 + (b % 2) * 0.08, 0.05 + Math.floor(b / 6) * 0.32);
+        ng.add(ball);
+      }
+      const ngSign = new THREE.Mesh(
+        new THREE.PlaneGeometry(4.6, 0.72),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture('NEXT GEN • EDUTAINMENT PARK', 'NINJA ARENA • RAINBOW SLIDES • KIDS CAFE', '#1e1b4b', '#fef08a', '#ec4899', 768, 128)
+        })
+      );
+      ngSign.position.set(0, 3.38, 0.62);
+      ng.add(ngSign);
+      root.add(ng);
+    }
+
+    // 2. S601 WINDLAB INDOOR SKYDIVING INTERIOR FLIGHT BRIEFING & GEAR PREP BAY (2F 1UE North wall x=-171.8, z=-21.6)
+    {
+      const wl = new THREE.Group();
+      wl.position.set(-171.8, 18.08, -21.65);
+      const suitOrangeMat = new THREE.MeshStandardMaterial({ color: '#ea580c', roughness: 0.36 });
+      const suitBlueMat = new THREE.MeshStandardMaterial({ color: '#0284c7', roughness: 0.36 });
+
+      // Illuminated Flight Gear Locker Wall with 8 Hanging Flight Suits & Full-Face Helmets
+      const lockerBack = new THREE.Mesh(new THREE.BoxGeometry(8.4, 3.2, 0.24), r21DarkMat);
+      lockerBack.position.set(-4.2, 1.62, -0.75);
+      const lockerFrame = new THREE.Mesh(new THREE.BoxGeometry(8.5, 0.08, 0.45), r21CyanNeon);
+      lockerFrame.position.set(-4.2, 3.18, -0.68);
+      wl.add(lockerBack, lockerFrame);
+      for (let s = 0; s < 8; s++) {
+        const sx = -7.7 + s * 1.0;
+        const suit = new THREE.Mesh(new THREE.CapsuleGeometry(0.18, 0.92, 4, 8), s % 2 === 0 ? suitOrangeMat : suitBlueMat);
+        suit.position.set(sx, 1.48, -0.45);
+        const helm = new THREE.Mesh(new THREE.SphereGeometry(0.17, 10, 10), s % 2 === 0 ? r21WhiteMat : suitOrangeMat);
+        helm.position.set(sx, 2.48, -0.42);
+        const visor = new THREE.Mesh(new THREE.SphereGeometry(0.14, 8, 8), r21DarkMat);
+        visor.position.set(sx, 2.48, -0.35);
+        wl.add(suit, helm, visor);
+      }
+
+      // Pre-Flight Briefing Glass Pod & Dual Telemetry Screens + Check-In Desk
+      const briefDesk = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.02, 0.95), r21DarkMat);
+      briefDesk.position.set(4.2, 0.51, 0.15);
+      const briefTrim = new THREE.Mesh(new THREE.BoxGeometry(4.48, 0.07, 1.02), r21GoldNeon);
+      briefTrim.position.set(4.2, 1.02, 0.15);
+      const teleBoard = new THREE.Mesh(
+        new THREE.PlaneGeometry(4.2, 1.15),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture('WINDLAB FLIGHT DECK • S601', 'PRE-FLIGHT BRIEFING • GEAR CHECK • TUNNEL 250 KM/H', '#0b1324', '#38bdf8', '#f97316', 768, 192)
+        })
+      );
+      teleBoard.position.set(4.2, 2.42, -0.62);
+      wl.add(briefDesk, briefTrim, teleBoard);
+      root.add(wl);
+    }
+
+    // 3. F625 MISSION Q ESCAPE ROOM CYBER-VAULT PORTAL & PUZZLE PEDESTALS (1F 1UE East-South wall x=-130.8, z=15.0)
+    {
+      const mq = new THREE.Group();
+      mq.position.set(-129.95, 12.08, 15.0);
+      mq.rotation.y = -Math.PI / 2;
+
+      // Giant Circular Bank/Cyber Vault Cog Door with Concentric Glowing Gold & Cyan Puzzle Rings
+      const vaultPlate = new THREE.Mesh(new THREE.BoxGeometry(7.8, 3.45, 0.22), r21DarkMat);
+      vaultPlate.position.set(0, 1.75, -0.42);
+      const vaultDoor = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.38, 1.38, 0.28, 28),
+        new THREE.MeshStandardMaterial({ color: '#334155', roughness: 0.25, metalness: 0.85 })
+      );
+      vaultDoor.rotation.x = Math.PI / 2;
+      vaultDoor.position.set(0, 1.78, -0.26);
+      const outerCog = new THREE.Mesh(new THREE.TorusGeometry(1.42, 0.075, 8, 24), r21GoldNeon);
+      outerCog.position.set(0, 1.78, -0.12);
+      const innerCog = new THREE.Mesh(new THREE.TorusGeometry(0.86, 0.055, 8, 20), r21CyanNeon);
+      innerCog.position.set(0, 1.78, -0.10);
+      const mqHeader = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.8, 0.65),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture('MISSION Q • ESCAPE ROOM', 'SOLVE THE VAULT • 60:00 COUNTDOWN', '#0f172a', '#fde047', '#38bdf8', 640, 128)
+        })
+      );
+      mqHeader.position.set(0, 3.25, -0.10);
+      mq.add(vaultPlate, vaultDoor, outerCog, innerCog, mqHeader);
+
+      // 2 Illuminated Mystery Puzzle Pedestals Flanking the Vault Door
+      for (const px of [-2.45, 2.45]) {
+        const ped = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.42, 1.02, 12), r21DarkMat);
+        ped.position.set(px, 0.51, 0.12);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.032, 6, 18), px < 0 ? r21CyanNeon : r21PinkNeon);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(px, 1.03, 0.12);
+        const artifact = new THREE.Mesh(new THREE.OctahedronGeometry(0.24, 0), px < 0 ? r21GoldNeon : r21CyanNeon);
+        artifact.position.set(px, 1.38, 0.12);
+        mq.add(ped, ring, artifact);
+      }
+      root.add(mq);
+    }
+
+    // 4. S101 HARVEY NORMAN 8K OLED HOME THEATRE & RGB GAMING PC SHOWCASE (2F Old Wing West x=-125.8, z=-15.8)
+    {
+      const hn = new THREE.Group();
+      hn.position.set(-126.65, 18.08, -15.8);
+      hn.rotation.y = Math.PI / 2;
+
+      // 98" 8K OLED Cinema Media Wall + Ambient Halo + Dolby Atmos Soundbar
+      const tvFrame = new THREE.Mesh(new THREE.BoxGeometry(3.4, 1.95, 0.10), r21DarkMat);
+      tvFrame.position.set(-2.4, 1.92, -0.35);
+      const tvHalo = new THREE.Mesh(new THREE.BoxGeometry(3.56, 2.10, 0.04), r21CyanNeon);
+      tvHalo.position.set(-2.4, 1.92, -0.41);
+      const tvScreen = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.26, 1.82),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture('HARVEY NORMAN • 8K OLED', 'DOLBY VISION • HOME CINEMA & GAMING PC LAB', '#090d16', '#38bdf8', '#ef4444', 640, 320)
+        })
+      );
+      tvScreen.position.set(-2.4, 1.92, -0.29);
+      const consoleCredenza = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.56, 0.58), r21DarkMat);
+      consoleCredenza.position.set(-2.4, 0.28, -0.15);
+      // RGB Gaming PC Battle-Station on Right Bay
+      const gamingDesk = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.78, 0.82), r21DarkMat);
+      gamingDesk.position.set(2.4, 0.39, -0.05);
+      const deskLed = new THREE.Mesh(new THREE.BoxGeometry(2.66, 0.05, 0.86), r21PinkNeon);
+      deskLed.position.set(2.4, 0.78, -0.05);
+      for (const mx of [1.75, 3.05]) {
+        const pcCase = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.52, 0.48), r21DarkMat);
+        pcCase.position.set(mx, 1.06, -0.12);
+        const pcFan = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.025, 6, 16), mx < 2.4 ? r21CyanNeon : r21PinkNeon);
+        pcFan.position.set(mx, 1.06, 0.13);
+        hn.add(pcCase, pcFan);
+      }
+      hn.add(tvFrame, tvHalo, tvScreen, consoleCredenza, gamingDesk, deskLed);
+      root.add(hn);
+    }
+
+    // 5. S140 TOYS"R"US GEOFFREY THE GIRAFFE MASCOT & GACHAPON WONDERLAND (2F Old Wing South x=-105.28, z=22.2)
+    {
+      const tru = new THREE.Group();
+      tru.position.set(-105.28, 18.08, 23.65);
+      tru.rotation.y = Math.PI;
+      const giraffeMat = new THREE.MeshStandardMaterial({ color: '#f59e0b', roughness: 0.38 });
+      const spotBrownMat = new THREE.MeshStandardMaterial({ color: '#78350f', roughness: 0.48 });
+
+      // Sculpted 2.65m Geoffrey the Giraffe Mascot Statue on Star Podium
+      const gPodium = new THREE.Mesh(new THREE.CylinderGeometry(0.88, 0.96, 0.24, 20), r21RainbowMats[4]);
+      gPodium.position.set(-3.6, 0.12, 0.25);
+      const gTorso = new THREE.Mesh(new THREE.CapsuleGeometry(0.32, 0.65, 6, 12), giraffeMat);
+      gTorso.rotation.x = Math.PI * 0.36;
+      gTorso.position.set(-3.6, 1.12, 0.20);
+      const gNeck = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.20, 1.25, 10), giraffeMat);
+      gNeck.rotation.x = -0.22;
+      gNeck.position.set(-3.6, 1.88, 0.48);
+      const gHead = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), giraffeMat);
+      gHead.scale.set(0.85, 0.95, 1.35);
+      gHead.position.set(-3.6, 2.48, 0.66);
+      for (const lx of [-3.82, -3.38]) {
+        for (const lz of [-0.05, 0.45]) {
+          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.055, 0.95, 8), giraffeMat);
+          leg.position.set(lx, 0.62, lz);
+          tru.add(leg);
+        }
+      }
+      tru.add(gPodium, gTorso, gNeck, gHead);
+
+      // 2-Tier 16-Machine Gachapon Capsule Wall + Giant Colorful Toy Bricks Display Island
+      for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 8; col++) {
+          const gx = -1.2 + col * 0.72;
+          const gy = 0.56 + row * 0.92;
+          const gBox = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.84, 0.52), r21RainbowMats[(col + row * 3) % 7]);
+          gBox.position.set(gx, gy, -0.65);
+          const gWin = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.42, 0.55), r21WhiteMat);
+          gWin.position.set(gx, gy + 0.14, -0.65);
+          tru.add(gBox, gWin);
+        }
+      }
+      for (let b = 0; b < 5; b++) {
+        const brick = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.46, 0.56), r21RainbowMats[b]);
+        brick.position.set(1.2 + (b % 3) * 1.05, 0.24 + Math.floor(b / 3) * 0.46, 0.35);
+        tru.add(brick);
+      }
+      root.add(tru);
+    }
+
+    // 6. S305A JD SPORTS ("KING OF TRAINERS") & S306-S308 NIKE • BATA LED SNEAKER PORTALS (2F New Wing North z=-23.2)
+    for (const spCfg of [
+      { x: 39.14, y: 18.08, z: -24.55, span: 8.6, neon: r21GoldNeon, title: 'JD • KING OF TRAINERS', sub: 'EXCLUSIVE AIR MAX • JORDAN • DUNK LAB' },
+      { x: 63.68, y: 18.08, z: -24.55, span: 15.6, neon: r21PinkNeon, title: 'NIKE • JORDAN FLIGHT LAB', sub: 'AIR ZOOM • PEGASUS • RUNNING INNOVATION' }
+    ]) {
+      const spG = new THREE.Group();
+      spG.position.set(spCfg.x, spCfg.y, spCfg.z);
+      // 3 Glowing LED Portal Ribs + 3 Levitating Sneaker Showcase Pedestals
+      for (const rx of [-spCfg.span * 0.34, 0, spCfg.span * 0.34]) {
+        const portalRib = new THREE.Mesh(new THREE.BoxGeometry(2.1, 2.95, 0.14), spCfg.neon);
+        portalRib.position.set(rx, 1.50, -0.55);
+        const innerBlack = new THREE.Mesh(new THREE.BoxGeometry(1.86, 2.74, 0.18), r21DarkMat);
+        innerBlack.position.set(rx, 1.48, -0.54);
+        const pod = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, 0.92, 16), r21DarkMat);
+        pod.position.set(rx, 0.46, 0.28);
+        const podHalo = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.032, 6, 20), spCfg.neon);
+        podHalo.rotation.x = Math.PI / 2;
+        podHalo.position.set(rx, 0.93, 0.28);
+        // Oversized Hero Sneaker Display on Pedestal
+        const sole = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.09, 0.24), r21WhiteMat);
+        sole.position.set(rx, 1.06, 0.28);
+        const upper = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.22, 0.22), spCfg.neon === r21GoldNeon ? r21RainbowMats[2] : r21RainbowMats[0]);
+        upper.position.set(rx - 0.04, 1.20, 0.28);
+        spG.add(portalRib, innerBlack, pod, podHalo, sole, upper);
+      }
+      const spHeader = new THREE.Mesh(
+        new THREE.PlaneGeometry(4.4, 0.68),
+        new THREE.MeshBasicMaterial({
+          map: createSignBoardTexture(spCfg.title, spCfg.sub, '#09090b', '#ffffff', '#facc15', 768, 128)
+        })
+      );
+      spHeader.position.set(0, 3.28, -0.42);
+      spG.add(spHeader);
+      root.add(spG);
+    }
+  }
+
+  // ==========================================================================
   // AUTHENTIC PHOTO-EXACT 1 UTAMA OUTDOOR 2F SARANGHAE FINGER-HEART ROOFTOP BRIDGE (Shot 12 / 2F-02)
   // Positioned 100% OUTSIDE 1UE's z=-24.4 wall at (-140.5, 18.0, -32.2) under OPEN SUNLIT BLUE SKY:
   // - Matte dark-charcoal gridded outdoor stone/ceramic tile deck (z_local = +7.8 -> -6.8) with crisp diagonal sun shadows!
