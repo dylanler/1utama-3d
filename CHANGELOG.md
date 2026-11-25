@@ -1,5 +1,9 @@
 # 1 Utama Shopping Centre 3D — Full-Fidelity Update Log
 
+## Round-24 (In Progress — P0 2F Rainbow Suspension Bridge & Concourse Tree/Foliage Solid-Mass Exclusion Envelope)
+- **P0 2F Rainbow Suspension Bridge & Rainforest Tree/Foliage 3D Exclusion Envelope (`src/world/iconicAttractions.js`, `#96`)**: Relocating Rainforest trees clear of the 2F suspension bridge corridor and enforcing hard 3D bounding-sphere exclusion volumes on all procedural branches, canopy spheres, leaves, palm fronds, and hanging vines so zero foliage phases through the bridge deck, Warren under-truss, steel arches, stay cables, side railings, terracotta balconies, lift shaft, or GF Koi Pond boardwalks.
+- **Concourse Planter & Balcony Vine Box Clearance Audit (`src/world/mallArchitecture.js`, `#96`)**: Auditing and clamping all concourse palm planters and balcony rim vine boxes across Rainforest, 1UE District K, Promenade, and New Wing so zero foliage encroaches into the 2F suspension bridge landings/deck, escalator wells/trusses/handrails, or glass balustrades.
+
 ## Round-23 (Completed — 100% Storefront Fidelity Wave 3: Tech/Telco, Salons/Spas, Lego/Kids/Pet, Bubble Tea/QSR Storefronts & Anchor/Tech/Lifestyle Fascia Emblems)
 - **Bespoke 3D Tech/Telco, Salons/Spas, Lego/Kids/Pet/Appliances & Bubble Tea/QSR Interiors (`src/world/mallArchitecture.js`, `#83`)**:
   - **Tech, Telco, Computers & Audio (`MACHINES`, `SWITCH`, `SAMSUNG`, `XIAOMI`, `HUAWEI`, `HONOR`, `OPPO`, `VIVO`, `ASUS / ROG`, `SONY`, `BOSE`, `GARMIN`, `MAXIS`, `CELCOMDIGI`, `U MOBILE`, `YES 5G`, `FUJIFILM`, `FOTO SHANGHAI`, `BEST DENKI`, `ALL IT`, `ITONE`, `HARVEY NORMAN`)**: Added blonde-oak & brushed-aluminum experience tables with 3D angled laptops (base deck + hinged tilted glowing screen), tablets, and smartphones on acrylic risers, glowing wall product lightboxes, headphone/smartwatch demo stands, and telco customer-service consultation pods with dual monitors & stools.
