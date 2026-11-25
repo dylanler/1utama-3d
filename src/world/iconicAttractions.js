@@ -1452,12 +1452,12 @@ export function buildIconicAttractions(scene, interactables) {
     });
   }
 
-  // Lush Lakeside Rainforest Palms rooted inside the Ground Floor Koi Pond basin (y = 5.66 — zero stray boulders on GF concourse!)
+  // Lush Lakeside Rainforest Palms rooted inside the Ground Floor Koi Pond basin (y = 5.66 — strictly clear of GF boardwalks & 2F bridge corridor!)
   const treeSpots = [
-    { x: 26.2, y: 5.66, z: -7.2, s: 1.05, h: 3.6 },
-    { x: 26.5, y: 5.66, z: 7.2, s: 1.05, h: 3.5 },
-    { x: 49.8, y: 5.66, z: -6.8, s: 1.05, h: 3.8 },
-    { x: 40.2, y: 5.66, z: 9.2, s: 0.96, h: 3.0 }
+    { x: 25.8, y: 5.66, z: -7.4, s: 0.98, h: 3.4 },
+    { x: 26.2, y: 5.66, z: 7.4, s: 0.98, h: 3.3 },
+    { x: 49.6, y: 5.66, z: -6.8, s: 0.98, h: 3.5 },
+    { x: 49.2, y: 5.66, z: 7.6, s: 0.94, h: 3.0 }
   ];
   for (let i = 0; i < treeSpots.length; i++) {
     const t = treeSpots[i];
@@ -1555,15 +1555,16 @@ export function buildIconicAttractions(scene, interactables) {
     envMapIntensity: 0.68
   });
 
-  // Soaring Multi-Story 1 Utama Rainforest Canopy Trees rooted inside Ground Floor Koi Pond islands (y = 5.68, rising 12-17m up past 2F!)
+  // Soaring Multi-Story 1 Utama Rainforest Canopy Trees rooted inside Ground Floor Koi Pond West & East bays
+  // (Strictly >= 8.2m clear of 2F Rainbow Suspension Bridge centerline x = 38.0 and inside elliptical courtyard boundary!)
   const canopyTreeSpots = [
-    { x: 25.4, z: -7.8, h: 15.2, s: 1.52, rot: 0.42, fronds: 17 },
-    { x: 50.6, z: -7.6, h: 13.8, s: 1.42, rot: 1.85, fronds: 15 },
-    { x: 26.2, z: 7.8, h: 16.0, s: 1.50, rot: 2.74, fronds: 16 },
-    { x: 49.8, z: 7.8, h: 12.6, s: 1.38, rot: 0.96, fronds: 14 },
-    { x: 30.6, z: -9.2, h: 11.4, s: 1.24, rot: 3.55, fronds: 13 },
-    { x: 45.8, z: -8.8, h: 13.2, s: 1.40, rot: 4.82, fronds: 16 },
-    { x: 28.8, z: 8.0, h: 10.2, s: 1.22, rot: 2.15, fronds: 13 }
+    { x: 26.2, z: -7.2, h: 14.2, s: 1.32, rot: 0.42, fronds: 15 },
+    { x: 49.8, z: -7.0, h: 13.4, s: 1.28, rot: 1.85, fronds: 14 },
+    { x: 26.8, z: 7.2, h: 14.6, s: 1.32, rot: 2.74, fronds: 15 },
+    { x: 49.2, z: 7.2, h: 12.4, s: 1.26, rot: 0.96, fronds: 14 },
+    { x: 29.4, z: -8.4, h: 9.8, s: 1.12, rot: 3.55, fronds: 12 },
+    { x: 46.6, z: -8.2, h: 10.2, s: 1.15, rot: 4.82, fronds: 13 },
+    { x: 28.6, z: 7.6, h: 9.4, s: 1.10, rot: 2.15, fronds: 12 }
   ];
   for (let i = 0; i < canopyTreeSpots.length; i++) {
     const ct = canopyTreeSpots[i];
@@ -1592,7 +1593,8 @@ export function buildIconicAttractions(scene, interactables) {
       const ang = (si / numSpots) * Math.PI * 2 + (fy * 0.05);
       const bx = 38.0 + Math.cos(ang) * 17.28;
       const bz = Math.sin(ang) * 12.48;
-      if (fy === 18.0 && Math.abs(bx - 38.0) < 3.0) continue;
+      // Keep wide 7.7m clearance around 2F Rainbow Suspension Bridge North & South portals/railings (x = 38.0 ± 3.85m)!
+      if (Math.abs(bx - 38.0) < 3.85) continue;
       const inwardYaw = Math.atan2(38.0 - bx, -bz);
       const vIdx = Math.round(fy * 5 + si * 7);
       if ((vIdx * 3) % 4 !== 0) {
@@ -1625,6 +1627,7 @@ export function buildIconicAttractions(scene, interactables) {
   // ==========================================================================
 
   // Photorealistic Multi-Leaf Broadleaf Tropical Rainforest Tree Generator (78-leaf botanical cutout clusters — ZERO cartoon oval blobs!)
+  // Enforces strict 3D solid-mass exclusion against the 2F Rainbow Suspension Bridge (x = 38.0 ± 2.8m, y >= 15.6m) & elliptical balcony walls!
   const broadleafClusterTex = createBroadleafCanopyClusterTexture();
   const broadleafMats = [
     new THREE.MeshStandardMaterial({ map: broadleafClusterTex, color: '#d8f0cf', alphaTest: 0.32, roughness: 0.68, side: THREE.DoubleSide }),
@@ -1632,33 +1635,64 @@ export function buildIconicAttractions(scene, interactables) {
     new THREE.MeshStandardMaterial({ map: broadleafClusterTex, color: '#b4d8b0', alphaTest: 0.32, roughness: 0.72, side: THREE.DoubleSide })
   ];
   const broadleafCardGeo = new THREE.PlaneGeometry(2.55, 2.55);
+  function clampRainforestFoliagePoint(wx, wy, wz, radMargin = 1.65) {
+    let cx = wx;
+    let cy = wy;
+    let cz = wz;
+    // 1) Hard 3D exclusion envelope around the entire 2F Rainbow Suspension Bridge (center x = 38.0, deck/railings/arches/truss x = 35.6..40.4, y = 15.8..26.0)
+    const bridgeHalfW = 2.65 + radMargin; // 4.30m half-width -> keeps leaf centers strictly <= 33.70 or >= 42.30 when y >= 15.6!
+    if (cy + radMargin > 15.6 && cy - radMargin < 26.2 && Math.abs(cz) < 14.2 + radMargin) {
+      if (Math.abs(cx - 38.0) < bridgeHalfW) {
+        cx = cx < 38.0 ? 38.0 - bridgeHalfW : 38.0 + bridgeHalfW;
+      }
+    }
+    // 2) Hard 3D exclusion against the surrounding 1F-5F elliptical terracotta balcony walls & glass funnel (cx = 38.0, cz = 0, rx = 17.2, rz = 12.4)
+    const maxRx = Math.max(4.0, 16.5 - radMargin);
+    const maxRz = Math.max(3.0, 11.7 - radMargin);
+    const eNorm = Math.hypot((cx - 38.0) / maxRx, cz / maxRz);
+    if (eNorm > 1.0) {
+      cx = 38.0 + ((cx - 38.0) / eNorm) * 0.97;
+      cz = (cz / eNorm) * 0.97;
+    }
+    return new THREE.Vector3(cx, cy, cz);
+  }
+
   function addBroadleafRainforestTree(tx, tz, trunkH, crownR, seed) {
     const tg = new THREE.Group();
     // Root all broadleaf Rainforest trees on the Ground Floor Koi Pond islands (y = 5.72) so ZERO trunks pierce LG below!
-    const effH = Math.max(8.5, trunkH - 5.8);
-    tg.position.set(tx, 5.72, tz);
+    const baseY = 5.72;
+    const effH = Math.max(6.2, trunkH - 5.8);
+    tg.position.set(tx, baseY, tz);
     trunkH = effH;
-    // Curved natural rainforest trunk rising from LG pond floor up past 2F bridge
-    const leanX = Math.sin(seed * 3.7) * 0.85;
-    const leanZ = Math.cos(seed * 2.9) * 0.65;
+    // Lean away from bridge centerline x = 38.0 so trunks & branches never lean into the bridge!
+    const bridgeSide = tx < 38.0 ? -1 : 1;
+    const leanX = bridgeSide * Math.abs(Math.sin(seed * 3.7)) * 0.65;
+    const leanZ = Math.cos(seed * 2.9) * 0.55;
+    const clampedTop = clampRainforestFoliagePoint(tx + leanX, baseY + trunkH, tz + leanZ, 1.45);
+    const topLocalX = clampedTop.x - tx;
+    const topLocalZ = clampedTop.z - tz;
     const trunkCurve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(leanX * 0.45, trunkH * 0.48, leanZ * 0.45),
-      new THREE.Vector3(leanX, trunkH, leanZ)
+      new THREE.Vector3(topLocalX * 0.45, trunkH * 0.48, topLocalZ * 0.45),
+      new THREE.Vector3(topLocalX, trunkH, topLocalZ)
     ]);
     const trunk = new THREE.Mesh(new THREE.TubeGeometry(trunkCurve, 12, 0.24, 8, false), botMats.trunkMat);
     trunk.castShadow = true;
     tg.add(trunk);
-    // 3 spreading upper limbs supporting dense multi-layered leafy broadleaf foliage clusters
-    const crownAnchors = [
-      new THREE.Vector3(leanX, trunkH, leanZ),
-      new THREE.Vector3(leanX + Math.cos(seed) * crownR * 0.48, trunkH - 1.4, leanZ + Math.sin(seed) * crownR * 0.48),
-      new THREE.Vector3(leanX + Math.cos(seed + 2.1) * crownR * 0.52, trunkH - 2.3, leanZ + Math.sin(seed + 2.1) * crownR * 0.52),
-      new THREE.Vector3(leanX + Math.cos(seed + 4.2) * crownR * 0.45, trunkH - 0.8, leanZ + Math.sin(seed + 4.2) * crownR * 0.45)
+    // 3 spreading upper limbs supporting dense multi-layered leafy broadleaf foliage clusters (clamped clear of bridge & balconies!)
+    const rawAnchors = [
+      new THREE.Vector3(topLocalX, trunkH, topLocalZ),
+      new THREE.Vector3(topLocalX + Math.cos(seed) * crownR * 0.44, trunkH - 1.3, topLocalZ + Math.sin(seed) * crownR * 0.44),
+      new THREE.Vector3(topLocalX + Math.cos(seed + 2.1) * crownR * 0.48, trunkH - 2.1, topLocalZ + Math.sin(seed + 2.1) * crownR * 0.48),
+      new THREE.Vector3(topLocalX + Math.cos(seed + 4.2) * crownR * 0.42, trunkH - 0.7, topLocalZ + Math.sin(seed + 4.2) * crownR * 0.42)
     ];
+    const crownAnchors = rawAnchors.map((a) => {
+      const wPt = clampRainforestFoliagePoint(tx + a.x, baseY + a.y, tz + a.z, 1.55);
+      return new THREE.Vector3(wPt.x - tx, wPt.y - baseY, wPt.z - tz);
+    });
     for (let bi = 1; bi < crownAnchors.length; bi++) {
       const limbCurve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(leanX * 0.75, trunkH - 3.6, leanZ * 0.75),
+        new THREE.Vector3(topLocalX * 0.72, trunkH - 3.2, topLocalZ * 0.72),
         crownAnchors[bi]
       ]);
       tg.add(new THREE.Mesh(new THREE.TubeGeometry(limbCurve, 6, 0.09, 6, false), botMats.trunkMat));
@@ -1667,33 +1701,41 @@ export function buildIconicAttractions(scene, interactables) {
       const anc = crownAnchors[ci];
       for (let lf = 0; lf < 7; lf++) {
         const ang = (lf / 7) * Math.PI * 2 + seed + ci;
-        const rad = (lf === 0 ? 0.1 : 0.42 + (lf % 3) * 0.36) * crownR * 0.55;
+        const rad = (lf === 0 ? 0.1 : 0.38 + (lf % 3) * 0.32) * crownR * 0.50;
+        const cardScale = 0.84 + (lf % 3) * 0.20;
+        const cardRadius = 1.35 * cardScale; // half-diagonal of 2.55m card
+        const rawWX = tx + anc.x + Math.cos(ang) * rad;
+        const rawWY = baseY + anc.y + ((lf % 3) - 1) * 0.62;
+        const rawWZ = tz + anc.z + Math.sin(ang) * rad;
+        const safeW = clampRainforestFoliagePoint(rawWX, rawWY, rawWZ, cardRadius + 0.35);
+        // Double-check strict bridge clearance: skip any leaf card whose bounding sphere comes within 2.55m of bridge centerline x = 38.0 above y = 15.6!
+        if (safeW.y + cardRadius > 15.6 && Math.abs(safeW.x - 38.0) < 2.55 + cardRadius) continue;
         const card = new THREE.Mesh(broadleafCardGeo, broadleafMats[(lf + ci + Math.round(seed * 7)) % broadleafMats.length]);
-        card.position.set(anc.x + Math.cos(ang) * rad, anc.y + ((lf % 3) - 1) * 0.72, anc.z + Math.sin(ang) * rad);
+        card.position.set(safeW.x - tx, safeW.y - baseY, safeW.z - tz);
         card.rotation.set(((lf % 3) - 1) * 0.55, ang, Math.sin(lf + seed) * 0.45);
-        card.scale.setScalar(0.88 + (lf % 3) * 0.24);
+        card.scale.setScalar(cardScale);
         tg.add(card);
       }
     }
     rainforestGroup.add(tg);
   }
 
-  // Balanced photorealistic rainforest tree canopy framing LEFT (+X in 2F-07: sunlit mid-crown matching photo!), RIGHT (-X in 2F-07: lush lower canopy revealing curved terracotta balconies!), and mid-height under-bridge canopy clusters for 3F-07 (Photo 2!)
+  // Balanced photorealistic rainforest tree canopy in West bay (x = 25.4..30.2) & East bay (x = 45.8..49.8) — 100% clear of 2F Suspension Bridge (x = 35.4..40.6), plus low under-bridge understory trees (h = 13.4..13.8, crown top <= 14.5m < bridge truss 16.74m)!
   const broadleafSpots = [
-    { x: 31.6, z: -5.2, h: 18.6, r: 3.1, s: 1.1 },
-    { x: 32.0, z: 7.4, h: 19.2, r: 3.2, s: 2.3 },
-    { x: 30.8, z: -9.2, h: 18.2, r: 2.9, s: 3.7 },
-    { x: 44.0, z: -4.6, h: 21.4, r: 3.6, s: 4.5 },
-    { x: 44.2, z: 4.6, h: 20.2, r: 3.4, s: 5.9 },
-    { x: 45.2, z: -8.8, h: 19.4, r: 3.1, s: 6.4 },
-    { x: 26.4, z: -2.4, h: 20.0, r: 3.5, s: 7.2 },
-    { x: 49.6, z: 1.8, h: 21.6, r: 3.8, s: 8.8 },
-    { x: 33.6, z: 8.4, h: 18.2, r: 2.8, s: 9.4 },
-    { x: 42.6, z: 8.6, h: 18.4, r: 2.9, s: 10.2 },
-    // Mid-height under-bridge broadleaf canopy clusters directly beneath/flanking the 2F suspension bridge midspan (3F-07 Photo 2!)
-    { x: 34.4, z: -1.8, h: 16.7, r: 3.4, s: 11.3 },
-    { x: 41.6, z: 0.6, h: 16.9, r: 3.5, s: 12.7 },
-    { x: 35.0, z: 2.2, h: 16.5, r: 3.3, s: 13.9 }
+    { x: 29.6, z: -5.0, h: 18.4, r: 2.8, s: 1.1 },
+    { x: 29.8, z: 6.8, h: 18.8, r: 2.9, s: 2.3 },
+    { x: 29.2, z: -8.6, h: 17.8, r: 2.6, s: 3.7 },
+    { x: 46.2, z: -4.6, h: 20.8, r: 3.1, s: 4.5 },
+    { x: 46.4, z: 4.6, h: 19.8, r: 3.0, s: 5.9 },
+    { x: 46.6, z: -8.2, h: 18.8, r: 2.8, s: 6.4 },
+    { x: 25.8, z: -2.4, h: 19.4, r: 3.0, s: 7.2 },
+    { x: 49.4, z: 1.8, h: 20.6, r: 3.1, s: 8.8 },
+    { x: 30.2, z: 7.8, h: 17.6, r: 2.6, s: 9.4 },
+    { x: 45.8, z: 7.8, h: 17.8, r: 2.6, s: 10.2 },
+    // Low under-bridge broadleaf canopy clusters strictly below the 2F bridge Warren under-truss (crown top y <= 14.4m vs truss bottom y = 16.74m -> 2.3m vertical air gap below bridge!)
+    { x: 33.4, z: -2.0, h: 13.4, r: 2.7, s: 11.3 },
+    { x: 42.6, z: 0.6, h: 13.6, r: 2.8, s: 12.7 },
+    { x: 33.6, z: 2.4, h: 13.2, r: 2.6, s: 13.9 }
   ];
   for (const bt of broadleafSpots) {
     addBroadleafRainforestTree(bt.x, bt.z, bt.h, bt.r, bt.s);
@@ -6366,12 +6408,12 @@ export function buildIconicAttractions(scene, interactables) {
   entryLedRiser.position.set(20.23, 0.115, -16.8);
   gardenGroup.add(pergolaDeck, entryCurbBase, entryStep1, entryLedRiser);
 
-  // Lush Foreground Architectural Limestone Planter Beds cleanly flanking z=-16.8 pergola & clear of elliptical sky well!
+  // Lush Foreground Architectural Limestone Planter Beds cleanly flanking z=-16.8 pergola & clear of cedar archway posts!
   for (let fpIdx = 0; fpIdx < 3; fpIdx++) {
     const [fpx, fpz, fpw, fpd] = [
-      [16.8, -19.8, 4.8, 1.5],
-      [16.6, -13.6, 4.2, 1.5],
-      [22.4, -20.0, 5.2, 1.4]
+      [16.8, -20.6, 4.4, 1.35],
+      [16.6, -13.0, 4.0, 1.35],
+      [22.8, -20.6, 4.8, 1.35]
     ][fpIdx];
     buildArchitecturalPlanter(gardenGroup, fpx, fpz, fpw, fpd, 0.44);
     populateTropicalUnderstory(gardenGroup, fpx, fpz, fpw, fpd, 0.40, 100 + fpIdx * 19, {

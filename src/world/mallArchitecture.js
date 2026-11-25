@@ -941,8 +941,8 @@ export function buildMallArchitecture(scene, interactables) {
             const mz = Math.sin(am) * rzRF;
             // On GF (fIdx === 1), leave wide open step-down entries onto the Ground Floor Koi Pond timber boardwalks (West x~20.4 & N/S x~38)!
             if (fIdx === 1 && ((mx < 22.0 && Math.abs(mz) < 3.6) || Math.abs(mx - 38.0) < 3.4)) continue;
-            // On 2F (fIdx === 3), leave clean bridge entry gaps at North (z=-12.8) & South (z=+12.8) around x=38!
-            if (fIdx === 3 && Math.abs(mx - 38.0) < 2.2) continue;
+            // On 2F (fIdx === 3), leave clean bridge entry gaps at North (z=-12.8) & South (z=+12.8) around x=38 clear of flared bridge handrails!
+            if (fIdx === 3 && Math.abs(mx - 38.0) < 2.95) continue;
             const x1 = 38.0 + Math.cos(a1) * rxRF;
             const z1 = Math.sin(a1) * rzRF;
             const x2 = 38.0 + Math.cos(a2) * rxRF;
@@ -6591,7 +6591,7 @@ export function buildMallArchitecture(scene, interactables) {
       }
       const rPlanter = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.56, 0.58), lightOakMat);
       rPlanter.position.set(halfW - 1.35, 0.28, 0.62);
-      const rPalm = createIndoorPalm(0.75);
+      const rPalm = createIndoorPalm(0.62);
       rPalm.position.set(halfW - 1.35, 0.54, 0.62);
       g.add(rPlanter, rPalm);
     } else if (isPuma) {
@@ -7697,11 +7697,11 @@ export function buildMallArchitecture(scene, interactables) {
       for (let p = 0; p < numPlanters; p++) {
         const px = -halfW + 2.2 + (p / Math.max(1, numPlanters - 1)) * (fac.width - 4.4);
         const pBox = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.64, 0.96), ivoryStoneMat);
-        pBox.position.set(px, 0.32, -1.25);
+        pBox.position.set(px, 0.32, -1.45);
         const pCap = new THREE.Mesh(new THREE.BoxGeometry(2.48, 0.06, 1.02), lightOakMat);
-        pCap.position.set(px, 0.66, -1.25);
-        const palm = createIndoorPalm(1.05);
-        palm.position.set(px, 0.66, -1.25);
+        pCap.position.set(px, 0.66, -1.45);
+        const palm = createIndoorPalm(0.68);
+        palm.position.set(px, 0.66, -1.45);
         fg.add(pBox, pCap, palm);
         if (p < numPlanters - 1) {
           const bx = px + (fac.width - 4.4) / (2 * Math.max(1, numPlanters - 1));
@@ -7748,7 +7748,7 @@ export function buildMallArchitecture(scene, interactables) {
         bTrim.position.set(s * (lobW * 0.5 - 0.72), facH * 0.5, 0.18);
         const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.26, 0.58, 14), marbleMat);
         pot.position.set(s * (lobW * 0.5 - 1.18), 0.29, -0.45);
-        const palm = createIndoorPalm(0.78);
+        const palm = createIndoorPalm(0.62);
         palm.position.set(s * (lobW * 0.5 - 1.18), 0.58, -0.45);
         fg.add(sWall, bTrim, pot, palm);
       }
@@ -7820,7 +7820,7 @@ export function buildMallArchitecture(scene, interactables) {
         sWall.position.set(s * (tunW * 0.5), facH * 0.5, -tunD * 0.5 + 0.05);
         const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 0.52, 12), ivoryStoneMat);
         pot.position.set(s * (tunW * 0.5 - 0.65), 0.26, -0.55);
-        const palm = createIndoorPalm(0.76);
+        const palm = createIndoorPalm(0.60);
         palm.position.set(s * (tunW * 0.5 - 0.65), 0.52, -0.55);
         fg.add(sWall, pot, palm);
       }
@@ -7920,7 +7920,7 @@ export function buildMallArchitecture(scene, interactables) {
           const potX = s * (portalW * 0.5 + 0.82);
           const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.26, 0.62, 14), ivoryStoneMat);
           pot.position.set(potX, 0.31, 0.66);
-          const palm = createIndoorPalm(0.68);
+          const palm = createIndoorPalm(0.56);
           palm.position.set(potX, 0.60, 0.66);
           fg.add(pot, palm);
         }
@@ -9551,8 +9551,8 @@ export function buildMallArchitecture(scene, interactables) {
     { f: 2, x: -153.5, z: 5.5 }, { f: 2, x: -74, z: -15.5 }, { f: 2, x: -74, z: 15.5 }, { f: 2, x: 86, z: 13.5 }, { f: 2, x: 114, z: 10.5 }, { f: 2, x: 125.5, z: 16.5 },
     // 2F (Added Highstreet walkway bench at (85, -10.5) for 2F-08; cleared (129, -18.8) from 2F-10 Pop Mart sightline!)
     { f: 3, x: -153.5, z: -5.5 }, { f: 3, x: -74, z: -15.5 }, { f: 3, x: -74, z: 15.5 }, { f: 3, x: -21.5, z: -5.2 }, { f: 3, x: 74, z: 14.5 }, { f: 3, x: 85, z: -10.5 }, { f: 3, x: 114, z: 10.5 }, { f: 3, x: 142, z: 16.2 },
-    // 3F (Added 1UE mezzanine planter at (-157, 9.5) for 3F-01!)
-    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 38, z: -16.2 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 125.5, z: 16.5 }, { f: 4, x: 142, z: 16.2 },
+    // 3F (Added 1UE mezzanine planter at (-157, 9.5) for 3F-01; relocated (38, -16.2) -> (58.5, -14.5) clear of Rainforest rim & bridge corridor!)
+    { f: 4, x: -157.5, z: 9.8 }, { f: 4, x: -152, z: -10.5 }, { f: 4, x: -74, z: -15.5 }, { f: 4, x: -74, z: 15.5 }, { f: 4, x: 58.5, z: -14.5 }, { f: 4, x: 84, z: 10.5 }, { f: 4, x: 125.5, z: 16.5 }, { f: 4, x: 142, z: 16.2 },
     // 4F–5F Entertainment Zone & Oval
     { f: 5, x: 64, z: -1.5 }, { f: 5, x: 76, z: 10.5 }, { f: 5, x: 102, z: 0 }, { f: 5, x: 130, z: 16.8 }, { f: 5, x: 129, z: -18.8 }
   ];
@@ -9606,7 +9606,7 @@ export function buildMallArchitecture(scene, interactables) {
     }
     const soilCap = new THREE.Mesh(new THREE.CylinderGeometry(0.74, 0.74, 0.05, 18), benchSoilMat);
     soilCap.position.y = 0.88;
-    const palm = createIndoorPalm(1.12);
+    const palm = createIndoorPalm(0.84);
     palm.position.y = 0.86;
 
     bg.add(baseRing, ledToe, stoneDrum, brassRing, cushionRing, potCore, soilCap, palm);
